@@ -70,7 +70,12 @@
   kept-new-versions 6
   kept-old-versions 2
   version-control t
-  backup-directory-alist '(("." . "~/.emacs.d/backups")))
+  backup-directory-alist '(("." . "~/.emacs.d/save/backup/")))
+#+END_SRC
+**** Autosave
+#+BEGIN_SRC emacs-lisp
+(setq temporary-file-directory "~/.emacs.d/save/autosave"
+      auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 #+END_SRC
 *** My Functions
 **** Init: Save-Tangle-Compile
