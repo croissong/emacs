@@ -58,11 +58,19 @@
 ** Generic
 *** My Values
 #+BEGIN_SRC emacs-lisp
-(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 (setq my/init-file (concat user-emacs-directory "init.org"))
 (setq org-directory (concat user-emacs-directory "meinAll/"))
 (setq org-default-notes-file (concat org-directory "Milkyway.org"))
 (setq my/toutesuit-file (concat org-directory "lookingGlass/toutesuit.org"))
+#+END_SRC
+**** Backup
+[[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
+#+BEGIN_SRC emacs-lisp
+(setq delete-old-versions t
+  kept-new-versions 6
+  kept-old-versions 2
+  version-control t
+  backup-directory-alist '(("." . "~/.emacs.d/backups")))
 #+END_SRC
 *** My Functions
 **** Init: Save-Tangle-Compile
