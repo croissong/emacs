@@ -94,6 +94,7 @@
 #+BEGIN_SRC emacs-lisp
 (prefer-coding-system 'utf-8)
 (set-language-environment "Latin-1")
+(tooltip-mode nil)
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
 (setq ring-bell-function 'ignore)
