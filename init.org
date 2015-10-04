@@ -1,0 +1,1313 @@
+#+PROPERTY: header-args :tangle yes
+* Initialize
+** Initialize package.el
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+(setq package-enable-at-startup nil)
+(setq package-archives
+'( ("gnu" . "http://elpa.gnu.org/packages/")
+   ("melpa" . "http://melpa.milkbox.net/packages/")
+   ("elpy" . "https://jorgenschaefer.github.io/packages/")
+   ("org" . "http://orgmode.org/elpa/")))
+(add-to-list 'load-path "~/.emacs.d/els")
+(package-initialize)
+#+END_SRC
+** Bootstrap use-package
+#+BEGIN_SRC emacs-lisp
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(require 'cl)
+(require 'use-package)
+(require 'bind-key)
+#+END_SRC
+** Keybindings
+*** Minor Mode Init
+#+BEGIN_SRC emacs-lisp
+(defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
+#+END_SRC
+*** Keybindings
+**** Moving
+***** Between Windows
+#+BEGIN_SRC emacs-lisp
+(define-key my-keys-minor-mode-map (kbd "s-ö") 'windmove-left)
+(define-key my-keys-minor-mode-map (kbd "s-#") 'windmove-right)
+(define-key my-keys-minor-mode-map (kbd "s-ü") 'windmove-up)
+(define-key my-keys-minor-mode-map (kbd "s-ä") 'windmove-down)
+#+END_SRC
+***** Cursor
+#+BEGIN_SRC emacs-lisp
+(define-key my-keys-minor-mode-map (kbd "C-ö") 'left-char)
+(define-key my-keys-minor-mode-map (kbd "C-#") 'right-char)
+(define-key my-keys-minor-mode-map (kbd "C-ü") 'previous-line)
+(define-key my-keys-minor-mode-map (kbd "C-ä") 'next-line)
+
+(define-key my-keys-minor-mode-map (kbd "C-+") 'delete-backward-char)
+(define-key my-keys-minor-mode-map (kbd "M-+") 'kill-word)
+(define-key my-keys-minor-mode-map (kbd "~") 'delete-forward-char)
+(define-key my-keys-minor-mode-map (kbd "C-M-<delete>") 'kill-word)
+#+END_SRC
+*** Minor Mode Exec
+#+BEGIN_SRC emacs-lisp
+(define-minor-mode my-keys-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  t " my-keys" 'my-keys-minor-mode-map)
+
+(my-keys-minor-mode 1)
+#+END_SRC
+** Generic
+*** My Values
+#+BEGIN_SRC emacs-lisp
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+(setq my/init-file (concat user-emacs-directory "init.org"))
+(setq org-directory (concat user-emacs-directory "meinAll/"))
+(setq org-default-notes-file (concat org-directory "Milkyway.org"))
+(setq my/toutesuit-file (concat org-directory "lookingGlass/toutesuit.org"))
+#+END_SRC
+*** My Functions
+**** Init: Save-Tangle-Compile
+#+BEGIN_SRC emacs-lisp
+(defun my/save-tangle-compile ()
+(interactive)
+(if (buffer-modified-p)
+(progn
+(save-buffer)
+(org-babel-tangle)
+(byte-compile-file (concat user-emacs-directory "init.el")))
+(minibuffer-message "nothing changed bitch"))
+)
+
+
+(defun my/open-init-file () 
+(interactive)
+(let ((keymap (make-keymap)))
+(define-key keymap (kbd "C-x C-s") 'my/save-tangle-compile)
+(define-minor-mode save-tangle-compile-mode
+  "for save and tangle "
+  nil " stc" keymap)
+  (with-current-buffer (find-file my/init-file)
+(save-tangle-compile-mode 1)
+)
+))
+#+END_SRC
+*** Coding Environment
+#+BEGIN_SRC emacs-lisp
+(prefer-coding-system 'utf-8)
+(set-language-environment "Latin-1")
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+(setq ring-bell-function 'ignore)
+(delete-selection-mode 1)
+(setq toggle-debug-on-error t)
+(setq backup-inhibited 1)
+;; http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3
+
+(fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+* Style
+** Font
+Fantasque Sans Mono
+#+BEGIN_SRC emacs-lisp
+(setq initial-frame-alist '(
+   (font . "Fantasque Sans Mono")
+ ))
+ (setq default-frame-alist '(
+   (font . "Fantasque Sans Mono")
+ ))
+#+END_SRC 
+** Mode-line
+#+BEGIN_SRC emacs-lisp
+;; (set-face-attribute 'mode-line nil :height 135 :foreground "#28a428" :background "#2a2a28")
+;; (set-face-attribute 'mode-line-inactive nil :height 135 :foreground "#995400" :background "#2a2a28")
+#+END_SRC
+** Cursor
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'region nil :background "darkblue")
+(set-cursor-color "orange")
+(setq-default cursor-type 'bar)
+#+END_SRC
+** Frame
+#+BEGIN_SRC emacs-lisp
+(menu-bar-mode -1) 
+(when window-system (set-frame-size (selected-frame) 200 62))
+(tool-bar-mode -1)
+(set-frame-parameter nil 'internal-border-width 4)
+(set-face-attribute 'fringe nil :background "#242424")
+(fringe-mode '(1 . 0))
+(set-face-attribute 'vertical-border nil :foreground "bisque4")
+(scroll-bar-mode -1)
+#+END_SRC
+** Generic
+Linewrap
+#+BEGIN_SRC emacs-lisp
+(global-visual-line-mode t)
+#+END_SRC
+* Packages
+** Style
+*** Theme
+#+BEGIN_SRC emacs-lisp
+(use-package soft-stone-theme
+  :init
+  (load-theme 'soft-stone t)
+;;test
+  :bind
+  :config
+  :ensure t
+  )
+#+END_SRC
+**** Alternativen
+- Soft-Morning
+** Auto-update
+[[https://github.com/rranelli/auto-package-update.el][@Github]]
+#+BEGIN_SRC emacs-lisp
+(use-package auto-package-update
+  :init
+  :bind
+  :config
+  ;;(auto-package-update-now)
+  :ensure t
+)
+#+END_SRC
+** Minor Modes
+*** Drag-stuff
+#+BEGIN_SRC emacs-lisp
+(use-package drag-stuff
+:init
+  ;;:bind (("M-ü" . drag-stuff-up)
+  ;;      ("M-ä" . drag-stuff-down)
+  ;; ("M-#" . drag-stuff-right))
+  ;;  ("M-ö" . drag-stuff-left)
+  :config
+  (add-to-list 'drag-stuff-except-modes 'org-mode)
+  (drag-stuff-global-mode t)
+  :ensure t
+)
+#+END_SRC
+*** Outshine
+**** Outline-Magic
+#+BEGIN_SRC emacs-lisp
+(use-package outline-magic
+  :init
+  :bind
+  :config
+  (add-hook 'outline-minor-mode-hook 
+	    (define-key outline-minor-mode-map [(C-tab)] 'outline-cycle))
+  :ensure t
+)
+#+END_SRC
+**** Outshine + Navi-Mode
+#+BEGIN_SRC emacs-lisp
+(use-package outshine
+  :init
+  :bind
+  :config
+  (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
+  :ensure t
+)
+(use-package navi-mode
+  :init
+  :bind
+  :config
+  :ensure t
+)
+#+END_SRC
+
+*** Company-Mode
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :ensure t
+:config 
+(add-hook 'after-init-hook 'global-company-mode)
+(define-key company-active-map (kbd "C-ä") 'company-select-next)
+(define-key company-active-map (kbd "C-ü") 'company-select-previous)
+)
+#+END_SRC
+
+*** Centered-Window-Mode
+#+BEGIN_SRC emacs-lisp
+(use-package centered-window-mode
+  :init
+  ;; Makes left fringe 10px or so smaller than right one in cwm 
+  (defun cwm/center ()
+    (set-fringe-mode
+     (let ((right_fringe
+	    (/ (- (frame-pixel-width)
+		  (* 110 (frame-char-width)))
+	       2)))
+       (cons (- right_fringe 50) right_fringe))
+     ))
+  :config
+  (centered-window-mode t)
+  :ensure t
+  )
+#+END_SRC
+
+*** Smartparens
+#+BEGIN_SRC emacs-lisp
+(use-package smartparens
+  :init
+(setq blink-matching-paren nil)
+(require 'smartparens-config)
+(set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
+(set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil)
+  :config
+(smartparens-global-mode t)
+(show-smartparens-global-mode t)
+  :ensure t
+)
+#+END_SRC
+*** Undo-Tree
+#+BEGIN_SRC emacs-lisp
+(use-package undo-tree
+  :bind (("C-p" . undo-tree-undo)
+         ("M-p" . undo-tree-redo))
+  :init
+  :config
+  (global-undo-tree-mode t)
+  :ensure t
+)
+#+END_SRC
+*** Expand-Region
+#+BEGIN_SRC emacs-lisp
+(use-package expand-region
+  :bind (("C-M-w" . er/expand-region)
+         ("C-M-q" . er/contract-region))
+  :init
+  :config
+  :ensure t
+)
+#+END_SRC
+*** ido
+#+BEGIN_SRC emacs-lisp
+(require 'ido)
+(ido-mode t)
+(ido-everywhere t)
+(setq ido-case-fold t
+      ido-enable-flex-matching t
+      ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*"
+			   "*Messages*" "Async Shell Command"))
+
+;; ;; If a buffer name that doesn't exist is chosen, just make a new one without prompting
+;; (setq ido-create-new-buffer 'always)
+
+;; Ignore the .aux extensions that TeX programs create 
+(setq completion-ignored-extensions 
+      (cons "*.aux" completion-ignored-extensions))
+
+
+;;; Ignore files defined in variable completion-ignored-extensions 
+(setq ido-ignore-extensions t) 
+
+;;; Order extensions by how I use them 
+(setq ido-file-extensions-order '(".tex"  ".txt" ".py" ".sh" ".el" ".xml" ".htm"))
+
+;;; Keep annoying buffers out of my face 
+(setq ido-ignore-buffers (list (rx (or (and bos  " ") 
+                                       (and bos 
+                                            (or "*Completions*" 
+                                                "*Shell Command Output*" 
+                                                "*vc-diff*") 
+                                            eos))))) 
+
+(add-to-list 'ido-ignore-files "\\`media/")
+#+END_SRC
+*** smex
+#+BEGIN_SRC emacs-lisp
+(use-package smex
+:bind ("M-x" . smex)
+:init
+:config
+:ensure t
+)
+#+END_SRC
+*** Space-line
+The Spacemacs Modeline
+[[[[https://github.com/TheBB/spaceline/tree/master/]]][@Github]]
+#+BEGIN_SRC emacs-lisp
+(use-package spaceline
+  :init
+  (require 'spaceline-config)
+  (spaceline-spacemacs-theme)
+  :bind
+  :config
+  :ensure t
+  )
+#+END_SRC
+*** Projectile
+#+BEGIN_SRC emacs-lisp
+;;asdsd
+(use-package projectile
+  :init
+  (add-hook 'python-mode-hook 'projectile-mode)
+  :bind
+  :config
+  :ensure t
+  )
+#+END_SRC
+** Magit
+#+BEGIN_SRC emacs-lisp
+;; Not working
+;;(require 'magit)
+;;(use-package magit
+;;:ensure t
+;;)
+#+END_SRC
+** Org-Mode
+#+BEGIN_SRC emacs-lisp
+(use-package org-plus-contrib
+  :init
+  :bind
+  :config
+  (require 'org)
+  ;; (require 'org-drill)
+  (require 'org-checklist)
+  (add-to-list 'org-modules 'org-checklist)
+  :ensure t
+)
+#+END_SRC
+*** Config
+#+BEGIN_SRC emacs-lisp
+(setq org-startup-indented t
+      org-blank-before-new-entry nil
+      org-return-follows-link nil
+      org-completion-use-ido t
+      org-image-actual-width '(500)
+      org-list-allow-alphabetical t
+      org-checkbox-hierarchical-statistics t)
+#+END_SRC
+**** Capture
+#+BEGIN_SRC emacs-lisp
+(setq org-refile-use-outline-path t
+      org-datetree-add-timestamp 1
+      org-extend-today-until 6
+      org-outline-path-complete-in-steps nil
+      org-hide-emphasis-markers t
+      org-time-stamp-custom-formats '("<%e. %B '%y>" . "<%b %e, %Y %H:%M>")
+      org-refile-targets '((nil :level . 2)))
+(setq-default org-display-custom-times t)
+(bind-key "C-c c" 'org-capture)
+#+END_SRC
+***** Templates
+#+BEGIN_SRC emacs-lisp
+;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+(setq org-capture-templates
+      (quote (
+	      (" " "Atrium" entry (file+headline (concat org-directory "Milkyway.org") "Atrium") "* %^{Headline} %^ü %?")
+	      
+              ("d" "Diary")
+              ("d " "Thought" entry (file+datetree (concat org-directory "monument/Tagebuch.gpg")) "* %(format-time-string \"[%H:%M]\") Je pense\n %?" :kill-buffer t)
+              ("dt" "Tag" entry (file+datetree (concat org-directory "monument/Tagebuch.gpg")) "* M'aujourd'hui\n** Quelque gut :)\n %?\n** Quelque done\n" :kill-buffer t)
+              
+              ("k" "Knowledge")
+	      ("k " "Atrium" entry (file+headline (concat org-directory "lookingGlass/knowledge.org") "Atrium") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t)
+	      ("km" "Math" entry (file+headline (concat org-directory "lookingGlass/knowledge.org") "Math") "*** %?")
+	      ("kp" "Physics" entry (file+headline (concat org-directory "lookingGlass/knowledge.org") "Physics") "* %?")
+	      ("kl" "Language" entry (file+headline (concat org-directory "lookingGlass/knowledge.org") "Language") "* %?")
+	      
+	      ("p" "Programming")
+	      ("p " "Atrium" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Atrium") "* %?")
+
+	      ("pp" "Practice" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Practice") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t)
+	      
+	      ("pw" "Webdev")
+	      ("pw " "Atrium" entry (file+olp (concat org-directory "lookingGlass/programming.org") "Webdev" "Atrium") "* %?")
+
+	      ("pwf" "Frontend")
+	      ("pwfd" "Design" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Design") "* %?")
+	      ("pwff" "Function" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Function") "* %?")
+	      ("pwfi" "Inspiration" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Inspiration") "* %?")
+	      ("pwb" "Backend" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Backend") "* %?")
+	      ("pl" "Linux" entry (file+olp (concat org-directory "lookingGlass/programming.org") "Linux" "Atrium") "* %?")
+
+	      ("pe" "Emacs")
+	      ("pe " "Atrium" entry (file+olp (concat org-directory "lookingGlass/programming.org") "Emacs" "Atrium") "* %?")
+	      ("peo" "Org-mode" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Org-mode") "* %?")
+
+	      
+	      ("m" "Media")
+	      ("m " "Atrium" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Atrium") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      
+	      ("mw" "Watch")
+
+	      ("mwm" "Movies")
+	      ("mwm " "To watch" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Watch" "Movies" "To Watch") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mwmw" "Watched" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Watch" "Movies" "Watched") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mwms" "Sources" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Watch" "Movies" "Sources") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mws" "Serien" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Watch" "Serien") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+
+	      ("mwv" "Video")
+	      ("mwve" "Entertainment" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Watch" "Videos" "Entertainment") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mwvl" "Learn" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Watch" "Videos" "Learn") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      
+	      ("mm" "Music")
+	      ("mm " "Song" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Music" "Songs") "* [[%^{Url}][%^{Interpret} - %^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mma" "Audiobook" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Music" "Audiobooks") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mmp" "Playlist" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Music" "Playlists") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+
+	      ("mr" "Reading")
+	      ("mr " "Book" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Books" "To Read") "* %? %^g")
+	      ("mrp" "Poem" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Poems") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mrs" "Story" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Stories") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mrw" "Wikipedia" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Wikipedia") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mre" "Et Aliae" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Et Aliae") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mrr" "Reddit" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Reddit") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mrb" "Blog/Subreddit" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Blogs/Subreddits") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+
+	      
+	      ("mt" "Toutesuit" entry (file+olp (concat org-directory "lookingGlass/toutesuit.org") "Videos") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
+
+	      
+	      ("r" "Resources")
+
+	      ("rc" "Cuisine")
+	      ("rc " "Atrium" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Atrium") "* [[%^{Url}][%^{Titel}]]" :kill-buffer t :immediate-finish t)
+	      ("rci" "Ingredients" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Ingredients") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
+	      
+	      ("rcr" "Recipes")
+	      ("rcra" "Appetizer" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Appetizer") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
+	      ("rcrb" "Breakfast" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Breakfast") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
+	      ("rcrd" "Dinner" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Dinner") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
+	      ("rcrs" "Salat" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Salat") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
+
+	      
+	      ("rs" "Sport")
+	      ("rs " "Atrium" entry (file+olp (concat org-directory "lookingGlass/sport.org") "Atrium") "* [[%^{Url}][%^{Titel}]]" :kill-buffer t :immediate-finish t)
+
+	      
+	      ("t" "Todo")
+	      ("te" "Easy" entry (file+headline (concat org-directory "Milkyway.org") "Easy")
+	       "* TODO %?\n :PROPERTIES:\n :CURRENCY_DELTAS: ((xp +5) (light +1)(credit +10))\n :END:")
+	      ("tm" "Medium" entry (file+headline (concat org-directory "Milkyway.org") "Medium")
+	       "* TODO %?\n :PROPERTIES:\n :CURRENCY_DELTAS: ((xp +12) (light +2)(credit +25))\n :END:")
+	      ("th" "Hard" entry (file+headline (concat org-directory "Milkyway.org") "Hard")
+	       "* TODO %?\n :PROPERTIES:\n :CURRENCY_DELTAS: ((xp +20) (light +5)(credit +50))\n :END:")
+
+	      ("tl" "Learn" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Toskana Durota" "Learn")
+	       "* %? %^g" :kill-buffer t)
+	      ("ts" "Someday" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Toskana Durota" "Someday")
+	       "* %? %^g" :kill-buffer t)
+	      )))
+#+END_SRC
+***** Tags
+#+BEGIN_SRC emacs-lisp
+(setq org-tag-alist '(("@work" . ?w) ("@home" . ?h) ("note" . ?n)("exercise" . nil)
+		      (:startgroup . nil)
+		      ("sport" . nil)
+		      (:grouptags . nil)
+		      ("sport_yoga" . nil)
+		      ("sport_weight" . nil)
+		      (:endgroup . nil)
+		      (:startgroup . nil)
+		      ("read" . nil)
+		      (:grouptags . nil)
+		      ("read_book" . nil)
+		      ("read_ebook" . nil)
+		      (:endgroup . nil)))
+#+END_SRC
+***** Functions
+Probably not up-to-date
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun org-capture-fill-template (&optional template initial annotation)
+  "Fill a template and return the filled template as a string.
+The template may still contain \"%?\" for cursor positioning."
+  (setq template (or template (org-capture-get :template)))
+  (when (stringp initial)
+    (setq initial (org-no-properties initial)))
+  (let* ((buffer (org-capture-get :buffer))
+	 (file (buffer-file-name (or (buffer-base-buffer buffer) buffer)))
+	 (ct (org-capture-get :default-time))
+	 (dct (decode-time ct))
+	 (ct1
+	  (if (< (nth 2 dct) org-extend-today-until)
+	      (encode-time 0 59 23 (1- (nth 3 dct)) (nth 4 dct) (nth 5 dct))
+	    ct))
+	 (plist-p (if org-store-link-plist t nil))
+	 (v-c (and (> (length kill-ring) 0) (current-kill 0)))
+	 (v-x (or (org-get-x-clipboard 'PRIMARY)
+		  (org-get-x-clipboard 'CLIPBOARD)
+		  (org-get-x-clipboard 'SECONDARY)))
+	 (v-t (format-time-string (car org-time-stamp-formats) ct1))
+	 (v-T (format-time-string (cdr org-time-stamp-formats) ct1))
+	 (v-u (concat "[" (substring v-t 1 -1) "]"))
+	 (v-U (concat "[" (substring v-T 1 -1) "]"))
+	 ;; `initial' and `annotation' might habe been passed.
+	 ;; But if the property list has them, we prefer those values
+	 (v-i (or (plist-get org-store-link-plist :initial)
+		  initial
+		  (org-capture-get :initial)
+		  ""))
+	 (v-a (or (plist-get org-store-link-plist :annotation)
+		  annotation
+		  (org-capture-get :annotation)
+		  ""))
+	 ;; Is the link empty?  Then we do not want it...
+	 (v-a (if (equal v-a "[[]]") "" v-a))
+	 (clipboards (remove nil (list v-i
+				       (org-get-x-clipboard 'PRIMARY)
+				       (org-get-x-clipboard 'CLIPBOARD)
+				       (org-get-x-clipboard 'SECONDARY)
+				       v-c)))
+	 (l-re "\\[\\[\\(.*?\\)\\]\\(\\[.*?\\]\\)?\\]")
+	 (v-A (if (and v-a (string-match l-re v-a))
+		  (replace-match "[[\\1][%^{Link description}]]" nil nil v-a)
+		v-a))
+	 (v-l (if (and v-a (string-match l-re v-a))
+		  (replace-match "\\1" nil nil v-a)
+		v-a))
+	 (v-n user-full-name)
+	 (v-k (if (marker-buffer org-clock-marker)
+		  (org-no-properties org-clock-heading)))
+	 (v-K (if (marker-buffer org-clock-marker)
+		  (org-make-link-string
+		   (buffer-file-name (marker-buffer org-clock-marker))
+		   org-clock-heading)))
+	 (v-f (or (org-capture-get :original-file-nondirectory) ""))
+	 (v-F (or (org-capture-get :original-file) ""))
+	 v-I
+	 (org-startup-folded nil)
+	 (org-inhibit-startup t)
+	 org-time-was-given org-end-time-was-given x
+	 prompt completions char time pos default histvar strings)
+
+    (setq org-store-link-plist
+	  (plist-put org-store-link-plist :annotation v-a)
+	  org-store-link-plist
+	  (plist-put org-store-link-plist :initial v-i))
+    (setq initial v-i)
+
+    (unless template (setq template "") (message "No template") (ding)
+	    (sit-for 1))
+    (save-window-excursion
+      (pop-to-buffer (get-buffer-create "*Capture*"))
+      (erase-buffer)
+      (insert template)
+      (goto-char (point-min))
+      (org-capture-steal-local-variables buffer)
+      (setq buffer-file-name nil mark-active nil)
+
+      ;; %[] Insert contents of a file.
+      (goto-char (point-min))
+      (while (re-search-forward "%\\[\\(.+\\)\\]" nil t)
+	(unless (org-capture-escaped-%)
+	  (let ((start (match-beginning 0))
+		(end (match-end 0))
+		(filename (expand-file-name (match-string 1))))
+	    (goto-char start)
+	    (delete-region start end)
+	    (condition-case error
+		(insert-file-contents filename)
+	      (error (insert (format "%%![Couldn't insert %s: %s]"
+				     filename error)))))))
+
+      ;; The current time
+      (goto-char (point-min))
+      (while (re-search-forward "%<\\([^>\n]+\\)>" nil t)
+	(replace-match (format-time-string (match-string 1)) t t))
+
+      ;; Simple %-escapes
+      (goto-char (point-min))
+      (while (re-search-forward "%\\([tTuUaliAcxkKInfF]\\)" nil t)
+	(unless (org-capture-escaped-%)
+	  (when (and initial (equal (match-string 0) "%i"))
+	    (save-match-data
+	      (let* ((lead (buffer-substring
+			    (point-at-bol) (match-beginning 0))))
+		(setq v-i (mapconcat 'identity
+				     (org-split-string initial "\n")
+				     (concat "\n" lead))))))
+	  (replace-match (or (eval (intern (concat "v-" (match-string 1)))) "")
+			 t t)))
+
+      ;; From the property list
+      (when plist-p
+	(goto-char (point-min))
+	(while (re-search-forward "%\\(:[-a-zA-Z]+\\)" nil t)
+	  (unless (org-capture-escaped-%)
+	    (and (setq x (or (plist-get org-store-link-plist
+					(intern (match-string 1))) ""))
+		 (replace-match x t t)))))
+
+      ;; %() embedded elisp
+      (goto-char (point-min))
+      (org-capture-expand-embedded-elisp)
+
+      ;; Turn on org-mode in temp buffer, set local variables
+      ;; This is to support completion in interactive prompts
+      (let ((org-inhibit-startup t)) (org-mode))
+      ;; Interactive template entries
+      (goto-char (point-min))
+      (while (re-search-forward "%^\\({\\([^}]*\\)}\\)?\\([gGtTuUCLpü]\\)?" nil t)
+	(unless (org-capture-escaped-%)
+	  (setq char (if (match-end 3) (match-string-no-properties 3))
+		prompt (if (match-end 2) (match-string-no-properties 2)))
+	  (goto-char (match-beginning 0))
+	  (replace-match "")
+	  (setq completions nil default nil)
+	  (when prompt
+	    (setq completions (org-split-string prompt "|")
+		  prompt (pop completions)
+		  default (car completions)
+		  histvar (intern (concat
+				   "org-capture-template-prompt-history::"
+				   (or prompt "")))
+		  completions (mapcar 'list completions)))
+	  (unless (boundp histvar) (set histvar nil))
+	  (cond
+	   ((member char '("G" "g"))
+	    (let* ((org-last-tags-completion-table
+		    (org-global-tags-completion-table
+		     (if (equal char "G")
+			 (org-agenda-files)
+		       (and file (list file)))))
+		   (org-add-colon-after-tag-completion t)
+		   (ins (org-icompleting-read
+			 (if prompt (concat prompt ": ") "Tags: ")
+			 'org-tags-completion-function nil nil nil
+			 'org-tags-history)))
+	      (setq ins (mapconcat 'identity
+				   (org-split-string
+				    ins (org-re "[^[:alnum:]_@#%]+"))
+				   ":"))
+	      (when (string-match "\\S-" ins)
+		(or (equal (char-before) ?:) (insert ":"))
+		(insert ins)
+		(or (equal (char-after) ?:) (insert ":"))
+		(and (org-at-heading-p)
+		     (let ((org-ignore-region t))
+		       (org-set-tags nil 'align))))))
+	   ((equal char "ü")
+	    (my/insert-link)
+	    )
+	   ((equal char "C")
+	    (cond ((= (length clipboards) 1) (insert (car clipboards)))
+		  ((> (length clipboards) 1)
+		   (insert (read-string "Clipboard/kill value: "
+					(car clipboards) '(clipboards . 1)
+					(car clipboards))))))
+	   ((equal char "L")
+	    (cond ((= (length clipboards) 1)
+		   (org-insert-link 0 (car clipboards)))
+		  ((> (length clipboards) 1)
+		   (org-insert-link 0 (read-string "Clipboard/kill value: "
+						   (car clipboards)
+						   '(clipboards . 1)
+						   (car clipboards))))))
+	   ((equal char "p")
+	    (org-set-property (org-no-properties prompt) nil))
+	   (char
+	    ;; These are the date/time related ones
+	    (setq org-time-was-given (equal (upcase char) char))
+	    (setq time (org-read-date (equal (upcase char) char) t nil
+				      prompt))
+	    (if (equal (upcase char) char) (setq org-time-was-given t))
+	    (org-insert-time-stamp time org-time-was-given
+				   (member char '("u" "U"))
+				   nil nil (list org-end-time-was-given)))
+	   (t
+	    (let (org-completion-use-ido)
+	      (push (org-completing-read-no-i
+		     (concat (if prompt prompt "Enter string")
+			     (if default (concat " [" default "]"))
+			     ": ")
+		     completions nil nil nil histvar default)
+		    strings)
+	      (insert (car strings)))))))
+      ;; Replace %n escapes with nth %^{...} string
+      (setq strings (nreverse strings))
+      (goto-char (point-min))
+      (while (re-search-forward "%\\\\\\([1-9][0-9]*\\)" nil t)
+	(unless (org-capture-escaped-%)
+	  (replace-match
+	   (nth (1- (string-to-number (match-string 1))) strings)
+	   nil t)))
+      ;; Make sure there are no empty lines before the text, and that
+      ;; it ends with a newline character
+      (goto-char (point-min))
+      (while (looking-at "[ \t]*\n") (replace-match ""))
+      (if (re-search-forward "[ \t\n]*\\'" nil t) (replace-match "\n"))
+      ;; Return the expanded template and kill the temporary buffer
+      (untabify (point-min) (point-max))
+      (set-buffer-modified-p nil)
+      (prog1 (buffer-string) (kill-buffer (current-buffer))))))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle no
+;; TODO change minibuffer prompt while read-from-minibuffer to display Url: or File: in minibuffer prompt depending on what is inserted
+;; TODO maybe change stevinho.justnetwork.eu from @justnetwork.eu to @stevinho.eu
+;; replace www. and use first and last (idea)
+(defun my/insert-link ()
+  (interactive)
+  (let* ((keymap (copy-keymap minibuffer-local-map))
+	 (get-stored-link
+	  '(lambda ()
+	     (setq url (caar org-stored-links))
+	    (if url
+		(concat "::" (car (last (split-string (nth 1 (split-string url "[\\:]")) "[\\/]"))))
+	      nil)))
+	 (get-url-link
+	  '(lambda ()
+	     (setq url (org-get-x-clipboard 'CLIPBOARD))
+	     (if (string= (substring url 0 4) "http")
+		 (let* ((urlParts
+			 (last (split-string (nth 2 (split-string url "[\\/]")) "[\\.]") 2)))
+		   (concat "@" (nth 0 urlParts) "." (nth 1 urlParts)))
+	       nil
+	       )))
+	 url urlDescription)
+    
+    (define-key keymap (kbd "<tab>")
+      (lambda () (interactive)
+	(let (link message)
+	  (if (string= "@" (substring (minibuffer-contents) 0 1))
+	      (setq link (funcall get-stored-link)
+		    message "No link stored")
+	    (setq link (funcall get-url-link)
+		  message "No Url in Clipboard"))
+	  (if link (progn
+		     (delete-minibuffer-contents)
+		     (insert link))
+	    (minibuffer-message message))
+	  )))
+    
+    (define-key keymap (kbd "C-g")
+      (lambda () (interactive)
+	(delete-minibuffer-contents)
+	(exit-minibuffer)
+	))
+    (setq urlDescription
+	  (or (funcall get-url-link) (funcall get-stored-link)))
+    
+    (if urlDescription
+	(progn
+	  (setq urlDescription (read-from-minibuffer "Link" urlDescription keymap))
+	  (if (string= "" urlDescription)
+	      (minibuffer-message "Aborted")
+	    (insert (format "[[%s][%s]]" url urlDescription))))
+      (minibuffer-message "No Link to insert. Aborted"))
+    ))
+#+END_SRC
+**** Babel
+#+BEGIN_SRC emacs-lisp
+(if (eq system-type 'windows-nt)
+(setq org-babel-sh-command "C:/cygwin64/bin/bash.exe"))
+
+(setq org-src-fontify-natively t
+      org-pretty-entities t
+      org-src-preserve-indentation t
+      org-src-window-setup 'current-window
+      org-edit-src-auto-save-idle-delay 60)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((latex . t)
+   (python . t)
+   (gnuplot . t)
+   (sh . t)))
+#+END_SRC
+**** Passwords
+#+BEGIN_SRC emacs-lisp
+(require 'org-passwords)
+(setq org-passwords-file (concat org-directory "monument/lesMysteres.gpg"))
+(defun my/get-secret ()
+  (interactive)
+  (with-current-buffer (find-file-noselect org-passwords-file)
+    (let ((allSecrets '())
+	  secretMarker)
+      (org-map-entries
+       '(add-to-list 'allSecrets
+		     (nth 4 (org-heading-components))))
+      (setq secretMarker
+	    (org-find-olp (list (ido-completing-read "Secret: "
+						     allSecrets))
+			  t))
+      (funcall interprogram-cut-function
+    	       (org-entry-get secretMarker
+    			      org-passwords-password-property
+    			      t))
+      (kill-buffer)
+      (minibuffer-message "Password copied to clipboard")
+      )
+    ))
+#+END_SRC
+**** Encryption
+#+BEGIN_SRC  emacs-lisp
+(require 'epa-file)
+(epa-file-enable)
+(setq epa-file-select-keys nil)
+#+END_SRC
+**** Ediff 
+#+BEGIN_SRC emacs-lisp
+;; diff hooks for org mode
+(add-hook 'ediff-select-hook 'f-ediff-org-unfold-tree-element)
+(add-hook 'ediff-unselect-hook 'f-ediff-org-fold-tree)
+;; Check for org mode and existence of buffer
+(defun f-ediff-org-showhide(buf command &rest cmdargs)
+  "If buffer exists and is orgmode then execute command"
+  (if buf
+      (if (eq (buffer-local-value 'major-mode (get-buffer buf)) 'org-mode)
+	  (save-excursion (set-buffer buf) (apply command cmdargs)))
+    )
+  )
+
+(defun f-ediff-org-unfold-tree-element ()
+  "Unfold tree at diff location"
+  (f-ediff-org-showhide ediff-buffer-A 'org-reveal)  
+  (f-ediff-org-showhide ediff-buffer-B 'org-reveal)  
+  (f-ediff-org-showhide ediff-buffer-C 'org-reveal)  
+  )
+;;
+(defun f-ediff-org-fold-tree ()
+  "Fold tree back to top level"
+  (f-ediff-org-showhide ediff-buffer-A 'hide-sublevels 1)  
+  (f-ediff-org-showhide ediff-buffer-B 'hide-sublevels 1)  
+  (f-ediff-org-showhide ediff-buffer-C 'hide-sublevels 1)  
+  )
+#+END_SRC
+**** Latex
+#+BEGIN_SRC emacs-lisp
+(require 'ox-latex)
+(unless (boundp 'org-latex-classes)
+  (setq org-latex-classes nil))
+(add-to-list 'org-latex-classes
+             '("article"
+               "\\documentclass{article}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#+END_SRC
+*** Style
+#+BEGIN_SRC emacs-lisp
+(custom-set-faces
+ `(org-level-4 ((t (:foreground "darkorange"))))
+ `(org-level-2 ((t (:foreground "cadet blue"))))
+ `(org-level-3 ((t (:foreground "#b75761"))))
+ `(org-property-value ((t (:foreground "purple"))))
+ `(org-special-keyword ((t (:foreground "#990099"))))
+ `(org-link ((t (:foreground "bisque4"))))
+ ;; weird issue with line-wrap, wrapped lines (the indent) don't get this face
+ ;; `(org-block-background ((t (:background "#133436"))))
+ ;; Underline/overline is weird
+ ;; `(org-block-begin-line ((t (:foreground ,"#446a5d" :underline ,"#b3e"))))
+ ;; `(org-block-end-line ((t (:foreground ,"#446a5d" :overline  ,"#b3e"))))
+ `(org-block-begin-line ((t (:foreground ,"#446a5d"))))
+ `(org-block-end-line ((t (:foreground ,"#446a5d"))))
+ )
+#+END_SRC
+*** Functions
+#+BEGIN_SRC emacs-lisp
+(defun org-sentence-newline()
+  (interactive)
+  (org-backward-sentence)
+  (org-delete-backward-char 1)
+  (org-return-indent))
+(defun my/org-delete-heading-or-line ()
+  (interactive)
+  (if (org-at-heading-p)
+      (org-cut-subtree)
+    (delete-line-no-kill)))
+#+END_SRC
+**** Checkboxes toggle DONE State (not working)
+[[http://osdir.com/ml/emacs-orgmode-gnu/2010-05/msg00506.html][mailinglist]]
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun org-summary-todo-checkbox (c-on c-off)
+  "Switch entry to DONE when all subentry-checkboxes are done, to TODO otherwise."
+  (outline-previous-visible-heading 1)
+  (let (org-log-done org-log-states)	; turn off logging
+    (org-todo (if (= c-off 0) "DONE" "TODO"))))
+(add-hook 'org-checkbox-statistics-hook 'org-summary-todo-checkbox)
+#+END_SRC
+**** Insert Image
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun org-insert-image (url name)
+"Take a screenshot into a time stamped unique-named file in the
+sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
+(interactive "sEnter url: \nsEnter file name: ")
+
+(setq foldername (concat user-emacs-directory "meinAll/media/" (file-name-base buffer-file-name) "/"))
+(if (not (file-exists-p foldername))
+  (mkdir foldername))
+
+(setq imgName (concat
+	       (format "%s." name) (nth 0 (last(split-string url "\\.")))))
+(setq imgPath (concat foldername imgName))
+
+(url-copy-file url imgPath)
+
+(setq width (let
+		((w (car (image-size (create-image imgPath) :pixel))))
+	      (if (> w 500) 500 w)))
+
+(insert (format "#+ATTR_HTML: :width %dpx" width))
+(newline-and-indent)
+(insert (concat "[[" imgPath "]]"))
+(newline-and-indent)
+(insert (concat ":PROPERTIES:"))
+(newline-and-indent)
+(insert (concat ":Quelle: [[" url "][Quelle]]"))
+(newline-and-indent)
+(insert (concat ":END:"))
+(org-display-inline-images nil t))
+#+END_SRC
+*** Keybindings
+#+BEGIN_SRC emacs-lisp
+(bind-key "<return>" 'org-return-indent org-mode-map)
+(bind-key "M-S-<delete>" 'my/org-delete-heading-or-line org-mode-map)
+(bind-key "C-M-<left>" 'org-backward-sentence org-mode-map)
+(bind-key "C-M-<right>" 'org-forward-sentence org-mode-map)
+(bind-key "C-M-<end>" 'org-sentence-newline org-mode-map)
+(bind-key "C-c C-l" 'my/insert-link org-mode-map)
+#+END_SRC
+*** MeinAll
+**** Functions
+#+BEGIN_SRC emacs-lisp
+(defun new-movie(title)
+  "Add a new movie to "
+  (interactive "sTitel: ")
+  (let ((headline (if (y-or-n-p "Have you seen it already?")
+		      "Watched"
+		    "To Watch")))
+    headline
+    ))
+#+END_SRC
+** AUCTeX
+#+BEGIN_SRC emacs-lisp
+(use-package tex
+  :init
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  :config
+  :ensure auctex
+)
+#+END_SRC
+** Dired+
+#+BEGIN_SRC emacs-lisp
+(use-package dired+
+  :init
+  :config
+  (toggle-diredp-find-file-reuse-dir 1)
+  (setq dired-listing-switches "-aDhl  --group-directories-first")
+  :ensure t
+)
+#+END_SRC
+*** Functions
+#+BEGIN_SRC emacs-lisp
+(defun dired-get-size ()
+  (interactive)
+  (let ((files (dired-get-marked-files)))
+    (with-temp-buffer
+      (apply 'call-process "/usr/bin/du" nil t nil "-sch" files)
+      (message "Size of all marked files: %s"
+               (progn 
+                 (re-search-backward "\\(^[0-9.,]+[A-Za-z]+\\).*total$")
+		 (match-string 1))))))
+#+END_SRC
+** Ispell
+#+BEGIN_SRC emacs-lisp
+(setq ispell-program-name "C:\\cygwin64\\bin\\aspell.exe"
+      ispell-really-aspell t
+      ispell-extra-args '("--sug-mode=fast")
+      ispell-dictionary "deutsch"
+      flyspell-issue-message-flag nil)
+#+END_SRC
+** Languages
+*** Elixir
+**** Elixir Mode
+https://github.com/elixir-lang/emacs-elixir
+#+BEGIN_SRC emacs-lisp
+(use-package elixir-mode
+  :init
+  :config
+  :ensure t
+)
+#+END_SRC
+**** Alchemist
+https://github.com/tonini/alchemist.el
+#+BEGIN_SRC emacs-lisp
+(use-package alchemist
+  :init
+  :config
+  :ensure t
+)
+#+END_SRC
+
+(require 'write-or-die.el)
+(require 'spell-number)
+*** Python
+**** Elpy
+#+BEGIN_SRC emacs-lisp
+(use-package elpy
+  :init
+  :bind
+  :config
+  (elpy-enable)
+  (elpy-use-ipython)
+  :ensure t
+  )
+#+END_SRC
+**** IPython Emacs Notebook (EIN)
+#+BEGIN_SRC emacs-lisp
+(use-package ein
+  :init
+  :bind
+  :config
+  :ensure t
+  )
+#+END_SRC
+*** HTML/CSS
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package emmet-mode
+  :init
+;;:bind (("M-ü" . drag-stuff-up)
+  ;;      ("M-ä" . drag-stuff-down)
+    ;;  ("M-ö" . drag-stuff-left)
+;; ("M-#" . drag-stuff-right))
+  :config
+(add-to-list 'drag-stuff-except-modes 'org-mode)
+(drag-stuff-global-mode t)
+  :ensure t
+)
+#+END_SRC
+** mini
+(require 'spell-number)
+* Functions
+** Random-Toutesuit
+#+BEGIN_SRC emacs-lisp
+(defun my/random-toutesuit ()
+  (interactive)
+  (with-current-buffer (find-file-noselect my/toutesuit-file)
+    (let ((id (random
+	       (string-to-number (org-entry-get (goto-char (point-max)) "ID"))))
+	  (counter 1)
+	  toutesuit point)
+      (catch 'counter
+	(org-map-entries '(lambda ()
+			    (when (= counter id)
+			      (setq point (point))
+			      (setq toutesuit
+				    (cons (nth 4 (org-heading-components))
+					  (org-entry-get point "URL")))
+			      (funcall interprogram-cut-function (cdr toutesuit))
+			      (minibuffer-message (car toutesuit))
+			      (throw 'counter counter))
+			    (setq counter (1+ counter)))
+			 "LEVEL>1"))
+      (goto-char point)
+      (org-set-tags)
+      (save-buffer)
+      (kill-buffer))))
+#+END_SRC
+*** Benchmarks
+#+BEGIN_SRC emacs-lisp :tangle no
+;; newest version: für 100 2.9s
+;; (benchmark-run 100 (with-current-buffer (find-file-noselect my/toutesuit-file)
+;;     (let ((id (random
+;; 	       (string-to-number (org-entry-get (end-of-buffer) "ID"))))
+;; 	  (counter 1)
+;; 	  toutesuit)
+;;       (catch 'counter
+;; 	(org-map-entries '(lambda ()
+;; 			    (when (= counter id)
+;; 				(setq toutesuit
+;; 				      (cons (nth 4 (org-heading-components))
+;; 					    (org-entry-get (point) "URL")))
+;; 				(funcall interprogram-cut-function (cdr toutesuit))
+;; 				(throw 'counter counter))
+;; 			    (setq counter (1+ counter)))))
+;;       )))
+
+;; new version: für 100 4.45s
+;; (benchmark-run 100 (with-current-buffer (find-file-noselect my/toutesuit-file)
+;;     (let ((id (random
+;; 	       (string-to-number (org-entry-get (end-of-buffer) "ID"))))
+;; 	  (counter 1)
+;; 	  toutesuit)
+;;       (while (<= counter id)
+;; 	(org-map-entries '(lambda ()
+;; 			    (when (= counter id)
+;; 				(setq toutesuit
+;; 				      (cons (nth 4 (org-heading-components))
+;; 					    (org-entry-get (point) "URL")))
+;; 				(funcall interprogram-cut-function (cdr toutesuit)))
+;; 			    (setq counter (1+ counter))
+;;       ;; (minibuffer-message (car toutesuit))
+;; 			    ))))))
+
+;; previous version: 0.176sec
+;; (benchmark-run (with-current-buffer (find-file-noselect my/toutesuit-file)
+;;     (let (urls toutesuit)
+;;       (org-map-entries '(lambda ()
+;; 			  (push (cons (nth 4 (org-heading-components)) (org-entry-get (point) "URL")) urls))
+;; 		       "LEVEL>1")
+;;       (setq toutesuit (nth (random (length urls)) urls))
+;;       (funcall interprogram-cut-function (cdr toutesuit))
+;;       )))
+
+;; (defun my/change-toutesuit ()
+;;   (interactive)
+;;   (with-current-buffer (find-file-noselect my/toutesuit-file)
+;;     (let ((id 1))
+;; 	(org-map-entries '(lambda ()
+;; 			    (org-set-property "ID" (number-to-string id))
+;; 			    (setq id (1+ id)))
+;; 			    "LEVEL>1")
+;; 	)))
+
+#+END_SRC
+** Line manouevor functions
+*** New-line-above
+#+BEGIN_SRC emacs-lisp
+(defun new-line-above ()
+  "Insert a newline above the current line and put point at beginning."
+  (interactive)
+  (unless (bolp)
+    (beginning-of-line))
+  (newline)
+  (forward-line -1)
+  (indent-according-to-mode))
+#+END_SRC
+*** New-line-below
+#+BEGIN_SRC emacs-lisp
+(defun new-line-below ()
+  "Insert a newline below the current line and put point at beginning."
+  (interactive)
+  (unless (eolp)
+    (end-of-line))
+  (newline-and-indent))
+#+END_SRC
+*** Copy-line-or-Region
+#+BEGIN_SRC emacs-lisp
+(defun xah-copy-line-or-region ()
+  "Copy current line, or text selection.
+When `universal-argument' is called first, copy whole buffer (but respect `narrow-to-region')."
+  (interactive)
+  (let (p1 p2)
+    (if (null current-prefix-arg)
+        (progn (if (use-region-p)
+                   (progn (setq p1 (region-beginning))
+                          (setq p2 (region-end)))
+                 (progn (setq p1 (line-beginning-position))
+                        (setq p2 (line-end-position)))))
+      (progn (setq p1 (point-min))
+             (setq p2 (point-max))))
+    (kill-ring-save p1 p2)))
+#+END_SRC
+*** Cut-line-or-Region
+#+BEGIN_SRC emacs-lisp
+(defun xah-cut-line-or-region ()
+  "Cut current line, or text selection.
+When `universal-argument' is called first, cut whole buffer (but respect `narrow-to-region')."
+  (interactive)
+  (let (p1 p2)
+    (if (null current-prefix-arg)
+        (progn (if (use-region-p)
+                   (progn (setq p1 (region-beginning))
+                          (setq p2 (region-end)))
+                 (progn (setq p1 (line-beginning-position))
+                        (setq p2 (line-beginning-position 2)))))
+      (progn (setq p1 (point-min))
+             (setq p2 (point-max))))
+    (kill-region p1 p2)))
+#+END_SRC
+*** More
+#+BEGIN_SRC emacs-lisp
+(defun delete-whitespace-or-word ()
+  (interactive)
+  (if (looking-at "\\(\t\\|  \\)")
+      (delete-horizontal-space)
+    (delete-word)))
+(defun backward-delete-whitespace-or-word ()
+  (interactive)
+  (if (looking-back "\\(\t\\|  \\)")
+      (delete-horizontal-space)
+    (backward-delete-word)))
+
+;; because back-to-indentation doesn't take me back to visual line
+(defun my/back-to-indentation ()
+  (interactive)
+  (beginning-of-visual-line)
+  (indent-for-tab-command))
+#+END_SRC
+** Not in use
+*** Delete-No-Kill
+#+BEGIN_SRC emacs-lisp :tangle no
+;; maybe kill is actually okay
+(defun delete-line-no-kill ()
+  (interactive)
+  (delete-region
+   (line-end-position 0)
+   (line-end-position))
+  (indent-for-tab-command))
+
+(defun backward-delete-word()
+  (interactive)
+  (delete-region (point) (progn (backward-word) (point))))
+
+(defun delete-word()
+  (interactive)
+  (delete-region (point) (progn (forward-word) (point))))
+#+END_SRC
+*** Useless?
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun find-file-right()
+  (interactive)
+  (split-window-right)
+  (ido-find-file-other-window))
+
+(defun space-right()
+  (interactive)
+  (insert-char 32)
+  (left-char))
+(defun xah-previous-user-buffer ()
+  "Switch to the previous user buffer.
+ "user buffer" is a buffer whose name does not start with "*".
+If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
+2015-01-05 URL `http://ergoemacs.org/emacs/elisp_next_prev_user_buffer.html'"
+  (interactive)
+  (previous-buffer)
+  (let ((i 0))
+    (while (< i 20)
+      (if (or
+           (string-equal "*" (substring (buffer-name) 0 1))
+           (if (string-equal major-mode "dired-mode")
+               xah-switch-buffer-ignore-dired
+             nil
+             ))
+          (progn (previous-buffer)
+                 (setq i (1+ i)))
+        (progn (setq i 100))))))
+
+(defun xah-next-user-buffer ()
+ "Switch to the next user buffer.
+ "user buffer" is a buffer whose name does not start with "*".
+If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
+2015-01-05 URL `http://ergoemacs.org/emacs/elisp_next_prev_user_buffer.html'"
+  (interactive)
+  (next-buffer)
+  (let ((i 0))
+    (while (< i 20)
+      (if (or
+           (string-equal "*" (substring (buffer-name) 0 1))
+           (if (string-equal major-mode "dired-mode")
+               xah-switch-buffer-ignore-dired
+             nil
+             ))
+          (progn (next-buffer)
+                 (setq i (1+ i)))
+        (progn (setq i 100))))))
+#+END_SRC
+** Misc
+*** Sudo-Save (Linux)
+#+BEGIN_SRC emacs-lisp
+(if (eq system-type 'gnu/linux)
+    (defun sudo-save ()
+  (interactive)
+  (if (not buffer-file-name)
+      (write-file (concat "/sudo:root@localhost:" (ido-read-file-name "File:")))
+    (write-file (concat "/sudo:root@localhost:" buffer-file-name)))))
+#+END_SRC
+*** Capitalize Word
+#+BEGIN_SRC emacs-lisp
+(defun capitalize-previous-word()
+  (interactive)
+  (capitalize-word -1))
+#+END_SRC
