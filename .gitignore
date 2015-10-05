@@ -6,10 +6,12 @@ games/
 jabber-avatar-cache/
 server/
 url/
+.python-environments/
+auto-save-list/
 
 session.*
 smex-items
 ido.last
 .mc-lists.el
 .org-id-locations
-.python-environments/
+.last-package-update-day
