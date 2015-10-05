@@ -1,0 +1,15 @@
+init.elc*
+save/
+elpa/
+eshell/
+games/
+jabber-avatar-cache/
+server/
+url/
+
+session.*
+smex-items
+ido.last
+.mc-lists.el
+.org-id-locations
+.python-environments/
