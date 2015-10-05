@@ -1,4 +1,4 @@
-#+PROPERTY: header-args :tangle yes
+#+PROPERTY: header-args :tangle init_temp.el
 * Initialize
 ** Initialize package.el
 #+BEGIN_SRC emacs-lisp
@@ -81,14 +81,18 @@
 **** Init: Save-Tangle-Compile
 #+BEGIN_SRC emacs-lisp
 (defun my/save-tangle-compile ()
-(interactive)
-(if (buffer-modified-p)
-(progn
-(save-buffer)
-(org-babel-tangle)
-(byte-compile-file (concat user-emacs-directory "init.el")))
-(minibuffer-message "nothing changed bitch"))
-)
+  (interactive)
+  (if (buffer-modified-p)
+      (progn
+	(save-buffer)
+	(org-babel-tangle)
+	(byte-compile-file (concat user-emacs-directory "init_temp.el"))
+	(rename-file (concat user-emacs-directory "init_temp.elc")
+		     (concat user-emacs-directory "init.elc")
+		     t)
+	(delete-file (concat user-emacs-directory "init_temp.el")))
+    (minibuffer-message "nothing changed bitch"))
+  )
 
 
 (defun my/open-init-file () 
