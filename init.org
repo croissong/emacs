@@ -167,7 +167,6 @@ Linewrap
 (use-package soft-stone-theme
   :init
   (load-theme 'soft-stone t)
-;;test
   :bind
   :config
   :ensure t
@@ -1019,13 +1018,28 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
                  (re-search-backward "\\(^[0-9.,]+[A-Za-z]+\\).*total$")
 		 (match-string 1))))))
 #+END_SRC
-** Ispell
+** Ispell/Aspell
 #+BEGIN_SRC emacs-lisp
 (setq ispell-program-name "C:\\cygwin64\\bin\\aspell.exe"
       ispell-really-aspell t
       ispell-extra-args '("--sug-mode=fast")
+      ;; TODO name deutsch+english
       ispell-dictionary "deutsch"
       flyspell-issue-message-flag nil)
+#+END_SRC
+*** Aspell - spell checking for multiple languages
+[[https://wiki.archlinux.org/index.php/User:Georgek][@wiki.archlinux]]
+combine dictionary deutsch + english
+#+BEGIN_SRC sh :tangle no
+# TODO replace ru with de 
+cd /usr/lib/aspell
+grep '^special' en.dat >>ru.dat
+aspell dump master en >w.en
+aspell dump master ru-yo >w.ru
+cat w.ru w.en >w.all
+aspell --lang=ru --encoding=UTF-8 create master ruen.rws < w.all
+rm -f w.ru w.en w.all
+echo "add ruen.rws" > ru.multi
 #+END_SRC
 ** Languages
 *** Elixir
