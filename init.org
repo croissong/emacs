@@ -315,6 +315,45 @@ Linewrap
   :ensure t
 )
 #+END_SRC
+*** Ediff
+TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
+**** Config
+#+BEGIN_SRC emacs-lisp
+;; (setq diff-command "ediff")
+;; (add-hook 'ediff-after-quit-hook-internal 'winner-undo)
+(custom-set-variables
+ '(ediff-window-setup-function 'ediff-setup-windows-plain)
+ '(ediff-split-window-function 'split-window-horizontally)
+ )
+#+END_SRC
+**** Org-mode fix
+#+BEGIN_SRC emacs-lisp
+;; diff hooks for org mode
+(add-hook 'ediff-select-hook 'f-ediff-org-unfold-tree-element)
+(add-hook 'ediff-unselect-hook 'f-ediff-org-fold-tree)
+;; Check for org mode and existence of buffer
+(defun f-ediff-org-showhide(buf command &rest cmdargs)
+  "If buffer exists and is orgmode then execute command"
+  (if buf
+      (if (eq (buffer-local-value 'major-mode (get-buffer buf)) 'org-mode)
+	  (save-excursion (set-buffer buf) (apply command cmdargs)))
+    )
+  )
+
+(defun f-ediff-org-unfold-tree-element ()
+  "Unfold tree at diff location"
+  (f-ediff-org-showhide ediff-buffer-A 'org-reveal)  
+  (f-ediff-org-showhide ediff-buffer-B 'org-reveal)  
+  (f-ediff-org-showhide ediff-buffer-C 'org-reveal)  
+  )
+;;
+(defun f-ediff-org-fold-tree ()
+  "Fold tree back to top level"
+  (f-ediff-org-showhide ediff-buffer-A 'hide-sublevels 1)  
+  (f-ediff-org-showhide ediff-buffer-B 'hide-sublevels 1)  
+  (f-ediff-org-showhide ediff-buffer-C 'hide-sublevels 1)  
+  )
+#+END_SRC
 *** Expand-Region
 #+BEGIN_SRC emacs-lisp
 (use-package expand-region
@@ -882,34 +921,6 @@ The template may still contain \"%?\" for cursor positioning."
 (require 'epa-file)
 (epa-file-enable)
 (setq epa-file-select-keys nil)
-#+END_SRC
-**** Ediff 
-#+BEGIN_SRC emacs-lisp
-;; diff hooks for org mode
-(add-hook 'ediff-select-hook 'f-ediff-org-unfold-tree-element)
-(add-hook 'ediff-unselect-hook 'f-ediff-org-fold-tree)
-;; Check for org mode and existence of buffer
-(defun f-ediff-org-showhide(buf command &rest cmdargs)
-  "If buffer exists and is orgmode then execute command"
-  (if buf
-      (if (eq (buffer-local-value 'major-mode (get-buffer buf)) 'org-mode)
-	  (save-excursion (set-buffer buf) (apply command cmdargs)))
-    )
-  )
-
-(defun f-ediff-org-unfold-tree-element ()
-  "Unfold tree at diff location"
-  (f-ediff-org-showhide ediff-buffer-A 'org-reveal)  
-  (f-ediff-org-showhide ediff-buffer-B 'org-reveal)  
-  (f-ediff-org-showhide ediff-buffer-C 'org-reveal)  
-  )
-;;
-(defun f-ediff-org-fold-tree ()
-  "Fold tree back to top level"
-  (f-ediff-org-showhide ediff-buffer-A 'hide-sublevels 1)  
-  (f-ediff-org-showhide ediff-buffer-B 'hide-sublevels 1)  
-  (f-ediff-org-showhide ediff-buffer-C 'hide-sublevels 1)  
-  )
 #+END_SRC
 **** Latex
 #+BEGIN_SRC emacs-lisp
