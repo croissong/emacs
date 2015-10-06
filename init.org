@@ -205,6 +205,12 @@ Linewrap
 #+BEGIN_SRC emacs-lisp :tangle no
 (winner-mode 1)
 #+END_SRC
+**** No Vertical Split [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
+;; dont allow vertical split (windows top/bottom)
+(setq split-height-threshold nil)
+(setq split-width-threshold 80)
+#+END_SRC
 ** Auto-update
 [[https://github.com/rranelli/auto-package-update.el][@Github]]
 #+BEGIN_SRC emacs-lisp
