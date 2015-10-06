@@ -1065,9 +1065,6 @@ https://github.com/tonini/alchemist.el
   :ensure t
 )
 #+END_SRC
-
-(require 'write-or-die.el)
-(require 'spell-number)
 *** Python
 **** Elpy
 #+BEGIN_SRC emacs-lisp
@@ -1105,7 +1102,9 @@ https://github.com/tonini/alchemist.el
 )
 #+END_SRC
 ** mini
+#+BEGIN_SRC emacs-lisp
 (require 'spell-number)
+#+END_SRC
 * Functions
 ** Random-Toutesuit
 #+BEGIN_SRC emacs-lisp
