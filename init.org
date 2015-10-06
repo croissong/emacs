@@ -1090,6 +1090,7 @@ https://github.com/tonini/alchemist.el
   )
 #+END_SRC
 *** HTML/CSS
+**** Emmet-Mode [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package emmet-mode
   :init
