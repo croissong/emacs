@@ -192,6 +192,15 @@ Linewrap
 **** Alternativen
 - Soft-Morning
 *** Window
+**** Purpose-mode
+[[https://github.com/bmag/emacs-purpose][@github]]
+#+BEGIN_SRC emacs-lisp
+(use-package window-purpose
+:init
+  :config
+  :ensure t
+)
+#+END_SRC
 **** Winner-mode [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
 (winner-mode 1)
