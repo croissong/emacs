@@ -1091,13 +1091,18 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package emmet-mode
   :init
-;;:bind (("M-ü" . drag-stuff-up)
-  ;;      ("M-ä" . drag-stuff-down)
-    ;;  ("M-ö" . drag-stuff-left)
-;; ("M-#" . drag-stuff-right))
+  (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+  (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
   :config
-(add-to-list 'drag-stuff-except-modes 'org-mode)
-(drag-stuff-global-mode t)
+  :ensure t
+)
+#+END_SRC
+**** js2-mode
+#+BEGIN_SRC emacs-lisp
+(use-package js2-mode
+  :init
+  (add-hook 'js-mode-hook 'js2-minor-mode)
+  :config
   :ensure t
 )
 #+END_SRC
