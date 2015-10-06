@@ -1108,9 +1108,15 @@ https://github.com/tonini/alchemist.el
   :ensure t
 )
 #+END_SRC
+*** Elisp
+#+BEGIN_SRC emacs-lisp
+(setq toggle-debug-on-error t)
+#+END_SRC
 ** mini
 #+BEGIN_SRC emacs-lisp
 (require 'spell-number)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+(setq same-window-buffer-names '("*Help*"))
 #+END_SRC
 * Functions
 ** Random-Toutesuit
