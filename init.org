@@ -1086,8 +1086,9 @@ https://github.com/tonini/alchemist.el
   :ensure t
   )
 #+END_SRC
-*** HTML/CSS
-**** Emmet-Mode [disabled]
+*** Web
+**** HTML/CSS
+***** Emmet-Mode [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package emmet-mode
   :init
@@ -1097,7 +1098,8 @@ https://github.com/tonini/alchemist.el
   :ensure t
 )
 #+END_SRC
-**** js2-mode
+**** JS
+***** js2-mode
 #+BEGIN_SRC emacs-lisp
 (use-package js2-mode
   :init
