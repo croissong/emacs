@@ -191,6 +191,11 @@ Linewrap
 #+END_SRC
 **** Alternativen
 - Soft-Morning
+*** Window
+**** Winner-mode [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
+(winner-mode 1)
+#+END_SRC
 ** Auto-update
 [[https://github.com/rranelli/auto-package-update.el][@Github]]
 #+BEGIN_SRC emacs-lisp
@@ -364,6 +369,7 @@ The Spacemacs Modeline
   (spaceline-spacemacs-theme)
   :bind
   :config
+  (spaceline-toggle-buffer-size-off)
   :ensure t
   )
 #+END_SRC
@@ -1130,6 +1136,11 @@ https://github.com/tonini/alchemist.el
 (require 'spell-number)
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
 (setq same-window-buffer-names '("*Help*"))
+#+END_SRC
+*** Disabled
+maybe for linux
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq select-active-regions nil)
 #+END_SRC
 * Functions
 ** Random-Toutesuit
