@@ -237,6 +237,20 @@ Linewrap
   :ensure t
 )
 #+END_SRC
+*** Google-translate
+#+BEGIN_SRC emacs-lisp
+(use-package google-translate
+  :init
+  (require 'google-translate-smooth-ui)
+  :bind (("C-c t" . google-translate-smooth-translate))
+  :config
+  (setq google-translate-translation-directions-alist
+	'(("de" . "en") ("en" . "de") ("de" . "fr") ("de" . "es")))
+  (setq google-translate-pop-up-buffer-set-focus t)
+  :ensure t
+)
+#+END_SRC
+
 *** Outshine
 **** Outline-Magic
 #+BEGIN_SRC emacs-lisp
