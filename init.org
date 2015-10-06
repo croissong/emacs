@@ -1,4 +1,7 @@
 #+PROPERTY: header-args :tangle init_temp.el
+
+* Other .emacs
+** [[http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3][@wisomandwonder]]
 * Initialize
 ** Initialize package.el
 #+BEGIN_SRC emacs-lisp
@@ -62,6 +65,8 @@
 (setq org-directory (concat user-emacs-directory "meinAll/"))
 (setq org-default-notes-file (concat org-directory "Milkyway.org"))
 (setq my/toutesuit-file (concat org-directory "lookingGlass/toutesuit.org"))
+(unless (file-directory-p (concat user-emacs-directory "config/"))
+  (mkdir (concat user-emacs-directory "config/")))
 #+END_SRC
 **** Backup
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
@@ -107,6 +112,11 @@
 )
 ))
 #+END_SRC
+*** Start-Up
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-startup-screen t)
+(add-hook 'emacs-startup-hook (lambda () (kill-buffer "*scratch*")))
+#+END_SRC
 *** Coding Environment
 [[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
 #+BEGIN_SRC emacs-lisp
@@ -116,6 +126,7 @@
 (set-keyboard-coding-system 'utf-8)
 (set-language-environment "Latin-1")
 (tooltip-mode -1)
+(fset 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
 (setq ring-bell-function 'ignore)
@@ -125,6 +136,11 @@
 ;; http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3
 
 (fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+*** What does it do?
+#+BEGIN_SRC emacs-lisp
+(setq display-buffer-alist
+      '(("*Async Shell Command*" . (display-buffer-no-window))))
 #+END_SRC
 * Style
 ** Font
@@ -210,6 +226,10 @@ Linewrap
 ;; dont allow vertical split (windows top/bottom)
 (setq split-height-threshold nil)
 (setq split-width-threshold 80)
+#+END_SRC
+*** More
+#+BEGIN_SRC emacs-lisp
+(setq sentence-end-double-space nil)
 #+END_SRC
 ** Auto-update
 [[https://github.com/rranelli/auto-package-update.el][@Github]]
@@ -469,6 +489,8 @@ The Spacemacs Modeline
 ;;(use-package magit
 ;;:ensure t
 ;;)
+
+;; (setq magit-last-seen-setup-instructions "1.4.0")
 #+END_SRC
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
@@ -965,6 +987,10 @@ The template may still contain \"%?\" for cursor positioning."
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                ("\\paragraph{%s}" . "\\paragraph*{%s}")
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+(if (eq system-type 'gnu/linux)
+    (setq org-latex-preview-ltxpng-directory "/tmp/ltxpng/")
+  (if (eq system-type 'windows-nt))
+    (setq org-latex-preview-ltxpng-directory "c:/Users/janmo/AppData/Local/Temp/"))
 #+END_SRC
 *** Style
 #+BEGIN_SRC emacs-lisp
@@ -1191,6 +1217,14 @@ https://github.com/tonini/alchemist.el
 maybe for linux
 #+BEGIN_SRC emacs-lisp :tangle no
 (setq select-active-regions nil)
+#+END_SRC
+**** jabber
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq jabber-account-list
+      '(("jan.moeller0@gmail.com"
+	 (:network-server . "talk.google.com")
+	 (:connection-type . ssl)
+	 (:port . 5223))))
 #+END_SRC
 * Functions
 ** Random-Toutesuit
