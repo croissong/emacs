@@ -166,6 +166,19 @@ Linewrap
 #+END_SRC
 * Packages
 ** Style
+*** Adaptive-Wrap
+#+BEGIN_SRC emacs-lisp
+(use-package adaptive-wrap
+  :init
+  (define-globalized-minor-mode adaptive-wrap-global-mode
+  adaptive-wrap-prefix-mode
+  adaptive-wrap-prefix-mode)
+  :bind
+  :config
+  (adaptive-wrap-global-mode)
+  :ensure t
+  )
+#+END_SRC
 *** Theme
 #+BEGIN_SRC emacs-lisp
 (use-package soft-stone-theme
