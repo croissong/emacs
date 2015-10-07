@@ -35,6 +35,7 @@
   t " my-keys" 'my-keys-minor-mode-map)
 
 (my-keys-minor-mode 1)
+(diminish 'my-keys-minor-mode)
 #+END_SRC
 *** Keybindings
 **** Moving
@@ -105,6 +106,7 @@
   nil " stc" keymap)
   (with-current-buffer (find-file my/init-file)
 (save-tangle-compile-mode 1)
+(diminish 'save-tangle-compile-mode)
 )
 ))
 #+END_SRC
@@ -175,6 +177,7 @@ Fantasque Sans Mono
 Linewrap
 #+BEGIN_SRC emacs-lisp
 (global-visual-line-mode t)
+(diminish 'visual-line-mode)
 #+END_SRC
 ** Faces
 *** What does it do [disabled]
@@ -256,6 +259,7 @@ Linewrap
   (add-to-list 'drag-stuff-except-modes 'org-mode)
   (drag-stuff-global-mode t)
   :ensure t
+  :diminish drag-stuff-mode
 )
 #+END_SRC
 *** YASnippet
@@ -361,6 +365,7 @@ Linewrap
   :config
   (centered-window-mode t)
   :ensure t
+  :diminish centered-window-mode
   )
 #+END_SRC
 
@@ -381,6 +386,7 @@ Linewrap
   (smartparens-global-mode t)
   (show-smartparens-global-mode t)
   :ensure t
+  :diminish smartparens-mode
   )
 #+END_SRC
 *** Undo-Tree
@@ -392,6 +398,7 @@ Linewrap
   :config
   (global-undo-tree-mode t)
   :ensure t
+  :diminish undo-tree-mode
 )
 #+END_SRC
 *** Ediff
@@ -452,11 +459,11 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 :config
 (ido-mode t)
 (ido-everywhere t)
-(bind-keys :map my-keys-minor-mode-map
-		 ("C-M-<tab>" . ido-switch-buffer)
-		 ("C-x b" . ido-switch-buffer-other-window))
+(bind-keys ("M-#" . ido-switch-buffer)
+		 ("M-ö" . ido-switch-buffer-other-window))
 (bind-keys :map ido-common-completion-map
-            ("C-M-<tab>" . ido-next-match)))
+            ("M-#" . ido-next-match)
+            ("M-ö" . ido-prev-match)))
 #+END_SRC
 **** config
 #+BEGIN_SRC emacs-lisp
@@ -567,9 +574,10 @@ The Spacemacs Modeline
       org-image-actual-width '(500)
       org-list-allow-alphabetical t
       org-checkbox-hierarchical-statistics t)
-(bind-key "C-c l" 'org-store-link)
-(bind-key "C-c a" 'org-agenda)
-(bind-key "C-c b" 'org-iswitchb)
+(diminish 'org-indent-mode)
+(bind-keys ("C-c l" 'org-store-link)
+	   ("C-c a" 'org-agenda)
+	   ("C-c b" 'org-iswitchb))
 #+END_SRC
 **** Capture
 #+BEGIN_SRC emacs-lisp
@@ -1226,6 +1234,7 @@ https://github.com/tonini/alchemist.el
   (elpy-enable)
   :bind
   :config
+  (remove 'elpy-module-highlight-indentation elpy-modules)
   (elpy-use-ipython)
   (elpy-set-test-runner 'elpy-test-pytest-runner)
   :ensure t
