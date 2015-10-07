@@ -264,8 +264,7 @@ Linewrap
   :init
   :config
   (yas-global-mode 1)
-  :ensure t
-)
+  :ensure t)
 #+END_SRC
 *** Evil-Nerd-Commenter
 #+BEGIN_SRC emacs-lisp
@@ -451,11 +450,11 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 :config
 (ido-mode t)
 (ido-everywhere t)
-(bind-keys (:map my-keys-minor-mode-map
+(bind-keys :map my-keys-minor-mode-map
 		 ("C-M-<tab>" . ido-switch-buffer)
-		 ("C-x b" . ido-switch-buffer-other-window)))
-(bind-keys (:map ido-common-completion-map
-            ("C-M-<tab>" . ido-next-match))))
+		 ("C-x b" . ido-switch-buffer-other-window))
+(bind-keys :map ido-common-completion-map
+            ("C-M-<tab>" . ido-next-match)))
 #+END_SRC
 **** config
 #+BEGIN_SRC emacs-lisp
