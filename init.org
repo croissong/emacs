@@ -2,6 +2,8 @@
 
 * Other .emacs
 ** [[http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3][@wisomandwonder]]
+** [[https://github.com/emacs-tw/awesome-emacs][awesome-emacs]]
+** [[https://github.com/jwiegley/dot-emacs][jwiegley dot-emacs]]
 * Initialize
 ** Initialize package.el
 #+BEGIN_SRC emacs-lisp
@@ -28,35 +30,29 @@
 *** Minor Mode Init
 #+BEGIN_SRC emacs-lisp
 (defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
-#+END_SRC
-*** Keybindings
-**** Moving
-***** Between Windows
-#+BEGIN_SRC emacs-lisp
-(define-key my-keys-minor-mode-map (kbd "s-ö") 'windmove-left)
-(define-key my-keys-minor-mode-map (kbd "s-#") 'windmove-right)
-(define-key my-keys-minor-mode-map (kbd "s-ü") 'windmove-up)
-(define-key my-keys-minor-mode-map (kbd "s-ä") 'windmove-down)
-#+END_SRC
-***** Cursor
-#+BEGIN_SRC emacs-lisp
-(define-key my-keys-minor-mode-map (kbd "C-ö") 'left-char)
-(define-key my-keys-minor-mode-map (kbd "C-#") 'right-char)
-(define-key my-keys-minor-mode-map (kbd "C-ü") 'previous-line)
-(define-key my-keys-minor-mode-map (kbd "C-ä") 'next-line)
-
-(define-key my-keys-minor-mode-map (kbd "C-+") 'delete-backward-char)
-(define-key my-keys-minor-mode-map (kbd "M-+") 'kill-word)
-(define-key my-keys-minor-mode-map (kbd "~") 'delete-forward-char)
-(define-key my-keys-minor-mode-map (kbd "C-M-<delete>") 'kill-word)
-#+END_SRC
-*** Minor Mode Exec
-#+BEGIN_SRC emacs-lisp
 (define-minor-mode my-keys-minor-mode
   "A minor mode so that my key settings override annoying major modes."
   t " my-keys" 'my-keys-minor-mode-map)
 
 (my-keys-minor-mode 1)
+#+END_SRC
+*** Keybindings
+**** Moving
+***** Between Windows
+#+BEGIN_SRC emacs-lisp
+(bind-key "C-ö" 'windmove-left my-keys-minor-mode-map)
+(bind-key "C-#" 'windmove-right my-keys-minor-mode-map)
+(bind-key "C-ü" 'windmove-up my-keys-minor-mode-map)
+(bind-key "C-ä" 'windmove-down my-keys-minor-mode-map)
+#+END_SRC
+**** hm
+#+BEGIN_SRC emacs-lisp
+(bind-keys :map my-keys-minor-mode-map
+	   ("C-M-k" . kill-this-buffer)
+	   ("C-l" . goto-line))
+;;in global keymap because conflict with org-mode new heading
+(bind-keys ("C-<return>" . new-line-below)
+	   ("M-<return>" . new-line-above))
 #+END_SRC
 ** Generic
 *** My Values
@@ -161,7 +157,7 @@ Fantasque Sans Mono
 ** Cursor
 #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'region nil :background "darkblue")
-(set-cursor-color "orange")
+(set-cursor-color "black")
 (setq-default cursor-type 'bar)
 #+END_SRC
 ** Frame
@@ -179,6 +175,11 @@ Fantasque Sans Mono
 Linewrap
 #+BEGIN_SRC emacs-lisp
 (global-visual-line-mode t)
+#+END_SRC
+** Faces
+*** What does it do [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
+ '(magit-diff-use-overlays nil)
 #+END_SRC
 * Packages
 ** Style
@@ -257,12 +258,23 @@ Linewrap
   :ensure t
 )
 #+END_SRC
+*** Evil-Nerd-Commenter
+#+BEGIN_SRC emacs-lisp
+(use-package evil-nerd-commenter
+  :init
+  :config
+  (evilnc-default-hotkeys)
+  :ensure t
+)
+#+END_SRC
 *** Multiple-Cursors
 #+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors
   :init
+  :bind (:map my-keys-minor-mode-map ("C-<down-mouse-1>" . mc/add-cursor-on-click))
   :config
   (setq mc/list-file (concat user-emacs-directory "config/.mc-lists.el"))
+  ;;'(mc/cursor-face ((nil (:background "orange"))))
   :ensure t
 )
 #+END_SRC
@@ -343,16 +355,21 @@ Linewrap
 *** Smartparens
 #+BEGIN_SRC emacs-lisp
 (use-package smartparens
+  :bind (:map smartparens-mode-map
+	      ("C-M-<left>" . sp-backward-sexp)
+	      ("C-M-<right>" . sp-forward-sexp)
+	      ("C-S-<backspace>" . sp-backward-kill-sexp)
+	      ("C-M-<down>" . sp-select-next-thing))
   :init
-(setq blink-matching-paren nil)
-(require 'smartparens-config)
-(set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
-(set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil)
+  (setq blink-matching-paren nil)
+  (require 'smartparens-config)
+  (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
+  (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil)
   :config
-(smartparens-global-mode t)
-(show-smartparens-global-mode t)
+  (smartparens-global-mode t)
+  (show-smartparens-global-mode t)
   :ensure t
-)
+  )
 #+END_SRC
 *** Undo-Tree
 #+BEGIN_SRC emacs-lisp
@@ -407,8 +424,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** Expand-Region
 #+BEGIN_SRC emacs-lisp
 (use-package expand-region
-  :bind (("C-M-w" . er/expand-region)
-         ("C-M-q" . er/contract-region))
+  :bind (:map my-keys-minor-mode-map
+	      ("C-M-w" . er/expand-region)
+	      ("C-M-q" . er/contract-region))
   :init
   :config
   :ensure t
@@ -416,9 +434,20 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 *** ido
 #+BEGIN_SRC emacs-lisp
-(require 'ido)
+(use-package ido
+:init
+:bind
+:config
 (ido-mode t)
 (ido-everywhere t)
+(bind-keys (:map my-keys-minor-mode-map
+		 ("C-M-<tab>" . ido-switch-buffer)
+		 ("C-x b" . ido-switch-buffer-other-window)))
+(bind-keys (:map ido-common-completion-map
+            ("C-M-<tab>" . ido-next-match))))
+#+END_SRC
+**** config
+#+BEGIN_SRC emacs-lisp
 (setq ido-case-fold t
       ido-enable-flex-matching t
       ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*"
@@ -447,6 +476,18 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
                                             eos))))) 
 
 (add-to-list 'ido-ignore-files "\\`media/")
+#+END_SRC
+**** flx-ido
+#+BEGIN_SRC emacs-lisp
+(use-package flx-ido
+:init
+:bind
+:config
+(flx-ido-mode 1)
+;; disable ido faces to see flx highlights.
+(setq ido-enable-flex-matching t)
+(setq ido-use-faces nil)
+:ensure t)
 #+END_SRC
 *** smex
 #+BEGIN_SRC emacs-lisp
@@ -514,6 +555,9 @@ The Spacemacs Modeline
       org-image-actual-width '(500)
       org-list-allow-alphabetical t
       org-checkbox-hierarchical-statistics t)
+(bind-key "C-c l" 'org-store-link)
+(bind-key "C-c a" 'org-agenda)
+(bind-key "C-c b" 'org-iswitchb)
 #+END_SRC
 **** Capture
 #+BEGIN_SRC emacs-lisp
@@ -870,7 +914,8 @@ The template may still contain \"%?\" for cursor positioning."
       (set-buffer-modified-p nil)
       (prog1 (buffer-string) (kill-buffer (current-buffer))))))
 #+END_SRC
-#+BEGIN_SRC emacs-lisp :tangle no
+****** My/insert-link
+#+BEGIN_SRC emacs-lisp
 ;; TODO change minibuffer prompt while read-from-minibuffer to display Url: or File: in minibuffer prompt depending on what is inserted
 ;; TODO maybe change stevinho.justnetwork.eu from @justnetwork.eu to @stevinho.eu
 ;; replace www. and use first and last (idea)
@@ -971,7 +1016,6 @@ The template may still contain \"%?\" for cursor positioning."
 **** Encryption
 #+BEGIN_SRC  emacs-lisp
 (require 'epa-file)
-(epa-file-enable)
 (setq epa-file-select-keys nil)
 #+END_SRC
 **** Latex
@@ -989,8 +1033,8 @@ The template may still contain \"%?\" for cursor positioning."
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 (if (eq system-type 'gnu/linux)
     (setq org-latex-preview-ltxpng-directory "/tmp/ltxpng/")
-  (if (eq system-type 'windows-nt))
-    (setq org-latex-preview-ltxpng-directory "c:/Users/janmo/AppData/Local/Temp/"))
+  (if (eq system-type 'windows-nt)
+    (setq org-latex-preview-ltxpng-directory "c:/Users/janmo/AppData/Local/Temp/")))
 #+END_SRC
 *** Style
 #+BEGIN_SRC emacs-lisp
@@ -1021,7 +1065,7 @@ The template may still contain \"%?\" for cursor positioning."
   (interactive)
   (if (org-at-heading-p)
       (org-cut-subtree)
-    (delete-line-no-kill)))
+    (kill-line)))
 #+END_SRC
 **** Checkboxes toggle DONE State (not working)
 [[http://osdir.com/ml/emacs-orgmode-gnu/2010-05/msg00506.html][mailinglist]]
@@ -1099,7 +1143,9 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 #+BEGIN_SRC emacs-lisp
 (use-package dired+
   :init
+  :bind
   :config
+  (bind-key "?" 'my/dired-get-size dired-mode-map)
   (toggle-diredp-find-file-reuse-dir 1)
   (setq dired-listing-switches "-aDhl  --group-directories-first")
   :ensure t
@@ -1107,7 +1153,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 #+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp
-(defun dired-get-size ()
+(defun my/dired-get-size ()
   (interactive)
   (let ((files (dired-get-marked-files)))
     (with-temp-buffer
@@ -1206,6 +1252,9 @@ https://github.com/tonini/alchemist.el
 *** Elisp
 #+BEGIN_SRC emacs-lisp
 (setq toggle-debug-on-error t)
+
+(bind-key "C-h C-f" 'find-function-at-point emacs-lisp-mode-map)
+(bind-key "C-h C-v" 'find-variable-at-point emacs-lisp-mode-map)
 #+END_SRC
 ** mini
 #+BEGIN_SRC emacs-lisp
@@ -1347,6 +1396,8 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
       (progn (setq p1 (point-min))
              (setq p2 (point-max))))
     (kill-ring-save p1 p2)))
+
+(bind-key "M-w" 'xah-copy-line-or-region)
 #+END_SRC
 *** Cut-line-or-Region
 #+BEGIN_SRC emacs-lisp
@@ -1364,25 +1415,33 @@ When `universal-argument' is called first, cut whole buffer (but respect `narrow
       (progn (setq p1 (point-min))
              (setq p2 (point-max))))
     (kill-region p1 p2)))
+    
+(bind-key "C-w" 'xah-cut-line-or-region)
 #+END_SRC
 *** More
 #+BEGIN_SRC emacs-lisp
-(defun delete-whitespace-or-word ()
+(defun my/delete-whitespace-or-word ()
   (interactive)
   (if (looking-at "\\(\t\\|  \\)")
       (delete-horizontal-space)
     (delete-word)))
-(defun backward-delete-whitespace-or-word ()
+    
+(defun my/backward-delete-whitespace-or-word ()
   (interactive)
   (if (looking-back "\\(\t\\|  \\)")
       (delete-horizontal-space)
     (backward-delete-word)))
+
+(bind-key "C-<backspace>" 'my/backward-delete-whitespace-or-word)
+(bind-key "C-M-<backspace>" 'my/delete-whitespace-or-word)
 
 ;; because back-to-indentation doesn't take me back to visual line
 (defun my/back-to-indentation ()
   (interactive)
   (beginning-of-visual-line)
   (indent-for-tab-command))
+
+(bind-key "C-a" 'my/back-to-indentation)
 #+END_SRC
 ** Not in use
 *** Delete-No-Kill
@@ -1464,7 +1523,8 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 #+END_SRC
 *** Capitalize Word
 #+BEGIN_SRC emacs-lisp
-(defun capitalize-previous-word()
+(defun my/capitalize-previous-word()
   (interactive)
   (capitalize-word -1))
+  (bind-key "M-c" 'my/capitalize-previous-word org-mode-map)
 #+END_SRC
