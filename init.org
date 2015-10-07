@@ -1,5 +1,20 @@
 #+PROPERTY: header-args :tangle init_temp.el
 
+* html export
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/bigblow/css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/bigblow/css/bigblow.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/bigblow/css/hideshow.css"/>
+
+#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery-1.11.0.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery-ui-1.10.2.min.js"></script>
+
+#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery.localscroll-min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery.scrollTo-1.4.3.1-min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery.zclip.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/bigblow.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/hideshow.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/lib/js/jquery.stickytableheaders.min.js"></script>
+
 * Other .emacs
 ** [[http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3][@wisomandwonder]]
 ** [[https://github.com/emacs-tw/awesome-emacs][awesome-emacs]]
@@ -539,6 +554,7 @@ The Spacemacs Modeline
   (add-hook 'python-mode-hook 'projectile-mode)
   :bind
   :config
+  (setq projectile-indexing-method 'alien)
   :ensure t
   )
 #+END_SRC
@@ -556,12 +572,13 @@ The Spacemacs Modeline
 #+BEGIN_SRC emacs-lisp
 (use-package org-plus-contrib
   :init
-  :bind
-  :config
   (require 'org)
   ;; (require 'org-drill)
   (require 'org-checklist)
   (add-to-list 'org-modules 'org-checklist)
+  :bind
+  :config
+  (diminish 'org-indent-mode)
   :ensure t
 )
 #+END_SRC
@@ -574,7 +591,6 @@ The Spacemacs Modeline
       org-image-actual-width '(500)
       org-list-allow-alphabetical t
       org-checkbox-hierarchical-statistics t)
-(diminish 'org-indent-mode)
 (bind-keys ("C-c l" 'org-store-link)
 	   ("C-c a" 'org-agenda)
 	   ("C-c b" 'org-iswitchb))
@@ -1234,7 +1250,7 @@ https://github.com/tonini/alchemist.el
   (elpy-enable)
   :bind
   :config
-  (remove 'elpy-module-highlight-indentation elpy-modules)
+  (delete 'elpy-module-highlight-indentation elpy-modules)
   (elpy-use-ipython)
   (elpy-set-test-runner 'elpy-test-pytest-runner)
   :ensure t
@@ -1251,6 +1267,14 @@ https://github.com/tonini/alchemist.el
 #+END_SRC
 *** Web
 **** HTML/CSS
+***** Htmlize
+#+BEGIN_SRC emacs-lisp
+(use-package htmlize
+  :init
+  :config
+  :ensure t
+)
+#+END_SRC
 ***** Emmet-Mode [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package emmet-mode
