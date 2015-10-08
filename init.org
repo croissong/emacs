@@ -477,7 +477,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (ido-mode t)
 (ido-everywhere t)
 (bind-keys ("M-#" . ido-switch-buffer)
-		 ("M-ö" . ido-switch-buffer-other-window))
+		 ("M-ö" . my/switch-to-previous-buffer))
 (bind-keys :map ido-common-completion-map
             ("M-#" . ido-next-match)
             ("M-ö" . ido-prev-match)))
@@ -1510,8 +1510,17 @@ When `universal-argument' is called first, cut whole buffer (but respect `narrow
   (interactive)
   (delete-region (point) (progn (forward-word) (point))))
 #+END_SRC
+*** switch to previous buffer
+[[http://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/][emacsredux.com]]
+#+BEGIN_SRC emacs-lisp
+(defun my/switch-to-previous-buffer ()
+  "Switch to previously open buffer.
+Repeated invocations toggle between the two most recently open buffers."
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
+#+END_SRC
 *** Useless?
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
 (defun find-file-right()
   (interactive)
   (split-window-right)
@@ -1521,9 +1530,10 @@ When `universal-argument' is called first, cut whole buffer (but respect `narrow
   (interactive)
   (insert-char 32)
   (left-char))
+  
 (defun xah-previous-user-buffer ()
   "Switch to the previous user buffer.
- "user buffer" is a buffer whose name does not start with "*".
+ `user buffer' is a buffer whose name does not start with `*'.
 If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 2015-01-05 URL `http://ergoemacs.org/emacs/elisp_next_prev_user_buffer.html'"
   (interactive)
@@ -1540,9 +1550,10 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
                  (setq i (1+ i)))
         (progn (setq i 100))))))
 
+
 (defun xah-next-user-buffer ()
  "Switch to the next user buffer.
- "user buffer" is a buffer whose name does not start with "*".
+ `user buffer' is a buffer whose name does not start with `*'.
 If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 2015-01-05 URL `http://ergoemacs.org/emacs/elisp_next_prev_user_buffer.html'"
   (interactive)
