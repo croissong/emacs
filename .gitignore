@@ -17,3 +17,4 @@ ido.last
 .last-package-update-day
 projectile.cache
 projectile-bookmarks.eld
+test.el
