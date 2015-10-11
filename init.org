@@ -87,9 +87,10 @@
 #+BEGIN_SRC emacs-lisp
 (setq delete-old-versions t
   kept-new-versions 6
+  create-lockfiles nil
   kept-old-versions 2
   version-control t
-  backup-directory-alist '(("." . "~/.emacs.d/save/backup/")))
+  backup-directory-alist '((".*" . "~/.emacs.d/save/backup/")))
 #+END_SRC
 **** Autosave
 #+BEGIN_SRC emacs-lisp
