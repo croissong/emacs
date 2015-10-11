@@ -1268,6 +1268,38 @@ https://github.com/tonini/alchemist.el
   :ensure t
   )
 #+END_SRC
+**** My Functions
+***** Jump-to-test
+#+BEGIN_SRC emacs-lisp
+(defun my/jump-to-test ()
+  (interactive)
+  
+  (let* ((file-name
+	  (concat "test_" (nth 0 (last (split-string buffer-file-name "[\\/]")))))
+	 (test-file
+	  (s-join "/" (append (butlast (split-string buffer-file-name "[\\/]")) (list file-name))))
+	 (func-name "")
+	 (func-args (progn
+		      (unless (looking-at "def")
+			(python-nav-beginning-of-defun))
+		      (right-word)
+		      (right-char)
+		      (set-mark (point))
+		      (sp-forward-sexp)
+		      (setq func-name (buffer-substring-no-properties (mark) (point)))
+		      (set-mark (point))
+		      (sp-forward-sexp)
+		      (buffer-substring-no-properties (mark) (point)))))
+    (with-current-buffer (find-file test-file)
+      (goto-char (point-min))
+      (let ((test-func (concat "test_" func-name)))
+	(unless (search-forward test-func nil t)
+	  (goto-char (point-max))
+	  (insert "\n"
+		  (format "def %s():\n" test-func)
+		  (format "\tassert %s%s == " func-name func-args))))
+      )))
+#+END_SRC
 *** Web
 **** HTML/CSS
 ***** Htmlize
