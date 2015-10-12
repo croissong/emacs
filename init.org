@@ -19,6 +19,8 @@
 ** [[http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3][@wisomandwonder]]
 ** [[https://github.com/emacs-tw/awesome-emacs][awesome-emacs]]
 ** [[https://github.com/jwiegley/dot-emacs][jwiegley dot-emacs]]
+** [[https://www.reddit.com/r/emacs/comments/3obmoh/emacs_for_writers_presentation_by_jay_dixit/][Emacs for writers]]
+- org-bullets
 ** elisp tips
 - [[https://www.reddit.com/r/emacs/comments/3nu2xr/emacs_lisp_programming_thoughts/][@reddit.com]]
 * Initialize
