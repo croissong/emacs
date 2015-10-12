@@ -1269,9 +1269,10 @@ https://github.com/tonini/alchemist.el
   (interactive)
   
   (let* ((file-name
-	  (concat "test_" (nth 0 (last (split-string buffer-file-name "[\\/]")))))
+	  (nth 0 (last (split-string buffer-file-name "[\\/]"))))
 	 (test-file
-	  (s-join "/" (append (butlast (split-string buffer-file-name "[\\/]")) (list file-name))))
+	  (s-join "/" (append (butlast (split-string buffer-file-name "[\\/]"))
+			      (list (concat "test_" file-name)))))
 	 (func-name "")
 	 (func-args (progn
 		      (unless (looking-at "def")
@@ -1287,6 +1288,10 @@ https://github.com/tonini/alchemist.el
 		      (buffer-substring-no-properties (mark) (point)))))
     (with-current-buffer (find-file test-file)
       (goto-char (point-min))
+      (unless (search-forward-regexp "from .+ import \\*" nil t)
+	(insert (concat "from "
+			(replace-regexp-in-string "\\.py" "" "calc.py")
+			" import *\n")))
       (let ((test-func (concat "test_" func-name)))
 	(unless (search-forward test-func nil t)
 	  (goto-char (point-max))
