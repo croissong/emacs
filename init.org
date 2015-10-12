@@ -288,6 +288,9 @@ Linewrap
   :init
   :config
   (yas-global-mode 1)
+  (unbind-key "<tab>" yas-minor-mode-map)
+  (unbind-key "TAB" yas-minor-mode-map)
+  (bind-key "C-<tab>" 'yas-expand yas-minor-mode-map)
   :ensure t
   )
 #+END_SRC
