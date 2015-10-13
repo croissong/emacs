@@ -1356,6 +1356,11 @@ maybe for linux
 	 (:connection-type . ssl)
 	 (:port . 5223))))
 #+END_SRC
+** Els
+#+BEGIN_SRC emacs-lisp
+(require 'spell-number)
+(require 'exercism)
+#+END_SRC
 * Functions
 ** Random-Toutesuit
 #+BEGIN_SRC emacs-lisp
