@@ -1,0 +1,12 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: import_ipdb
+# key: ipdb
+# binding: direct-keybinding
+# --
+import ipdb, traceback
+
+def excepthook(ec, ei, tb):
+    traceback.print_exception(ec, ei, tb)
+    ipdb.pm()
+# ipdb.set_trace()
+sys.excepthook = excepthook

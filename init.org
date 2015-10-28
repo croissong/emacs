@@ -77,10 +77,14 @@
 ** Generic
 *** My Values
 #+BEGIN_SRC emacs-lisp
-(setq my/init-file (concat user-emacs-directory "init.org"))
-(setq org-directory (concat user-emacs-directory "meinAll/"))
-(setq org-default-notes-file (concat org-directory "Milkyway.org"))
-(setq my/toutesuit-file (concat org-directory "lookingGlass/toutesuit.org"))
+(setq default-directory "C:/Users/janmo/Documents"
+      my/init-file (concat user-emacs-directory "init.org")
+      org-directory (concat user-emacs-directory "meinAll/")
+      org-default-notes-file (concat org-directory "Milkyway.org")
+      my/toutesuit-file (concat default-directory
+				"/Cloud/Dokumente/meinAll/lookingGlass/toutesuit.org")
+      org-passwords-file (concat default-directory
+				"/Cloud/Dokumente/meinAll/monument/lesMysteres.gpg"))
 (unless (file-directory-p (concat user-emacs-directory "config/"))
   (mkdir (concat user-emacs-directory "config/")))
 #+END_SRC
@@ -512,9 +516,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package flx-ido
 :init
+(flx-ido-mode 1)
 :bind
 :config
-(flx-ido-mode 1)
 ;; disable ido faces to see flx highlights.
 (setq ido-enable-flex-matching t)
 (setq ido-use-faces nil)
@@ -554,6 +558,14 @@ The Spacemacs Modeline
   (setq projectile-indexing-method 'alien)
   :ensure t
   )
+#+END_SRC
+*** Floobits
+#+BEGIN_SRC emacs-lisp
+(use-package floobits
+:init
+:config
+:ensure t
+)
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
@@ -1024,7 +1036,6 @@ The template may still contain \"%?\" for cursor positioning."
 **** Passwords
 #+BEGIN_SRC emacs-lisp
 (require 'org-passwords)
-(setq org-passwords-file (concat org-directory "monument/lesMysteres.gpg"))
 (defun my/get-secret ()
   (interactive)
   (with-current-buffer (find-file-noselect org-passwords-file)
@@ -1239,6 +1250,14 @@ https://github.com/tonini/alchemist.el
   :ensure t
 )
 #+END_SRC
+*** Markdown
+#+BEGIN_SRC emacs-lisp
+(use-package markdown-mode
+  :init
+  :config
+  :ensure t
+)
+#+END_SRC
 *** Python
 **** Elpy
 #+BEGIN_SRC emacs-lisp
@@ -1249,7 +1268,10 @@ https://github.com/tonini/alchemist.el
   :config
   (delete 'elpy-module-highlight-indentation elpy-modules)
   (elpy-use-ipython)
+  ;; Currently no debugging in elpy afaik
+  ;; (setq elpy-test-pytest-runner-command '("py.test --pdb")) ;
   (elpy-set-test-runner 'elpy-test-pytest-runner)
+  (setq elpy-rpc-backend "rope")
   :ensure t
   )
 #+END_SRC
@@ -1339,7 +1361,6 @@ https://github.com/tonini/alchemist.el
 #+END_SRC
 ** mini
 #+BEGIN_SRC emacs-lisp
-(require 'spell-number)
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
 (setq same-window-buffer-names '("*Help*"))
 #+END_SRC
@@ -1359,7 +1380,14 @@ maybe for linux
 ** Els
 #+BEGIN_SRC emacs-lisp
 (require 'spell-number)
-(require 'exercism)
+#+END_SRC
+*** Exercism
+#+BEGIN_SRC emacs-lisp
+(use-package exercism
+  :init
+  :config
+  (setq *exercism-cmd* (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe"))
+)
 #+END_SRC
 * Functions
 ** Random-Toutesuit

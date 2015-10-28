@@ -99,7 +99,7 @@ Optionally add HEADERS and other ARGS."
     :group 'exercism
     :type 'string)
 
-  (defcustom exercism-config-file "~/.exercism.json"
+  (defcustom exercism-config-file "~/../../.exercism.json"
     "Custom location for exercism config file"
     :group 'exercism
     :type 'string)

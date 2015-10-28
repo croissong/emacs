@@ -1,0 +1,10 @@
+;;;; Emacs Bookmark Format Version 1 ;;;;
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("floobits-Skender-32150"
+ (filename . "c:/Users/janmo/exercism/python/roman-numerals/roman.py")
+ (front-context-string . "construct(arabic")
+ (rear-context-string . "s[index]\nxs\ndef ")
+ (position . 314))
+)
