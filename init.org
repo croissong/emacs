@@ -625,6 +625,10 @@ The Spacemacs Modeline
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
+(when (eq system-type 'windows-nt)
+  (use-package ssh-agency
+    :ensure t
+    ))
 (use-package magit
 :ensure t
 )
