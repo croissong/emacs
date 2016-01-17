@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("floobits-Skender-32150"
+(("org-capture-last-stored"
+ (filename . "~/Downloads/testDay.gpg")
+ (front-context-string . "**** M'aujourd'h")
+ (rear-context-string . "** Quelque done\n")
+ (position . 149))
+("floobits-Skender-32150"
  (filename . "c:/Users/janmo/exercism/python/roman-numerals/roman.py")
  (front-context-string . "construct(arabic")
  (rear-context-string . "s[index]\nxs\ndef ")

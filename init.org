@@ -21,6 +21,9 @@
 ** [[https://github.com/jwiegley/dot-emacs][jwiegley dot-emacs]]
 ** [[https://www.reddit.com/r/emacs/comments/3obmoh/emacs_for_writers_presentation_by_jay_dixit/][Emacs for writers]]
 - org-bullets
+** packages maybe Futur
+*** Big collection [[https://emacs.zeef.com/ehartc#link_1504097][@zeef.com]]
+*** Focus [[https://github.com/larstvei/Focus/blob/master/README.md][@github.com]]
 ** elisp tips
 - [[https://www.reddit.com/r/emacs/comments/3nu2xr/emacs_lisp_programming_thoughts/][@reddit.com]]
 * Initialize
@@ -41,7 +44,7 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-(require 'cl)
+(require 'cl-lib)
 (require 'use-package)
 (require 'bind-key)
 #+END_SRC
@@ -77,14 +80,27 @@
 ** Generic
 *** My Values
 #+BEGIN_SRC emacs-lisp
-(setq default-directory "C:/Users/janmo/Documents"
-      my/init-file (concat user-emacs-directory "init.org")
-      org-directory (concat user-emacs-directory "meinAll/")
-      org-default-notes-file (concat org-directory "Milkyway.org")
-      my/toutesuit-file (concat default-directory
-				"/Cloud/Dokumente/meinAll/lookingGlass/toutesuit.org")
-      org-passwords-file (concat default-directory
-				"/Cloud/Dokumente/meinAll/monument/lesMysteres.gpg"))
+(cond ((eq system-type 'gnu/linux)
+       (setq default-directory "~/"
+	     ;; org-directory (concat default-directory
+	     ;; "/Cloud/Dokumente/meinAll/")
+	     ;; org-default-notes-file (concat org-directory "Milkyway.org")
+	     ;; my/toutesuit-file (concat org-directory
+	     ;; "/lookingGlass/toutesuit.org")
+	     ;; org-passwords-file (concat default-directory
+	     ;; "/Cloud/Dokumente/meinAll/monument/lesMysteres.gpg")
+	     ))
+      (t
+       (setq default-directory "C:/Users/janmo/Documents"
+	     org-directory (concat default-directory
+				   "/Cloud/Dokumente/meinAll/")
+	     org-default-notes-file (concat org-directory "Milkyway.org")
+	     org-passwords-file (concat default-directory
+					"/Cloud/Dokumente/meinAll/monument/lesMysteres.gpg"))))
+
+(defvar my/init-file (concat user-emacs-directory "init.org"))
+;;(defvar my/toutesuit-file (concat org-directory "/lookingGlass/toutesuit.org"))
+
 (unless (file-directory-p (concat user-emacs-directory "config/"))
   (mkdir (concat user-emacs-directory "config/")))
 #+END_SRC
@@ -168,12 +184,18 @@
 ** Font
 Fantasque Sans Mono
 #+BEGIN_SRC emacs-lisp
-(setq initial-frame-alist '(
-   (font . "Fantasque Sans Mono")
- ))
- (setq default-frame-alist '(
-   (font . "Fantasque Sans Mono")
- ))
+(if (file-exists-p "/etc/crouton/name")
+    (setq default-frame-alist '(
+				(font . "Fantasque Sans Mono 15")
+				))
+  (progn
+    (setq initial-frame-alist '(
+				(font . "Fantasque Sans Mono")
+				))
+    (setq default-frame-alist '(
+				(font . "Fantasque Sans Mono")
+				))
+    ))
 #+END_SRC 
 ** Mode-line
 #+BEGIN_SRC emacs-lisp
@@ -190,11 +212,24 @@ Fantasque Sans Mono
 #+BEGIN_SRC emacs-lisp
 (menu-bar-mode -1) 
 (tool-bar-mode -1)
-(setq initial-frame-alist '((width . 190) (height . 60)))
-(set-frame-parameter nil 'internal-border-width 4)
-(set-face-attribute 'fringe nil :background "#242424")
-(fringe-mode '(1 . 0))
-(set-face-attribute 'vertical-border nil :foreground "bisque4")
+(if (file-exists-p "/etc/crouton/name")
+    (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  (add-to-list 'default-frame-alist '((width . 190) (height . 60)))
+  )
+  (if (daemonp)
+    (add-hook 'after-make-frame-functions
+        (lambda (frame)
+            (select-frame frame)
+            (set-frame-parameter nil 'internal-border-width 4)
+	    (set-face-attribute 'fringe nil :background "#bisque4")
+	    (fringe-mode '(1 . 0))
+	    (set-face-attribute 'vertical-border nil :foreground "bisque4")))
+    (progn
+      (set-frame-parameter nil 'internal-border-width 4)
+      (set-face-attribute 'fringe nil :background "#242424")
+      (fringe-mode '(1 . 0))
+      (set-face-attribute 'vertical-border nil :foreground "bisque4"))
+    )
 (scroll-bar-mode -1)
 #+END_SRC
 ** Generic
@@ -274,11 +309,15 @@ Linewrap
 *** Drag-stuff
 #+BEGIN_SRC emacs-lisp
 (use-package drag-stuff
-:init
-  ;;:bind (("M-ü" . drag-stuff-up)
-  ;;      ("M-ä" . drag-stuff-down)
-  ;; ("M-#" . drag-stuff-right))
-  ;;  ("M-ö" . drag-stuff-left)
+  :init
+  ;; if chromebook
+  (if (file-exists-p "/etc/crouton/name")
+      (bind-keys ("M-<prior>" . drag-stuff-up)
+		 ("M-<next>" . drag-stuff-down)
+		 ;; ("M-right" . drag-stuff-right)
+		 ;; ("M-right" . drag-stuff-left)
+		 )
+    )
   :config
   (add-to-list 'drag-stuff-except-modes 'org-mode)
   (drag-stuff-global-mode t)
@@ -290,11 +329,24 @@ Linewrap
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
   :init
+  (setq yas-verbosity 2)
   :config
   (yas-global-mode 1)
   (unbind-key "<tab>" yas-minor-mode-map)
   (unbind-key "TAB" yas-minor-mode-map)
   (bind-key "C-<tab>" 'yas-expand yas-minor-mode-map)
+  :ensure t
+  )
+#+END_SRC
+*** Buffer-move
+https://github.com/lukhas/buffer-move
+#+BEGIN_SRC emacs-lisp
+(use-package buffer-move
+  :bind (:map my-keys-minor-mode-map
+	      ("C-M-#" . buf-move-right)
+	      ("C-M-ö" . buf-move-left)
+              ("C-M-ü" . buf-move-up)
+              ("C-M-ä" . buf-move-down))
   :ensure t
   )
 #+END_SRC
@@ -438,7 +490,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   "If buffer exists and is orgmode then execute command"
   (if buf
       (if (eq (buffer-local-value 'major-mode (get-buffer buf)) 'org-mode)
-	  (save-excursion (set-buffer buf) (apply command cmdargs)))
+	  (with-current-buffer (apply command cmdargs)))
     )
   )
 
@@ -594,7 +646,8 @@ The Spacemacs Modeline
 *** Config
 #+BEGIN_SRC emacs-lisp
 (setq org-startup-indented t
-      org-blank-before-new-entry nil
+      org-blank-before-new-entry '((heading . nil)
+				  (plain-list-item . nil))
       org-return-follows-link nil
       org-completion-use-ido t
       org-image-actual-width '(500)
@@ -734,7 +787,7 @@ The Spacemacs Modeline
 		      (:endgroup . nil)))
 #+END_SRC
 ***** Functions
-Probably not up-to-date
+****** Probably not up-to-date
 #+BEGIN_SRC emacs-lisp :tangle no
 (defun org-capture-fill-template (&optional template initial annotation)
   "Fill a template and return the filled template as a string.
@@ -1187,10 +1240,10 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 #+BEGIN_SRC emacs-lisp
 (use-package dired+
   :init
+  (toggle-diredp-find-file-reuse-dir 1)
   :bind
   :config
   (bind-key "?" 'my/dired-get-size dired-mode-map)
-  (toggle-diredp-find-file-reuse-dir 1)
   (setq dired-listing-switches "-aDhl  --group-directories-first")
   :ensure t
 )
@@ -1267,7 +1320,9 @@ https://github.com/tonini/alchemist.el
   :bind
   :config
   (delete 'elpy-module-highlight-indentation elpy-modules)
-  (elpy-use-ipython)
+  (if (executable-find "ipython")
+      (elpy-use-ipython)
+    (message "'ipython' not found found; please install"))
   ;; Currently no debugging in elpy afaik
   ;; (setq elpy-test-pytest-runner-command '("py.test --pdb")) ;
   (elpy-set-test-runner 'elpy-test-pytest-runner)
@@ -1332,6 +1387,15 @@ https://github.com/tonini/alchemist.el
   :ensure t
 )
 #+END_SRC
+***** Scss-Mode
+#+BEGIN_SRC emacs-lisp
+(use-package scss-mode
+  :init
+  (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+  :config
+  :ensure t
+)
+#+END_SRC
 ***** Emmet-Mode [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package emmet-mode
@@ -1348,7 +1412,31 @@ https://github.com/tonini/alchemist.el
 (use-package js2-mode
   :init
   (add-hook 'js-mode-hook 'js2-minor-mode)
+  (setq js2-basic-offset 2)
   :config
+  :ensure t
+)
+#+END_SRC
+***** Web-mode
+[[http://web-mode.org/][@web-mode.org]]
+#+BEGIN_SRC emacs-lisp
+(use-package web-mode
+  :init
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
+  :config
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-attr-indent-offset nil)
+  :ensure t
+)
+#+END_SRC
+***** coffee-mode
+#+BEGIN_SRC emacs-lisp
+(use-package coffee-mode
+  :init
+  :config
+  (custom-set-variables '(coffee-tab-width 2))
   :ensure t
 )
 #+END_SRC
@@ -1383,11 +1471,43 @@ maybe for linux
 #+END_SRC
 *** Exercism
 #+BEGIN_SRC emacs-lisp
-(use-package exercism
+  (if (executable-find "exercism")
+      (use-package exercism
+        :no-require t
+        :init
+        (unless (eq system-type 'gnu/linux)
+          (setq exercism-config-file "~/../../.exercism.json"))
+        :config
+        (unless (eq system-type 'gnu/linux)
+          (setq *exercism-cmd* (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe"))))
+    (message "'exercism' not found found; please install"))
+#+END_SRC
+** Dev
+*** Namespaces elisp
+[[https://github.com/Malabarba/Nameless][@github.com]] 
+#+BEGIN_SRC emacs-lisp
+(use-package nameless
   :init
   :config
-  (setq *exercism-cmd* (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe"))
+  (setq nameless-private-prefix t)
+  :ensure t
+  :pin melpa
 )
+#+END_SRC
+*** Testing
+[[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
+#+BEGIN_SRC emacs-lisp
+(use-package xtest
+  :init
+  :config
+  :ensure t
+)
+#+END_SRC
+** My
+*** Daybook
+[[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
+#+BEGIN_SRC emacs-lisp
+(use-package my-daybook)
 #+END_SRC
 * Functions
 ** Random-Toutesuit
@@ -1473,6 +1593,50 @@ maybe for linux
 ;; 	)))
 
 #+END_SRC
+** Html-to-React
+#+BEGIN_SRC emacs-lisp
+(defun my/html-to-react ()
+  (interactive)
+  (with-current-buffer (current-buffer)
+    (goto-char (point-min))
+    (while (search-forward "class" nil t) (replace-match "className" nil t))
+    (goto-char (point-min))
+    (while (search-forward "\"" nil t) (replace-match "'" nil t))
+    (web-mode)
+    (goto-char (point-min))
+    (let* ((html (buffer-string))
+	   (toc (my/html-to-react--get-toc html))
+	   (content (my/html-to-react--get-content html)))
+      (message content)
+      (delete-region (point-min) (point-max))
+      (insert (format "import React from 'react'
+
+export class Toc extends React.Component {
+  render () {
+    return (
+      %s
+    )
+  }
+}
+
+export class Content extends React.Component {
+  render () {
+    return (
+      <div>%s</div>
+    )
+  }
+}"
+		   toc content))))
+  )
+
+(defun my/html-to-react--get-toc (html)
+  (buffer-substring-no-properties (point-min)
+		    (+ (web-mode-element-end-position) 1)))
+
+(defun my/html-to-react--get-content (html)
+  (buffer-substring-no-properties (+ (web-mode-element-end-position) 1)
+				  (point-max)))
+#+END_SRC 
 ** Line manouevor functions
 *** New-line-above
 #+BEGIN_SRC emacs-lisp
@@ -1596,7 +1760,8 @@ Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (insert-char 32)
   (left-char))
-  
+
+(defvar xah-switch-buffer-ignore-dired t)
 (defun xah-previous-user-buffer ()
   "Switch to the previous user buffer.
  `user buffer' is a buffer whose name does not start with `*'.
