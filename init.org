@@ -103,6 +103,10 @@
 
 (unless (file-directory-p (concat user-emacs-directory "config/"))
   (mkdir (concat user-emacs-directory "config/")))
+(unless (file-directory-p (concat user-emacs-directory "save/autosave"))
+  (mkdir (concat user-emacs-directory "save/autosave") t))
+(unless (file-directory-p (concat user-emacs-directory "save/backup"))
+  (mkdir (concat user-emacs-directory "save/backup") t))
 #+END_SRC
 **** Backup
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
