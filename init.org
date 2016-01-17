@@ -625,12 +625,9 @@ The Spacemacs Modeline
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
-;; Not working
-;;(require 'magit)
-;;(use-package magit
-;;:ensure t
-;;)
-
+(use-package magit
+:ensure t
+)
 ;; (setq magit-last-seen-setup-instructions "1.4.0")
 #+END_SRC
 ** Org-Mode
