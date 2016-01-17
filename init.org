@@ -1333,6 +1333,12 @@ https://github.com/tonini/alchemist.el
 #+END_SRC
 **** IPython Emacs Notebook (EIN)
 #+BEGIN_SRC emacs-lisp
+(use-package cl-generic
+  :init
+  :bind
+  :config
+  :ensure t
+  )
 (use-package ein
   :init
   :bind
