@@ -1504,10 +1504,15 @@ maybe for linux
 )
 #+END_SRC
 ** My
-*** Daybook
+*** Bonjoiurnal
 [[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
 #+BEGIN_SRC emacs-lisp
-(use-package my-daybook)
+(use-package bonjournal
+  :init
+  :config
+  (setq bonjournal-dir-linux "~/gdrive/Dokumente/meinAll/monument/Bonjournal/")
+  (setq bonjournal-dir-windows "~/gdrive/Dokumente/meinAll/monument/Bonjournal/")
+)
 #+END_SRC
 * Functions
 ** Random-Toutesuit
