@@ -103,6 +103,10 @@
 
 (unless (file-directory-p (concat user-emacs-directory "config/"))
   (mkdir (concat user-emacs-directory "config/")))
+(unless (file-directory-p (concat user-emacs-directory "save/autosave"))
+  (mkdir (concat user-emacs-directory "save/autosave") t))
+(unless (file-directory-p (concat user-emacs-directory "save/backup"))
+  (mkdir (concat user-emacs-directory "save/backup") t))
 #+END_SRC
 **** Backup
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
@@ -621,12 +625,13 @@ The Spacemacs Modeline
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
-;; Not working
-;;(require 'magit)
-;;(use-package magit
-;;:ensure t
-;;)
-
+(when (eq system-type 'windows-nt)
+  (use-package ssh-agency
+    :ensure t
+    ))
+(use-package magit
+:ensure t
+)
 ;; (setq magit-last-seen-setup-instructions "1.4.0")
 #+END_SRC
 ** Org-Mode
@@ -1332,6 +1337,12 @@ https://github.com/tonini/alchemist.el
 #+END_SRC
 **** IPython Emacs Notebook (EIN)
 #+BEGIN_SRC emacs-lisp
+(use-package cl-generic
+  :init
+  :bind
+  :config
+  :ensure t
+  )
 (use-package ein
   :init
   :bind
