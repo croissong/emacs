@@ -36,7 +36,8 @@
    ("melpa" . "http://melpa.milkbox.net/packages/")
    ("elpy" . "https://jorgenschaefer.github.io/packages/")
    ("org" . "http://orgmode.org/elpa/")))
-(add-to-list 'load-path "~/.emacs.d/els")
+(let ((default-directory "~/.emacs.d/els"))
+  (normal-top-level-add-subdirs-to-load-path))
 (package-initialize)
 #+END_SRC
 ** Bootstrap use-package
