@@ -1500,6 +1500,15 @@ maybe for linux
   :ensure t
 )
 #+END_SRC
+** Other
+*** Sqlite
+#+BEGIN_SRC emacs-lisp
+(use-package esqlite
+  :init
+  :config
+  :ensure t
+)
+#+END_SRC
 ** My
 *** Bonjoiurnal
 [[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
