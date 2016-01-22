@@ -1,8 +1,8 @@
-;;; toutsuit.el --- Write journal in emacs org-mode  -*- lexical-binding: t; -*-
+;;; toutesuit.el --- Write journal in emacs org-mode  -*- lexical-binding: t; -*-
 
-(defvar toutsuit-file )
+(defvar toutesuit-file "~/toutesuite/toutesuit.org")
 
-(defun toutsuit-getRandom ()
+(defun toutesuit-getRandom ()
   (interactive)
   (with-current-buffer (find-file-noselect my/toutesuit-file)
     (let ((id (random
