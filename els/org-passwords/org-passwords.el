@@ -380,6 +380,27 @@ Substitutions are made in order of the list, so for example:
 	       (cdr list-of-strings)))
     (car list-of-strings)))
 
+(defun org-passwords-get-secret ()
+  (interactive)
+  (with-current-buffer (find-file-noselect org-passwords-file)
+    (let ((allSecrets '())
+	  secretMarker)
+      (org-map-entries
+       '(add-to-list 'allSecrets
+		     (nth 4 (org-heading-components))))
+      (setq secretMarker
+	    (org-find-olp (list (ido-completing-read "Secret: "
+						     allSecrets))
+			  t))
+      (funcall interprogram-cut-function
+    	       (org-entry-get secretMarker
+    			      org-passwords-password-property
+    			      t))
+      (kill-buffer)
+      (minibuffer-message "Password copied to clipboard")
+      )
+    ))
+
 (provide 'org-passwords)
 
 ;;; org-passwords.el ends here

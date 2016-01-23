@@ -38,8 +38,10 @@
 #+BEGIN_SRC emacs-lisp
 (use-package org-init
   :init
-  :config
-  )
+  :config)
+(use-package my-util
+  :init
+  :config)
 #+END_SRC
 ** Keybindings
 *** Minor Mode Init
@@ -73,33 +75,13 @@
 ** Generic
 *** My Values
 #+BEGIN_SRC emacs-lisp
-(cond ((eq system-type 'gnu/linux)
-       (setq default-directory "~/"
-	     ;; org-directory (concat default-directory
-	     ;; "/Cloud/Dokumente/meinAll/")
-	     ;; org-default-notes-file (concat org-directory "Milkyway.org")
-	     ;; my/toutesuit-file (concat org-directory
-	     ;; "/lookingGlass/toutesuit.org")
-	     ;; org-passwords-file (concat default-directory
-	     ;; "/Cloud/Dokumente/meinAll/monument/lesMysteres.gpg")
-	     ))
-      (t
-       (setq default-directory "C:/Users/janmo/Documents"
-	     org-directory (concat default-directory
-				   "/Cloud/Dokumente/meinAll/")
-	     org-default-notes-file (concat org-directory "Milkyway.org")
-	     org-passwords-file (concat default-directory
-					"/Cloud/Dokumente/meinAll/monument/lesMysteres.gpg"))))
+(setq default-directory "~/")
+(defvar gdrive-dir (concat default-directory "cloud/"))
+(defvar meinAll-dir (concat gdrive-dir "dokumente/meinAll/"))
 
-(defvar my/init-file (concat user-emacs-directory "init.org"))
-;;(defvar my/toutesuit-file (concat org-directory "/lookingGlass/toutesuit.org"))
-
-(unless (file-directory-p (concat user-emacs-directory "config/"))
-  (mkdir (concat user-emacs-directory "config/")))
-(unless (file-directory-p (concat user-emacs-directory "save/autosave"))
-  (mkdir (concat user-emacs-directory "save/autosave") t))
-(unless (file-directory-p (concat user-emacs-directory "save/backup"))
-  (mkdir (concat user-emacs-directory "save/backup") t))
+(my-util-ensureEmacsDir "config/")
+(my-util-ensureEmacsDir "save/autosave")
+(my-util-ensureEmacsDir "save/backup")
 #+END_SRC
 **** Backup
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
@@ -113,10 +95,8 @@
 #+END_SRC
 **** Autosave
 #+BEGIN_SRC emacs-lisp
-(setq temporary-file-directory "~/.emacs.d/save/autosave"
-      auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 #+END_SRC
-*** My Functions
 *** Start-Up
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-screen t)
@@ -151,18 +131,10 @@
 ** Font
 Fantasque Sans Mono
 #+BEGIN_SRC emacs-lisp
-(if (file-exists-p "/etc/crouton/name")
-    (setq default-frame-alist '(
-				(font . "Fantasque Sans Mono 15")
-				))
-  (progn
-    (setq initial-frame-alist '(
-				(font . "Fantasque Sans Mono")
-				))
-    (setq default-frame-alist '(
-				(font . "Fantasque Sans Mono")
-				))
-    ))
+(if (my-util-cb?)
+    (add-to-list 'default-frame-alist '(font . "Fantasque Sans Mono 15"))
+    ;; (setq initial-frame-alist (font . "Fantasque Sans Mono"))
+    (add-to-list 'default-frame-alist '(font . "Fantasque Sans Mono")))
 #+END_SRC 
 ** Mode-line
 #+BEGIN_SRC emacs-lisp
@@ -181,8 +153,8 @@ Fantasque Sans Mono
 (tool-bar-mode -1)
 (if (file-exists-p "/etc/crouton/name")
     (add-to-list 'default-frame-alist '(fullscreen . maximized))
-  (add-to-list 'default-frame-alist '((width . 190) (height . 60)))
-  )
+  (add-to-list 'default-frame-alist '(width . 190))
+  (add-to-list 'default-frame-alist '(height . 60)))
   (if (daemonp)
     (add-hook 'after-make-frame-functions
         (lambda (frame)
@@ -607,6 +579,7 @@ The Spacemacs Modeline
   (add-to-list 'org-modules 'org-checklist)
   :bind
   :config
+  (setq org-default-notes-file (concat meinAll-dir "milkyway.org"))
   (diminish 'org-indent-mode)
   :ensure t
 )
@@ -1056,27 +1029,9 @@ The template may still contain \"%?\" for cursor positioning."
 #+END_SRC
 **** Passwords
 #+BEGIN_SRC emacs-lisp
-(require 'org-passwords)
-(defun my/get-secret ()
-  (interactive)
-  (with-current-buffer (find-file-noselect org-passwords-file)
-    (let ((allSecrets '())
-	  secretMarker)
-      (org-map-entries
-       '(add-to-list 'allSecrets
-		     (nth 4 (org-heading-components))))
-      (setq secretMarker
-	    (org-find-olp (list (ido-completing-read "Secret: "
-						     allSecrets))
-			  t))
-      (funcall interprogram-cut-function
-    	       (org-entry-get secretMarker
-    			      org-passwords-password-property
-    			      t))
-      (kill-buffer)
-      (minibuffer-message "Password copied to clipboard")
-      )
-    ))
+(use-package org-passwords
+  :config
+  (setq org-passwords-file (concat meinAll-dir  "monument/lesMysteres.gpg")))
 #+END_SRC
 **** Encryption
 #+BEGIN_SRC  emacs-lisp
@@ -1096,10 +1051,7 @@ The template may still contain \"%?\" for cursor positioning."
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                ("\\paragraph{%s}" . "\\paragraph*{%s}")
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-(if (eq system-type 'gnu/linux)
-    (setq org-latex-preview-ltxpng-directory "/tmp/ltxpng/")
-  (if (eq system-type 'windows-nt)
-    (setq org-latex-preview-ltxpng-directory "c:/Users/janmo/AppData/Local/Temp/")))
+(setq org-latex-preview-ltxpng-directory (concat temporary-file-directory "ltxpng/"))
 #+END_SRC
 *** Style
 #+BEGIN_SRC emacs-lisp
@@ -1445,16 +1397,14 @@ maybe for linux
 #+END_SRC
 *** Exercism
 #+BEGIN_SRC emacs-lisp
-  (if (executable-find "exercism")
-      (use-package exercism
-        :no-require t
-        :init
-        (unless (eq system-type 'gnu/linux)
-          (setq exercism-config-file "~/../../.exercism.json"))
-        :config
-        (unless (eq system-type 'gnu/linux)
-          (setq *exercism-cmd* (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe"))))
-    (message "'exercism' not found found; please install"))
+(my-util-ifInstalled "exercism"
+    (use-package exercism
+      :no-require t
+      :init
+      :config
+      (if (my-util-win?)
+	  (setq *exercism-cmd*
+		(shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe")))))
 #+END_SRC
 ** Dev
 *** Namespaces elisp
@@ -1493,10 +1443,18 @@ maybe for linux
 (use-package bonjournal
   :init
   :config
-  (setq bonjournal-dir-linux "~/gdrive/Dokumente/meinAll/monument/Bonjournal/")
-  (setq bonjournal-dir-windows "~/gdrive/Dokumente/meinAll/monument/Bonjournal/")
-)
+  (setq bonjournal-dir (concat meinAll-dir "monument/Bonjournal/"))
+  )
 #+END_SRC
+*** Toutesuit
+[[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
+#+BEGIN_SRC emacs-lisp
+(use-package toutesuit
+  :init
+  :config
+  (setq toutesuit-file (concat meinAll-dir "lookingGlass/toutesuit.org")))
+#+END_SRC
+
 * Functions
 ** Html-to-React
 #+BEGIN_SRC emacs-lisp
@@ -1709,12 +1667,12 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 ** Misc
 *** Sudo-Save (Linux)
 #+BEGIN_SRC emacs-lisp
-(if (eq system-type 'gnu/linux)
+(if (my-util-linux?)
     (defun sudo-save ()
-  (interactive)
-  (if (not buffer-file-name)
-      (write-file (concat "/sudo:root@localhost:" (ido-read-file-name "File:")))
-    (write-file (concat "/sudo:root@localhost:" buffer-file-name)))))
+      (interactive)
+      (if (not buffer-file-name)
+	  (write-file (concat "/sudo:root@localhost:" (ido-read-file-name "File:")))
+	(write-file (concat "/sudo:root@localhost:" buffer-file-name)))))
 #+END_SRC
 *** Capitalize Word
 #+BEGIN_SRC emacs-lisp

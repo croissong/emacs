@@ -19,3 +19,4 @@ projectile.cache
 projectile-bookmarks.eld
 test.el
 scratch/
+*.elc

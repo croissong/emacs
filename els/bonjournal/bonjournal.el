@@ -1,8 +1,7 @@
 ;;; bonjournal.el --- Write journal in emacs org-mode  -*- lexical-binding: t; -*-
 
 (defvar bonjournal--entryDate 0)
-(defvar bonjournal-dir-linux "~/bonjournal/")
-(defvar bonjournal-dir-windows "~/bonjournal/")
+(defvar bonjournal-dir "~/bonjournal/")
 (defvar bonjournal--day-file "day.org")
 (defvar bonjournal--journal-file "bonjournal.gpg")
 (defvar bonjournal-entryTemplate "\n\n/%H:%M/, *Je pense*\n")
@@ -103,16 +102,11 @@
      ,@body
      (setq epa-file-cache-passphrase-for-symmetric-encryption nil)))
 
-(defsubst bonjournal--getBonjournalDir ()
-  (if (eq system-type 'gnu/linux)
-      bonjournal-dir-linux
-    bonjournal-dir-windows))
-
 (defsubst bonjournal--getDayPath ()
-  (concat (bonjournal--getBonjournalDir) bonjournal--day-file))
+  (concat bonjournal-dir bonjournal--day-file))
 
 (defsubst bonjournal--getJournalPath ()
-  (concat (bonjournal--getBonjournalDir) bonjournal--journal-file))
+  (concat bonjournal-dir bonjournal--journal-file))
 
 (defsubst bonjournal--writeToJournal (entry)
   (bonjournal--with-enablePassCache
