@@ -1,5 +1,7 @@
 ;;; bonjournal.el --- Write journal in emacs org-mode  -*- lexical-binding: t; -*-
 
+(require 'org-datetree)
+
 (defvar bonjournal--entryDate 0)
 (defvar bonjournal-dir "~/bonjournal/")
 (defvar bonjournal--day-file "day.org")
@@ -9,49 +11,48 @@
 
 
 
-(defsubst bonjournal--defineMode ()
+(defun bonjournal--defineMode ()
   (let ((keymap (make-keymap)))
     ;; (define-key keymap (kbd "C-c C-c") 'bonjournal--save-day)
     (define-minor-mode bonjournal-mode
       "bonjournal functions"
       nil "" keymap)))
 
-(defsubst bonjournal--enableModes ()
+(defun bonjournal--enableModes ()
   (bonjournal--defineMode)
   (bonjournal-mode 1)
   (diminish 'bonjournal-mode)
   (org-mode))
 
-(defsubst bonjournal--with-safeFileVariable (&rest body)
+(defun bonjournal--with-safeFileVariable (&rest body)
   (setq enable-local-variables :all)
   (eval body)
   (setq enable-local-variables t))
 
-(defsubst bonjournal--getDate ()
-  (bonjournal--with-safeFileVariable
-   'hack-local-variables)
+(defun bonjournal--getDate ()
+  (hack-local-variables)
   (when (boundp 'date)
     (setq bonjournal--entryDate (calendar-absolute-from-gregorian (read date)))))
 
-(defsubst bonjournal--isNewDay ()
+(defun bonjournal--isNewDay ()
   (> (org-today) bonjournal--entryDate))
 
-(defsubst bonjournal--setDate ()
+(defun bonjournal--setDate ()
   (setq bonjournal--entryDate (org-today))
   (let ((date
 	 (format "%S" (calendar-gregorian-from-absolute bonjournal--entryDate))))
     (add-file-local-variable-prop-line 'date date)))
 
-(defsubst bonjournal--hasEntry ()
+(defun bonjournal--hasEntry ()
   (> (count-lines (point-min) (point-max)) 1))
 
-(defsubst bonjournal--onEntryLine ()
+(defun bonjournal--onEntryLine ()
   (looking-at bonjournal--entryTemplateRegex))
 
-(defsubst bonjournal--onEmptyLine ()
+(defun bonjournal--onEmptyLine ()
   (eq (point) (point-max)))
 
-(defsubst bonjournal--cleanLine ()
+(defun bonjournal--cleanLine ()
   (back-to-indentation)
   (when (or (bonjournal--onEmptyLine)
 	    (bonjournal--onEntryLine))
@@ -60,37 +61,44 @@
     (delete-char -1)
     t))
 
-(defsubst bonjournal--cleanLastEntry ()
+(defun bonjournal--cleanLastEntry ()
   (let ((lineCleaned t))
     (goto-char (point-max))
     (while lineCleaned
       (setq lineCleaned (bonjournal--cleanLine)))
     (goto-char (point-max))))
 
-(defsubst bonjournal--deleteEntries ()
+(defun bonjournal--deleteEntries ()
   (goto-char (point-min))
   (delete-region (line-beginning-position 2) (point-max)))
 
-(defsubst bonjournal--getEntries ()
+(defun bonjournal--getEntries ()
   (goto-char (point-min))
   (let ((secondLine (line-beginning-position 2)))
     (buffer-substring-no-properties secondLine (point-max))))
 
-(defsubst bonjournal--writingFail ()
+(defun bonjournal--writingFail ()
   (message "Filesize not increased. Maybe something went wrong")
-  (set-window-buffer (selected-window) (current-buffer)))
+  (set-window-buffer (selected-window) (current-buffer))
+  nil)
 
-(defsubst bonjournal--drivePush ()
-  (message "pushing bonjournal...")
-  (shell-command-to-string (concat "drive push " bonjournal--journal-file))
-  (message "done"))
+(defun bonjournal--drivePush ()
+  (let ((default-directory "~/cloud/dokumente/meinAll/monument/bonjournal/"))
+    (message "pushing bonjournal...")
+    (shell-command-to-string (concat "drive push "
+				     bonjournal--journal-file
+				     " " bonjournal--day-file))
+    (message "done")))
 
-(defsubst bonjournal--drivePull ()
-  (message "pulling bonjournal...")
-  (shell-command-to-string (concat "drive pull " bonjournal--journal-file))
-  (message "done"))
+(defun bonjournal--drivePull ()
+  (let ((default-directory "~/cloud/dokumente/meinAll/monument/bonjournal/"))
+    (message "pulling bonjournal...")
+    (shell-command-to-string (concat "drive push "
+				     bonjournal--journal-file
+				     " " bonjournal--day-file))
+    (message "done")))
 
-(defsubst bonjournal--writingSuccess ()
+(defun bonjournal--writingSuccess ()
   (setq require-final-newline nil)
   (save-buffer)
   (bonjournal--drivePush)
@@ -102,52 +110,73 @@
      ,@body
      (setq epa-file-cache-passphrase-for-symmetric-encryption nil)))
 
-(defsubst bonjournal--getDayPath ()
+(defun bonjournal--getDayPath ()
   (concat bonjournal-dir bonjournal--day-file))
 
-(defsubst bonjournal--getJournalPath ()
+(defun bonjournal--getJournalPath ()
   (concat bonjournal-dir bonjournal--journal-file))
 
-(defsubst bonjournal--writeToJournal (entry)
+(defun bonjournal--insertEntry (entry date)
+  (org-mode)
+  (org-datetree-find-date-create (calendar-gregorian-from-absolute date))
+  (goto-char (point-max))
+  (insert entry))
+
+(defun bonjournal--writeToJournal (entry)
   (bonjournal--with-enablePassCache
    (with-current-buffer (find-file (bonjournal--getJournalPath))
-    (let ((oldSize (buffer-size)))
-      (org-datetree-find-date-create (calendar-gregorian-from-absolute bonjournal--entryDate))
-      (goto-char (point-max))
-      (insert entry)
-      (if (> (buffer-size) oldSize)
-	  (bonjournal--writingSuccess)
-	(bonjournal--writingFail))))))
+     (let ((oldSize (buffer-size)))
+       (bonjournal--insertEntry entry bonjournal--entryDate)
+       (if (> (buffer-size) oldSize)
+	   (bonjournal--writingSuccess)
+	 (bonjournal--writingFail))))))
 
-(defsubst bonjournal--saveEntry ()
+(defun bonjournal--saveEntry ()
   (let ((entry (bonjournal--getEntries)))
-    (bonjournal--deleteEntries)
-    (save-buffer)
-    (bonjournal--writeToJournal entry)))
+    (when (bonjournal--writeToJournal entry)
+	(progn
+	  (bonjournal--deleteEntries)
+	  (save-buffer)))))
 
-(defsubst bonjournal--insertEntryTemplate ()
+(defun bonjournal--insertEntryTemplate ()
   (insert (format-time-string bonjournal-entryTemplate)))
 
-(defsubst bonjournal--displayBuffer ()
+(defun bonjournal--displayBuffer ()
   (set-window-start (selected-window) 1)
   (set-window-buffer (selected-window) (current-buffer))
   (delete-other-windows))
 
-(defsubst bonjournal--makeBuffer ()
+(defun bonjournal--makeBuffer ()
   (with-current-buffer (find-file (bonjournal--getDayPath))
-      (bonjournal--drivePull)
-      (bonjournal--enableModes)
-      (when (not (bonjournal--getDate))
-	(bonjournal--setDate))
-      (bonjournal--cleanLastEntry)
-      (when (and (bonjournal--isNewDay) (bonjournal--hasEntry))
-	  (bonjournal--saveEntry))
-      (bonjournal--insertEntryTemplate)
-      (bonjournal--displayBuffer)))
+    (bonjournal--enableModes)
+    (when (not (bonjournal--getDate))
+      (bonjournal--setDate))
+    (bonjournal--cleanLastEntry)
+    (when (and (bonjournal--isNewDay) (bonjournal--hasEntry))
+      (bonjournal--saveEntry))
+    (bonjournal--insertEntryTemplate)
+    (bonjournal--displayBuffer)))
 
 (defun bonjournal-new-entry ()
   (interactive)
-   (bonjournal--makeBuffer))
+  (bonjournal--drivePull)
+  (bonjournal--with-safeFileVariable
+   'bonjournal--makeBuffer))
+
+(defun bonjournal--parseNextHash ()
+  (search-forward "#")
+  (thing-at-point 'sexp t)
+  (bonjournal--parseNextHash))
+
+(defun bonjournal--parseHashes ()
+  (bonjournal--parseNextHash))
+
+(defun bonjournal--anaylizeEntry (entry)
+  (with-temp-buffer
+    (insert entry)
+    (goto-char (point-min))
+    (bonjournal--parseHashes)))
 
 (provide 'bonjournal)
 ;;; bonjournal.el ends here
+

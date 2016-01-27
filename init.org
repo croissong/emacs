@@ -1443,7 +1443,7 @@ maybe for linux
 (use-package bonjournal
   :init
   :config
-  (setq bonjournal-dir (concat meinAll-dir "monument/Bonjournal/"))
+  (setq bonjournal-dir (concat meinAll-dir "monument/bonjournal/"))
   )
 #+END_SRC
 *** Toutesuit
