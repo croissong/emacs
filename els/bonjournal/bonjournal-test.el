@@ -25,7 +25,13 @@
   (xt-note "diesdas")
   (xtd-setup= (lambda(_)
 		(bonjournal--insertEntry (getTestEntry 1) (org-today)))
-	      ("-!-" "\n* 2016\n** 2016-01 Januar\n*** 2016-01-27 Mittwoch\n<2016-01-27 Mi>\n/17:00/, *Je pense*\ns-!-")))
+	      ("-!-" (concat (getDatetreeEntry) "/17:00/, *Je pense*\ns-!-"))))
+
+(defun getDatetreeEntry ()
+  (with-temp-buffer
+    (org-mode)
+    (org-datetree-find-date-create (calendar-gregorian-from-absolute (org-today)))
+  (buffer-substring-no-properties (point-min) (point-max))))
 
 (defun xt-date (_)
   (bonjournal--setDate)
@@ -34,4 +40,16 @@
 (xt-deftest date
   (xt-note "Testing the insert procedure.")
     (xtd-return= 'xt-date
-		("" (org-today))))
+		("-!-" (org-today))))
+
+(xt-deftest hashAtPoint
+  (xt-note "Testing the insert procedure.")
+  (xtd-return= (lambda(_) (bonjournal--getHashAtPoint))
+	      ("#-!-sohn" "sohn")))
+
+(xt-deftest removeHash
+  (xt-note "nvm hashtag parsing is not working its weird this test is kinda useless")
+  (xtd-setup= (lambda(_)
+	        (bonjournal--removeHash))
+	      ("#-!-hash" "#-!-")))
+

@@ -1,0 +1,10 @@
+* TODO gpg key encryption
+instead of symmatric encription
+* TODO analyze hashtags
+** TODO parseHashes
+*** DONE simple sentence
+*** TODO Paragraph?
+** TODO save hashtags
+* TODO hashtag autocompletion
+* TODO hashtags groups
+** e.g. #todo / #foo.todo

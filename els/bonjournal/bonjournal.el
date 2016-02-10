@@ -165,8 +165,40 @@
 
 (defun bonjournal--parseNextHash ()
   (search-forward "#")
-  (thing-at-point 'sexp t)
-  (bonjournal--parseNextHash))
+  (let ((hash bonjournal--getHashAtPoint)
+	(content bonjournal--getHashContent))
+    (bonjournal--processHash hash content)
+  (bonjournal--parseNextHash)))
+
+(defun bonjournal--getHashAtPoint ()
+  (let ((hash (thing-at-point 'sexp t)))
+    (bonjournal--removeHash)
+    (setq hash (replace-regexp-in-string "#" "" hash))
+    hash))
+
+(defun bonjournal--getHashContent ()
+  (bonjournal--getHashSentence))
+
+(defun bonjournal--getHashSentence ()
+  (thing-at-point 'sentence))
+
+(defun bonjournal--processHash (hash content)
+  (let ((hashGroups (bonjournal--getHashGroups hash)))
+    (bonjournal--createHashEntry hash content hashgroups)))
+
+(defun bonjournal--createHashEntry (hash content groups)
+  (cond (bonjournal--isTodo groups))
+  )
+
+(defun bonjournal--getHashGroups (hash)
+  )
+
+(defun bonjournal--isTodo (groups)
+  (eq (last groups) "todo"))
+
+(defun bonjournal--removeHash ()
+   (let ((hashBounds (bounds-of-thing-at-point 'sexp)))
+  (delete-region (car hashBounds) (cdr hashBounds))))
 
 (defun bonjournal--parseHashes ()
   (bonjournal--parseNextHash))

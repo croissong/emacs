@@ -558,6 +558,16 @@ The Spacemacs Modeline
 :ensure t
 )
 #+END_SRC
+*** aggressive-indent
+[[https://github.com/Malabarba/aggressive-indent-mode][@github.com]]
+#+BEGIN_SRC emacs-lisp
+(use-package aggressive-indent
+  :init
+  (global-aggressive-indent-mode 1)
+  :bind
+  :config
+  :ensure t)
+#+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (when (eq system-type 'windows-nt)
@@ -1025,7 +1035,8 @@ The template may still contain \"%?\" for cursor positioning."
  '((latex . t)
    (python . t)
    (gnuplot . t)
-   (sh . t)))
+   (sh . t)
+   (sql . t)))
 #+END_SRC
 **** Passwords
 #+BEGIN_SRC emacs-lisp
@@ -1210,6 +1221,7 @@ https://github.com/elixir-lang/emacs-elixir
 #+BEGIN_SRC emacs-lisp
 (use-package elixir-mode
   :init
+  :bind (("C-c C-c" . alchemist-eval-buffer))
   :config
   :ensure t
 )
