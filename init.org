@@ -19,9 +19,14 @@
    ("melpa" . "http://melpa.milkbox.net/packages/")
    ("elpy" . "https://jorgenschaefer.github.io/packages/")
    ("org" . "http://orgmode.org/elpa/")))
-(let ((default-directory "~/.emacs.d/els/"))
+#+END_SRC
+** Els
+#+BEGIN_SRC emacs-lisp
+(let ((default-directory "~/.emacs.d/els/")
+      (byte-compile-verbose nil))
+  (byte-recompile-directory default-directory)
   (normal-top-level-add-subdirs-to-load-path))
-(package-initialize)
+  (package-initialize)
 #+END_SRC
 ** Bootstrap use-package
 #+BEGIN_SRC emacs-lisp

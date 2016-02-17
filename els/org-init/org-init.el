@@ -5,12 +5,6 @@
 (defvar org-init--temp-file (concat user-emacs-directory "init_temp.el"))
 (defvar org-init--compiled-file (concat user-emacs-directory "init.elc"))
 
-(when (and (file-exists-p org-init--compiled-file) (org-file-newer?))
-  (org-init-compile))
-
-(defun org-file-newer? ()
-  (file-newer-than-file-p org-init--file org-init--compiled-file))
-
 (defsubst org-init--make-keymap ()
   (let ((keymap (make-keymap)))
     (define-key keymap (kbd "C-t C-c") 'org-init-compile)
@@ -26,7 +20,7 @@
 (defun org-init-compile ()
   (interactive)
   (org-init--tangle)
-  (byte-compile-file org-init--temp-file t)
+  (byte-compile-file org-init--temp-file)
   (rename-file (concat org-init--temp-file "c")
 	       org-init--compiled-file
 	       t)
@@ -41,6 +35,12 @@
   (with-current-buffer (find-file org-init--file)
     (org-init--mode 1)
     (diminish 'org-init--mode)))
+
+(when (and (file-exists-p org-init--compiled-file)
+	   (not (file-exists-p org-init--temp-file))
+	   (file-newer-than-file-p org-init--file org-init--compiled-file))
+  (org-init-compile))
+
 (provide 'org-init)
 
 ;;; org-init.el ends here
