@@ -3,6 +3,10 @@
 (require 'org)
 (defvar org-init--file (concat user-emacs-directory "init.org"))
 (defvar org-init--temp-file (concat user-emacs-directory "init_temp.el"))
+(defvar org-init--compiled-file (concat user-emacs-directory "init.elc"))
+
+(when (file-newer-than-file-p org-init--file org-init--compiled-file)
+  (org-init-compile))
 
 (defsubst org-init--make-keymap ()
   (let ((keymap (make-keymap)))
@@ -13,13 +17,15 @@
   "for save and tangle "
   nil " stc" (org-init--make-keymap))
 
+(defun org-init--tangle ()
+  (org-babel-tangle-file org-init--file org-init--temp-file))
 
 (defun org-init-compile ()
   (interactive)
-  (org-babel-tangle-file org-init--file org-init--temp-file)
+  (org-init--tangle)
   (byte-compile-file org-init--temp-file t)
-  (rename-file (concat user-emacs-directory "init_temp.elc")
-	       (concat user-emacs-directory "init.elc")
+  (rename-file (concat org-init--temp-file "c")
+	       org-init--compiled-file
 	       t)
   (delete-file org-init--temp-file))
 
