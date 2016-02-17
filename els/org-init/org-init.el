@@ -5,8 +5,11 @@
 (defvar org-init--temp-file (concat user-emacs-directory "init_temp.el"))
 (defvar org-init--compiled-file (concat user-emacs-directory "init.elc"))
 
-(when (file-newer-than-file-p org-init--file org-init--compiled-file)
+(when (and (file-exists-p org-init--compiled-file) (org-file-newer?))
   (org-init-compile))
+
+(defun org-file-newer? ()
+  (file-newer-than-file-p org-init--file org-init--compiled-file))
 
 (defsubst org-init--make-keymap ()
   (let ((keymap (make-keymap)))
