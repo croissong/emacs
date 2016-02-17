@@ -1,3 +1,7 @@
+* TODO fix #important
+Pushing und writing in bonjournal gpg hat geklappt, cleaning up day.org and isnert new date nicht
+* TODO add save now
+* TODO add save with confirmations
 * TODO gpg key encryption
 instead of symmatric encription
 * TODO analyze hashtags

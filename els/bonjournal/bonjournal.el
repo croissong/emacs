@@ -139,6 +139,7 @@
 	  (save-buffer)))))
 
 (defun bonjournal--insertEntryTemplate ()
+  (goto-char (point-max))
   (insert (format-time-string bonjournal-entryTemplate)))
 
 (defun bonjournal--displayBuffer ()
