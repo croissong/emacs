@@ -474,6 +474,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   ;; use eslint with web-mode for jsx files
   (flycheck-add-mode 'javascript-eslint 'web-mode)
 
+  ;;https://github.com/justjake/eslint-project-relative
+  (my-util-installed?
+   "eslint-project-relative"
+   (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
   ;; customize flycheck temp file prefix
   (setq-default flycheck-temp-prefix ".flycheck")
   :ensure t
@@ -591,6 +595,7 @@ The Spacemacs Modeline
 #+BEGIN_SRC emacs-lisp
 (use-package aggressive-indent
   :init
+  (setq-default indent-tabs-mode nil)
   (global-aggressive-indent-mode 1)
   :bind
   :config
@@ -1455,14 +1460,15 @@ maybe for linux
 #+END_SRC
 *** Exercism
 #+BEGIN_SRC emacs-lisp
-(my-util-ifInstalled "exercism"
-    (use-package exercism
-      :no-require t
-      :init
-      :config
-      (if (my-util-win?)
-	  (setq *exercism-cmd*
-		(shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe")))))
+(my-util-installed?
+ "exercism"
+ (use-package exercism
+   :no-require t
+   :init
+   :config
+   (if (my-util-win?)
+       (setq *exercism-cmd*
+             (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe")))))
 #+END_SRC
 ** Dev
 *** Namespaces elisp
