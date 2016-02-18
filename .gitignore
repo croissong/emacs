@@ -20,3 +20,4 @@ projectile-bookmarks.eld
 test.el
 scratch/
 *.elc
+/org-init.el

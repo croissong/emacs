@@ -1,9 +1,10 @@
-;;; org-init.el --- Write journal in emacs org-mode  -*- lexical-binding: t; -*-
+;;; org-init.el --- Write init in emacs org-mode  -*- lexical-binding: t; -*-
 
 (require 'org)
+
 (defvar org-init--file (concat user-emacs-directory "init.org"))
-(defvar org-init--temp-file (concat user-emacs-directory "init_temp.el"))
-(defvar org-init--compiled-file (concat user-emacs-directory "init.elc"))
+(defvar org-init--el-file (concat user-emacs-directory "org-init.el"))
+(defvar org-init--elc-file (concat org-init--el-file "c"))
 
 (defsubst org-init--make-keymap ()
   (let ((keymap (make-keymap)))
@@ -15,16 +16,17 @@
   nil " stc" (org-init--make-keymap))
 
 (defun org-init--tangle ()
-  (org-babel-tangle-file org-init--file org-init--temp-file))
+  (org-babel-tangle-file org-init--file org-init--el-file))
 
 (defun org-init-compile ()
   (interactive)
-  (org-init--tangle)
-  (byte-compile-file org-init--temp-file)
-  (rename-file (concat org-init--temp-file "c")
-	       org-init--compiled-file
-	       t)
-  (delete-file org-init--temp-file))
+  (when (org-init--need-compile?)
+    (org-init--tangle)
+    (byte-compile-file org-init--el-file)))
+
+(defun org-init--need-compile? ()
+  (or (not (file-exists-p org-init--elc-file))
+      (file-newer-than-file-p org-init--file org-init--elc-file)))
 
 (defun org-init-git ()
   (interactive)
@@ -35,11 +37,6 @@
   (with-current-buffer (find-file org-init--file)
     (org-init--mode 1)
     (diminish 'org-init--mode)))
-
-(when (and (file-exists-p org-init--compiled-file)
-	   (not (file-exists-p org-init--temp-file))
-	   (file-newer-than-file-p org-init--file org-init--compiled-file))
-  (org-init-compile))
 
 (provide 'org-init)
 

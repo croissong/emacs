@@ -23,8 +23,8 @@
 ** Els
 #+BEGIN_SRC emacs-lisp
 (let ((default-directory "~/.emacs.d/els/")
-      (byte-compile-verbose nil))
-  (byte-recompile-directory default-directory)
+      (message-log-max nil))
+  (byte-recompile-directory default-directory 0)
   (normal-top-level-add-subdirs-to-load-path))
   (package-initialize)
 #+END_SRC
@@ -252,20 +252,19 @@ Linewrap
 #+BEGIN_SRC emacs-lisp
 (use-package drag-stuff
   :init
-  ;; if chromebook
-  (if (file-exists-p "/etc/crouton/name")
-      (bind-keys ("M-<prior>" . drag-stuff-up)
-		 ("M-<next>" . drag-stuff-down)
-		 ;; ("M-right" . drag-stuff-right)
-		 ;; ("M-right" . drag-stuff-left)
-		 )
-    )
+  (when (my-util-cb?)
+    (bind-keys :map drag-stuff-mode-map
+	       ("M-S-<prior>" . drag-stuff-up)
+	       ("M-S-<next>" . drag-stuff-down)
+	       ;; ("M-right" . drag-stuff-right)
+	       ;; ("M-right" . drag-stuff-left))
+	       ))
   :config
   (add-to-list 'drag-stuff-except-modes 'org-mode)
-  (drag-stuff-global-mode t)
+  (drag-stuff-global-mode)
   :ensure t
   :diminish drag-stuff-mode
-)
+  )
 #+END_SRC
 *** YASnippet
 #+BEGIN_SRC emacs-lisp
@@ -460,6 +459,32 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :config
   :ensure t
 )
+#+END_SRC
+*** Flycheck
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck
+  :init
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  :config
+  ;; disable jshint since we prefer eslint checking
+  (setq-default flycheck-disabled-checkers
+		(append flycheck-disabled-checkers
+			'(javascript-jshint)))
+
+  ;; use eslint with web-mode for jsx files
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
+
+  ;; customize flycheck temp file prefix
+  (setq-default flycheck-temp-prefix ".flycheck")
+  :ensure t
+  )
+#+END_SRC
+**** disable in org-src-block
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-src-mode-hook
+	  (lambda () (setq-local
+		      flycheck-disabled-checkers
+		      '(emacs-lisp-checkdoc))))
 #+END_SRC
 *** ido
 #+BEGIN_SRC emacs-lisp
@@ -1142,12 +1167,23 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 #+END_SRC
 *** Keybindings
 #+BEGIN_SRC emacs-lisp
-(bind-key "<return>" 'org-return-indent org-mode-map)
-(bind-key "M-S-<delete>" 'my/org-delete-heading-or-line org-mode-map)
-(bind-key "C-M-<left>" 'org-backward-sentence org-mode-map)
-(bind-key "C-M-<right>" 'org-forward-sentence org-mode-map)
-(bind-key "C-M-<end>" 'org-sentence-newline org-mode-map)
-(bind-key "C-c C-l" 'my/insert-link org-mode-map)
+(bind-keys :map org-mode-map
+("<return>" . org-return-indent)
+("M-S-<delete>" . my/org-delete-heading-or-line)
+("C-M-<left>" . org-backward-sentence)
+("C-M-<right>" . org-forward-sentence)
+("C-M-<end>" . org-sentence-newline)
+("C-c C-l" . my/insert-link))
+#+END_SRC
+**** chromebook
+#+BEGIN_SRC emacs-lisp
+(when (my-util-cb?)
+    (bind-keys :map org-mode-map
+	       ("M-S-<prior>" . org-shiftmetaup)
+	       ("M-S-<next>" . org-shiftmetadown)
+	       ;; ("M-right" . drag-stuff-right)
+	       ;; ("M-right" . drag-stuff-left)
+	       ))
 #+END_SRC
 *** MeinAll
 **** Functions
@@ -1437,7 +1473,6 @@ maybe for linux
   :config
   (setq nameless-private-prefix t)
   :ensure t
-  :pin melpa
 )
 #+END_SRC
 *** Testing
