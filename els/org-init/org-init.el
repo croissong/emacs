@@ -1,7 +1,7 @@
 ;;; org-init.el --- Write init in emacs org-mode  -*- lexical-binding: t; -*-
-
+;;; Commentary: 
 (require 'org)
-
+;;; Code:
 (defvar org-init--file (concat user-emacs-directory "init.org"))
 (defvar org-init--el-file (concat user-emacs-directory "org-init.el"))
 (defvar org-init--elc-file (concat org-init--el-file "c"))
@@ -22,7 +22,9 @@
   (interactive)
   (when (org-init--need-compile?)
     (org-init--tangle)
-    (byte-compile-file org-init--el-file)))
+    (message "compiling file..")
+    (byte-compile-file org-init--el-file)
+    (message "done compiling")))
 
 (defun org-init--need-compile? ()
   (or (not (file-exists-p org-init--elc-file))

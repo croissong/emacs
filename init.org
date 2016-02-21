@@ -30,18 +30,22 @@
 #+END_SRC
 ** Bootstrap use-package
 #+BEGIN_SRC emacs-lisp
+(message "1")
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+(message "2")
 (require 'cl-lib)
 (require 'use-package)
 (require 'bind-key)
 #+END_SRC
 ** Org-init
 #+BEGIN_SRC emacs-lisp
+(message "3")
 (use-package org-init
   :init
   :config)
+(message "4")
 (use-package my-util
   :init
   :config)
@@ -119,7 +123,7 @@
 #+BEGIN_SRC emacs-lisp
 (setq ring-bell-function 'ignore)
 (delete-selection-mode 1)
-(setq toggle-debug-on-error t)
+(setq debug-on-error t)
 (setq backup-inhibited 1)
 ;; http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3
 
@@ -131,25 +135,6 @@
       '(("*Async Shell Command*" . (display-buffer-no-window))))
 #+END_SRC
 * Style
-** Font
-Fantasque Sans Mono
-#+BEGIN_SRC emacs-lisp
-(if (my-util-cb?)
-    (add-to-list 'default-frame-alist '(font . "Fantasque Sans Mono 15"))
-    ;; (setq initial-frame-alist (font . "Fantasque Sans Mono"))
-    (add-to-list 'default-frame-alist '(font . "Fantasque Sans Mono")))
-#+END_SRC 
-** Mode-line
-#+BEGIN_SRC emacs-lisp
-;; (set-face-attribute 'mode-line nil :height 135 :foreground "#28a428" :background "#2a2a28")
-;; (set-face-attribute 'mode-line-inactive nil :height 135 :foreground "#995400" :background "#2a2a28")
-#+END_SRC
-** Cursor
-#+BEGIN_SRC emacs-lisp
-(set-face-attribute 'region nil :background "darkblue")
-(set-cursor-color "black")
-(setq-default cursor-type 'bar)
-#+END_SRC
 ** Frame
 #+BEGIN_SRC emacs-lisp
 (menu-bar-mode -1) 
@@ -173,6 +158,25 @@ Fantasque Sans Mono
       (set-face-attribute 'vertical-border nil :foreground "bisque4"))
     )
 (scroll-bar-mode -1)
+#+END_SRC
+** Font
+Fantasque Sans Mono
+#+BEGIN_SRC emacs-lisp
+(if (my-util-cb?)
+    (add-to-list 'default-frame-alist '(font . "Fantasque Sans Mono 15"))
+    ;; (setq initial-frame-alist (font . "Fantasque Sans Mono"))
+    (add-to-list 'default-frame-alist '(font . "Fantasque Sans Mono")))
+#+END_SRC 
+** Mode-line
+#+BEGIN_SRC emacs-lisp
+;; (set-face-attribute 'mode-line nil :height 135 :foreground "#28a428" :background "#2a2a28")
+;; (set-face-attribute 'mode-line-inactive nil :height 135 :foreground "#995400" :background "#2a2a28")
+#+END_SRC
+** Cursor
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'region nil :background "darkblue")
+(set-cursor-color "black")
+(setq-default cursor-type 'bar)
 #+END_SRC
 ** Generic
 Linewrap
@@ -252,6 +256,7 @@ Linewrap
 #+BEGIN_SRC emacs-lisp
 (use-package drag-stuff
   :init
+  :config
   (when (my-util-cb?)
     (bind-keys :map drag-stuff-mode-map
 	       ("M-S-<prior>" . drag-stuff-up)
@@ -259,7 +264,6 @@ Linewrap
 	       ;; ("M-right" . drag-stuff-right)
 	       ;; ("M-right" . drag-stuff-left))
 	       ))
-  :config
   (add-to-list 'drag-stuff-except-modes 'org-mode)
   (drag-stuff-global-mode)
   :ensure t
