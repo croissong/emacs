@@ -359,6 +359,7 @@ https://github.com/lukhas/buffer-move
 (add-hook 'after-init-hook 'global-company-mode)
 (define-key company-active-map (kbd "C-ä") 'company-select-next)
 (define-key company-active-map (kbd "C-ü") 'company-select-previous)
+(setq company-dabbrev-downcase nil)
 )
 #+END_SRC
 
@@ -1420,7 +1421,9 @@ https://github.com/tonini/alchemist.el
   :config
   (setq web-mode-code-indent-offset 2)
   (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-attr-indent-offset nil)
+  (setq web-mode-attr-indent-offset 2)
+  (setq web-mode-attr-value-indent-offset 0)
+  (setq web-mode-css-indent-offset 2)
   :ensure t
   )
 #+END_SRC
@@ -1521,7 +1524,14 @@ maybe for linux
   :config
   (setq toutesuit-file (concat meinAll-dir "lookingGlass/toutesuit.org")))
 #+END_SRC
-
+** Cygwin
+*** Cygwin-Mount
+#+BEGIN_SRC emacs-lisp
+(setenv "PATH" (concat "c:/cygwin64/bin;" (getenv "PATH")))
+(setq exec-path (cons "c:/cygwin64/bin/" exec-path))
+(require 'cygwin-mount)
+(cygwin-mount-activate)
+#+END_SRC
 * Functions
 ** Html-to-React
 #+BEGIN_SRC emacs-lisp
