@@ -359,6 +359,7 @@ https://github.com/lukhas/buffer-move
 (add-hook 'after-init-hook 'global-company-mode)
 (define-key company-active-map (kbd "C-ä") 'company-select-next)
 (define-key company-active-map (kbd "C-ü") 'company-select-previous)
+(setq company-dabbrev-downcase nil)
 )
 #+END_SRC
 
@@ -466,26 +467,26 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 *** Flycheck
 #+BEGIN_SRC emacs-lisp
-(use-package flycheck
-  :init
-  (add-hook 'after-init-hook #'global-flycheck-mode)
-  :config
-  ;; disable jshint since we prefer eslint checking
-  (setq-default flycheck-disabled-checkers
-		(append flycheck-disabled-checkers
-			'(javascript-jshint)))
+  (use-package flycheck
+    :init
+    ;;(add-hook 'after-init-hook #'global-flycheck-mode)
+    :config
+    ;; disable jshint since we prefer eslint checking
+    (setq-default flycheck-disabled-checkers
+                  (append flycheck-disabled-checkers
+                          '(javascript-jshint)))
 
-  ;; use eslint with web-mode for jsx files
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
+    ;; use eslint with web-mode for jsx files
+    (flycheck-add-mode 'javascript-eslint 'web-mode)
 
-  ;;https://github.com/justjake/eslint-project-relative
-  (my-util-installed?
-   "eslint-project-relative"
-   (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
-  ;; customize flycheck temp file prefix
-  (setq-default flycheck-temp-prefix ".flycheck")
-  :ensure t
-  )
+    ;;https://github.com/justjake/eslint-project-relative
+    ;; (my-util-installed?
+     ;; "eslint-project-relative"
+     ;; (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
+    ;; customize flycheck temp file prefix
+    (setq-default flycheck-temp-prefix ".flycheck")
+    :ensure t
+    )
 #+END_SRC
 **** disable in org-src-block
 #+BEGIN_SRC emacs-lisp
@@ -586,14 +587,6 @@ The Spacemacs Modeline
   :ensure t
   )
 #+END_SRC
-*** Floobits
-#+BEGIN_SRC emacs-lisp
-(use-package floobits
-:init
-:config
-:ensure t
-)
-#+END_SRC
 *** aggressive-indent
 [[https://github.com/Malabarba/aggressive-indent-mode][@github.com]]
 #+BEGIN_SRC emacs-lisp
@@ -630,6 +623,7 @@ The Spacemacs Modeline
   (diminish 'org-indent-mode)
   :ensure t
 )
+(use-package bitly :ensure t)
 #+END_SRC
 *** Config
 #+BEGIN_SRC emacs-lisp
@@ -1118,6 +1112,7 @@ The template may still contain \"%?\" for cursor positioning."
  `(org-block-begin-line ((t (:foreground ,"#446a5d"))))
  `(org-block-end-line ((t (:foreground ,"#446a5d"))))
  )
+ (setq org-use-sub-superscripts nil)
 #+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp
@@ -1269,19 +1264,22 @@ https://github.com/elixir-lang/emacs-elixir
 #+BEGIN_SRC emacs-lisp
 (use-package elixir-mode
   :init
-  :bind (("C-c C-c" . alchemist-eval-buffer))
   :config
   :ensure t
-)
+  )
 #+END_SRC
 **** Alchemist
 https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (use-package alchemist
   :init
+  ;:bind (:map alchemist-mode-keymap
+;	      ("C-c C-c" . alchemist-eval-buffer))
   :config
+(bind-keys :map alchemist-mode-keymap
+	       ("c" . alchemist-eval-buffer))
   :ensure t
-)
+  )
 #+END_SRC
 *** Markdown
 #+BEGIN_SRC emacs-lisp
@@ -1420,7 +1418,7 @@ https://github.com/tonini/alchemist.el
   :config
   (setq web-mode-code-indent-offset 2)
   (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-attr-indent-offset nil)
+  (setq web-mode-attr-indent-offset 2)
   :ensure t
   )
 #+END_SRC
