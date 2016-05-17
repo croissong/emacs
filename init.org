@@ -38,14 +38,13 @@
  #+END_SRC
 ** Org-init
 #+BEGIN_SRC emacs-lisp
-(req-package org-init
+(req-package-force org-init
 :load-path "els/org-init/")
-(when (org-init--recompile)
-  (signal 'quit nil))
+(org-init-recompile)
 #+END_SRC
 ** My/Utils
 #+BEGIN_SRC emacs-lisp
-(req-package my-util
+(req-package-force my-util
 :load-path "els/my-utils/")
 #+END_SRC
 * Keybindings
@@ -123,7 +122,6 @@
 #+BEGIN_SRC emacs-lisp
 (setq ring-bell-function 'ignore)
 (delete-selection-mode 1)
-(setq debug-on-error t)
 (setq backup-inhibited 1)
 ;; http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3
 
@@ -520,7 +518,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
                                                 "*vc-diff*") 
                                             eos))))) 
 
-(add-to-list 'ido-ignore-files "\\`media/")
+;;(add-to-list 'ido-ignore-files "\\`media/")
 #+END_SRC
 **** flx-ido
 #+BEGIN_SRC emacs-lisp
@@ -1073,7 +1071,7 @@ The template may still contain \"%?\" for cursor positioning."
 #+END_SRC
 **** Latex
 #+BEGIN_SRC emacs-lisp
-(require 'ox-latex)
+;;(require 'ox-latex)
 (unless (boundp 'org-latex-classes)
   (setq org-latex-classes nil))
 (add-to-list 'org-latex-classes
@@ -1417,7 +1415,6 @@ https://github.com/tonini/alchemist.el
 #+END_SRC
 *** Elisp
 #+BEGIN_SRC emacs-lisp
-(setq toggle-debug-on-error nil)
 (setq lisp-indent-function 'common-lisp-indent-function)
 (bind-key "C-h C-f" 'find-function-at-point emacs-lisp-mode-map)
 (bind-key "C-h C-v" 'find-variable-at-point emacs-lisp-mode-map)
@@ -1476,14 +1473,14 @@ maybe for linux
 )
 #+END_SRC
 ** Other
-*** Sqlite
-#+BEGIN_SRC emacs-lisp
+*** Sqlite [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package esqlite
   :init
   :config
 )
 #+END_SRC
-*** Sql-Indnet
+*** Sql-Indent
 #+BEGIN_SRC emacs-lisp
 (req-package sql-indent
   :init
@@ -1518,6 +1515,10 @@ maybe for linux
                :load-path "els/cygwin/"
                :init (cygwin-mount-activate)
                ))
+#+END_SRC
+** Finish req-package
+#+BEGIN_SRC emacs-lisp
+(req-package-finish)
 #+END_SRC
 * Functions
 ** Html-to-React

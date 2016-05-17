@@ -18,14 +18,15 @@
 (defun org-init--tangle ()
   (org-babel-tangle-file org-init--file org-init--el-file))
 
-(defun org-init-recompile () 
+(defun org-init-recompile ()
+  (interactive)
   (if (org-init--need-compile?)
       (progn
         (org-init--tangle)
         (message "compiling file...")
-        (let ((byte-compile-dest-file-function (lambda (x) org-init--elc-file)))
-          (byte-compile-file org-init--el-file t))
-        (message "compiled and loaded"))
+	(byte-compile-file org-init--el-file)
+	(rename-file (concat org-init--el-file "c") org-init--elc-file t)
+        (message "compiled, will be loaded next time"))
     (message "no need to recompile")
     nil))
 

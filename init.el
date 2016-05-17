@@ -15,7 +15,7 @@
  '(ediff-window-setup-function (quote ediff-setup-windows-plain))
  '(package-selected-packages
    (quote
-    (req-package request-deferred neotree company-web bitly xtest window-purpose web-mode use-package undo-tree ssh-agency spaceline soft-stone-theme smex smartparens scss-mode projectile org-plus-contrib navi-mode nameless multiple-cursors markdown-mode magit js2-mode htmlize google-translate flx-ido floobits expand-region evil-nerd-commenter esqlite elpy ein drag-stuff dired+ coffee-mode centered-window-mode buffer-move auto-package-update auctex alchemist aggressive-indent adaptive-wrap))))
+    (req-package xtest window-purpose web-mode use-package undo-tree ssh-agency spaceline soft-stone-theme smex smartparens scss-mode projectile org-plus-contrib navi-mode nameless multiple-cursors markdown-mode magit js2-mode htmlize google-translate flycheck flx-ido floobits expand-region evil-nerd-commenter esqlite elpy ein drag-stuff dired+ coffee-mode centered-window-mode buffer-move auto-package-update auctex alchemist aggressive-indent adaptive-wrap))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
