@@ -270,8 +270,8 @@ Linewrap
   :diminish drag-stuff-mode
   )
 #+END_SRC
-*** YASnippet
-#+BEGIN_SRC emacs-lisp
+*** YASnippet [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package yasnippet
   :init
   (setq yas-verbosity 2)
@@ -1461,6 +1461,7 @@ maybe for linux
 	 (:connection-type . ssl)
 	 (:port . 5223))))
 #+END_SRC
+*** Hungry-delete
 ** Els
 #+BEGIN_SRC emacs-lisp
 (use-package spell-number)
