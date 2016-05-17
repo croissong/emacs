@@ -12,42 +12,44 @@
 ** Initialize package.el
 #+BEGIN_SRC emacs-lisp
 (require 'package)
-(setq package-enable-at-startup nil)
-(setq package-archives
-'( ("gnu" . "http://elpa.gnu.org/packages/")
-   ("melpa" . "http://melpa.milkbox.net/packages/")
-   ("elpy" . "https://jorgenschaefer.github.io/packages/")
-   ("org" . "http://orgmode.org/elpa/")))
+(setq package-enable-at-startup nil
+      package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("melpa" . "http://melpa.milkbox.net/packages/")
+                         ("elpy" . "https://jorgenschaefer.github.io/packages/")
+                         ("org" . "http://orgmode.org/elpa/"))
+      load-prefer-newer t)
+(package-initialize)
 #+END_SRC
-** Els
+** Bootstrap req-package
 #+BEGIN_SRC emacs-lisp
-(setq load-prefer-newer t)
-  (package-initialize)
-#+END_SRC
-** Bootstrap use-package
-#+BEGIN_SRC emacs-lisp
-(message "1")
 (unless (package-installed-p 'req-package)
   (package-refresh-contents)
   (package-install 'req-package))
-(message "2")
 (require 'cl-lib)
 (require 'req-package)
 (require 'bind-key)
 #+END_SRC
+** Auto-Compile
+ [[https://github.com/tarsius/auto-compile][@github]]
+ #+BEGIN_SRC emacs-lisp :tangle no
+ (req-package auto-compile
+   :init (auto-compile-on-load-mode)
+ )
+ #+END_SRC
 ** Org-init
 #+BEGIN_SRC emacs-lisp
-(message "3")
 (req-package org-init
-  :init
-  :config)
-(message "4")
-(req-package my-util
-  :init
-  :config)
+:load-path "els/org-init/")
+(when (org-init--recompile)
+  (signal 'quit nil))
 #+END_SRC
-** Keybindings
-*** Minor Mode Init
+** My/Utils
+#+BEGIN_SRC emacs-lisp
+(req-package my-util
+:load-path "els/my-utils/")
+#+END_SRC
+* Keybindings
+** Minor Mode Init
 #+BEGIN_SRC emacs-lisp
 (defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
 (define-minor-mode my-keys-minor-mode
@@ -57,16 +59,16 @@
 (my-keys-minor-mode 1)
 (diminish 'my-keys-minor-mode)
 #+END_SRC
-*** Keybindings
-**** Moving
-***** Between Windows
+** Keybindings
+*** Moving
+**** Between Windows
 #+BEGIN_SRC emacs-lisp
 (bind-key "C-ö" 'windmove-left my-keys-minor-mode-map)
 (bind-key "C-#" 'windmove-right my-keys-minor-mode-map)
 (bind-key "C-ü" 'windmove-up my-keys-minor-mode-map)
 (bind-key "C-ä" 'windmove-down my-keys-minor-mode-map)
 #+END_SRC
-**** hm
+*** hm
 #+BEGIN_SRC emacs-lisp
 (bind-keys :map my-keys-minor-mode-map
 	   ("C-M-k" . kill-this-buffer)
@@ -75,8 +77,8 @@
 (bind-keys ("C-<return>" . new-line-below)
 	   ("M-<return>" . new-line-above))
 #+END_SRC
-** Generic
-*** My Values
+* Generic
+** My Values
 #+BEGIN_SRC emacs-lisp
 (setq default-directory "~/")
 (defvar gdrive-dir (concat default-directory "cloud/"))
@@ -86,7 +88,7 @@
 (my-util-ensureEmacsDir "save/autosave")
 (my-util-ensureEmacsDir "save/backup")
 #+END_SRC
-**** Backup
+*** Backup
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
 #+BEGIN_SRC emacs-lisp
 (setq delete-old-versions t
@@ -96,16 +98,16 @@
   version-control t
   backup-directory-alist '((".*" . "~/.emacs.d/save/backup/")))
 #+END_SRC
-**** Autosave
+*** Autosave
 #+BEGIN_SRC emacs-lisp
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 #+END_SRC
-*** Start-Up
+** Start-Up
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-screen t)
 (add-hook 'emacs-startup-hook (lambda () (kill-buffer "*scratch*")))
 #+END_SRC
-*** Coding Environment
+** Coding Environment
 [[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
 #+BEGIN_SRC emacs-lisp
 (prefer-coding-system 'utf-8)
@@ -127,7 +129,7 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
-*** What does it do?
+** What does it do?
 #+BEGIN_SRC emacs-lisp
 (setq display-buffer-alist
       '(("*Async Shell Command*" . (display-buffer-no-window))))
@@ -244,13 +246,6 @@ Linewrap
    :bind
    :config
    ;;(auto-package-update-now)
- )
- #+END_SRC
-*** Auto-Compile
- [[https://github.com/tarsius/auto-compile][@github]]
- #+BEGIN_SRC emacs-lisp :tangle no
- (req-package auto-compile
-   :init (auto-compile-on-save-mode)
  )
  #+END_SRC
 ** Minor Modes
@@ -1067,8 +1062,9 @@ The template may still contain \"%?\" for cursor positioning."
 **** Passwords
 #+BEGIN_SRC emacs-lisp
 (req-package org-passwords
-  :config
-  (setq org-passwords-file (concat meinAll-dir  "monument/lesMysteres.gpg")))
+             :load-path "els/org-passwords/"
+             :config (setq org-passwords-file (expand-file-name meinAll-dir
+                                                                "monument/lesMysteres.gpg")))
 #+END_SRC
 **** Encryption
 #+BEGIN_SRC  emacs-lisp
@@ -1446,20 +1442,20 @@ maybe for linux
 #+END_SRC
 *** Hungry-delete
 ** Els
+*** Spell-number
 #+BEGIN_SRC emacs-lisp
-(req-package spell-number)
+(req-package spell-number
+             :load-path "els/spell-number/")
 #+END_SRC
 *** Exercism
 #+BEGIN_SRC emacs-lisp
-(my-util-installed?
- "exercism"
- (req-package exercism
-   :no-require t
-   :init
-   :config
-   (if (my-util-win?)
-       (setq *exercism-cmd*
-             (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe")))))
+(my-util-installed? "exercism"
+                    (req-package exercism
+                                 :load-path "els/exercism/"
+                                 :no-require t
+                                 :config (when (my-util-win?)
+                                           (setq *exercism-cmd*
+                                                 (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe")))))
 #+END_SRC
 ** Dev
 *** Namespaces elisp
@@ -1499,18 +1495,18 @@ maybe for linux
 [[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (req-package bonjournal
-  :init
-  :config
-  (setq bonjournal-dir (concat meinAll-dir "monument/bonjournal/"))
-  )
+             :load-path "els/bonjournal/"
+             :config (setq bonjournal-dir (expand-file-name meinAll-dir
+                                                            "monument/bonjournal/"))
+             )
 #+END_SRC
 *** Toutesuit
 [[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (req-package toutesuit
-  :init
-  :config
-  (setq toutesuit-file (concat meinAll-dir "lookingGlass/toutesuit.org")))
+             :load-path "els/toutesuit/"
+             :config (setq toutesuit-file (expand-file-name
+                                           meinAll-dir "lookingGlass/toutesuit.org")))
 #+END_SRC
 ** Cygwin
 *** Cygwin-Mount
@@ -1518,8 +1514,10 @@ maybe for linux
 (if (my-util-win?)
     (setenv "PATH" (concat "c:/cygwin64/bin;" (getenv "PATH")))
   (setq exec-path (cons "c:/cygwin64/bin/" exec-path))
-  (require 'cygwin-mount)
-  (cygwin-mount-activate))
+  (req-package 'cygwin-mount
+               :load-path "els/cygwin/"
+               :init (cygwin-mount-activate)
+               ))
 #+END_SRC
 * Functions
 ** Html-to-React

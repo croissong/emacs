@@ -2,9 +2,9 @@
 ;;; Commentary: 
 (require 'org)
 ;;; Code:
-(defvar org-init--file (concat user-emacs-directory "init.org"))
-(defvar org-init--el-file (concat user-emacs-directory "org-init.el"))
-(defvar org-init--elc-file (concat org-init--el-file "c"))
+(defvar org-init--file (expand-file-name "init.org" user-emacs-directory))
+(defvar org-init--el-file (expand-file-name "org-init.el" user-emacs-directory))
+(defvar org-init--elc-file (expand-file-name "init.elc" user-emacs-directory))
 
 (defsubst org-init--make-keymap ()
   (let ((keymap (make-keymap)))
@@ -18,21 +18,20 @@
 (defun org-init--tangle ()
   (org-babel-tangle-file org-init--file org-init--el-file))
 
-(defun org-init-compile ()
-  (interactive)
-  (when (org-init--need-compile?)
-    (org-init--tangle)
-    (message "compiling file..")
-    (byte-compile-file org-init--el-file)
-    (message "done compiling")))
+(defun org-init-recompile () 
+  (if (org-init--need-compile?)
+      (progn
+        (org-init--tangle)
+        (message "compiling file...")
+        (let ((byte-compile-dest-file-function (lambda (x) org-init--elc-file)))
+          (byte-compile-file org-init--el-file t))
+        (message "compiled and loaded"))
+    (message "no need to recompile")
+    nil))
 
 (defun org-init--need-compile? ()
-  (if (or
-	 (not (file-exists-p org-init--elc-file))
-	 (file-newer-than-file-p org-init--file org-init--elc-file))
-      t
-    (message "no need to compile")
-    nil))
+  (or (not (file-exists-p org-init--elc-file))
+      (file-newer-than-file-p org-init--file org-init--elc-file)))
 
 (defun org-init-git ()
   (interactive)
@@ -43,12 +42,6 @@
   (with-current-buffer (find-file org-init--file)
     (org-init--mode 1)
     (diminish 'org-init--mode)))
-
-(defun org-init-load (&optional debug)
-  (interactive)
-  (if debug
-      (load-file org-init--el-file)
-    (load-file org-init--elc-file)))
 
 (provide 'org-init)
 
