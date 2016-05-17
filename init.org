@@ -5,7 +5,6 @@
 ** [[https://www.reddit.com/r/emacs/comments/3obmoh/emacs_for_writers_presentation_by_jay_dixit/][Emacs for writers]]
 - org-bullets
 ** packages maybe Futur
-*** Big collection [[https://emacs.zeef.com/ehartc#link_1504097][@zeef.com]]
 *** Focus [[https://github.com/larstvei/Focus/blob/master/README.md][@github.com]]
 ** elisp tips
 - [[https://www.reddit.com/r/emacs/comments/3nu2xr/emacs_lisp_programming_thoughts/][@reddit.com]]
@@ -22,31 +21,28 @@
 #+END_SRC
 ** Els
 #+BEGIN_SRC emacs-lisp
-(let ((default-directory "~/.emacs.d/els/")
-      (message-log-max nil))
-  (byte-recompile-directory default-directory 0)
-  (normal-top-level-add-subdirs-to-load-path))
+(setq load-prefer-newer t)
   (package-initialize)
 #+END_SRC
 ** Bootstrap use-package
 #+BEGIN_SRC emacs-lisp
 (message "1")
-(unless (package-installed-p 'use-package)
+(unless (package-installed-p 'req-package)
   (package-refresh-contents)
-  (package-install 'use-package))
+  (package-install 'req-package))
 (message "2")
 (require 'cl-lib)
-(require 'use-package)
+(require 'req-package)
 (require 'bind-key)
 #+END_SRC
 ** Org-init
 #+BEGIN_SRC emacs-lisp
 (message "3")
-(use-package org-init
+(req-package org-init
   :init
   :config)
 (message "4")
-(use-package my-util
+(req-package my-util
   :init
   :config)
 #+END_SRC
@@ -114,6 +110,8 @@
 #+BEGIN_SRC emacs-lisp
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
+(setq buffer-file-coding-system 'utf-8
+      default-file-name-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-language-environment "Latin-1")
@@ -193,7 +191,7 @@ Linewrap
 ** Style
 *** Adaptive-Wrap
 #+BEGIN_SRC emacs-lisp
-(use-package adaptive-wrap
+(req-package adaptive-wrap
   :init
   (define-globalized-minor-mode adaptive-wrap-global-mode
   adaptive-wrap-prefix-mode
@@ -201,17 +199,15 @@ Linewrap
   :bind
   :config
   (adaptive-wrap-global-mode)
-  :ensure t
   )
 #+END_SRC
 *** Theme
 #+BEGIN_SRC emacs-lisp
-(use-package soft-stone-theme
+(req-package soft-stone-theme
   :init
   (load-theme 'soft-stone t)
   :bind
   :config
-  :ensure t
   )
 #+END_SRC
 **** Alternativen
@@ -220,10 +216,9 @@ Linewrap
 **** Purpose-mode
 [[https://github.com/bmag/emacs-purpose][@github]]
 #+BEGIN_SRC emacs-lisp
-(use-package window-purpose
+(req-package window-purpose
 :init
   :config
-  :ensure t
 )
 #+END_SRC
 **** Winner-mode [disabled]
@@ -240,21 +235,28 @@ Linewrap
 #+BEGIN_SRC emacs-lisp
 (setq sentence-end-double-space nil)
 #+END_SRC
-** Auto-update
-[[https://github.com/rranelli/auto-package-update.el][@Github]]
-#+BEGIN_SRC emacs-lisp
-(use-package auto-package-update
-  :init
-  :bind
-  :config
-  ;;(auto-package-update-now)
-  :ensure t
-)
-#+END_SRC
+** PackageManagement
+*** Auto-update [disabled
+ [[https://github.com/rranelli/auto-package-update.el][@Github]]
+ #+BEGIN_SRC emacs-lisp :tangle no
+ (req-package auto-package-update
+   :init
+   :bind
+   :config
+   ;;(auto-package-update-now)
+ )
+ #+END_SRC
+*** Auto-Compile
+ [[https://github.com/tarsius/auto-compile][@github]]
+ #+BEGIN_SRC emacs-lisp :tangle no
+ (req-package auto-compile
+   :init (auto-compile-on-save-mode)
+ )
+ #+END_SRC
 ** Minor Modes
 *** Drag-stuff
 #+BEGIN_SRC emacs-lisp
-(use-package drag-stuff
+(req-package drag-stuff
   :init
   :config
   (when (my-util-cb?)
@@ -266,13 +268,12 @@ Linewrap
 	       ))
   (add-to-list 'drag-stuff-except-modes 'org-mode)
   (drag-stuff-global-mode)
-  :ensure t
   :diminish drag-stuff-mode
   )
 #+END_SRC
 *** YASnippet [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
-(use-package yasnippet
+(req-package yasnippet
   :init
   (setq yas-verbosity 2)
   :config
@@ -280,45 +281,41 @@ Linewrap
   (unbind-key "<tab>" yas-minor-mode-map)
   (unbind-key "TAB" yas-minor-mode-map)
   (bind-key "C-<tab>" 'yas-expand yas-minor-mode-map)
-  :ensure t
   )
 #+END_SRC
 *** Buffer-move
 https://github.com/lukhas/buffer-move
 #+BEGIN_SRC emacs-lisp
-(use-package buffer-move
+(req-package buffer-move
   :bind (:map my-keys-minor-mode-map
 	      ("C-M-#" . buf-move-right)
 	      ("C-M-ö" . buf-move-left)
               ("C-M-ü" . buf-move-up)
               ("C-M-ä" . buf-move-down))
-  :ensure t
   )
 #+END_SRC
 *** Evil-Nerd-Commenter
 #+BEGIN_SRC emacs-lisp
-(use-package evil-nerd-commenter
+(req-package evil-nerd-commenter
   :init
   :config
   (evilnc-default-hotkeys)
-  :ensure t
 )
 #+END_SRC
 *** Multiple-Cursors
 #+BEGIN_SRC emacs-lisp
-(use-package multiple-cursors
+(req-package multiple-cursors
   :init
   :bind (:map my-keys-minor-mode-map ("C-<down-mouse-1>" . mc/add-cursor-on-click))
   :config
   (setq mc/list-file (concat user-emacs-directory "config/.mc-lists.el"))
   ;;'(mc/cursor-face ((nil (:background "orange"))))
-  :ensure t
 )
 #+END_SRC
 
 *** Google-translate
 #+BEGIN_SRC emacs-lisp
-(use-package google-translate
+(req-package google-translate
   :init
   (require 'google-translate-smooth-ui)
   :bind (("C-c t" . google-translate-smooth-translate))
@@ -326,14 +323,13 @@ https://github.com/lukhas/buffer-move
   (setq google-translate-translation-directions-alist
 	'(("de" . "en") ("en" . "de") ("de" . "fr") ("de" . "es")))
   (setq google-translate-pop-up-buffer-set-focus t)
-  :ensure t
 )
 #+END_SRC
 
 *** Outshine
 **** Outshine + Navi-Mode
 #+BEGIN_SRC emacs-lisp
-(use-package outshine
+(req-package outshine
   :init
   ;; because somehow it stopped being activated
   (require 'outshine)
@@ -342,30 +338,25 @@ https://github.com/lukhas/buffer-move
   :bind
   :config
   (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
-  :ensure t
   )
-(use-package navi-mode
+(req-package navi-mode
   :init
   :bind
   :config
-  :ensure t
   )
 #+END_SRC
 *** Company-Mode
 #+BEGIN_SRC emacs-lisp
-(use-package company
-  :ensure t
+(req-package company
 :config 
 (add-hook 'after-init-hook 'global-company-mode)
 (define-key company-active-map (kbd "C-ä") 'company-select-next)
 (define-key company-active-map (kbd "C-ü") 'company-select-previous)
-(setq company-dabbrev-downcase nil)
-)
+(setq company-dabbrev-downcase nil))
 #+END_SRC
-
 *** Centered-Window-Mode
 #+BEGIN_SRC emacs-lisp
-(use-package centered-window-mode
+(req-package centered-window-mode
   :init
   ;; Makes left fringe 10px or so smaller than right one in cwm 
   (defun cwm/center ()
@@ -378,14 +369,13 @@ https://github.com/lukhas/buffer-move
      ))
   :config
   (centered-window-mode t)
-  :ensure t
   :diminish centered-window-mode
   )
 #+END_SRC
 
 *** Smartparens
 #+BEGIN_SRC emacs-lisp
-(use-package smartparens
+(req-package smartparens
   :bind (:map smartparens-mode-map
 	      ("C-M-<left>" . sp-backward-sexp)
 	      ("C-M-<right>" . sp-forward-sexp)
@@ -399,19 +389,17 @@ https://github.com/lukhas/buffer-move
   :config
   (smartparens-global-mode t)
   (show-smartparens-global-mode t)
-  :ensure t
   :diminish smartparens-mode
   )
 #+END_SRC
 *** Undo-Tree
 #+BEGIN_SRC emacs-lisp
-(use-package undo-tree
+(req-package undo-tree
   :bind (("C-p" . undo-tree-undo)
          ("M-p" . undo-tree-redo))
   :init
   :config
   (global-undo-tree-mode t)
-  :ensure t
   :diminish undo-tree-mode
 )
 #+END_SRC
@@ -456,18 +444,18 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 *** Expand-Region
 #+BEGIN_SRC emacs-lisp
-(use-package expand-region
+(req-package expand-region
   :bind (:map my-keys-minor-mode-map
 	      ("C-M-w" . er/expand-region)
 	      ("C-M-q" . er/contract-region))
   :init
   :config
-  :ensure t
+  (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions)
 )
 #+END_SRC
 *** Flycheck
 #+BEGIN_SRC emacs-lisp
-(use-package flycheck
+(req-package flycheck
   :init
   (add-hook 'after-init-hook #'global-flycheck-mode)
   :config
@@ -485,7 +473,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
    (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
   ;; customize flycheck temp file prefix
   (setq-default flycheck-temp-prefix ".flycheck")
-  :ensure t
   )
 #+END_SRC
 **** disable in org-src-block
@@ -497,7 +484,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 *** ido
 #+BEGIN_SRC emacs-lisp
-(use-package ido
+(req-package ido
 :init
 :bind
 :config
@@ -542,7 +529,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 **** flx-ido
 #+BEGIN_SRC emacs-lisp
-(use-package flx-ido
+(req-package flx-ido
 :init
 (flx-ido-mode 1)
 :bind
@@ -554,7 +541,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 *** smex
 #+BEGIN_SRC emacs-lisp
-(use-package smex
+(req-package smex
 :bind ("M-x" . smex)
 :init
 :config
@@ -565,31 +552,29 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 The Spacemacs Modeline
 [[[[https://github.com/TheBB/spaceline/tree/master/]]][@Github]]
 #+BEGIN_SRC emacs-lisp
-(use-package spaceline
+(req-package spaceline
   :init
   (require 'spaceline-config)
   (spaceline-spacemacs-theme)
   :bind
   :config
   (spaceline-toggle-buffer-size-off)
-  :ensure t
   )
 #+END_SRC
 *** Projectile
 #+BEGIN_SRC emacs-lisp
 ;;asdsd
-(use-package projectile
+(req-package projectile
   :init
   (add-hook 'python-mode-hook 'projectile-mode)
   :bind
   :config
   (setq projectile-indexing-method 'alien)
-  :ensure t
   )
 #+END_SRC
 *** Floobits
 #+BEGIN_SRC emacs-lisp
-(use-package floobits
+(req-package floobits
 :init
 :config
 :ensure t
@@ -598,28 +583,26 @@ The Spacemacs Modeline
 *** aggressive-indent
 [[https://github.com/Malabarba/aggressive-indent-mode][@github.com]]
 #+BEGIN_SRC emacs-lisp
-(use-package aggressive-indent
+(req-package aggressive-indent
   :init
   (setq-default indent-tabs-mode nil)
   (global-aggressive-indent-mode 1)
   :bind
-  :config
-  :ensure t)
+  :config)
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
-(use-package ssh-agency
+(req-package ssh-agency
   :if (my-util-win?)
-  :ensure t
   )
-(use-package magit
+(req-package magit
 :ensure t
 )
 ;; (setq magit-last-seen-setup-instructions "1.4.0")
 #+END_SRC
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
-(use-package org-plus-contrib
+(req-package org-plus-contrib
   :init
   (require 'org)
   ;; (require 'org-drill)
@@ -629,7 +612,6 @@ The Spacemacs Modeline
   :config
   (setq org-default-notes-file (concat meinAll-dir "milkyway.org"))
   (diminish 'org-indent-mode)
-  :ensure t
 )
 #+END_SRC
 *** Config
@@ -641,10 +623,16 @@ The Spacemacs Modeline
       org-completion-use-ido t
       org-image-actual-width '(500)
       org-list-allow-alphabetical t
+      org-use-property-inheritance t
       org-checkbox-hierarchical-statistics t)
 (bind-keys ("C-c l" 'org-store-link)
 	   ("C-c a" 'org-agenda)
 	   ("C-c b" 'org-iswitchb))
+#+END_SRC
+**** Export
+#+BEGIN_SRC emacs-lisp
+(setq org-export-with-toc nil
+      org-export-with-section-numbers nil)
 #+END_SRC
 **** Capture
 #+BEGIN_SRC emacs-lisp
@@ -1078,7 +1066,7 @@ The template may still contain \"%?\" for cursor positioning."
 #+END_SRC
 **** Passwords
 #+BEGIN_SRC emacs-lisp
-(use-package org-passwords
+(req-package org-passwords
   :config
   (setq org-passwords-file (concat meinAll-dir  "monument/lesMysteres.gpg")))
 #+END_SRC
@@ -1209,23 +1197,29 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 #+END_SRC
 ** AUCTeX
 #+BEGIN_SRC emacs-lisp
-(use-package tex
+(req-package tex
   :init
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   :config
   :ensure auctex
 )
 #+END_SRC
+** NeoTree
+#+BEGIN_SRC emacs-lisp
+(req-package neotree
+  :init
+  :config
+)
+#+END_SRC
 ** Dired+
 #+BEGIN_SRC emacs-lisp
-(use-package dired+
+(req-package dired+
   :init
   (toggle-diredp-find-file-reuse-dir 1)
   :bind
   :config
   (bind-key "?" 'my/dired-get-size dired-mode-map)
   (setq dired-listing-switches "-aDhl  --group-directories-first")
-  :ensure t
 )
 #+END_SRC
 *** Functions
@@ -1268,34 +1262,31 @@ echo "add ruen.rws" > ru.multi
 **** Elixir Mode
 https://github.com/elixir-lang/emacs-elixir
 #+BEGIN_SRC emacs-lisp
-(use-package elixir-mode
+(req-package elixir-mode
   :init
   :bind (("C-c C-c" . alchemist-eval-buffer))
   :config
-  :ensure t
 )
 #+END_SRC
 **** Alchemist
 https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
-(use-package alchemist
+(req-package alchemist
   :init
   :config
-  :ensure t
 )
 #+END_SRC
 *** Markdown
 #+BEGIN_SRC emacs-lisp
-(use-package markdown-mode
+(req-package markdown-mode
   :init
   :config
-  :ensure t
 )
 #+END_SRC
 *** Python
 **** Elpy
 #+BEGIN_SRC emacs-lisp
-(use-package elpy
+(req-package elpy
   :init
   (elpy-enable)
   :bind
@@ -1308,22 +1299,19 @@ https://github.com/tonini/alchemist.el
   ;; (setq elpy-test-pytest-runner-command '("py.test --pdb")) ;
   (elpy-set-test-runner 'elpy-test-pytest-runner)
   (setq elpy-rpc-backend "rope")
-  :ensure t
   )
 #+END_SRC
 **** IPython Emacs Notebook (EIN)
 #+BEGIN_SRC emacs-lisp
-(use-package cl-generic
+(req-package cl-generic
   :init
   :bind
   :config
-  :ensure t
   )
-(use-package ein
+(req-package ein
   :init
   :bind
   :config
-  :ensure t
   )
 #+END_SRC
 **** My Functions
@@ -1368,49 +1356,45 @@ https://github.com/tonini/alchemist.el
 **** HTML/CSS
 ***** Htmlize
 #+BEGIN_SRC emacs-lisp
-(use-package htmlize
+(req-package htmlize
   :init
   :config
-  :ensure t
 )
 #+END_SRC
 ***** Scss-Mode
 #+BEGIN_SRC emacs-lisp
-(use-package scss-mode
+(req-package scss-mode
   :init
   (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
   :config
-  :ensure t
 )
 #+END_SRC
 ***** Emmet-Mode [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
-(use-package emmet-mode
+(req-package emmet-mode
   :init
   (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
   (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
   :config
-  :ensure t
 )
 #+END_SRC
 **** JS
 ***** js2-mode
 #+BEGIN_SRC emacs-lisp
-(use-package js2-mode
+(req-package js2-mode
   :init
   (add-hook 'js-mode-hook 'js2-minor-mode)
   (setq js2-basic-offset 2)
   :config
-  :ensure t
 )
 #+END_SRC
 ***** Web-mode
 [[http://web-mode.org/][@web-mode.org]]
 #+BEGIN_SRC emacs-lisp
-(use-package web-mode
+(req-package web-mode
   :init
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
   (setq web-mode-content-types-alist
 	'(("css" . "\\.\\(s?css\\|css\\.erb\\)\\'")
 	  ("jsx" . "\\.\\([jt]s\\|[jt]s\\.erb\\)\\'")
@@ -1424,22 +1408,21 @@ https://github.com/tonini/alchemist.el
   (setq web-mode-attr-indent-offset 2)
   (setq web-mode-attr-value-indent-offset 0)
   (setq web-mode-css-indent-offset 2)
-  :ensure t
   )
+  (req-package company-web )
 #+END_SRC
 ***** coffee-mode
 #+BEGIN_SRC emacs-lisp
-(use-package coffee-mode
+(req-package coffee-mode
   :init
   :config
   (custom-set-variables '(coffee-tab-width 2))
-  :ensure t
 )
 #+END_SRC
 *** Elisp
 #+BEGIN_SRC emacs-lisp
-(setq toggle-debug-on-error t)
-
+(setq toggle-debug-on-error nil)
+(setq lisp-indent-function 'common-lisp-indent-function)
 (bind-key "C-h C-f" 'find-function-at-point emacs-lisp-mode-map)
 (bind-key "C-h C-v" 'find-variable-at-point emacs-lisp-mode-map)
 #+END_SRC
@@ -1464,13 +1447,13 @@ maybe for linux
 *** Hungry-delete
 ** Els
 #+BEGIN_SRC emacs-lisp
-(use-package spell-number)
+(req-package spell-number)
 #+END_SRC
 *** Exercism
 #+BEGIN_SRC emacs-lisp
 (my-util-installed?
  "exercism"
- (use-package exercism
+ (req-package exercism
    :no-require t
    :init
    :config
@@ -1482,36 +1465,40 @@ maybe for linux
 *** Namespaces elisp
 [[https://github.com/Malabarba/Nameless][@github.com]] 
 #+BEGIN_SRC emacs-lisp
-(use-package nameless
+(req-package nameless
   :init
   :config
   (setq nameless-private-prefix t)
-  :ensure t
 )
 #+END_SRC
 *** Testing
 [[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
 #+BEGIN_SRC emacs-lisp
-(use-package xtest
+(req-package xtest
   :init
   :config
-  :ensure t
 )
 #+END_SRC
 ** Other
 *** Sqlite
 #+BEGIN_SRC emacs-lisp
-(use-package esqlite
+(req-package esqlite
   :init
   :config
-  :ensure t
+)
+#+END_SRC
+*** Sql-Indnet
+#+BEGIN_SRC emacs-lisp
+(req-package sql-indent
+  :init
+  :config
 )
 #+END_SRC
 ** My
 *** Bonjoiurnal
 [[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
 #+BEGIN_SRC emacs-lisp
-(use-package bonjournal
+(req-package bonjournal
   :init
   :config
   (setq bonjournal-dir (concat meinAll-dir "monument/bonjournal/"))
@@ -1520,7 +1507,7 @@ maybe for linux
 *** Toutesuit
 [[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
 #+BEGIN_SRC emacs-lisp
-(use-package toutesuit
+(req-package toutesuit
   :init
   :config
   (setq toutesuit-file (concat meinAll-dir "lookingGlass/toutesuit.org")))
@@ -1528,10 +1515,11 @@ maybe for linux
 ** Cygwin
 *** Cygwin-Mount
 #+BEGIN_SRC emacs-lisp
-(setenv "PATH" (concat "c:/cygwin64/bin;" (getenv "PATH")))
-(setq exec-path (cons "c:/cygwin64/bin/" exec-path))
-(require 'cygwin-mount)
-(cygwin-mount-activate)
+(if (my-util-win?)
+    (setenv "PATH" (concat "c:/cygwin64/bin;" (getenv "PATH")))
+  (setq exec-path (cons "c:/cygwin64/bin/" exec-path))
+  (require 'cygwin-mount)
+  (cygwin-mount-activate))
 #+END_SRC
 * Functions
 ** Html-to-React

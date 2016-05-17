@@ -27,8 +27,12 @@
     (message "done compiling")))
 
 (defun org-init--need-compile? ()
-  (or (not (file-exists-p org-init--elc-file))
-      (file-newer-than-file-p org-init--file org-init--elc-file)))
+  (if (or
+	 (not (file-exists-p org-init--elc-file))
+	 (file-newer-than-file-p org-init--file org-init--elc-file))
+      t
+    (message "no need to compile")
+    nil))
 
 (defun org-init-git ()
   (interactive)
@@ -39,6 +43,12 @@
   (with-current-buffer (find-file org-init--file)
     (org-init--mode 1)
     (diminish 'org-init--mode)))
+
+(defun org-init-load (&optional debug)
+  (interactive)
+  (if debug
+      (load-file org-init--el-file)
+    (load-file org-init--elc-file)))
 
 (provide 'org-init)
 
