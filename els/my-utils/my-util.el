@@ -13,10 +13,10 @@
   (unless (file-directory-p (concat user-emacs-directory path))
     (mkdir (concat user-emacs-directory path) t)))
 
-(defmacro my-util-installed? (exe &rest body)
-  `(if (executable-find ,exe)
-       ,@body
-     (message "%s not found found; please install" ,exe)))
+(defun my-util-installed? (exe)
+  (unless (executable-find exe)
+    (message "%s not found found; please install" exe)
+    nil))
 
 (provide 'my-util)
 

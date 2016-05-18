@@ -461,9 +461,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (flycheck-add-mode 'javascript-eslint 'web-mode)
 
   ;;https://github.com/justjake/eslint-project-relative
-  (my-util-installed?
-   "eslint-project-relative"
-   (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
+  (when (my-util-installed? "eslint-project-relative")
+    (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
   ;; customize flycheck temp file prefix
   (setq-default flycheck-temp-prefix ".flycheck")
   )
@@ -1447,13 +1446,12 @@ maybe for linux
 #+END_SRC
 *** Exercism
 #+BEGIN_SRC emacs-lisp
-(my-util-installed? "exercism"
-                    (req-package exercism
-                                 :load-path "els/exercism/"
-                                 :no-require t
-                                 :config (when (my-util-win?)
-                                           (setq *exercism-cmd*
-                                                 (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe")))))
+(req-package exercism
+    :load-path "els/exercism/"
+    :if (my-util-installed? "exercism")
+    :config (when (my-util-win?)
+	      (setq *exercism-cmd*
+		    (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe"))))
 #+END_SRC
 ** Dev
 *** Namespaces elisp
