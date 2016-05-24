@@ -582,6 +582,11 @@ The Spacemacs Modeline
   :bind
   :config)
 #+END_SRC
+*** which-key
+[[https://github.com/justbur/emacs-which-key?utm_medium=referral&utm_campaign=ZEEF&utm_source=https%3A%2F%2Femacs.zeef.com%2Fehartc][@github.com]]
+#+BEGIN_SRC emacs-lisp
+(req-package which-key :init (which-key-mode))
+#+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (req-package ssh-agency

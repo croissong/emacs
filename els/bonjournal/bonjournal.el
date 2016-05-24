@@ -6,7 +6,7 @@
 (defvar bonjournal-dir "~/bonjournal/")
 (defvar bonjournal--day-file "day.org")
 (defvar bonjournal--journal-file "bonjournal.gpg")
-(defvar bonjournal-entryTemplate "\n\n/%H:%M/, *Je pense*\n")
+(defvar bonjournal-entryTemplate "/%H:%M/, *Je pense*\n")
 (defvar bonjournal--entryTemplateRegex "\/[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}\/, \*")
 
 
@@ -159,17 +159,47 @@
     (bonjournal--displayBuffer)))
 
 (defun bonjournal-new-entry ()
-  (interactive)
-  (bonjournal--drivePull)
-  (bonjournal--with-safeFileVariable
-   'bonjournal--makeBuffer))
+  (interactive) 
+  (bonjournal--insertEntryTemplate))
+
+(defun bonjournal--parseEntryJson()
+  (let* ((entry (buffer-substring-no-properties (point-min) (point-max)))
+         (bonentry `(:entry ,entry)))
+    (json-encode-list bonentry)))
+
+(defun bonjorunal-saveEntry ()
+  (interactive) 
+  (let ((json (bonjournal--parseEntryJson)))
+    (deferred:$
+        (bonjournal--postEntry json)
+        (deferred:nextc it
+            (lambda (resp)
+              (let* ((data (request-response-data resp))
+                     (reward (alist-get 'reward data))
+                     (xp (alist-get 'xp reward))
+                     (gold (alist-get 'gold reward))
+                     (lines (alist-get 'lines data)))
+                (if reward
+                    (progn
+                      (message "Bonentry (%s lines) saved. %s Xp and %s Gold earned!" lines xp gold)
+                      (erase-buffer))
+                  (message "nogood"))
+                ))))))
+
+(defun bonjournal--postEntry(entry)
+  (request-deferred
+   "localhost:4000/addBonentry"
+   :headers '(("Content-Type" . "application/json"))
+   :type "POST"
+   :data entry
+   :parser 'json-read))
 
 (defun bonjournal--parseNextHash ()
   (search-forward "#")
   (let ((hash bonjournal--getHashAtPoint)
 	(content bonjournal--getHashContent))
     (bonjournal--processHash hash content)
-  (bonjournal--parseNextHash)))
+    (bonjournal--parseNextHash)))
 
 (defun bonjournal--getHashAtPoint ()
   (let ((hash (thing-at-point 'sexp t)))
