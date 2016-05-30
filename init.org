@@ -448,8 +448,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions)
 )
 #+END_SRC
-*** Flycheck
-#+BEGIN_SRC emacs-lisp
+*** Flycheck [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package flycheck
   :init
   (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -583,6 +583,11 @@ The Spacemacs Modeline
   (global-aggressive-indent-mode 1)
   :bind
   :config)
+#+END_SRC
+*** which-key
+[[https://github.com/justbur/emacs-which-key?utm_medium=referral&utm_campaign=ZEEF&utm_source=https%3A%2F%2Femacs.zeef.com%2Fehartc][@github.com]]
+#+BEGIN_SRC emacs-lisp
+(req-package which-key :init (which-key-mode))
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
