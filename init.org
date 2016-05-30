@@ -38,13 +38,15 @@
  #+END_SRC
 ** Org-init
 #+BEGIN_SRC emacs-lisp
-(req-package-force org-init
+(req-package org-init
+:force t
 :load-path "els/org-init/")
 (org-init-recompile)
 #+END_SRC
 ** My/Utils
 #+BEGIN_SRC emacs-lisp
-(req-package-force my-util
+(req-package my-util
+:force t
 :load-path "els/my-utils/")
 #+END_SRC
 * Keybindings
@@ -1380,6 +1382,7 @@ https://github.com/tonini/alchemist.el
   
   :config
   (setq js2-basic-offset 2)
+  (setq js2-strict-inconsistent-return-warning nil)
 )
 #+END_SRC
 ***** Web-mode
