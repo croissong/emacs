@@ -1,6 +1,8 @@
 ;;; org-init.el --- Write init in emacs org-mode  -*- lexical-binding: t; -*-
 ;;; Commentary: 
 ;;; Code:
+(require 'org)
+
 (defvar org-init--file (expand-file-name "init.org" user-emacs-directory))
 (defvar org-init--el-file (expand-file-name "org-init.el" user-emacs-directory))
 (defvar org-init--elc-file (expand-file-name "init.elc" user-emacs-directory))
