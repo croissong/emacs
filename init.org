@@ -590,7 +590,9 @@ The Spacemacs Modeline
 (req-package which-key :init (which-key-mode))
 #+END_SRC
 ** Magit
+[[https://github.com/magit/magit/wiki/Pushing-with-Magit-from-Windows][@github.com]]
 #+BEGIN_SRC emacs-lisp
+(setenv "SSH_ASKPASS" "git-gui--askpass")
 (req-package ssh-agency
   :if (my-util-win?)
   )
@@ -598,6 +600,10 @@ The Spacemacs Modeline
 :ensure t
 )
 ;; (setq magit-last-seen-setup-instructions "1.4.0")
+#+END_SRC
+*** git-timemachine
+#+BEGIN_SRC emacs-lisp
+(req-package git-timemachine)
 #+END_SRC
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
