@@ -1523,14 +1523,20 @@ maybe for linux
 )
 #+END_SRC
 ** My
-*** Bonjoiurnal
-[[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
+*** Bonjournal
 #+BEGIN_SRC emacs-lisp
 (req-package bonjournal
              :load-path "els/bonjournal/"
              :config (setq bonjournal-dir (expand-file-name meinAll-dir
                                                             "monument/bonjournal/"))
              )
+#+END_SRC
+*** Bonquest
+#+BEGIN_SRC emacs-lisp
+(req-package bonquest
+    :require request-deferred
+    :load-path "els/bonquest/"
+    )
 #+END_SRC
 *** Toutesuit
 [[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
