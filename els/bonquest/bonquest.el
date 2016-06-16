@@ -175,3 +175,10 @@
 
 
 (provide 'bonquest)
+
+(request-deferred
+ "localhost:4000/addQuote"
+ :headers '(("Content-Type" . "application/json"))
+ :type "POST"
+ :data (json-encode-list `(:quote "test"))
+ :parser 'json-read)
