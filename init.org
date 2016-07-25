@@ -1433,6 +1433,10 @@ https://github.com/tonini/alchemist.el
 (bind-key "C-h C-f" 'find-function-at-point emacs-lisp-mode-map)
 (bind-key "C-h C-v" 'find-variable-at-point emacs-lisp-mode-map)
 #+END_SRC
+*** Php
+#+BEGIN_SRC emacs-lisp
+(req-package php-mode)
+#+END_SRC
 ** mini
 #+BEGIN_SRC emacs-lisp
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
