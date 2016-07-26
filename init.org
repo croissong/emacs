@@ -69,6 +69,10 @@
 (bind-key "C-ü" 'windmove-up my-keys-minor-mode-map)
 (bind-key "C-ä" 'windmove-down my-keys-minor-mode-map)
 #+END_SRC
+*** disable overwrite
+#+BEGIN_SRC emacs-lisp
+(define-key global-map [(insert)] nil)
+#+END_SRC
 *** hm
 #+BEGIN_SRC emacs-lisp
 (bind-keys :map my-keys-minor-mode-map
@@ -84,7 +88,7 @@
 (setq default-directory "~/")
 (defvar gdrive-dir (concat default-directory "cloud/"))
 (defvar meinAll-dir (concat gdrive-dir "dokumente/meinAll/"))
-
+(put 'upcase-region 'disabled nil)
 (my-util-ensureEmacsDir "config/")
 (my-util-ensureEmacsDir "save/autosave")
 (my-util-ensureEmacsDir "save/backup")
@@ -128,6 +132,12 @@
 ;; http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3
 
 (fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+*** Kill active process buffer no prompt
+#+BEGIN_SRC emacs-lisp
+(setq kill-buffer-query-functions
+  (remq 'process-kill-buffer-query-function
+         kill-buffer-query-functions))
 #+END_SRC
 ** What does it do?
 #+BEGIN_SRC emacs-lisp
@@ -219,9 +229,11 @@ Linewrap
 [[https://github.com/bmag/emacs-purpose][@github]]
 #+BEGIN_SRC emacs-lisp
 (req-package window-purpose
-:init
-  :config
-)
+    :config
+  (add-to-list 'purpose-user-mode-purposes '(rust-mode . rust))
+  (add-to-list 'purpose-user-mode-purposes '(cargo-process-mode . cargo-process))
+  (purpose-compile-user-configuration)
+  )
 #+END_SRC
 **** Winner-mode [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -288,6 +300,10 @@ https://github.com/lukhas/buffer-move
               ("C-M-ü" . buf-move-up)
               ("C-M-ä" . buf-move-down))
   )
+#+END_SRC
+*** AG the_silver_searcher
+#+BEGIN_SRC emacs-lisp
+(req-package ag)
 #+END_SRC
 *** Evil-Nerd-Commenter
 #+BEGIN_SRC emacs-lisp
@@ -454,8 +470,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** Flycheck [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
 (req-package flycheck
-  :init
-  (add-hook 'after-init-hook #'global-flycheck-mode)
+    :init
+  ;; (add-hook 'after-init-hook #'global-flycheck-mode) ;
   :config
   ;; disable jshint since we prefer eslint checking
   (setq-default flycheck-disabled-checkers
@@ -592,6 +608,11 @@ The Spacemacs Modeline
 #+BEGIN_SRC emacs-lisp
 (req-package which-key :init (which-key-mode))
 #+END_SRC
+*** dumb-jump
+[[https://github.com/jacktasia/dumb-jump][@github.com]]
+#+BEGIN_SRC emacs-lisp
+(req-package dumb-jump)
+#+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (req-package ssh-agency
@@ -626,6 +647,7 @@ The Spacemacs Modeline
       org-image-actual-width '(500)
       org-list-allow-alphabetical t
       org-use-property-inheritance t
+      org-use-sub-superscripts nil
       org-checkbox-hierarchical-statistics t)
 (bind-keys ("C-c l" 'org-store-link)
 	   ("C-c a" 'org-agenda)
@@ -1266,18 +1288,20 @@ echo "add ruen.rws" > ru.multi
 https://github.com/elixir-lang/emacs-elixir
 #+BEGIN_SRC emacs-lisp
 (req-package elixir-mode
-  :init
-  :bind (("C-c C-c" . alchemist-eval-buffer))
+    :init
   :config
-)
+  )
 #+END_SRC
 **** Alchemist
 https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (req-package alchemist
-  :init
-  :config
-)
+    :require elixir-mode
+    :init
+    :config
+    :bind (:map alchemist-mode-map
+                ("C-c C-c" . alchemist-eval-buffer)) 
+    )
 #+END_SRC
 *** Markdown
 #+BEGIN_SRC emacs-lisp
@@ -1400,6 +1424,7 @@ https://github.com/tonini/alchemist.el
     :init
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
   (setq web-mode-content-types-alist
 	'(("css" . "\\.\\(s?css\\|css\\.erb\\)\\'")
 	  ("jsx" . "\\.\\([jt]s\\|[jt]s\\.erb\\)\\'")
@@ -1413,9 +1438,10 @@ https://github.com/tonini/alchemist.el
         web-mode-attr-indent-offset 2
         web-mode-attr-value-indent-offset 2
         web-mode-css-indent-offset 2 
-        web-mode-style-padding 1 
+        web-mode-style-padding 1
         web-mode-script-padding 0 
-        web-mode-block-padding 0)
+        web-mode-block-padding 0
+        web-mode-enable-control-block-indentation nil)
   )
   (req-package company-web )
 #+END_SRC
@@ -1450,10 +1476,40 @@ https://github.com/tonini/alchemist.el
 (req-package racer
     :config
   (setq racer-cmd "~/.cargo/bin/racer.exe"
-        racer-rust-src-path "C:/Program Files/Rust/rustc-1.9.0/src/")
+        racer-rust-src-path "C:/Program Files/Rust/source/src/")
   (add-hook 'rust-mode-hook #'racer-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode))
-(req-package cargo)
+(req-package cargo
+    :require rust-mode
+    :init (add-hook 'rust-mode-hook 'cargo-minor-mode)
+    :config
+    (defun cargo-process--cleanup (buffer)
+      (when (get-buffer-process (get-buffer buffer))
+        (delete-process buffer)))
+    (defvar cargo-process-history '())
+    (defun cargo-process-run ()
+      "Run the Cargo run command.
+With the prefix argument, modify the command's invocation.
+Cargo: Build and execute src/main.rs."
+      (interactive) 
+      (cargo-process--start
+       "Run"
+       (read-string "Command: " "cargo run" '(cargo-process-history . 0))))
+
+    (defun cargo-process-test (enable_print)
+      "Run the Cargo test command.
+With the prefix argument, modify the command's invocation.
+Cargo: Run the tests."
+      (interactive "P")
+      (let* ((command "cargo test"))
+        (when enable_print
+          (concat command " -- --nocapture"))
+        (cargo-process--start "Test" "cargo test"))
+      )
+    )
+(req-package flycheck-rust
+    :config
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 #+END_SRC
 ** mini
 #+BEGIN_SRC emacs-lisp
@@ -1769,6 +1825,13 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
           (progn (next-buffer)
                  (setq i (1+ i)))
         (progn (setq i 100))))))
+#+END_SRC
+** goto code
+#+BEGIN_SRC emacs-lisp
+(defun goto-code()
+(interactive)
+  (dired "~/Documents/code")
+  )
 #+END_SRC
 ** Misc
 *** Sudo-Save (Linux)
