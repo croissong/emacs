@@ -1,5 +1,5 @@
 ;;; bonjournal.el --- Write journal in emacs org-mode  -*- lexical-binding: t; -*-
-
+(require 'request-deferred)
 (require 'org-datetree)
 
 (defvar bonjournal--entryDate 0)
@@ -15,7 +15,7 @@
   (let ((keymap (make-keymap)))
     ;; (define-key keymap (kbd "C-c C-c") 'bonjournal--save-day)
     (define-minor-mode bonjournal-mode
-      "bonjournal functions"
+        "bonjournal functions"
       nil "" keymap)))
 
 (defun bonjournal--enableModes ()

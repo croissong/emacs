@@ -62,7 +62,7 @@
   (if (org-at-heading-p)
       (progn
         (org-narrow-to-element)
-        (org-entry-put (point) "TODO" "TODO")
+        (org-entry-put (point) "TODO" "todo")
         (let* ((json (bonquest--parseQuestJson)))
           (deferred:$
               (bonquest--postQuest json)
@@ -84,6 +84,26 @@
                          :content ,(bonquest--parseContent headline))))
     (json-encode-list quest)))
 
+(defvar bonquest--standardQuests '(("c" "Cleaning")
+                                   ("cw". ("Wäsche" (:title "Wäsche")))))
+
+(defun bonquest-finishStandard ()
+  (let* ((quest (org-mks bonquest--standardQuests "Quests")))
+    (setq quest `(:title ,(plist-get (nth 2 quest) :title)
+                         :type "standard"
+                         :state "done"
+                         :content ""))
+    (setq quest (json-encode-list quest))
+    (deferred:$
+        (bonquest--postQuest quest)
+        (deferred:nextc it
+            (lambda (resp)
+              (let* ((data (request-response-data resp))
+                     (id (alist-get 'id data)))
+                (message id)
+                )))))
+  )
+
 (defun bonquest-addQuest (title)
   (interactive "sQuest title: ")
   (org-insert-heading-respect-content)
@@ -93,6 +113,7 @@
 
 
 (defun bonquest--postQuest(questJson)
+  (message "sending quest %s" questJson)
   (request-deferred
    "localhost:4000/addQuest"
    :headers '(("Content-Type" . "application/json"))
@@ -128,28 +149,36 @@
 
 
 
-(defun testRpg ()
-  (org-element-map (org-element-parse-buffer) 'headline
-    (lambda (headline)
-      (if (org-element-property :TODO))
-      (message "%s" headline)
-      (setq headline (org-json-straigten-tree headline)) 
-      (setq headline (json-encode-list headline)) 
-      (setq headline (let ((json-object-type 'plist)
-                           (json-array-type 'list) )
-                       (json-read-from-string headline)))
-      (setq headline (stringToSymbols headline))
-      (org-element-interpret-data headline))))
+;; (defun testRpg ()
+;;   (org-element-map (org-element-parse-buffer) 'headline
+;;     (lambda (headline)
+;;       (if (org-element-property :TODO))
+;;       (message "%s" headline)
+;;       (setq headline (org-json-straigten-tree headline)) 
+;;       (setq headline (json-encode-list headline)) 
+;;       (setq headline (let ((json-object-type 'plist)
+;;                            (json-array-type 'list) )
+;;                        (json-read-from-string headline)))
+;;       (setq headline (stringToSymbols headline))
+;;       (org-element-interpret-data headline))))
 
-(add-hook 'org-after-todo-state-change-hook
-          (lambda () (message "%S" org-state)))
+;; (add-hook 'org-after-todo-state-change-hook
+;;           (lambda () (message "%S" org-state)))
 
-(let* ((main (assoc 'main spaceline--mode-lines))
-       (right (cdr main)))
-  (setcdr main (push 'rpg right))
-  (assq-delete-all 'main spaceline--mode-lines)
-  (push spaceline--mode-lines ')
-  main)
-(spaceline-compile)
+;; (let* ((main (assoc 'main spaceline--mode-lines))
+;;        (right (cdr main)))
+;;   (setcdr main (push 'rpg right))
+;;   (assq-delete-all 'main spaceline--mode-lines)
+;;   (push spaceline--mode-lines ')
+;;   main)
+;; (spaceline-compile)
 
 
+(provide 'bonquest)
+
+(request-deferred
+ "localhost:4000/addQuote"
+ :headers '(("Content-Type" . "application/json"))
+ :type "POST"
+ :data (json-encode-list `(:quote "test"))
+ :parser 'json-read)
