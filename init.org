@@ -69,6 +69,14 @@
 (bind-key "C-ü" 'windmove-up my-keys-minor-mode-map)
 (bind-key "C-ä" 'windmove-down my-keys-minor-mode-map)
 #+END_SRC
+*** delete other window
+#+BEGIN_SRC emacs-lisp
+(defun delete-other-window ()
+  (interactive)
+  (delete-window (other-window 1)))
+
+(bind-key "C-q" 'delete-other-window my-keys-minor-mode-map)
+#+END_SRC
 *** disable overwrite
 #+BEGIN_SRC emacs-lisp
 (define-key global-map [(insert)] nil)
