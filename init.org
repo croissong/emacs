@@ -1483,6 +1483,7 @@ https://github.com/tonini/alchemist.el
 *** Php
 #+BEGIN_SRC emacs-lisp
 (req-package php-mode)
+#+END_SRC
 *** Rust
 #+BEGIN_SRC emacs-lisp
 (req-package rust-mode)
