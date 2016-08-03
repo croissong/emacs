@@ -2,10 +2,14 @@
 ;;; Commentary: 
 ;;; Code:
 (require 'org)
+(require 'bytecomp)
+(require 'byte-compile)
 
-(defvar org-init--file (expand-file-name "init.org" user-emacs-directory))
-(defvar org-init--el-file (expand-file-name "org-init.el" user-emacs-directory))
-(defvar org-init--elc-file (expand-file-name "init.elc" user-emacs-directory))
+(defvar org-init--init-org (expand-file-name "init.org" user-emacs-directory))
+(defvar org-init--org-init-el (expand-file-name "org-init.el" user-emacs-directory))
+(defvar org-init--init-el (expand-file-name "init.el" user-emacs-directory))
+
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
 (defsubst org-init--make-keymap ()
   (let ((keymap (make-keymap)))
@@ -17,23 +21,27 @@
   nil " stc" (org-init--make-keymap))
 
 (defun org-init--tangle ()
-  (org-babel-tangle-file org-init--file org-init--el-file))
+  (org-babel-tangle-file org-init--init-org org-init--org-init-el))
 
 (defun org-init-recompile ()
-  (interactive)
-  (if (org-init--need-compile?)
-      (progn
-        (org-init--tangle)
-        (message "compiling file...")
-	(byte-compile-file org-init--el-file)
-	(rename-file (concat org-init--el-file "c") org-init--elc-file t)
-        (message "compiled, will be loaded next time"))
-    (message "no need to recompile")
-    nil))
+  (interactive) 
+  (when (org-init--need-compile? org-init--init-el
+				 (concat org-init--init-el "c"))
+    (byte-compile-file org-init--init-el))
+  (when (org-init--need-compile? org-init--init-org
+				 (concat org-init--org-init-el "c"))
+    (org-init--tangle)
+    (byte-compile-file org-init--org-init-el)
+    (delete-file org-init--org-init-el)
+    t))
 
-(defun org-init--need-compile? ()
-  (or (not (file-exists-p org-init--elc-file))
-      (file-newer-than-file-p org-init--file org-init--elc-file)))
+(defun org-init-load ()
+  (load-file (concat org-init--org-init-el "c")))
+
+(defun org-init--need-compile? (file dest)
+  (or (not (file-exists-p dest))
+      (file-newer-than-file-p file
+                              dest)))
 
 (defun org-init-git ()
   (interactive)
@@ -41,7 +49,7 @@
 
 (defun org-init-open () 
   (interactive)
-  (with-current-buffer (find-file org-init--file)
+  (with-current-buffer (find-file org-init--init-org)
     (org-init--mode 1)
     (diminish 'org-init--mode)))
 

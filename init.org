@@ -36,14 +36,6 @@
    :init (auto-compile-on-load-mode)
  )
  #+END_SRC
-** Org-init
-#+BEGIN_SRC emacs-lisp
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(req-package org-init
-:force t
-:load-path "els/org-init/")
-(org-init-recompile)
-#+END_SRC
 ** My/Utils
 #+BEGIN_SRC emacs-lisp
 (req-package my-util
