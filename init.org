@@ -38,6 +38,7 @@
  #+END_SRC
 ** Org-init
 #+BEGIN_SRC emacs-lisp
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (req-package org-init
 :force t
 :load-path "els/org-init/")
@@ -1872,3 +1873,5 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 (when (my-util-win?)
   (server-start))
 #+END_SRC
+* Calc
+https://www.reddit.com/r/emacs/comments/1mbn0s/the_emacs_calculator/
