@@ -655,7 +655,9 @@ The Spacemacs Modeline
       org-list-allow-alphabetical t
       org-use-property-inheritance t
       org-use-sub-superscripts nil
-      org-checkbox-hierarchical-statistics t)
+      org-checkbox-hierarchical-statistics t
+      magit-diff-arguments (quote ("--ignore-space-change"
+      "--ignore-all-space" "--no-ext-diff" "--stat")))
 (bind-keys ("C-c l" 'org-store-link)
 	   ("C-c a" 'org-agenda)
 	   ("C-c b" 'org-iswitchb))
@@ -1616,13 +1618,13 @@ maybe for linux
 ** Cygwin
 *** Cygwin-Mount
 #+BEGIN_SRC emacs-lisp
-(if (my-util-win?)
-    (setenv "PATH" (concat "c:/cygwin64/bin;" (getenv "PATH")))
+(when (my-util-win?)
+  (setenv "PATH" (concat "c:/cygwin64/bin;" (getenv "PATH")))
   (setq exec-path (cons "c:/cygwin64/bin/" exec-path))
   (req-package 'cygwin-mount
-               :load-path "els/cygwin/"
-               :init (cygwin-mount-activate)
-               ))
+      :load-path "els/cygwin/"
+      :init (cygwin-mount-activate)
+      ))
 #+END_SRC
 ** Finish req-package
 #+BEGIN_SRC emacs-lisp
