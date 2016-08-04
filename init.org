@@ -311,7 +311,8 @@ https://github.com/lukhas/buffer-move
 #+END_SRC
 *** AG the_silver_searcher
 #+BEGIN_SRC emacs-lisp
-(req-package ag)
+(req-package ag
+    :require wgrep-ag)
 #+END_SRC
 *** Evil-Nerd-Commenter
 #+BEGIN_SRC emacs-lisp
