@@ -18,7 +18,6 @@
                          ("elpy" . "https://jorgenschaefer.github.io/packages/")
                          ("org" . "http://orgmode.org/elpa/"))
       load-prefer-newer t)
-(package-initialize)
 #+END_SRC
 ** Bootstrap req-package
 #+BEGIN_SRC emacs-lisp
@@ -1600,7 +1599,7 @@ maybe for linux
              )
 #+END_SRC
 *** Bonquest
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package bonquest
     :require request-deferred
     :load-path "els/bonquest/"
