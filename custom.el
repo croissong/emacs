@@ -5,7 +5,10 @@
  ;; If there is more than one, they won't work right.
  '(coffee-tab-width 2)
  '(ediff-split-window-function (quote split-window-horizontally))
- '(ediff-window-setup-function (quote ediff-setup-windows-plain)))
+ '(ediff-window-setup-function (quote ediff-setup-windows-plain))
+ '(package-selected-packages
+   (quote
+    (xtest window-purpose which-key web-mode undo-tree togetherly swiper ssh-agency sql-indent spaceline soft-stone-theme smex smartparens scss-mode request-deferred req-package rainbow-mode racer projectile php-mode org-plus-contrib neotree navi-mode nameless multiple-cursors markdown-mode magit-gh-pulls json-mode js2-mode htmlize google-translate git-wip-timemachine git-timemachine flycheck-rust flx-ido floobits expand-region evil-nerd-commenter esqlite elpy ein dumb-jump drag-stuff dired+ company-web company-racer coffee-mode centered-window-mode cargo buffer-move bitly avy-menu auto-package-update auctex alchemist aggressive-indent ag adaptive-wrap))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
