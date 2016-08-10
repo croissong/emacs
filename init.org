@@ -56,10 +56,10 @@
 *** Moving
 **** Between Windows
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-ö" 'windmove-left my-keys-minor-mode-map)
+(bind-key "C-Ã¶" 'windmove-left my-keys-minor-mode-map)
 (bind-key "C-#" 'windmove-right my-keys-minor-mode-map)
-(bind-key "C-ü" 'windmove-up my-keys-minor-mode-map)
-(bind-key "C-ä" 'windmove-down my-keys-minor-mode-map)
+(bind-key "C-Ã¼" 'windmove-up my-keys-minor-mode-map)
+(bind-key "C-Ã¤" 'windmove-down my-keys-minor-mode-map)
 #+END_SRC
 *** delete other window
 #+BEGIN_SRC emacs-lisp
@@ -117,7 +117,6 @@
 [[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
 #+BEGIN_SRC emacs-lisp
 (prefer-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
 (setq buffer-file-coding-system 'utf-8
       default-file-name-coding-system 'utf-8
       utf-translate-cjk-mode nil ; disable CJK coding/encoding (Chinese/Japanese/Korean characters)
@@ -1331,18 +1330,19 @@ https://github.com/tonini/alchemist.el
 **** Elpy
 #+BEGIN_SRC emacs-lisp
 (req-package elpy
-  :init
+    :init
   (elpy-enable)
   :bind
   :config
   (delete 'elpy-module-highlight-indentation elpy-modules)
   (if (executable-find "ipython")
-      (elpy-use-ipython)
-    (message "'ipython' not found found; please install"))
+      ;; (elpy-use-ipython)
+      (message "'ipython' not found found; please install"))
   ;; Currently no debugging in elpy afaik
   ;; (setq elpy-test-pytest-runner-command '("py.test --pdb")) ;
-  (elpy-set-test-runner 'elpy-test-pytest-runner)
-  (setq elpy-rpc-backend "rope")
+  ;; (elpy-set-test-runner 'elpy-test-pytest-runner)
+  (setq elpy-rpc-backend "rope"
+        elpy-rpc-python-command "python")
   )
 #+END_SRC
 **** IPython Emacs Notebook (EIN)
