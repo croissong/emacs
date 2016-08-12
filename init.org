@@ -138,8 +138,6 @@
 (delete-selection-mode 1)
 (setq backup-inhibited 1)
 ;; http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3
-
-(fset 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 *** Kill active process buffer no prompt
 #+BEGIN_SRC emacs-lisp
@@ -1551,6 +1549,12 @@ maybe for linux
 	 (:port . 5223))))
 #+END_SRC
 *** Hungry-delete
+#+BEGIN_SRC emacs-lisp
+(req-package hungry-delete
+    :init (global-hungry-delete-mode)
+    :config
+    )
+#+END_SRC
 ** Els
 *** Spell-number
 #+BEGIN_SRC emacs-lisp
