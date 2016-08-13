@@ -1334,6 +1334,9 @@ https://github.com/tonini/alchemist.el
   (elpy-enable)
   :bind
   :config
+  ;; https://github.com/jorgenschaefer/elpy/issues/887
+  ;; probvably enable again, its new with emacs 25
+  (setq python-shell-completion-native-enable nil)
   (delete 'elpy-module-highlight-indentation elpy-modules)
   (if (executable-find "ipython")
       ;; (elpy-use-ipython)
