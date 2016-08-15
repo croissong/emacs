@@ -310,7 +310,10 @@ https://github.com/lukhas/buffer-move
 *** AG the_silver_searcher
 #+BEGIN_SRC emacs-lisp
 (req-package ag
-    :require wgrep-ag)
+    :require wgrep-ag
+    :config
+    (push "~/.agignore" ag-arguments)
+    (push "--path-to-agignore" ag-arguments))
 #+END_SRC
 *** Evil-Nerd-Commenter
 #+BEGIN_SRC emacs-lisp
