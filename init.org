@@ -56,10 +56,12 @@
 *** Moving
 **** Between Windows
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-ö" 'windmove-left my-keys-minor-mode-map)
-(bind-key "C-#" 'windmove-right my-keys-minor-mode-map)
-(bind-key "C-ü" 'windmove-up my-keys-minor-mode-map)
-(bind-key "C-ä" 'windmove-down my-keys-minor-mode-map)
+(bind-keys :map my-keys-minor-mode-map
+	   ("C-ö" . windmove-left)
+	   ("C-#" . windmove-right)
+           ("C-ü" . windmove-up)
+           ("C-ä" . windmove-down)
+           ("C-Ü" . clone-indirect-buffer))
 #+END_SRC
 *** delete other window
 #+BEGIN_SRC emacs-lisp
@@ -116,17 +118,17 @@
 ** Coding Environment
 [[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
 #+BEGIN_SRC emacs-lisp
-(prefer-coding-system 'utf-8)
-(setq buffer-file-coding-system 'utf-8
-      default-file-name-coding-system 'utf-8
+(prefer-coding-system 'utf-8-unix)
+(setq buffer-file-coding-system 'utf-8-unix
+      default-file-name-coding-system 'utf-8-unix
       utf-translate-cjk-mode nil ; disable CJK coding/encoding (Chinese/Japanese/Korean characters)
-      locale-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
+      locale-coding-system 'utf-8-unix)
+(set-terminal-coding-system 'utf-8-unix)
+(set-keyboard-coding-system 'utf-8-unix)
 (set-language-environment 'utf-8)
-(set-default-coding-systems 'utf-8)
+(set-default-coding-systems 'utf-8-unix)
 (unless (eq system-type 'windows-nt)
-  (set-selection-coding-system 'utf-8))
+  (set-selection-coding-system 'utf-8-unix))
 #+END_SRC
 ** littlest things
 #+BEGIN_SRC emacs-lisp
