@@ -8,7 +8,7 @@
  '(ediff-window-setup-function (quote ediff-setup-windows-plain))
  '(package-selected-packages
    (quote
-    (hungry-delete xtest window-purpose which-key wgrep-ag web-mode undo-tree swiper ssh-agency sql-indent spaceline soft-stone-theme smex smartparens scss-mode request-deferred req-package racer projectile php-mode org-plus-contrib neotree navi-mode nameless multiple-cursors markdown-mode magit json-mode js2-mode htmlize google-translate git-timemachine flycheck-rust flx-ido floobits expand-region evil-nerd-commenter esqlite elpy ein dumb-jump drag-stuff dired+ company-web company-racer coffee-mode centered-window-mode cargo buffer-move auto-package-update auctex alchemist aggressive-indent ag adaptive-wrap))))
+    (xtest window-purpose which-key wgrep-ag web-mode undo-tree swiper ssh-agency sql-indent spaceline soft-stone-theme smex smartparens scss-mode request-deferred req-package racer projectile php-mode pass org-plus-contrib neotree navi-mode nameless multiple-cursors markdown-mode magit json-mode js2-mode hungry-delete htmlize google-translate git-timemachine flycheck-rust flx-ido floobits expand-region evil-nerd-commenter esqlite elpy ein dumb-jump drag-stuff dired+ company-web company-racer coffee-mode centered-window-mode cargo buffer-move auto-package-update auctex alchemist aggressive-indent ag adaptive-wrap))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

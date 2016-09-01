@@ -1110,9 +1110,12 @@ The template may still contain \"%?\" for cursor positioning."
 **** Passwords
 #+BEGIN_SRC emacs-lisp
 (req-package org-passwords
-             :load-path "els/org-passwords/"
-             :config (setq org-passwords-file (expand-file-name meinAll-dir
-                                                                "monument/lesMysteres.gpg")))
+    :load-path "els/org-passwords/"
+    :config (setq org-passwords-file (expand-file-name meinAll-dir
+                                                       "monument/lesMysteres.gpg")))
+;; http://barrenfrozenwasteland.com/2015/06/configuring-pass-on-windows/
+(req-package pass
+    :config )
 #+END_SRC
 **** Encryption
 #+BEGIN_SRC  emacs-lisp
@@ -1641,9 +1644,9 @@ maybe for linux
 (when (my-util-win?)
   (setenv "PATH" (concat "c:/cygwin64/bin;" (getenv "PATH")))
   (setq exec-path (cons "c:/cygwin64/bin/" exec-path))
-  (req-package 'cygwin-mount
+  (req-package cygwin-mount
       :load-path "els/cygwin/"
-      :init (cygwin-mount-activate)
+      :config (cygwin-mount-activate)
       ))
 #+END_SRC
 ** Finish req-package
