@@ -21,9 +21,10 @@
 #+END_SRC
 ** Bootstrap req-package
 #+BEGIN_SRC emacs-lisp
-(unless (package-installed-p 'req-package)
-  (package-refresh-contents)
-  (package-install 'req-package))
+(eval-when-compile
+  (unless (package-installed-p 'req-package)
+    (package-refresh-contents)
+    (package-install 'req-package)))
 (require 'cl-lib)
 (require 'req-package)
 (require 'bind-key)
@@ -70,6 +71,10 @@
   (delete-window (other-window 1)))
 
 (bind-key "C-q" 'delete-other-window my-keys-minor-mode-map)
+#+END_SRC
+*** find file other window
+#+BEGIN_SRC emacs-lisp
+(bind-key "C-x C-M-f" 'ido-find-file-other-window my-keys-minor-mode-map)
 #+END_SRC
 *** disable overwrite
 #+BEGIN_SRC emacs-lisp
@@ -422,7 +427,8 @@ https://github.com/lukhas/buffer-move
 #+BEGIN_SRC emacs-lisp
 (req-package undo-tree
   :bind (("C-p" . undo-tree-undo)
-         ("M-p" . undo-tree-redo))
+         ("M-p" . undo-tree-redo)
+         ("C-M-p" . undo-tree-visualize))
   :init
   :config
   (global-undo-tree-mode t)
