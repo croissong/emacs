@@ -657,7 +657,7 @@ The Spacemacs Modeline
   :bind
   :config
   (setq org-default-notes-file (concat meinAll-dir "milkyway.org"))
-  (diminish 'org-indent-mode)
+  :diminish org-indent-mode
 )
 #+END_SRC
 *** Config
