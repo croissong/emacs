@@ -657,8 +657,13 @@ The Spacemacs Modeline
   :bind
   :config
   (setq org-default-notes-file (concat meinAll-dir "milkyway.org"))
-  :diminish org-indent-mode
-)
+  :diminish org-indent-mode)
+  
+  (req-package my-org
+  :force t
+  :bind (:map org-mode-map
+	      ("C-c C-M-e" . my-org-export-all))
+  :load-path "els/my-org/")
 #+END_SRC
 *** Config
 #+BEGIN_SRC emacs-lisp
@@ -1125,6 +1130,7 @@ The template may still contain \"%?\" for cursor positioning."
 #+END_SRC
 **** Encryption
 #+BEGIN_SRC  emacs-lisp
+(setenv "GPG_AGENT_INFO" nil)
 (require 'epa-file)
 (setq epa-file-select-keys nil)
 #+END_SRC
@@ -1224,7 +1230,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 ("C-M-<left>" . org-backward-sentence)
 ("C-M-<right>" . org-forward-sentence)
 ("C-M-<end>" . org-sentence-newline)
-("C-c C-l" . my/insert-link))
+("C-c l" . my/insert-link))
 #+END_SRC
 **** chromebook
 #+BEGIN_SRC emacs-lisp
