@@ -34,23 +34,25 @@
   (let ((rndPos (+ pMin (random pMax))))
     (goto-char rndPos)))
 
+;; TODO http://emacs.stackexchange.com/questions/10771/how-to-use-my-custom-layout-for-generating-html-files-from-org-files-instead-of
 (defun my-org-export-all ()
   "Export all subtrees that are *not* tagged with :noexport: to
 separate files.
 
 Note that subtrees must have the :EXPORT_FILE_NAME: property set
 to a unique value for this to work properly."
-  (interactive) 
-  (org-map-entries (lambda ()
-                     (let* ((heading (nth 4 (org-heading-components)))
-                            (title (format "<!-- title: %s -->" heading))
-                            (file (org-entry-get (point) "EXPORT_FILE_NAME"))) 
-                       (with-current-buffer (org-html-export-as-html nil t nil t)
-                         (insert title)
-                         (newline)
-                         (write-file file)
-                         (kill-buffer))
-                       )) "-noexport"))
+  (interactive)
+  (save-window-excursion
+    (org-map-entries (lambda ()
+                       (let* ((heading (nth 4 (org-heading-components)))
+                              (title (format "<!-- title: %s -->" heading))
+                              (file (org-entry-get (point) "EXPORT_FILE_NAME"))) 
+                         (with-current-buffer (org-html-export-as-html nil t nil t)
+                           (insert title)
+                           (newline)
+                           (write-file file)
+                           (kill-buffer)) 
+                         )) "-noexport")))
 (provide 'my-org)
 
 ;;; my-org.el ends here
