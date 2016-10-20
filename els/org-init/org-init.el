@@ -31,9 +31,9 @@
   (when (org-init--need-compile? org-init--init-org
 				 (concat org-init--org-init-el "c"))
     (org-init--tangle)
-    (byte-compile-file org-init--org-init-el)
-    (delete-file org-init--org-init-el)
-    t))
+    (when (byte-compile-file org-init--org-init-el)
+      (delete-file org-init--org-init-el)
+      t)))
 
 (defun org-init-load ()
   (load-file (concat org-init--org-init-el "c")))
