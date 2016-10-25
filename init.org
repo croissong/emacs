@@ -1438,6 +1438,7 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (req-package scss-mode
   :init
+  (setq css-indent-offset 2)
   (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
   :config
 )
