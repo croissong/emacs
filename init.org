@@ -621,8 +621,10 @@ The Spacemacs Modeline
 [[https://github.com/Malabarba/aggressive-indent-mode][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (req-package aggressive-indent
-  :init
-  (setq-default indent-tabs-mode nil)
+    :init
+  (setq-default indent-tabs-mode nil
+                tab-width 2
+                indent-line-function 'insert-tab)
   (global-aggressive-indent-mode 1)
   :bind
   :config)
