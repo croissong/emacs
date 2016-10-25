@@ -1,17 +1,3 @@
-* Other .emacs
-** [[http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3][@wisomandwonder]]
-** [[https://github.com/emacs-tw/awesome-emacs][awesome-emacs]]
-** [[https://github.com/jwiegley/dot-emacs][jwiegley dot-emacs]]
-** [[https://www.reddit.com/r/emacs/comments/3obmoh/emacs_for_writers_presentation_by_jay_dixit/][Emacs for writers]]
-- org-bullets
-** packages maybe Futur
-*** Focus [[https://github.com/larstvei/Focus/blob/master/README.md][@github.com]]
-** elisp tips
-- [[https://www.reddit.com/r/emacs/comments/3nu2xr/emacs_lisp_programming_thoughts/][@reddit.com]]
-* Initialize
-** Coding Environment
-[[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
-#+BEGIN_SRC emacs-lisp
   (eval-and-compile
     (prefer-coding-system 'utf-8-unix)
     (setq buffer-file-coding-system 'utf-8-unix
@@ -24,9 +10,7 @@
     (set-default-coding-systems 'utf-8-unix)
     (unless (eq system-type 'windows-nt)
       (set-selection-coding-system 'utf-8-unix)))
-#+END_SRC
-** Initialize package.el
-#+BEGIN_SRC emacs-lisp
+
   (eval-and-compile
     (require 'package)
     (setq package-enable-at-startup nil
@@ -36,9 +20,7 @@
             ("elpy" . "https://jorgenschaefer.github.io/packages/")
             ("org" . "http://orgmode.org/elpa/"))
           load-prefer-newer t))
-#+END_SRC
-** Bootstrap req-package
-#+BEGIN_SRC emacs-lisp
+
   (eval-and-compile
     (unless (package-installed-p 'req-package)
       (package-refresh-contents)
@@ -46,26 +28,14 @@
     (require 'cl-lib)
     (require 'req-package)
     (require 'bind-key))
-#+END_SRC
-** Auto-Compile
- [[https://github.com/tarsius/auto-compile][@github]]
- #+BEGIN_SRC emacs-lisp :tangle no
- (req-package auto-compile
-   :init (auto-compile-on-load-mode)
- )
- #+END_SRC
-** My/Utils
-#+BEGIN_SRC emacs-lisp
+
   (eval-and-compile
     (req-package
      my-util
      :force t
      :functions my-util-ensureEmacsDir my-util-cb? my-util-win? my-util-linux?
      :load-path "els/my-utils/"))
-#+END_SRC
-* Keybindings
-** Minor Mode Init
-#+BEGIN_SRC emacs-lisp
+
 (defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
 (define-minor-mode my-keys-minor-mode
   "A minor mode so that my key settings override annoying major modes."
@@ -73,46 +43,31 @@
 
 (my-keys-minor-mode 1)
 (diminish 'my-keys-minor-mode)
-#+END_SRC
-** Keybindings
-*** Moving
-**** Between Windows
-#+BEGIN_SRC emacs-lisp
+
 (bind-keys :map my-keys-minor-mode-map
 	   ("C-ö" . windmove-left)
 	   ("C-#" . windmove-right)
            ("C-ü" . windmove-up)
            ("C-ä" . windmove-down)
            ("C-Ü" . clone-indirect-buffer))
-#+END_SRC
-*** delete other window
-#+BEGIN_SRC emacs-lisp
+
 (defun delete-other-window ()
   (interactive)
   (delete-window (other-window 1)))
 
 (bind-key "C-q" 'delete-other-window my-keys-minor-mode-map)
-#+END_SRC
-*** find file other window
-#+BEGIN_SRC emacs-lisp
+
 (bind-key "C-x C-M-f" 'ido-find-file-other-window my-keys-minor-mode-map)
-#+END_SRC
-*** disable overwrite
-#+BEGIN_SRC emacs-lisp
+
 (define-key global-map [(insert)] nil)
-#+END_SRC
-*** hm
-#+BEGIN_SRC emacs-lisp
+
 (bind-keys :map my-keys-minor-mode-map
 	   ("C-M-k" . kill-this-buffer)
 	   ("C-l" . goto-line))
 ;;in global keymap because conflict with org-mode new heading
 (bind-keys ("C-<return>" . new-line-below)
 	   ("M-<return>" . new-line-above))
-#+END_SRC
-* Generic
-** My Values
-#+BEGIN_SRC emacs-lisp
+
 (setq default-directory "~/")
 (defvar gdrive-dir (concat default-directory "cloud/"))
 (defvar meinAll-dir (concat gdrive-dir "dokumente/meinAll/"))
@@ -121,51 +76,34 @@
 (my-util-ensureEmacsDir "config/")
 (my-util-ensureEmacsDir "save/autosave")
 (my-util-ensureEmacsDir "save/backup")
-#+END_SRC
-*** Backup
-[[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
-#+BEGIN_SRC emacs-lisp
+
 (setq delete-old-versions t
   kept-new-versions 6
   create-lockfiles nil
   kept-old-versions 2
   version-control t
   backup-directory-alist '((".*" . "~/.emacs.d/save/backup/")))
-#+END_SRC
-*** Autosave
-#+BEGIN_SRC emacs-lisp
+
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
-#+END_SRC
-** Start-Up
-#+BEGIN_SRC emacs-lisp
+
 (setq inhibit-startup-screen t)
 (add-hook 'emacs-startup-hook (lambda () (kill-buffer "*scratch*")))
-#+END_SRC
-** littlest things
-#+BEGIN_SRC emacs-lisp
+
 (tooltip-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
+
 (setq ring-bell-function 'ignore)
 (delete-selection-mode 1)
 (setq backup-inhibited 1)
 ;; http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3
-#+END_SRC
-*** Kill active process buffer no prompt
-#+BEGIN_SRC emacs-lisp
+
 (setq kill-buffer-query-functions
   (remq 'process-kill-buffer-query-function
          kill-buffer-query-functions))
-#+END_SRC
-** What does it do?
-#+BEGIN_SRC emacs-lisp
+
 (setq display-buffer-alist
       '(("*Async Shell Command*" . (display-buffer-no-window))))
-#+END_SRC
-* Style
-** Frame
-#+BEGIN_SRC emacs-lisp
+
 (menu-bar-mode -1) 
 (tool-bar-mode -1)
 (if (file-exists-p "/etc/crouton/name")
@@ -187,41 +125,22 @@
       (set-face-attribute 'vertical-border nil :foreground "bisque4"))
     )
 (scroll-bar-mode -1)
-#+END_SRC
-** Font
-Fantasque Sans Mono
-#+BEGIN_SRC emacs-lisp
+
 (if (my-util-cb?)
     (add-to-list 'default-frame-alist '(font . "Fantasque Sans Mono 15"))
     ;; (setq initial-frame-alist (font . "Fantasque Sans Mono"))
     (add-to-list 'default-frame-alist '(font . "Fantasque Sans Mono")))
-#+END_SRC 
-** Mode-line
-#+BEGIN_SRC emacs-lisp
+
 ;; (set-face-attribute 'mode-line nil :height 135 :foreground "#28a428" :background "#2a2a28")
 ;; (set-face-attribute 'mode-line-inactive nil :height 135 :foreground "#995400" :background "#2a2a28")
-#+END_SRC
-** Cursor
-#+BEGIN_SRC emacs-lisp
+
 (set-face-attribute 'region nil :background "darkblue")
 (set-cursor-color "black")
 (setq-default cursor-type 'bar)
-#+END_SRC
-** Generic
-Linewrap
-#+BEGIN_SRC emacs-lisp
+
 (global-visual-line-mode t)
 (diminish 'visual-line-mode)
-#+END_SRC
-** Faces
-*** What does it do [disabled]
-#+BEGIN_SRC emacs-lisp :tangle no
- '(magit-diff-use-overlays nil)
-#+END_SRC
-* Packages
-** Style
-*** Adaptive-Wrap
-#+BEGIN_SRC emacs-lisp
+
 (req-package adaptive-wrap
   :init
   (define-globalized-minor-mode adaptive-wrap-global-mode
@@ -231,57 +150,23 @@ Linewrap
   :config
   (adaptive-wrap-global-mode)
   )
-#+END_SRC
-*** Theme
-#+BEGIN_SRC emacs-lisp
+
 (req-package soft-stone-theme
   :init
   (load-theme 'soft-stone t)
   :bind
   :config
   )
-#+END_SRC
-**** Alternativen
-- Soft-Morning
-*** Window
-**** Purpose-mode
-[[https://github.com/bmag/emacs-purpose][@github]]
-#+BEGIN_SRC emacs-lisp
+
 (req-package window-purpose
     :config
   (add-to-list 'purpose-user-mode-purposes '(rust-mode . rust))
   (add-to-list 'purpose-user-mode-purposes '(cargo-process-mode . cargo-process))
   (purpose-compile-user-configuration)
   )
-#+END_SRC
-**** Winner-mode [disabled]
-#+BEGIN_SRC emacs-lisp :tangle no
-(winner-mode 1)
-#+END_SRC
-**** No Vertical Split [disabled]
-#+BEGIN_SRC emacs-lisp :tangle no
-;; dont allow vertical split (windows top/bottom)
-(setq split-height-threshold nil)
-(setq split-width-threshold 80)
-#+END_SRC
-*** More
-#+BEGIN_SRC emacs-lisp
+
 (setq sentence-end-double-space nil)
-#+END_SRC
-** PackageManagement
-*** Auto-update [disabled
- [[https://github.com/rranelli/auto-package-update.el][@Github]]
- #+BEGIN_SRC emacs-lisp :tangle no
- (req-package auto-package-update
-   :init
-   :bind
-   :config
-   ;;(auto-package-update-now)
- )
- #+END_SRC
-** Minor Modes
-*** Drag-stuff
-#+BEGIN_SRC emacs-lisp
+
 (req-package drag-stuff
   :init
   :config
@@ -296,22 +181,7 @@ Linewrap
   (drag-stuff-global-mode)
   :diminish drag-stuff-mode
   )
-#+END_SRC
-*** YASnippet [disabled]
-#+BEGIN_SRC emacs-lisp :tangle no
-(req-package yasnippet
-  :init
-  (setq yas-verbosity 2)
-  :config
-  (yas-global-mode 1)
-  (unbind-key "<tab>" yas-minor-mode-map)
-  (unbind-key "TAB" yas-minor-mode-map)
-  (bind-key "C-<tab>" 'yas-expand yas-minor-mode-map)
-  )
-#+END_SRC
-*** Buffer-move
-https://github.com/lukhas/buffer-move
-#+BEGIN_SRC emacs-lisp
+
 (req-package buffer-move
   :bind (:map my-keys-minor-mode-map
 	      ("C-M-#" . buf-move-right)
@@ -319,25 +189,19 @@ https://github.com/lukhas/buffer-move
               ("C-M-ü" . buf-move-up)
               ("C-M-ä" . buf-move-down))
   )
-#+END_SRC
-*** AG the_silver_searcher
-#+BEGIN_SRC emacs-lisp
+
 (req-package ag
     :require wgrep-ag
     :config
     (push "~/.agignore" ag-arguments)
     (push "--path-to-agignore" ag-arguments))
-#+END_SRC
-*** Evil-Nerd-Commenter
-#+BEGIN_SRC emacs-lisp
+
 (req-package evil-nerd-commenter
   :init
   :config
   (evilnc-default-hotkeys)
 )
-#+END_SRC
-*** Multiple-Cursors
-#+BEGIN_SRC emacs-lisp
+
 (req-package multiple-cursors
   :init
   :bind (:map my-keys-minor-mode-map ("C-<down-mouse-1>" . mc/add-cursor-on-click))
@@ -345,10 +209,7 @@ https://github.com/lukhas/buffer-move
   (setq mc/list-file (concat user-emacs-directory "config/.mc-lists.el"))
   ;;'(mc/cursor-face ((nil (:background "orange"))))
 )
-#+END_SRC
 
-*** Google-translate
-#+BEGIN_SRC emacs-lisp
 (req-package google-translate
   :init
   (require 'google-translate-smooth-ui)
@@ -358,11 +219,7 @@ https://github.com/lukhas/buffer-move
 	'(("de" . "en") ("en" . "de") ("de" . "fr") ("de" . "es")))
   (setq google-translate-pop-up-buffer-set-focus t)
 )
-#+END_SRC
 
-*** Outshine
-**** Outshine + Navi-Mode
-#+BEGIN_SRC emacs-lisp
 (req-package outshine
     :init
   ;; because somehow it stopped being activated
@@ -378,9 +235,7 @@ https://github.com/lukhas/buffer-move
   :bind
   :config
   )
-#+END_SRC
-*** Company-Mode
-#+BEGIN_SRC emacs-lisp
+
 (req-package company
 :config 
 (add-hook 'after-init-hook 'global-company-mode)
@@ -390,9 +245,7 @@ https://github.com/lukhas/buffer-move
       company-minimum-prefix-length 1
       company-tooltip-align-annotations t
       company-dabbrev-downcase nil))
-#+END_SRC
-*** Centered-Window-Mode
-#+BEGIN_SRC emacs-lisp
+
 (req-package centered-window-mode
   :init
   ;; Makes left fringe 10px or so smaller than right one in cwm 
@@ -408,10 +261,7 @@ https://github.com/lukhas/buffer-move
   (centered-window-mode t)
   :diminish centered-window-mode
   )
-#+END_SRC
 
-*** Smartparens
-#+BEGIN_SRC emacs-lisp
 (req-package smartparens
   :bind (:map smartparens-mode-map
 	      ("C-M-<left>" . sp-backward-sexp)
@@ -428,9 +278,7 @@ https://github.com/lukhas/buffer-move
   (show-smartparens-global-mode t)
   :diminish smartparens-mode
   )
-#+END_SRC
-*** Undo-Tree
-#+BEGIN_SRC emacs-lisp
+
 (req-package undo-tree
   :bind (("C-p" . undo-tree-undo)
          ("M-p" . undo-tree-redo)
@@ -440,20 +288,14 @@ https://github.com/lukhas/buffer-move
   (global-undo-tree-mode t)
   :diminish undo-tree-mode
 )
-#+END_SRC
-*** Ediff
-TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
-**** Config
-#+BEGIN_SRC emacs-lisp
+
 ;; (setq diff-command "ediff")
 ;; (add-hook 'ediff-after-quit-hook-internal 'winner-undo)
 (custom-set-variables
  '(ediff-window-setup-function 'ediff-setup-windows-plain)
  '(ediff-split-window-function 'split-window-horizontally)
  )
-#+END_SRC
-**** Org-mode fix
-#+BEGIN_SRC emacs-lisp
+
 ;; diff hooks for org mode
 (add-hook 'ediff-select-hook 'f-ediff-org-unfold-tree-element)
 (add-hook 'ediff-unselect-hook 'f-ediff-org-fold-tree)
@@ -479,9 +321,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (f-ediff-org-showhide ediff-buffer-B 'hide-sublevels 1)  
   (f-ediff-org-showhide ediff-buffer-C 'hide-sublevels 1)  
   )
-#+END_SRC
-*** Expand-Region
-#+BEGIN_SRC emacs-lisp
+
 (req-package expand-region
   :bind (:map my-keys-minor-mode-map
 	      ("C-M-w" . er/expand-region)
@@ -490,37 +330,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :config
   (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions)
 )
-#+END_SRC
-*** Flycheck [disabled]
-#+BEGIN_SRC emacs-lisp :tangle no
-(req-package flycheck
-    :init
-  ;; (add-hook 'after-init-hook #'global-flycheck-mode) ;
-  :config
-  ;; disable jshint since we prefer eslint checking
-  (setq-default flycheck-disabled-checkers
-		(append flycheck-disabled-checkers
-			'(javascript-jshint)))
 
-  ;; use eslint with web-mode for jsx files
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
-
-  ;;https://github.com/justjake/eslint-project-relative
-  (when (my-util-installed? "eslint-project-relative")
-    (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
-  ;; customize flycheck temp file prefix
-  (setq-default flycheck-temp-prefix ".flycheck")
-  )
-#+END_SRC
-**** disable in org-src-block
-#+BEGIN_SRC emacs-lisp
 (add-hook 'org-src-mode-hook
 	  (lambda () (setq-local
 		      flycheck-disabled-checkers
 		      '(emacs-lisp-checkdoc))))
-#+END_SRC
-*** ido
-#+BEGIN_SRC emacs-lisp
+
 (req-package ido
 :init
 :bind
@@ -532,9 +347,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (bind-keys :map ido-common-completion-map
             ("M-#" . ido-next-match)
             ("M-ö" . ido-prev-match)))
-#+END_SRC
-**** config
-#+BEGIN_SRC emacs-lisp
+
 (setq ido-case-fold t
       ido-enable-flex-matching t
       ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*"
@@ -563,9 +376,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
                                             eos))))) 
 
 ;;(add-to-list 'ido-ignore-files "\\`media/")
-#+END_SRC
-**** flx-ido
-#+BEGIN_SRC emacs-lisp
+
 (req-package flx-ido
 :init
 (flx-ido-mode 1)
@@ -575,20 +386,14 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (setq ido-enable-flex-matching t)
 (setq ido-use-faces nil)
 :ensure t)
-#+END_SRC
-*** smex
-#+BEGIN_SRC emacs-lisp
+
 (req-package smex
 :bind ("M-x" . smex)
 :init
 :config
 :ensure t
 )
-#+END_SRC
-*** Space-line
-The Spacemacs Modeline
-[[[[https://github.com/TheBB/spaceline/tree/master/]]][@Github]]
-#+BEGIN_SRC emacs-lisp
+
 (req-package spaceline
   :init
   (require 'spaceline-config)
@@ -597,9 +402,7 @@ The Spacemacs Modeline
   :config
   (spaceline-toggle-buffer-size-off)
   )
-#+END_SRC
-*** Projectile
-#+BEGIN_SRC emacs-lisp
+
 ;;asdsd
 (req-package projectile
   :init
@@ -608,38 +411,24 @@ The Spacemacs Modeline
   :config
   (setq projectile-indexing-method 'alien)
   )
-#+END_SRC
-*** Floobits
-#+BEGIN_SRC emacs-lisp
+
 (req-package floobits
 :init
 :config
 :ensure t
 )
-#+END_SRC
-*** aggressive-indent
-[[https://github.com/Malabarba/aggressive-indent-mode][@github.com]]
-#+BEGIN_SRC emacs-lisp
+
 (req-package aggressive-indent
   :init
   (setq-default indent-tabs-mode nil)
   (global-aggressive-indent-mode 1)
   :bind
   :config)
-#+END_SRC
-*** which-key
-[[https://github.com/justbur/emacs-which-key?utm_medium=referral&utm_campaign=ZEEF&utm_source=https%3A%2F%2Femacs.zeef.com%2Fehartc][@github.com]]
-#+BEGIN_SRC emacs-lisp
+
 (req-package which-key :init (which-key-mode))
-#+END_SRC
-*** dumb-jump
-[[https://github.com/jacktasia/dumb-jump][@github.com]]
-#+BEGIN_SRC emacs-lisp
+
 (req-package dumb-jump)
-#+END_SRC
-** Magit
-[[https://github.com/magit/magit/wiki/Pushing-with-Magit-from-Windows][@github.com]]
-#+BEGIN_SRC emacs-lisp
+
 (setenv "SSH_ASKPASS" "git-gui--askpass")
 (req-package ssh-agency
   :if (my-util-win?)
@@ -647,13 +436,9 @@ The Spacemacs Modeline
 (req-package magit
 :ensure t
 )
-#+END_SRC
-*** git-timemachine
-#+BEGIN_SRC emacs-lisp
+
 (req-package git-timemachine)
-#+END_SRC
-** Org-Mode
-#+BEGIN_SRC emacs-lisp
+
 (req-package org-plus-contrib
   :init
   (require 'org)
@@ -670,9 +455,7 @@ The Spacemacs Modeline
   :bind (:map org-mode-map
 	      ("C-c C-M-e" . my-org-export-all))
   :load-path "els/my-org/")
-#+END_SRC
-*** Config
-#+BEGIN_SRC emacs-lisp
+
 (setq org-startup-indented t
       org-blank-before-new-entry '((heading . nil)
 				  (plain-list-item . nil))
@@ -688,14 +471,10 @@ The Spacemacs Modeline
 (bind-keys ("C-c l" 'org-store-link)
 	   ("C-c a" 'org-agenda)
 	   ("C-c b" 'org-iswitchb))
-#+END_SRC
-**** Export
-#+BEGIN_SRC emacs-lisp
+
 (setq org-export-with-toc nil
       org-export-with-section-numbers nil)
-#+END_SRC
-**** Capture
-#+BEGIN_SRC emacs-lisp
+
 (setq org-refile-use-outline-path t
       org-datetree-add-timestamp 1
       org-extend-today-until 6
@@ -705,9 +484,7 @@ The Spacemacs Modeline
       org-refile-targets '((nil :level . 2)))
 (setq-default org-display-custom-times t)
 (bind-key "C-c c" 'org-capture)
-#+END_SRC
-***** Templates
-#+BEGIN_SRC emacs-lisp
+
 ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
 (setq org-capture-templates
       (quote (
@@ -806,9 +583,7 @@ The Spacemacs Modeline
 	      ("ts" "Someday" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Toskana Durota" "Someday")
 	       "* %? %^g" :kill-buffer t)
 	      )))
-#+END_SRC
-***** Tags
-#+BEGIN_SRC emacs-lisp
+
 (setq org-tag-alist '(("@work" . ?w) ("@home" . ?h) ("note" . ?n)("exercise" . nil)
 		      (:startgroup . nil)
 		      ("sport" . nil)
@@ -822,235 +597,7 @@ The Spacemacs Modeline
 		      ("read_book" . nil)
 		      ("read_ebook" . nil)
 		      (:endgroup . nil)))
-#+END_SRC
-***** Functions
-****** Probably not up-to-date
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun org-capture-fill-template (&optional template initial annotation)
-  "Fill a template and return the filled template as a string.
-The template may still contain \"%?\" for cursor positioning."
-  (setq template (or template (org-capture-get :template)))
-  (when (stringp initial)
-    (setq initial (org-no-properties initial)))
-  (let* ((buffer (org-capture-get :buffer))
-	 (file (buffer-file-name (or (buffer-base-buffer buffer) buffer)))
-	 (ct (org-capture-get :default-time))
-	 (dct (decode-time ct))
-	 (ct1
-	  (if (< (nth 2 dct) org-extend-today-until)
-	      (encode-time 0 59 23 (1- (nth 3 dct)) (nth 4 dct) (nth 5 dct))
-	    ct))
-	 (plist-p (if org-store-link-plist t nil))
-	 (v-c (and (> (length kill-ring) 0) (current-kill 0)))
-	 (v-x (or (org-get-x-clipboard 'PRIMARY)
-		  (org-get-x-clipboard 'CLIPBOARD)
-		  (org-get-x-clipboard 'SECONDARY)))
-	 (v-t (format-time-string (car org-time-stamp-formats) ct1))
-	 (v-T (format-time-string (cdr org-time-stamp-formats) ct1))
-	 (v-u (concat "[" (substring v-t 1 -1) "]"))
-	 (v-U (concat "[" (substring v-T 1 -1) "]"))
-	 ;; `initial' and `annotation' might habe been passed.
-	 ;; But if the property list has them, we prefer those values
-	 (v-i (or (plist-get org-store-link-plist :initial)
-		  initial
-		  (org-capture-get :initial)
-		  ""))
-	 (v-a (or (plist-get org-store-link-plist :annotation)
-		  annotation
-		  (org-capture-get :annotation)
-		  ""))
-	 ;; Is the link empty?  Then we do not want it...
-	 (v-a (if (equal v-a "[[]]") "" v-a))
-	 (clipboards (remove nil (list v-i
-				       (org-get-x-clipboard 'PRIMARY)
-				       (org-get-x-clipboard 'CLIPBOARD)
-				       (org-get-x-clipboard 'SECONDARY)
-				       v-c)))
-	 (l-re "\\[\\[\\(.*?\\)\\]\\(\\[.*?\\]\\)?\\]")
-	 (v-A (if (and v-a (string-match l-re v-a))
-		  (replace-match "[[\\1][%^{Link description}]]" nil nil v-a)
-		v-a))
-	 (v-l (if (and v-a (string-match l-re v-a))
-		  (replace-match "\\1" nil nil v-a)
-		v-a))
-	 (v-n user-full-name)
-	 (v-k (if (marker-buffer org-clock-marker)
-		  (org-no-properties org-clock-heading)))
-	 (v-K (if (marker-buffer org-clock-marker)
-		  (org-make-link-string
-		   (buffer-file-name (marker-buffer org-clock-marker))
-		   org-clock-heading)))
-	 (v-f (or (org-capture-get :original-file-nondirectory) ""))
-	 (v-F (or (org-capture-get :original-file) ""))
-	 v-I
-	 (org-startup-folded nil)
-	 (org-inhibit-startup t)
-	 org-time-was-given org-end-time-was-given x
-	 prompt completions char time pos default histvar strings)
 
-    (setq org-store-link-plist
-	  (plist-put org-store-link-plist :annotation v-a)
-	  org-store-link-plist
-	  (plist-put org-store-link-plist :initial v-i))
-    (setq initial v-i)
-
-    (unless template (setq template "") (message "No template") (ding)
-	    (sit-for 1))
-    (save-window-excursion
-      (pop-to-buffer (get-buffer-create "*Capture*"))
-      (erase-buffer)
-      (insert template)
-      (goto-char (point-min))
-      (org-capture-steal-local-variables buffer)
-      (setq buffer-file-name nil mark-active nil)
-
-      ;; %[] Insert contents of a file.
-      (goto-char (point-min))
-      (while (re-search-forward "%\\[\\(.+\\)\\]" nil t)
-	(unless (org-capture-escaped-%)
-	  (let ((start (match-beginning 0))
-		(end (match-end 0))
-		(filename (expand-file-name (match-string 1))))
-	    (goto-char start)
-	    (delete-region start end)
-	    (condition-case error
-		(insert-file-contents filename)
-	      (error (insert (format "%%![Couldn't insert %s: %s]"
-				     filename error)))))))
-
-      ;; The current time
-      (goto-char (point-min))
-      (while (re-search-forward "%<\\([^>\n]+\\)>" nil t)
-	(replace-match (format-time-string (match-string 1)) t t))
-
-      ;; Simple %-escapes
-      (goto-char (point-min))
-      (while (re-search-forward "%\\([tTuUaliAcxkKInfF]\\)" nil t)
-	(unless (org-capture-escaped-%)
-	  (when (and initial (equal (match-string 0) "%i"))
-	    (save-match-data
-	      (let* ((lead (buffer-substring
-			    (point-at-bol) (match-beginning 0))))
-		(setq v-i (mapconcat 'identity
-				     (org-split-string initial "\n")
-				     (concat "\n" lead))))))
-	  (replace-match (or (eval (intern (concat "v-" (match-string 1)))) "")
-			 t t)))
-
-      ;; From the property list
-      (when plist-p
-	(goto-char (point-min))
-	(while (re-search-forward "%\\(:[-a-zA-Z]+\\)" nil t)
-	  (unless (org-capture-escaped-%)
-	    (and (setq x (or (plist-get org-store-link-plist
-					(intern (match-string 1))) ""))
-		 (replace-match x t t)))))
-
-      ;; %() embedded elisp
-      (goto-char (point-min))
-      (org-capture-expand-embedded-elisp)
-
-      ;; Turn on org-mode in temp buffer, set local variables
-      ;; This is to support completion in interactive prompts
-      (let ((org-inhibit-startup t)) (org-mode))
-      ;; Interactive template entries
-      (goto-char (point-min))
-      (while (re-search-forward "%^\\({\\([^}]*\\)}\\)?\\([gGtTuUCLpü]\\)?" nil t)
-	(unless (org-capture-escaped-%)
-	  (setq char (if (match-end 3) (match-string-no-properties 3))
-		prompt (if (match-end 2) (match-string-no-properties 2)))
-	  (goto-char (match-beginning 0))
-	  (replace-match "")
-	  (setq completions nil default nil)
-	  (when prompt
-	    (setq completions (org-split-string prompt "|")
-		  prompt (pop completions)
-		  default (car completions)
-		  histvar (intern (concat
-				   "org-capture-template-prompt-history::"
-				   (or prompt "")))
-		  completions (mapcar 'list completions)))
-	  (unless (boundp histvar) (set histvar nil))
-	  (cond
-	   ((member char '("G" "g"))
-	    (let* ((org-last-tags-completion-table
-		    (org-global-tags-completion-table
-		     (if (equal char "G")
-			 (org-agenda-files)
-		       (and file (list file)))))
-		   (org-add-colon-after-tag-completion t)
-		   (ins (org-icompleting-read
-			 (if prompt (concat prompt ": ") "Tags: ")
-			 'org-tags-completion-function nil nil nil
-			 'org-tags-history)))
-	      (setq ins (mapconcat 'identity
-				   (org-split-string
-				    ins (org-re "[^[:alnum:]_@#%]+"))
-				   ":"))
-	      (when (string-match "\\S-" ins)
-		(or (equal (char-before) ?:) (insert ":"))
-		(insert ins)
-		(or (equal (char-after) ?:) (insert ":"))
-		(and (org-at-heading-p)
-		     (let ((org-ignore-region t))
-		       (org-set-tags nil 'align))))))
-	   ((equal char "ü")
-	    (my/insert-link)
-	    )
-	   ((equal char "C")
-	    (cond ((= (length clipboards) 1) (insert (car clipboards)))
-		  ((> (length clipboards) 1)
-		   (insert (read-string "Clipboard/kill value: "
-					(car clipboards) '(clipboards . 1)
-					(car clipboards))))))
-	   ((equal char "L")
-	    (cond ((= (length clipboards) 1)
-		   (org-insert-link 0 (car clipboards)))
-		  ((> (length clipboards) 1)
-		   (org-insert-link 0 (read-string "Clipboard/kill value: "
-						   (car clipboards)
-						   '(clipboards . 1)
-						   (car clipboards))))))
-	   ((equal char "p")
-	    (org-set-property (org-no-properties prompt) nil))
-	   (char
-	    ;; These are the date/time related ones
-	    (setq org-time-was-given (equal (upcase char) char))
-	    (setq time (org-read-date (equal (upcase char) char) t nil
-				      prompt))
-	    (if (equal (upcase char) char) (setq org-time-was-given t))
-	    (org-insert-time-stamp time org-time-was-given
-				   (member char '("u" "U"))
-				   nil nil (list org-end-time-was-given)))
-	   (t
-	    (let (org-completion-use-ido)
-	      (push (org-completing-read-no-i
-		     (concat (if prompt prompt "Enter string")
-			     (if default (concat " [" default "]"))
-			     ": ")
-		     completions nil nil nil histvar default)
-		    strings)
-	      (insert (car strings)))))))
-      ;; Replace %n escapes with nth %^{...} string
-      (setq strings (nreverse strings))
-      (goto-char (point-min))
-      (while (re-search-forward "%\\\\\\([1-9][0-9]*\\)" nil t)
-	(unless (org-capture-escaped-%)
-	  (replace-match
-	   (nth (1- (string-to-number (match-string 1))) strings)
-	   nil t)))
-      ;; Make sure there are no empty lines before the text, and that
-      ;; it ends with a newline character
-      (goto-char (point-min))
-      (while (looking-at "[ \t]*\n") (replace-match ""))
-      (if (re-search-forward "[ \t\n]*\\'" nil t) (replace-match "\n"))
-      ;; Return the expanded template and kill the temporary buffer
-      (untabify (point-min) (point-max))
-      (set-buffer-modified-p nil)
-      (prog1 (buffer-string) (kill-buffer (current-buffer))))))
-#+END_SRC
-****** My/insert-link
-#+BEGIN_SRC emacs-lisp
 ;; TODO change minibuffer prompt while read-from-minibuffer to display Url: or File: in minibuffer prompt depending on what is inserted
 ;; TODO maybe change stevinho.justnetwork.eu from @justnetwork.eu to @stevinho.eu
 ;; replace www. and use first and last (idea)
@@ -1104,9 +651,7 @@ The template may still contain \"%?\" for cursor positioning."
 	    (insert (format "[[%s][%s]]" url urlDescription))))
       (minibuffer-message "No Link to insert. Aborted"))
     ))
-#+END_SRC
-**** Babel
-#+BEGIN_SRC emacs-lisp
+
 (when (my-util-win?)
   (setq org-babel-sh-command "C:/cygwin64/bin/bash.exe"))
 
@@ -1123,9 +668,7 @@ The template may still contain \"%?\" for cursor positioning."
    (gnuplot . t)
    (sh . t)
    (sql . t)))
-#+END_SRC
-**** Passwords
-#+BEGIN_SRC emacs-lisp
+
 (req-package org-passwords
     :load-path "els/org-passwords/"
     :config (setq org-passwords-file (expand-file-name meinAll-dir
@@ -1133,15 +676,11 @@ The template may still contain \"%?\" for cursor positioning."
 ;; http://barrenfrozenwasteland.com/2015/06/configuring-pass-on-windows/
 (req-package pass
     :config )
-#+END_SRC
-**** Encryption
-#+BEGIN_SRC  emacs-lisp
+
 (setenv "GPG_AGENT_INFO" nil)
 (require 'epa-file)
 (setq epa-file-select-keys nil)
-#+END_SRC
-**** Latex
-#+BEGIN_SRC emacs-lisp
+
 ;;(require 'ox-latex)
 (unless (boundp 'org-latex-classes)
   (setq org-latex-classes nil))
@@ -1154,9 +693,7 @@ The template may still contain \"%?\" for cursor positioning."
                ("\\paragraph{%s}" . "\\paragraph*{%s}")
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 (setq org-latex-preview-ltxpng-directory (concat temporary-file-directory "ltxpng/"))
-#+END_SRC
-*** Style
-#+BEGIN_SRC emacs-lisp
+
 (custom-set-faces
  `(org-level-4 ((t (:foreground "darkorange"))))
  `(org-level-2 ((t (:foreground "cadet blue"))))
@@ -1172,9 +709,7 @@ The template may still contain \"%?\" for cursor positioning."
  `(org-block-begin-line ((t (:foreground ,"#446a5d"))))
  `(org-block-end-line ((t (:foreground ,"#446a5d"))))
  )
-#+END_SRC
-*** Functions
-#+BEGIN_SRC emacs-lisp
+
 (defun org-sentence-newline()
   (interactive)
   (org-backward-sentence)
@@ -1185,51 +720,7 @@ The template may still contain \"%?\" for cursor positioning."
   (if (org-at-heading-p)
       (org-cut-subtree)
     (kill-line)))
-#+END_SRC
-**** Checkboxes toggle DONE State (not working)
-[[http://osdir.com/ml/emacs-orgmode-gnu/2010-05/msg00506.html][mailinglist]]
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun org-summary-todo-checkbox (c-on c-off)
-  "Switch entry to DONE when all subentry-checkboxes are done, to TODO otherwise."
-  (outline-previous-visible-heading 1)
-  (let (org-log-done org-log-states)	; turn off logging
-    (org-todo (if (= c-off 0) "DONE" "TODO"))))
-(add-hook 'org-checkbox-statistics-hook 'org-summary-todo-checkbox)
-#+END_SRC
-**** Insert Image
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun org-insert-image (url name)
-"Take a screenshot into a time stamped unique-named file in the
-sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
-(interactive "sEnter url: \nsEnter file name: ")
 
-(setq foldername (concat user-emacs-directory "meinAll/media/" (file-name-base buffer-file-name) "/"))
-(if (not (file-exists-p foldername))
-  (mkdir foldername))
-
-(setq imgName (concat
-	       (format "%s." name) (nth 0 (last(split-string url "\\.")))))
-(setq imgPath (concat foldername imgName))
-
-(url-copy-file url imgPath)
-
-(setq width (let
-		((w (car (image-size (create-image imgPath) :pixel))))
-	      (if (> w 500) 500 w)))
-
-(insert (format "#+ATTR_HTML: :width %dpx" width))
-(newline-and-indent)
-(insert (concat "[[" imgPath "]]"))
-(newline-and-indent)
-(insert (concat ":PROPERTIES:"))
-(newline-and-indent)
-(insert (concat ":Quelle: [[" url "][Quelle]]"))
-(newline-and-indent)
-(insert (concat ":END:"))
-(org-display-inline-images nil t))
-#+END_SRC
-*** Keybindings
-#+BEGIN_SRC emacs-lisp
 (bind-keys :map org-mode-map
 ("<return>" . org-return-indent)
 ("M-S-<delete>" . my/org-delete-heading-or-line)
@@ -1237,9 +728,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 ("C-M-<right>" . org-forward-sentence)
 ("C-M-<end>" . org-sentence-newline)
 ("C-c l" . my/insert-link))
-#+END_SRC
-**** chromebook
-#+BEGIN_SRC emacs-lisp
+
 (when (my-util-cb?)
     (bind-keys :map org-mode-map
 	       ("M-S-<prior>" . org-shiftmetaup)
@@ -1247,10 +736,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 	       ;; ("M-right" . drag-stuff-right)
 	       ;; ("M-right" . drag-stuff-left)
 	       ))
-#+END_SRC
-*** MeinAll
-**** Functions
-#+BEGIN_SRC emacs-lisp
+
 (defun new-movie(title)
   "Add a new movie to "
   (interactive "sTitel: ")
@@ -1259,25 +745,19 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 		    "To Watch")))
     headline
     ))
-#+END_SRC
-** AUCTeX
-#+BEGIN_SRC emacs-lisp
+
 (req-package tex
   :init
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   :config
   :ensure auctex
 )
-#+END_SRC
-** NeoTree
-#+BEGIN_SRC emacs-lisp
+
 (req-package neotree
   :init
   :config
 )
-#+END_SRC
-** Dired+
-#+BEGIN_SRC emacs-lisp
+
 (req-package dired+
   :init
   (toggle-diredp-find-file-reuse-dir 1)
@@ -1286,9 +766,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
   (bind-key "?" 'my/dired-get-size dired-mode-map)
   (setq dired-listing-switches "-aDhl  --group-directories-first")
 )
-#+END_SRC
-*** Functions
-#+BEGIN_SRC emacs-lisp
+
 (defun my/dired-get-size ()
   (interactive)
   (let ((files (dired-get-marked-files)))
@@ -1298,43 +776,19 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
                (progn 
                  (re-search-backward "\\(^[0-9.,]+[A-Za-z]+\\).*total$")
 		 (match-string 1))))))
-#+END_SRC
-** Ispell/Aspell
-#+BEGIN_SRC emacs-lisp
+
 (setq ispell-program-name "C:\\cygwin64\\bin\\aspell.exe"
       ispell-really-aspell t
       ispell-extra-args '("--sug-mode=fast")
       ;; TODO name deutsch+english
       ispell-dictionary "deutsch"
       flyspell-issue-message-flag nil)
-#+END_SRC
-*** Aspell - spell checking for multiple languages
-[[https://wiki.archlinux.org/index.php/User:Georgek][@wiki.archlinux]]
-combine dictionary deutsch + english
-#+BEGIN_SRC sh :tangle no
-# TODO replace ru with de 
-cd /usr/lib/aspell
-grep '^special' en.dat >>ru.dat
-aspell dump master en >w.en
-aspell dump master ru-yo >w.ru
-cat w.ru w.en >w.all
-aspell --lang=ru --encoding=UTF-8 create master ruen.rws < w.all
-rm -f w.ru w.en w.all
-echo "add ruen.rws" > ru.multi
-#+END_SRC
-** Languages
-*** Elixir
-**** Elixir Mode
-https://github.com/elixir-lang/emacs-elixir
-#+BEGIN_SRC emacs-lisp
+
 (req-package elixir-mode
     :init
   :config
   )
-#+END_SRC
-**** Alchemist
-https://github.com/tonini/alchemist.el
-#+BEGIN_SRC emacs-lisp
+
 (req-package alchemist
     :require elixir-mode
     :init
@@ -1342,17 +796,12 @@ https://github.com/tonini/alchemist.el
     :bind (:map alchemist-mode-map
                 ("C-c C-c" . alchemist-eval-buffer)) 
     )
-#+END_SRC
-*** Markdown
-#+BEGIN_SRC emacs-lisp
+
 (req-package markdown-mode
   :init
   :config
 )
-#+END_SRC
-*** Python
-**** Elpy
-#+BEGIN_SRC emacs-lisp
+
 (req-package elpy
     :init
   (elpy-enable)
@@ -1371,9 +820,7 @@ https://github.com/tonini/alchemist.el
   (setq elpy-rpc-backend "rope"
         elpy-rpc-python-command "python")
   )
-#+END_SRC
-**** IPython Emacs Notebook (EIN)
-#+BEGIN_SRC emacs-lisp
+
 (req-package cl-generic
   :init
   :bind
@@ -1384,10 +831,7 @@ https://github.com/tonini/alchemist.el
   :bind
   :config
   )
-#+END_SRC
-**** My Functions
-***** Jump-to-test
-#+BEGIN_SRC emacs-lisp
+
 (defun my/jump-to-test ()
   (interactive)
   
@@ -1422,36 +866,18 @@ https://github.com/tonini/alchemist.el
 		  (format "def %s():\n" test-func)
 		  (format "\tassert %s%s == " func-name func-args))))
       )))
-#+END_SRC
-*** Web
-**** HTML/CSS
-***** Htmlize
-#+BEGIN_SRC emacs-lisp
+
 (req-package htmlize
   :init
   :config
 )
-#+END_SRC
-***** Scss-Mode
-#+BEGIN_SRC emacs-lisp
+
 (req-package scss-mode
   :init
   (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
   :config
 )
-#+END_SRC
-***** Emmet-Mode [disabled]
-#+BEGIN_SRC emacs-lisp :tangle no
-(req-package emmet-mode
-  :init
-  (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-  (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
-  :config
-)
-#+END_SRC
-**** JS
-***** js2-mode
-#+BEGIN_SRC emacs-lisp
+
 (req-package js2-mode
   :init
   (add-hook 'js-mode-hook 'js2-minor-mode)
@@ -1460,16 +886,12 @@ https://github.com/tonini/alchemist.el
   (setq js2-basic-offset 2)
   (setq js2-strict-inconsistent-return-warning nil)
 )
-#+END_SRC
-***** Web-mode
-[[http://web-mode.org/][@web-mode.org]]
-#+BEGIN_SRC emacs-lisp
+
 (req-package web-mode
     :init
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-  (add-to-list 'auto-mode-alist '("\\.ts\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
   (setq web-mode-content-types-alist
 	'(("css" . "\\.\\(s?css\\|css\\.erb\\)\\'")
 	  ("jsx" . "\\.\\([jt]s\\|[jt]s\\.erb\\)\\'")
@@ -1489,33 +911,23 @@ https://github.com/tonini/alchemist.el
         web-mode-enable-control-block-indentation nil)
   )
   (req-package company-web )
-#+END_SRC
-***** coffee-mode
-#+BEGIN_SRC emacs-lisp
+
 (req-package coffee-mode
   :init
   :config
   (custom-set-variables '(coffee-tab-width 2))
 )
-#+END_SRC
-***** json-mode
-#+BEGIN_SRC emacs-lisp
+
 (setq js-indent-level 2)
 (req-package json-mode
 :config (setq json-reformat:indent-width 2))
-#+END_SRC
-*** Elisp
-#+BEGIN_SRC emacs-lisp
+
 (setq lisp-indent-function 'common-lisp-indent-function)
 (bind-key "C-h C-f" 'find-function-at-point emacs-lisp-mode-map)
 (bind-key "C-h C-v" 'find-variable-at-point emacs-lisp-mode-map)
-#+END_SRC
-*** Php
-#+BEGIN_SRC emacs-lisp
+
 (req-package php-mode)
-#+END_SRC
-*** Rust
-#+BEGIN_SRC emacs-lisp
+
 (req-package rust-mode)
 (req-package company-racer
     :require company
@@ -1559,107 +971,52 @@ Cargo: Run the tests."
 (req-package flycheck-rust
     :config
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-#+END_SRC
-** mini
-#+BEGIN_SRC emacs-lisp
+
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
 (setq same-window-buffer-names '("*Help*"))
-#+END_SRC
-*** Disabled
-maybe for linux
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq select-active-regions nil)
-#+END_SRC
-**** jabber
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq jabber-account-list
-      '(("jan.moeller0@gmail.com"
-	 (:network-server . "talk.google.com")
-	 (:connection-type . ssl)
-	 (:port . 5223))))
-#+END_SRC
-*** Hungry-delete
-#+BEGIN_SRC emacs-lisp
+
 (req-package hungry-delete
     :init (global-hungry-delete-mode)
     :config
     )
-#+END_SRC
-** Els
-*** Spell-number
-#+BEGIN_SRC emacs-lisp
+
 (req-package spell-number
              :load-path "els/spell-number/")
-#+END_SRC
-*** Exercism
-#+BEGIN_SRC emacs-lisp
+
 (req-package exercism
     :load-path "els/exercism/"
     :if (my-util-installed? "exercism")
     :config (when (my-util-win?)
 	      (setq *exercism-cmd*
 		    (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe"))))
-#+END_SRC
-** Dev
-*** Namespaces elisp
-[[https://github.com/Malabarba/Nameless][@github.com]] 
-#+BEGIN_SRC emacs-lisp
+
 (req-package nameless
   :init
   :config
   (setq nameless-private-prefix t)
 )
-#+END_SRC
-*** Testing
-[[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
-#+BEGIN_SRC emacs-lisp
+
 (req-package xtest
   :init
   :config
 )
-#+END_SRC
-** Other
-*** Sqlite [disabled]
-#+BEGIN_SRC emacs-lisp :tangle no
-(req-package esqlite
-  :init
-  :config
-)
-#+END_SRC
-*** Sql-Indent
-#+BEGIN_SRC emacs-lisp
+
 (req-package sql-indent
   :init
   :config
 )
-#+END_SRC
-** My
-*** Bonjournal
-#+BEGIN_SRC emacs-lisp
+
 (req-package bonjournal
              :load-path "els/bonjournal/"
              :config (setq bonjournal-dir (expand-file-name meinAll-dir
                                                             "monument/bonjournal/"))
              )
-#+END_SRC
-*** Bonquest
-#+BEGIN_SRC emacs-lisp :tangle no
-(req-package bonquest
-    :require request-deferred
-    :load-path "els/bonquest/"
-    )
-#+END_SRC
-*** Toutesuit
-[[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
-#+BEGIN_SRC emacs-lisp
+
 (req-package toutesuit
              :load-path "els/toutesuit/"
              :config (setq toutesuit-file (expand-file-name
                                            meinAll-dir "lookingGlass/toutesuit.org")))
-#+END_SRC
-** Cygwin
-*** Cygwin-Mount
-#+BEGIN_SRC emacs-lisp
+
 (when (my-util-win?)
   (setenv "PATH" (concat "c:/cygwin64/bin;" (getenv "PATH")))
   (setq exec-path (cons "c:/cygwin64/bin/" exec-path))
@@ -1667,14 +1024,9 @@ maybe for linux
       :load-path "els/cygwin/"
       :config (cygwin-mount-activate)
       ))
-#+END_SRC
-** Finish req-package
-#+BEGIN_SRC emacs-lisp
+
 (req-package-finish)
-#+END_SRC
-* Functions
-** Html-to-React
-#+BEGIN_SRC emacs-lisp
+
 (defun my/html-to-react ()
   (interactive)
   (with-current-buffer (current-buffer)
@@ -1716,10 +1068,7 @@ export class Content extends React.Component {
 (defun my/html-to-react--get-content (html)
   (buffer-substring-no-properties (+ (web-mode-element-end-position) 1)
 				  (point-max)))
-#+END_SRC 
-** Line manouevor functions
-*** New-line-above
-#+BEGIN_SRC emacs-lisp
+
 (defun new-line-above ()
   "Insert a newline above the current line and put point at beginning."
   (interactive)
@@ -1728,18 +1077,14 @@ export class Content extends React.Component {
   (newline)
   (forward-line -1)
   (indent-according-to-mode))
-#+END_SRC
-*** New-line-below
-#+BEGIN_SRC emacs-lisp
+
 (defun new-line-below ()
   "Insert a newline below the current line and put point at beginning."
   (interactive)
   (unless (eolp)
     (end-of-line))
   (newline-and-indent))
-#+END_SRC
-*** Copy-line-or-Region
-#+BEGIN_SRC emacs-lisp
+
 (defun xah-copy-line-or-region ()
   "Copy current line, or text selection.
 When `universal-argument' is called first, copy whole buffer (but respect `narrow-to-region')."
@@ -1756,9 +1101,7 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
     (kill-ring-save p1 p2)))
 
 (bind-key "M-w" 'xah-copy-line-or-region)
-#+END_SRC
-*** Cut-line-or-Region
-#+BEGIN_SRC emacs-lisp
+
 (defun xah-cut-line-or-region ()
   "Cut current line, or text selection.
 When `universal-argument' is called first, cut whole buffer (but respect `narrow-to-region')."
@@ -1775,9 +1118,7 @@ When `universal-argument' is called first, cut whole buffer (but respect `narrow
     (kill-region p1 p2)))
     
 (bind-key "C-w" 'xah-cut-line-or-region)
-#+END_SRC
-*** More
-#+BEGIN_SRC emacs-lisp
+
 (defun my/delete-whitespace-or-word ()
   (interactive)
   (if (looking-at "\\(\t\\|  \\)")
@@ -1800,10 +1141,7 @@ When `universal-argument' is called first, cut whole buffer (but respect `narrow
   (indent-for-tab-command))
 
 (bind-key "C-a" 'my/back-to-indentation)
-#+END_SRC
-** Not in use
-*** Delete-No-Kill
-#+BEGIN_SRC emacs-lisp
+
 ;; maybe kill is actually okay
 (defun delete-line-no-kill ()
   (interactive)
@@ -1819,18 +1157,13 @@ When `universal-argument' is called first, cut whole buffer (but respect `narrow
 (defun delete-word()
   (interactive)
   (delete-region (point) (progn (forward-word) (point))))
-#+END_SRC
-*** switch to previous buffer
-[[http://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/][emacsredux.com]]
-#+BEGIN_SRC emacs-lisp
+
 (defun my/switch-to-previous-buffer ()
   "Switch to previously open buffer.
 Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
-#+END_SRC
-*** Useless?
-#+BEGIN_SRC emacs-lisp
+
 (defun find-file-right()
   (interactive)
   (split-window-right)
@@ -1880,35 +1213,23 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
           (progn (next-buffer)
                  (setq i (1+ i)))
         (progn (setq i 100))))))
-#+END_SRC
-** goto code
-#+BEGIN_SRC emacs-lisp
+
 (defun goto-code()
 (interactive)
   (dired "~/Documents/code")
   )
-#+END_SRC
-** Misc
-*** Sudo-Save (Linux)
-#+BEGIN_SRC emacs-lisp
+
 (if (my-util-linux?)
     (defun sudo-save ()
       (interactive)
       (if (not buffer-file-name)
 	  (write-file (concat "/sudo:root@localhost:" (ido-read-file-name "File:")))
 	(write-file (concat "/sudo:root@localhost:" buffer-file-name)))))
-#+END_SRC
-*** Capitalize Word
-#+BEGIN_SRC emacs-lisp
+
 (defun my/capitalize-previous-word()
   (interactive)
   (capitalize-word -1))
   (bind-key "M-c" 'my/capitalize-previous-word org-mode-map)
-#+END_SRC
-* Emacs Server (Windows)
-#+BEGIN_SRC emacs-lisp
+
 (when (my-util-win?)
   (server-start))
-#+END_SRC
-* Calc
-https://www.reddit.com/r/emacs/comments/1mbn0s/the_emacs_calculator/
