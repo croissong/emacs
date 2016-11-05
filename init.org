@@ -657,13 +657,13 @@ The Spacemacs Modeline
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
 (req-package org-plus-contrib
-  :init
+    :init
+  :bind
+  :config
   (require 'org)
   ;; (require 'org-drill)
   (require 'org-checklist)
   (add-to-list 'org-modules 'org-checklist)
-  :bind
-  :config
   (setq org-default-notes-file (concat meinAll-dir "milkyway.org"))
   :diminish org-indent-mode)
   
