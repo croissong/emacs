@@ -279,6 +279,10 @@ Linewrap
    ;;(auto-package-update-now)
  )
  #+END_SRC
+** View large files
+#+BEGIN_SRC emacs-lisp
+(req-package vlf)
+#+END_SRC
 ** Minor Modes
 *** Drag-stuff
 #+BEGIN_SRC emacs-lisp
@@ -322,11 +326,10 @@ https://github.com/lukhas/buffer-move
 #+END_SRC
 *** AG the_silver_searcher
 #+BEGIN_SRC emacs-lisp
-(req-package ag
-    :require wgrep-ag
+(req-package helm-ag
     :config
-    (push "~/.agignore" ag-arguments)
-    (push "--path-to-agignore" ag-arguments))
+    (setq helm-ag-base-command "rg --vimgrep --no-heading --ignore-case")
+    )
 #+END_SRC
 *** Evil-Nerd-Commenter
 #+BEGIN_SRC emacs-lisp
