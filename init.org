@@ -1661,8 +1661,6 @@ maybe for linux
   :config
 )
 #+END_SRC
-*** View large file
-(req-package vlf)
 ** My
 *** Bonjournal
 #+BEGIN_SRC emacs-lisp
