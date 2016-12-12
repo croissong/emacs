@@ -660,13 +660,13 @@ The Spacemacs Modeline
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
 (req-package org-plus-contrib
-  :init
+    :init
+  :bind
+  :config
   (require 'org)
   ;; (require 'org-drill)
   (require 'org-checklist)
   (add-to-list 'org-modules 'org-checklist)
-  :bind
-  :config
   (setq org-default-notes-file (concat meinAll-dir "milkyway.org"))
   :diminish org-indent-mode)
   
@@ -1510,6 +1510,28 @@ https://github.com/tonini/alchemist.el
 (req-package json-mode
 :config (setq json-reformat:indent-width 2))
 #+END_SRC
+***** typescript
+#+BEGIN_SRC emacs-lisp
+(req-package tide
+    :init
+  (defun setup-tide-mode ()
+    (interactive)
+    (tide-setup)
+    (flycheck-mode +1)
+    (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    (eldoc-mode +1)
+    (tide-hl-identifier-mode +1)
+    ;; company is an optional dependency. You have to
+    ;; install it separately via package-install
+    ;; `M-x package-install [ret] company`
+    (company-mode +1))
+  :config
+  (setq company-tooltip-align-annotations t
+        typescript-indent-level 2
+        tide-format-options '(:indentSize: 2)) 
+  (add-hook 'typescript-mode-hook #'setup-tide-mode)
+  )
+#+END_SRC
 *** Elisp
 #+BEGIN_SRC emacs-lisp
 (setq lisp-indent-function 'common-lisp-indent-function)
@@ -1639,6 +1661,8 @@ maybe for linux
   :config
 )
 #+END_SRC
+*** View large file
+(req-package vlf)
 ** My
 *** Bonjournal
 #+BEGIN_SRC emacs-lisp
