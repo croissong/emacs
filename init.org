@@ -1472,7 +1472,6 @@ https://github.com/tonini/alchemist.el
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-  (add-to-list 'auto-mode-alist '("\\.ts\\'" . web-mode))
   (setq web-mode-content-types-alist
 	'(("css" . "\\.\\(s?css\\|css\\.erb\\)\\'")
 	  ("jsx" . "\\.\\([jt]s\\|[jt]s\\.erb\\)\\'")
@@ -1511,7 +1510,8 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (req-package tide
     :init
-  (defun setup-tide-mode ()
+  :config
+(defun setup-tide-mode ()
     (interactive)
     (tide-setup)
     (flycheck-mode +1)
@@ -1522,7 +1522,6 @@ https://github.com/tonini/alchemist.el
     ;; install it separately via package-install
     ;; `M-x package-install [ret] company`
     (company-mode +1))
-  :config
   (setq company-tooltip-align-annotations t
         typescript-indent-level 2
         tide-format-options '(:indentSize: 2)) 
