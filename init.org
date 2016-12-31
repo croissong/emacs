@@ -642,6 +642,12 @@ The Spacemacs Modeline
 #+BEGIN_SRC emacs-lisp
 (req-package dumb-jump)
 #+END_SRC
+*** pomodoro
+#+BEGIN_SRC emacs-lisp
+(req-package pomodoro
+:config (pomodoro-add-to-mode-line)
+(setq pomodoro-time-format "%.2m"))
+#+END_SRC
 ** Magit
 [[https://github.com/magit/magit/wiki/Pushing-with-Magit-from-Windows][@github.com]]
 #+BEGIN_SRC emacs-lisp
