@@ -48,12 +48,12 @@
     (require 'bind-key))
 #+END_SRC
 ** Auto-Compile
- [[https://github.com/tarsius/auto-compile][@github]]
- #+BEGIN_SRC emacs-lisp :tangle no
+[[https://github.com/tarsius/auto-compile][@github]]
+#+BEGIN_SRC emacs-lisp :tangle no
  (req-package auto-compile
    :init (auto-compile-on-load-mode)
  )
- #+END_SRC
+#+END_SRC
 ** My/Utils
 #+BEGIN_SRC emacs-lisp
   (eval-and-compile
@@ -121,6 +121,10 @@
 (my-util-ensureEmacsDir "config/")
 (my-util-ensureEmacsDir "save/autosave")
 (my-util-ensureEmacsDir "save/backup")
+
+(setq-default indent-tabs-mode nil
+              tab-width 2
+              indent-line-function 'insert-tab)
 #+END_SRC
 *** Backup
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
@@ -140,6 +144,11 @@
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-screen t)
 (add-hook 'emacs-startup-hook (lambda () (kill-buffer "*scratch*")))
+#+END_SRC
+** before-save
+#+BEGIN_SRC emacs-lisp
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-hook (lambda() (indent-region (point-min) (point-max) nil)))
 #+END_SRC
 ** littlest things
 #+BEGIN_SRC emacs-lisp
@@ -166,7 +175,7 @@
 * Style
 ** Frame
 #+BEGIN_SRC emacs-lisp
-(menu-bar-mode -1) 
+(menu-bar-mode -1)
 (tool-bar-mode -1)
 (if (file-exists-p "/etc/crouton/name")
     (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -195,7 +204,7 @@ Fantasque Sans Mono
     (add-to-list 'default-frame-alist '(font . "Fantasque Sans Mono 15"))
     ;; (setq initial-frame-alist (font . "Fantasque Sans Mono"))
     (add-to-list 'default-frame-alist '(font . "Fantasque Sans Mono")))
-#+END_SRC 
+#+END_SRC
 ** Mode-line
 #+BEGIN_SRC emacs-lisp
 ;; (set-face-attribute 'mode-line nil :height 135 :foreground "#28a428" :background "#2a2a28")
@@ -270,15 +279,15 @@ Linewrap
 #+END_SRC
 ** PackageManagement
 *** Auto-update [disabled
- [[https://github.com/rranelli/auto-package-update.el][@Github]]
- #+BEGIN_SRC emacs-lisp :tangle no
+[[https://github.com/rranelli/auto-package-update.el][@Github]]
+#+BEGIN_SRC emacs-lisp :tangle no
  (req-package auto-package-update
    :init
    :bind
    :config
    ;;(auto-package-update-now)
  )
- #+END_SRC
+#+END_SRC
 ** View large files
 #+BEGIN_SRC emacs-lisp
 (req-package vlf)
@@ -385,7 +394,7 @@ https://github.com/lukhas/buffer-move
 *** Company-Mode
 #+BEGIN_SRC emacs-lisp
 (req-package company
-:config 
+:config
 (add-hook 'after-init-hook 'global-company-mode)
 (define-key company-active-map (kbd "C-ä") 'company-select-next)
 (define-key company-active-map (kbd "C-ü") 'company-select-previous)
@@ -398,7 +407,7 @@ https://github.com/lukhas/buffer-move
 #+BEGIN_SRC emacs-lisp
 (req-package centered-window-mode
   :init
-  ;; Makes left fringe 10px or so smaller than right one in cwm 
+  ;; Makes left fringe 10px or so smaller than right one in cwm
   (defun cwm/center ()
     (set-fringe-mode
      (let ((right_fringe
@@ -471,16 +480,16 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (defun f-ediff-org-unfold-tree-element ()
   "Unfold tree at diff location"
-  (f-ediff-org-showhide ediff-buffer-A 'org-reveal)  
-  (f-ediff-org-showhide ediff-buffer-B 'org-reveal)  
-  (f-ediff-org-showhide ediff-buffer-C 'org-reveal)  
+  (f-ediff-org-showhide ediff-buffer-A 'org-reveal)
+  (f-ediff-org-showhide ediff-buffer-B 'org-reveal)
+  (f-ediff-org-showhide ediff-buffer-C 'org-reveal)
   )
 ;;
 (defun f-ediff-org-fold-tree ()
   "Fold tree back to top level"
-  (f-ediff-org-showhide ediff-buffer-A 'hide-sublevels 1)  
-  (f-ediff-org-showhide ediff-buffer-B 'hide-sublevels 1)  
-  (f-ediff-org-showhide ediff-buffer-C 'hide-sublevels 1)  
+  (f-ediff-org-showhide ediff-buffer-A 'hide-sublevels 1)
+  (f-ediff-org-showhide ediff-buffer-B 'hide-sublevels 1)
+  (f-ediff-org-showhide ediff-buffer-C 'hide-sublevels 1)
   )
 #+END_SRC
 *** Expand-Region
@@ -546,24 +555,24 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ;; ;; If a buffer name that doesn't exist is chosen, just make a new one without prompting
 ;; (setq ido-create-new-buffer 'always)
 
-;; Ignore the .aux extensions that TeX programs create 
-(setq completion-ignored-extensions 
+;; Ignore the .aux extensions that TeX programs create
+(setq completion-ignored-extensions
       (cons "*.aux" completion-ignored-extensions))
 
 
-;;; Ignore files defined in variable completion-ignored-extensions 
-(setq ido-ignore-extensions t) 
+;;; Ignore files defined in variable completion-ignored-extensions
+(setq ido-ignore-extensions t)
 
-;;; Order extensions by how I use them 
+;;; Order extensions by how I use them
 (setq ido-file-extensions-order '(".tex"  ".txt" ".py" ".sh" ".el" ".xml" ".htm"))
 
-;;; Keep annoying buffers out of my face 
-(setq ido-ignore-buffers (list (rx (or (and bos  " ") 
-                                       (and bos 
-                                            (or "*Completions*" 
-                                                "*Shell Command Output*" 
-                                                "*vc-diff*") 
-                                            eos))))) 
+;;; Keep annoying buffers out of my face
+(setq ido-ignore-buffers (list (rx (or (and bos  " ")
+                                       (and bos
+                                            (or "*Completions*"
+                                                "*Shell Command Output*"
+                                                "*vc-diff*")
+                                            eos)))))
 
 ;;(add-to-list 'ido-ignore-files "\\`media/")
 #+END_SRC
@@ -620,17 +629,12 @@ The Spacemacs Modeline
 :ensure t
 )
 #+END_SRC
-*** aggressive-indent
+*** aggressive-indent [disabled]
 [[https://github.com/Malabarba/aggressive-indent-mode][@github.com]]
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package aggressive-indent
     :init
-  (setq-default indent-tabs-mode nil
-                tab-width 2
-                indent-line-function 'insert-tab)
-  (global-aggressive-indent-mode 1)
-  :bind
-  :config)
+  (global-aggressive-indent-mode 1))
 #+END_SRC
 *** which-key
 [[https://github.com/justbur/emacs-which-key?utm_medium=referral&utm_campaign=ZEEF&utm_source=https%3A%2F%2Femacs.zeef.com%2Fehartc][@github.com]]
@@ -669,7 +673,7 @@ The Spacemacs Modeline
   (add-to-list 'org-modules 'org-checklist)
   (setq org-default-notes-file (concat meinAll-dir "milkyway.org"))
   :diminish org-indent-mode)
-  
+
   (req-package my-org
   :force t
   :bind (:map org-mode-map
@@ -717,22 +721,22 @@ The Spacemacs Modeline
 (setq org-capture-templates
       (quote (
 	      (" " "Atrium" entry (file+headline (concat org-directory "Milkyway.org") "Atrium") "* %^{Headline} %^ü %?")
-	      
+
               ("d" "Diary")
               ("d " "Thought" entry (file+datetree (concat org-directory "monument/Tagebuch.gpg")) "* %(format-time-string \"[%H:%M]\") Je pense\n %?" :kill-buffer t)
               ("dt" "Tag" entry (file+datetree (concat org-directory "monument/Tagebuch.gpg")) "* M'aujourd'hui\n** Quelque gut :)\n %?\n** Quelque done\n" :kill-buffer t)
-              
+
               ("k" "Knowledge")
 	      ("k " "Atrium" entry (file+headline (concat org-directory "lookingGlass/knowledge.org") "Atrium") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t)
 	      ("km" "Math" entry (file+headline (concat org-directory "lookingGlass/knowledge.org") "Math") "*** %?")
 	      ("kp" "Physics" entry (file+headline (concat org-directory "lookingGlass/knowledge.org") "Physics") "* %?")
 	      ("kl" "Language" entry (file+headline (concat org-directory "lookingGlass/knowledge.org") "Language") "* %?")
-	      
+
 	      ("p" "Programming")
 	      ("p " "Atrium" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Atrium") "* %?")
 
 	      ("pp" "Practice" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Practice") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t)
-	      
+
 	      ("pw" "Webdev")
 	      ("pw " "Atrium" entry (file+olp (concat org-directory "lookingGlass/programming.org") "Webdev" "Atrium") "* %?")
 
@@ -747,10 +751,10 @@ The Spacemacs Modeline
 	      ("pe " "Atrium" entry (file+olp (concat org-directory "lookingGlass/programming.org") "Emacs" "Atrium") "* %?")
 	      ("peo" "Org-mode" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Org-mode") "* %?")
 
-	      
+
 	      ("m" "Media")
 	      ("m " "Atrium" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Atrium") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
-	      
+
 	      ("mw" "Watch")
 
 	      ("mwm" "Movies")
@@ -762,7 +766,7 @@ The Spacemacs Modeline
 	      ("mwv" "Video")
 	      ("mwve" "Entertainment" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Watch" "Videos" "Entertainment") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
 	      ("mwvl" "Learn" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Watch" "Videos" "Learn") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
-	      
+
 	      ("mm" "Music")
 	      ("mm " "Song" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Music" "Songs") "* [[%^{Url}][%^{Interpret} - %^{Titel}]]" :immediate-finish t :kill-buffer t)
 	      ("mma" "Audiobook" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Music" "Audiobooks") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
@@ -777,27 +781,27 @@ The Spacemacs Modeline
 	      ("mrr" "Reddit" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Reddit") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
 	      ("mrb" "Blog/Subreddit" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Blogs/Subreddits") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
 
-	      
+
 	      ("mt" "Toutesuit" entry (file+olp (concat org-directory "lookingGlass/toutesuit.org") "Videos") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
 
-	      
+
 	      ("r" "Resources")
 
 	      ("rc" "Cuisine")
 	      ("rc " "Atrium" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Atrium") "* [[%^{Url}][%^{Titel}]]" :kill-buffer t :immediate-finish t)
 	      ("rci" "Ingredients" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Ingredients") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
-	      
+
 	      ("rcr" "Recipes")
 	      ("rcra" "Appetizer" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Appetizer") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
 	      ("rcrb" "Breakfast" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Breakfast") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
 	      ("rcrd" "Dinner" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Dinner") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
 	      ("rcrs" "Salat" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Salat") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
 
-	      
+
 	      ("rs" "Sport")
 	      ("rs " "Atrium" entry (file+olp (concat org-directory "lookingGlass/sport.org") "Atrium") "* [[%^{Url}][%^{Titel}]]" :kill-buffer t :immediate-finish t)
 
-	      
+
 	      ("t" "Todo")
 	      ("te" "Easy" entry (file+headline (concat org-directory "Milkyway.org") "Easy")
 	       "* TODO %?\n :PROPERTIES:\n :CURRENCY_DELTAS: ((xp +5) (light +1)(credit +10))\n :END:")
@@ -1078,7 +1082,7 @@ The template may still contain \"%?\" for cursor positioning."
 	       nil
 	       )))
 	 url urlDescription)
-    
+
     (define-key keymap (kbd "<tab>")
       (lambda () (interactive)
 	(let (link message)
@@ -1092,7 +1096,7 @@ The template may still contain \"%?\" for cursor positioning."
 		     (insert link))
 	    (minibuffer-message message))
 	  )))
-    
+
     (define-key keymap (kbd "C-g")
       (lambda () (interactive)
 	(delete-minibuffer-contents)
@@ -1100,7 +1104,7 @@ The template may still contain \"%?\" for cursor positioning."
 	))
     (setq urlDescription
 	  (or (funcall get-url-link) (funcall get-stored-link)))
-    
+
     (if urlDescription
 	(progn
 	  (setq urlDescription (read-from-minibuffer "Link" urlDescription keymap))
@@ -1300,7 +1304,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
     (with-temp-buffer
       (apply 'call-process "/usr/bin/du" nil t nil "-sch" files)
       (message "Size of all marked files: %s"
-               (progn 
+               (progn
                  (re-search-backward "\\(^[0-9.,]+[A-Za-z]+\\).*total$")
 		 (match-string 1))))))
 #+END_SRC
@@ -1317,7 +1321,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 [[https://wiki.archlinux.org/index.php/User:Georgek][@wiki.archlinux]]
 combine dictionary deutsch + english
 #+BEGIN_SRC sh :tangle no
-# TODO replace ru with de 
+# TODO replace ru with de
 cd /usr/lib/aspell
 grep '^special' en.dat >>ru.dat
 aspell dump master en >w.en
@@ -1345,7 +1349,7 @@ https://github.com/tonini/alchemist.el
     :init
     :config
     :bind (:map alchemist-mode-map
-                ("C-c C-c" . alchemist-eval-buffer)) 
+                ("C-c C-c" . alchemist-eval-buffer))
     )
 #+END_SRC
 *** Markdown
@@ -1395,7 +1399,7 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (defun my/jump-to-test ()
   (interactive)
-  
+
   (let* ((file-name
 	  (nth 0 (last (split-string buffer-file-name "[\\/]"))))
 	 (test-file
@@ -1461,7 +1465,7 @@ https://github.com/tonini/alchemist.el
 (req-package js2-mode
   :init
   (add-hook 'js-mode-hook 'js2-minor-mode)
-  
+
   :config
   (setq js2-basic-offset 2)
   (setq js2-strict-inconsistent-return-warning nil)
@@ -1488,9 +1492,9 @@ https://github.com/tonini/alchemist.el
         web-mode-markup-indent-offset 2
         web-mode-attr-indent-offset 2
         web-mode-attr-value-indent-offset 2
-        web-mode-css-indent-offset 2 
+        web-mode-css-indent-offset 2
         web-mode-style-padding 1
-        web-mode-script-padding 0 
+        web-mode-script-padding 0
         web-mode-block-padding 0
         web-mode-enable-control-block-indentation nil)
   )
@@ -1528,7 +1532,7 @@ https://github.com/tonini/alchemist.el
   :config
   (setq company-tooltip-align-annotations t
         typescript-indent-level 2
-        tide-format-options '(:indentSize: 2)) 
+        tide-format-options '(:indentSize: 2))
   (add-hook 'typescript-mode-hook #'setup-tide-mode)
   )
 #+END_SRC
@@ -1547,7 +1551,7 @@ https://github.com/tonini/alchemist.el
 (req-package rust-mode)
 (req-package company-racer
     :require company
-    :config 
+    :config
     (add-to-list 'company-backends 'company-racer)
     (add-hook 'racer-mode-hook #'company-mode))
 (req-package racer
@@ -1568,7 +1572,7 @@ https://github.com/tonini/alchemist.el
       "Run the Cargo run command.
 With the prefix argument, modify the command's invocation.
 Cargo: Build and execute src/main.rs."
-      (interactive) 
+      (interactive)
       (cargo-process--start
        "Run"
        (read-string "Command: " "cargo run" '(cargo-process-history . 0))))
@@ -1630,7 +1634,7 @@ maybe for linux
 #+END_SRC
 ** Dev
 *** Namespaces elisp
-[[https://github.com/Malabarba/Nameless][@github.com]] 
+[[https://github.com/Malabarba/Nameless][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (req-package nameless
   :init
@@ -1744,7 +1748,7 @@ export class Content extends React.Component {
 (defun my/html-to-react--get-content (html)
   (buffer-substring-no-properties (+ (web-mode-element-end-position) 1)
 				  (point-max)))
-#+END_SRC 
+#+END_SRC
 ** Line manouevor functions
 *** New-line-above
 #+BEGIN_SRC emacs-lisp
@@ -1801,7 +1805,7 @@ When `universal-argument' is called first, cut whole buffer (but respect `narrow
       (progn (setq p1 (point-min))
              (setq p2 (point-max))))
     (kill-region p1 p2)))
-    
+
 (bind-key "C-w" 'xah-cut-line-or-region)
 #+END_SRC
 *** More
@@ -1811,7 +1815,7 @@ When `universal-argument' is called first, cut whole buffer (but respect `narrow
   (if (looking-at "\\(\t\\|  \\)")
       (delete-horizontal-space)
     (delete-word)))
-    
+
 (defun my/backward-delete-whitespace-or-word ()
   (interactive)
   (if (looking-back "\\(\t\\|  \\)")
