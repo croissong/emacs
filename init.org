@@ -237,7 +237,7 @@ Linewrap
   (define-globalized-minor-mode adaptive-wrap-global-mode
   adaptive-wrap-prefix-mode
   adaptive-wrap-prefix-mode)
-  :bind
+
   :config
   (adaptive-wrap-global-mode)
   )
@@ -247,7 +247,7 @@ Linewrap
 (req-package soft-stone-theme
   :init
   (load-theme 'soft-stone t)
-  :bind
+
   :config
   )
 #+END_SRC
@@ -284,7 +284,7 @@ Linewrap
 #+BEGIN_SRC emacs-lisp :tangle no
  (req-package auto-package-update
    :init
-   :bind
+
    :config
    ;;(auto-package-update-now)
  )
@@ -339,6 +339,7 @@ https://github.com/lukhas/buffer-move
 (req-package helm-ag
     :config
     (setq helm-ag-base-command "rg --vimgrep --no-heading --ignore-case")
+    :bind (:map my-keys-minor-mode-map ("C-M-s" . helm-do-ag))
     )
 #+END_SRC
 *** Evil-Nerd-Commenter
@@ -382,13 +383,13 @@ https://github.com/lukhas/buffer-move
   (require 'outshine)
   (add-hook 'emacs-lisp-mode-hook 'outline-minor-mode)
   ;; (add-hook 'python-mode-hook 'outline-minor-mode)
-  :bind
+
   :config
   (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
   )
 (req-package navi-mode
   :init
-  :bind
+
   :config
   )
 #+END_SRC
@@ -536,7 +537,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+BEGIN_SRC emacs-lisp
 (req-package ido
 :init
-:bind
+
 :config
 (ido-mode t)
 (ido-everywhere t)
@@ -582,7 +583,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (req-package flx-ido
 :init
 (flx-ido-mode 1)
-:bind
+
 :config
 ;; disable ido faces to see flx highlights.
 (setq ido-enable-flex-matching t)
@@ -606,7 +607,7 @@ The Spacemacs Modeline
   :init
   (require 'spaceline-config)
   (spaceline-spacemacs-theme)
-  :bind
+
   :config
   (spaceline-toggle-buffer-size-off)
   )
@@ -617,7 +618,7 @@ The Spacemacs Modeline
 (req-package projectile
   :init
   (add-hook 'python-mode-hook 'projectile-mode)
-  :bind
+
   :config
   (setq projectile-indexing-method 'alien)
   )
@@ -669,15 +670,15 @@ pomodoro-nth-for-longer-break 3))
 :ensure t
 )
 #+END_SRC
-*** git-timemachine
-#+BEGIN_SRC emacs-lisp
+*** git-timemachine [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package git-timemachine)
 #+END_SRC
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
 (req-package org-plus-contrib
     :init
-  :bind
+
   :config
   (require 'org)
   ;; (require 'org-drill)
@@ -1302,7 +1303,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 (req-package dired+
   :init
   (toggle-diredp-find-file-reuse-dir 1)
-  :bind
+
   :config
   (bind-key "?" 'my/dired-get-size dired-mode-map)
   (setq dired-listing-switches "-aDhl  --group-directories-first")
@@ -1377,7 +1378,7 @@ https://github.com/tonini/alchemist.el
 (req-package elpy
     :init
   (elpy-enable)
-  :bind
+
   :config
   ;; https://github.com/jorgenschaefer/elpy/issues/887
   ;; probvably enable again, its new with emacs 25
@@ -1397,12 +1398,12 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (req-package cl-generic
   :init
-  :bind
+
   :config
   )
 (req-package ein
   :init
-  :bind
+
   :config
   )
 #+END_SRC
