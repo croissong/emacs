@@ -154,8 +154,11 @@
 #+END_SRC
 ** before-save
 #+BEGIN_SRC emacs-lisp
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-(add-hook 'before-save-hook (lambda() (indent-region (point-min) (point-max) nil)))
+(defun my/add-format-before-save(mode-hook)
+  (add-hook mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook 'delete-trailing-whitespace nil 'local)
+              (add-hook 'before-save-hook (lambda() (indent-region (point-min) (point-max) nil)) nil 'local))))
 #+END_SRC
 ** littlest things
 #+BEGIN_SRC emacs-lisp
@@ -1485,7 +1488,7 @@ https://github.com/tonini/alchemist.el
 (req-package js2-mode
   :init
   (add-hook 'js-mode-hook 'js2-minor-mode)
-
+  (my/add-format-before-save 'js-mode-hook)
   :config
   (setq js2-basic-offset 2)
   (setq js2-strict-inconsistent-return-warning nil)
