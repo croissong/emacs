@@ -22,3 +22,4 @@ scratch/
 *.elc
 /org-init.el
 /custom.el
+/tramp
