@@ -679,7 +679,8 @@ pomodoro-nth-for-longer-break 3))
 (req-package magit
 :ensure t
 :config (setq magit-diff-arguments (quote ("--ignore-space-change"
-      "--ignore-all-space" "--no-ext-diff" "--stat" "--color-words")))
+      "--ignore-all-space" "--no-ext-diff" "--stat" "--color-words"))
+      (magit-diff-section-arguments (quote ("--ignore-all-space" "--no-ext-diff" "-U2"))))
 )
 #+END_SRC
 *** git-timemachine [disabled]
