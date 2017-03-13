@@ -1363,6 +1363,7 @@ https://github.com/elixir-lang/emacs-elixir
 (req-package elixir-mode
     :init
   :config
+  (my/add-format-before-save 'elixir-mode-hook)
   )
 #+END_SRC
 **** Alchemist
@@ -1486,6 +1487,7 @@ https://github.com/tonini/alchemist.el
   :init
   (setq css-indent-offset 2)
   (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+  (my/add-format-before-save 'css-mode-hook)
   :config
 )
 #+END_SRC
