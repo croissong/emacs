@@ -1471,6 +1471,8 @@ https://github.com/tonini/alchemist.el
   :init
   (setq css-indent-offset 2)
   (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+  (my/add-format-before-save 'scss-mode-hook)
+  (my/add-format-before-save 'css-mode-hook)
   :config
 )
 #+END_SRC
@@ -1504,6 +1506,7 @@ https://github.com/tonini/alchemist.el
   (add-to-list 'auto-mode-alist '("\\.marko\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  (my/add-format-before-save 'web-mode-hook)
   (setq web-mode-content-types-alist
 	'(("css" . "\\.\\(s?css\\|css\\.erb\\)\\'")
 	  ("jsx" . "\\.\\([jt]s\\|[jt]s\\.erb\\)\\'")
