@@ -1962,7 +1962,7 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 #+BEGIN_SRC emacs-lisp
 (defun goto-code()
 (interactive)
-  (dired "~/Documents/code")
+  (dired "~/code")
   )
 #+END_SRC
 ** Misc
