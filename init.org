@@ -307,15 +307,15 @@ Linewrap
 *** Drag-stuff
 #+BEGIN_SRC emacs-lisp
 (req-package drag-stuff
-  :init
+    :init
   :config
-  (when (my-util-cb?)
+  (if (my-util-cb?)
+      (bind-keys :map drag-stuff-mode-map
+                 ("M-S-<prior" . drag-stuff-up)
+                 ("M-S-<next>" . drag-stuff-down))
     (bind-keys :map drag-stuff-mode-map
-	       ("M-S-<prior>" . drag-stuff-up)
-	       ("M-S-<next>" . drag-stuff-down)
-	       ;; ("M-right" . drag-stuff-right)
-	       ;; ("M-right" . drag-stuff-left))
-	       ))
+               ("M-up" . drag-stuff-up)
+               ("M-down" . drag-stuff-down)))
   (add-to-list 'drag-stuff-except-modes 'org-mode)
   (drag-stuff-global-mode)
   :diminish drag-stuff-mode
