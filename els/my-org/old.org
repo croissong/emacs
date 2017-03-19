@@ -1,0 +1,117 @@
+* Templates
+#+BEGIN_SRC emacs-lisp
+;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+(setq org-capture-templates
+      (quote (
+	      (" " "Atrium" entry (file+headline (concat org-directory "Milkyway.org") "Atrium") "* %^{Headline} %^ü %?")
+
+              ("d" "Diary")
+              ("d " "Thought" entry (file+datetree (concat org-directory "monument/Tagebuch.gpg")) "* %(format-time-string \"[%H:%M]\") Je pense\n %?" :kill-buffer t)
+              ("dt" "Tag" entry (file+datetree (concat org-directory "monument/Tagebuch.gpg")) "* M'aujourd'hui\n** Quelque gut :)\n %?\n** Quelque done\n" :kill-buffer t)
+
+              ("k" "Knowledge")
+	      ("k " "Atrium" entry (file+headline (concat org-directory "lookingGlass/knowledge.org") "Atrium") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t)
+	      ("km" "Math" entry (file+headline (concat org-directory "lookingGlass/knowledge.org") "Math") "*** %?")
+	      ("kp" "Physics" entry (file+headline (concat org-directory "lookingGlass/knowledge.org") "Physics") "* %?")
+	      ("kl" "Language" entry (file+headline (concat org-directory "lookingGlass/knowledge.org") "Language") "* %?")
+
+	      ("p" "Programming")
+	      ("p " "Atrium" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Atrium") "* %?")
+
+	      ("pp" "Practice" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Practice") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t)
+
+	      ("pw" "Webdev")
+	      ("pw " "Atrium" entry (file+olp (concat org-directory "lookingGlass/programming.org") "Webdev" "Atrium") "* %?")
+
+	      ("pwf" "Frontend")
+	      ("pwfd" "Design" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Design") "* %?")
+	      ("pwff" "Function" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Function") "* %?")
+	      ("pwfi" "Inspiration" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Inspiration") "* %?")
+	      ("pwb" "Backend" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Backend") "* %?")
+	      ("pl" "Linux" entry (file+olp (concat org-directory "lookingGlass/programming.org") "Linux" "Atrium") "* %?")
+
+	      ("pe" "Emacs")
+	      ("pe " "Atrium" entry (file+olp (concat org-directory "lookingGlass/programming.org") "Emacs" "Atrium") "* %?")
+	      ("peo" "Org-mode" entry (file+headline (concat org-directory "lookingGlass/programming.org") "Org-mode") "* %?")
+
+
+	      ("m" "Media")
+	      ("m " "Atrium" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Atrium") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+
+	      ("mw" "Watch")
+
+	      ("mwm" "Movies")
+	      ("mwm " "To watch" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Watch" "Movies" "To Watch") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mwmw" "Watched" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Watch" "Movies" "Watched") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mwms" "Sources" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Watch" "Movies" "Sources") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mws" "Serien" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Watch" "Serien") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+
+	      ("mwv" "Video")
+	      ("mwve" "Entertainment" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Watch" "Videos" "Entertainment") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mwvl" "Learn" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Watch" "Videos" "Learn") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+
+	      ("mm" "Music")
+	      ("mm " "Song" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Music" "Songs") "* [[%^{Url}][%^{Interpret} - %^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mma" "Audiobook" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Music" "Audiobooks") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mmp" "Playlist" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Music" "Playlists") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+
+	      ("mr" "Reading")
+	      ("mr " "Book" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Books" "To Read") "* %? %^g")
+	      ("mrp" "Poem" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Poems") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mrs" "Story" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Stories") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mrw" "Wikipedia" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Wikipedia") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mre" "Et Aliae" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Et Aliae") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mrr" "Reddit" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Reddit") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+	      ("mrb" "Blog/Subreddit" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Media" "Reading" "Blogs/Subreddits") "* [[%^{Url}][%^{Titel}]]" :immediate-finish t :kill-buffer t)
+
+
+	      ("mt" "Toutesuit" entry (file+olp (concat org-directory "lookingGlass/toutesuit.org") "Videos") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
+
+
+	      ("r" "Resources")
+
+	      ("rc" "Cuisine")
+	      ("rc " "Atrium" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Atrium") "* [[%^{Url}][%^{Titel}]]" :kill-buffer t :immediate-finish t)
+	      ("rci" "Ingredients" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Ingredients") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
+
+	      ("rcr" "Recipes")
+	      ("rcra" "Appetizer" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Appetizer") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
+	      ("rcrb" "Breakfast" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Breakfast") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
+	      ("rcrd" "Dinner" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Dinner") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
+	      ("rcrs" "Salat" entry (file+olp (concat org-directory "lookingGlass/cuisine.org") "Salat") "* [[%^{Url}][%^{Titel}]] %^g" :kill-buffer t :immediate-finish t)
+
+
+	      ("rs" "Sport")
+	      ("rs " "Atrium" entry (file+olp (concat org-directory "lookingGlass/sport.org") "Atrium") "* [[%^{Url}][%^{Titel}]]" :kill-buffer t :immediate-finish t)
+
+
+	      ("t" "Todo")
+	      ("te" "Easy" entry (file+headline (concat org-directory "Milkyway.org") "Easy")
+	       "* TODO %?\n :PROPERTIES:\n :CURRENCY_DELTAS: ((xp +5) (light +1)(credit +10))\n :END:")
+	      ("tm" "Medium" entry (file+headline (concat org-directory "Milkyway.org") "Medium")
+	       "* TODO %?\n :PROPERTIES:\n :CURRENCY_DELTAS: ((xp +12) (light +2)(credit +25))\n :END:")
+	      ("th" "Hard" entry (file+headline (concat org-directory "Milkyway.org") "Hard")
+	       "* TODO %?\n :PROPERTIES:\n :CURRENCY_DELTAS: ((xp +20) (light +5)(credit +50))\n :END:")
+
+	      ("tl" "Learn" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Toskana Durota" "Learn")
+	       "* %? %^g" :kill-buffer t)
+	      ("ts" "Someday" entry (file+olp (concat org-directory "lookingGlass/moise.org") "Toskana Durota" "Someday")
+	       "* %? %^g" :kill-buffer t)
+	      )))
+#+END_SRC
+* Tags
+#+BEGIN_SRC emacs-lisp
+(setq org-tag-alist '(("@work" . ?w) ("@home" . ?h) ("note" . ?n)("exercise" . nil)
+		      (:startgroup . nil)
+		      ("sport" . nil)
+		      (:grouptags . nil)
+		      ("sport_yoga" . nil)
+		      ("sport_weight" . nil)
+		      (:endgroup . nil)
+		      (:startgroup . nil)
+		      ("read" . nil)
+		      (:grouptags . nil)
+		      ("read_book" . nil)
+		      ("read_ebook" . nil)
+		      (:endgroup . nil)))
+#+END_SRC
