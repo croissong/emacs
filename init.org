@@ -314,8 +314,8 @@ Linewrap
                  ("M-S-<prior" . drag-stuff-up)
                  ("M-S-<next>" . drag-stuff-down))
     (bind-keys :map drag-stuff-mode-map
-               ("M-up" . drag-stuff-up)
-               ("M-down" . drag-stuff-down)))
+               ("M-<up>" . drag-stuff-up)
+               ("M-<down>" . drag-stuff-down)))
   (add-to-list 'drag-stuff-except-modes 'org-mode)
   (drag-stuff-global-mode)
   :diminish drag-stuff-mode
@@ -1573,6 +1573,7 @@ https://github.com/tonini/alchemist.el
     (setq flycheck-check-syntax-automatically '(save mode-enabled))
     (eldoc-mode +1)
     (tide-hl-identifier-mode +1)
+    (add-hook 'before-save-hook 'tide-format-before-save nil 'local)
     ;; company is an optional dependency. You have to
     ;; install it separately via package-install
     ;; `M-x package-install [ret] company`
@@ -1582,7 +1583,6 @@ https://github.com/tonini/alchemist.el
         typescript-indent-level 2
         tide-format-options '(:indentSize: 2))
   (add-hook 'typescript-mode-hook #'setup-tide-mode)
-  (my/add-format-before-save 'typescript-mode-hook)
   )
 #+END_SRC
 *** Elisp
