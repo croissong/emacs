@@ -669,6 +669,11 @@ pomodoro-break-time 10
 pomodoro-long-break-time 20
 pomodoro-nth-for-longer-break 3))
 #+END_SRC
+*** yaml
+#+BEGIN_SRC emacs-lisp
+(req-package yaml-mode
+:init (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+#+END_SRC
 ** Magit
 [[https://github.com/magit/magit/wiki/Pushing-with-Magit-from-Windows][@github.com]]
 #+BEGIN_SRC emacs-lisp
