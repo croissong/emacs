@@ -1633,6 +1633,11 @@ maybe for linux
 #+BEGIN_SRC emacs-lisp
 (req-package-finish)
 #+END_SRC
+** Tramp
+#+BEGIN_SRC emacs-lisp
+(setq tramp-default-method "ssh"
+      tramp-remote-path `(tramp-default-remote-path "/bin" "/usr/local/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/sbin" "/local/bin" "/local/freeware/bin" "/local/gnu/bin" "/usr/freeware/bin" "/usr/pkg/bin" "/usr/contrib/bin" "/opt/bin" "/opt/sbin" "/opt/local/bin"))
+#+END_SRC
 * Functions
 ** Html-to-React
 #+BEGIN_SRC emacs-lisp
