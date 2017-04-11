@@ -81,9 +81,9 @@
 (bind-keys :map my-keys-minor-mode-map
 	   ("C-ö" . windmove-left)
 	   ("C-#" . windmove-right)
-           ("C-ü" . windmove-up)
-           ("C-ä" . windmove-down)
-           ("C-Ü" . clone-indirect-buffer))
+     ("C-ü" . windmove-up)
+     ("C-ä" . windmove-down)
+     ("C-Ü" . clone-indirect-buffer))
 #+END_SRC
 *** delete other window
 #+BEGIN_SRC emacs-lisp
