@@ -177,7 +177,7 @@
   (remq 'process-kill-buffer-query-function
          kill-buffer-query-functions))
 #+END_SRC
-** What does it do?
+** async shell buffer
 #+BEGIN_SRC emacs-lisp
 (setq display-buffer-alist
       '(("*Async Shell Command*" . (display-buffer-no-window))))
