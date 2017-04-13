@@ -420,14 +420,14 @@ https://github.com/lukhas/buffer-move
 (req-package centered-window-mode
   :init
   ;; Makes left fringe 10px or so smaller than right one in cwm
-  (defun cwm/center ()
-    (set-fringe-mode
-     (let ((right_fringe
-	    (/ (- (frame-pixel-width)
-		  (* 110 (frame-char-width)))
-	       2)))
-       (cons (- right_fringe 50) right_fringe))
-     ))
+  ;; (defun cwm/center ()
+  ;;   (set-fringe-mode
+  ;;    (let ((right_fringe
+	;;     (/ (- (frame-pixel-width)
+	;; 	  (* 110 (frame-char-width)))
+	;;        2)))
+  ;;      (cons (- right_fringe 50) right_fringe))
+  ;;    ))
   :config
   (centered-window-mode t)
   :diminish centered-window-mode
