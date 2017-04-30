@@ -166,9 +166,10 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
-(setq ring-bell-function 'ignore)
 (delete-selection-mode 1)
-(setq backup-inhibited 1)
+(setq backup-inhibited 1
+      ring-bell-function 'ignore
+      vc-follow-symlinks t)
 ;; http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3
 #+END_SRC
 *** Kill active process buffer no prompt
