@@ -1043,7 +1043,7 @@ The template may still contain \"%?\" for cursor positioning."
  '((latex . t)
    (python . t)
    (gnuplot . t)
-   (shell . t)
+   (sh . t)
    (sql . t)))
 #+END_SRC
 **** Passwords
@@ -1521,6 +1521,10 @@ Cargo: Run the tests."
 (req-package flycheck-rust
     :config
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+#+END_SRC
+*** go
+#+BEGIN_SRC emacs-lisp
+(req-package go-mode)
 #+END_SRC
 ** mini
 #+BEGIN_SRC emacs-lisp
