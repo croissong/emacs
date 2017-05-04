@@ -188,25 +188,21 @@
 #+BEGIN_SRC emacs-lisp
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-(if (file-exists-p "/etc/crouton/name")
-    (add-to-list 'default-frame-alist '(fullscreen . maximized))
-  (add-to-list 'default-frame-alist '(width . 190))
-  (add-to-list 'default-frame-alist '(height . 60)))
-  (if (daemonp)
-    (add-hook 'after-make-frame-functions
-        (lambda (frame)
-            (select-frame frame)
-            (set-frame-parameter nil 'internal-border-width 4)
-	    (set-face-attribute 'fringe nil :background "#bisque4")
-	    (fringe-mode '(1 . 0))
-	    (set-face-attribute 'vertical-border nil :foreground "bisque4")))
-    (progn
-      (set-frame-parameter nil 'internal-border-width 4)
-      (set-face-attribute 'fringe nil :background "#242424")
-      (fringe-mode '(1 . 0))
-      (set-face-attribute 'vertical-border nil :foreground "bisque4"))
-    )
 (scroll-bar-mode -1)
+(defun my/style-frame()
+  (set-frame-parameter nil 'internal-border-width 4)
+  (set-face-attribute 'fringe nil :background "#bisque4")
+  (fringe-mode '(1 . 0))
+  (set-face-attribute 'vertical-border nil :foreground "bisque4")
+  )
+(if (daemonp)
+    (add-hook 'after-make-frame-functions
+              (lambda (frame)
+                (select-frame frame)
+                (my/style-frame)
+                ))
+  (my/style-frame)
+  )
 #+END_SRC
 ** Font
 Fantasque Sans Mono
