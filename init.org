@@ -1369,7 +1369,7 @@ https://github.com/tonini/alchemist.el
 #+END_SRC
 ***** css
 #+BEGIN_SRC emacs-lisp
-  (setq css-indent-offset 2)
+  (setq css-indent-offset 4)
   (my/add-format-before-save 'css-mode-hook)
 #+END_SRC
 ***** Scss-Mode [disabled]
