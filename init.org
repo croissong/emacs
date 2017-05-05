@@ -222,12 +222,6 @@ Fantasque Sans Mono
 ;; (set-face-attribute 'mode-line nil :height 135 :foreground "#28a428" :background "#2a2a28")
 ;; (set-face-attribute 'mode-line-inactive nil :height 135 :foreground "#995400" :background "#2a2a28")
 #+END_SRC
-** Cursor
-#+BEGIN_SRC emacs-lisp
-(set-face-attribute 'region nil :background "darkblue")
-(set-cursor-color "black")
-(setq-default cursor-type 'bar)
-#+END_SRC
 ** Generic
 Linewrap
 #+BEGIN_SRC emacs-lisp
@@ -264,6 +258,12 @@ Linewrap
 #+END_SRC
 **** Alternativen
 - Soft-Morning
+**** Cursor
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'region nil :background "darkblue")
+(set-cursor-color "royal blue")
+(setq-default cursor-type 'bar)
+#+END_SRC
 *** Window
 **** Purpose-mode
 [[https://github.com/bmag/emacs-purpose][@github]]
@@ -350,7 +350,6 @@ https://github.com/lukhas/buffer-move
 (req-package helm-ag
     :config
     (setq helm-ag-base-command "rg --vimgrep --no-heading --ignore-case")
-    :bind (:map my-keys-minor-mode-map ("C-M-s" . helm-do-ag))
     )
 #+END_SRC
 *** Evil-Nerd-Commenter
@@ -628,10 +627,16 @@ The Spacemacs Modeline
 ;;asdsd
 (req-package projectile
   :init
-  (add-hook 'python-mode-hook 'projectile-mode)
-
+  (projectile-mode)
   :config
-  (setq projectile-indexing-method 'alien)
+  (setq projectile-completion-system 'helm
+        projectile-switch-project-action 'helm-projectile
+        projectile-enable-caching t)
+  )
+(req-package helm-projectile
+    :config
+  (setq projectile-switch-project-action 'helm-projectile-find-file)
+  :bind (:map my-keys-minor-mode-map ("C-M-s" . helm-ag-project-root))
   )
 #+END_SRC
 *** Floobits
@@ -678,9 +683,10 @@ pomodoro-nth-for-longer-break 3))
 ** Magit
 [[https://github.com/magit/magit/wiki/Pushing-with-Magit-from-Windows][@github.com]]
 #+BEGIN_SRC emacs-lisp
-(setenv "SSH_ASKPASS" "git-gui--askpass")
 (req-package ssh-agency
   :if (my-util-win?)
+  :init
+  (setenv "SSH_ASKPASS" "git-gui--askpass")
   )
 (req-package magit
 :ensure t
