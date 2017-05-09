@@ -6,6 +6,7 @@
 - org-bullets
 ** packages maybe Futur
 *** Focus [[https://github.com/larstvei/Focus/blob/master/README.md][@github.com]]
+*** finance https://github.com/ledger/ledger-mode
 ** elisp tips
 - [[https://www.reddit.com/r/emacs/comments/3nu2xr/emacs_lisp_programming_thoughts/][@reddit.com]]
 * Initialize
