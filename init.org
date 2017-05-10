@@ -249,7 +249,7 @@ Linewrap
 (req-package soft-stone-theme
   :init
   (load-theme 'soft-stone t)
-
+  :force t
   :config
   )
 #+END_SRC
