@@ -109,6 +109,12 @@
  ("M-s r" . replace-string)
  ("M-s q" . query-replace))
 #+END_SRC
+*** revert buffer
+#+BEGIN_SRC emacs-lisp
+(bind-keys
+ :map my-keys-minor-mode-map
+ ("M-r" . revert-buffer))
+#+END_SRC
 *** hm
 #+BEGIN_SRC emacs-lisp
 (bind-keys :map my-keys-minor-mode-map
