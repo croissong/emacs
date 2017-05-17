@@ -107,11 +107,12 @@
 *** hm
 #+BEGIN_SRC emacs-lisp
 (bind-keys :map my-keys-minor-mode-map
-	   ("C-M-k" . kill-this-buffer)
-	   ("C-l" . goto-line))
+           ("C-M-k" . kill-this-buffer)
+           ("C-l" . goto-line)
+           ("M-_" . shell-command))
 ;;in global keymap because conflict with org-mode new heading
 (bind-keys ("C-<return>" . new-line-below)
-	   ("M-<return>" . new-line-above))
+           ("M-<return>" . new-line-above))
 #+END_SRC
 * Generic
 ** My Values
