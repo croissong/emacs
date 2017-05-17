@@ -187,7 +187,8 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (defun my/style-frame()
-  (set-frame-parameter nil 'internal-border-width 4)
+  ;; messes with window height
+  ;; (set-frame-parameter nil 'internal-border-width 4)
   (set-face-attribute 'fringe nil :background "#bisque4")
   (fringe-mode '(1 . 0))
   (set-face-attribute 'vertical-border nil :foreground "bisque4")
@@ -200,15 +201,6 @@
                 ))
   (my/style-frame)
   )
-#+END_SRC
-** Font
-Fantasque Sans Mono
-#+BEGIN_SRC emacs-lisp
-(if (my-util-cb?)
-    (add-to-list 'default-frame-alist '(font . "Fantasque Sans Mono 15"))
-    ;; (setq initial-frame-alist (font . "Fantasque Sans Mono"))
-;; "alternative font: Hack"
-    (add-to-list 'default-frame-alist '(font . "Fantasque Sans Mono")))
 #+END_SRC
 ** Mode-line
 #+BEGIN_SRC emacs-lisp
@@ -324,8 +316,9 @@ https://github.com/lukhas/buffer-move
 *** AG the_silver_searcher
 #+BEGIN_SRC emacs-lisp
 (req-package helm-ag
-    :config
-    (setq helm-ag-base-command "rg --vimgrep --no-heading --ignore-case")
+    :config (setq helm-ag-base-command "rg --vimgrep --no-heading --ignore-case")
+    :bind (:map my-keys-minor-mode-map
+                ("C-M-f" . helm-projectile-find-file))
     )
 #+END_SRC
 *** Evil-Nerd-Commenter
@@ -586,8 +579,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 )
 #+END_SRC
 *** Space-line
-The Spacemacs Modeline
-[[[[https://github.com/TheBB/spaceline/tree/master/]]][@Github]]
+[[https://github.com/TheBB/spaceline/tree/master/][The Spacemacs Modeline @github]]
 #+BEGIN_SRC emacs-lisp
 (req-package spaceline
   :init
@@ -604,18 +596,17 @@ The Spacemacs Modeline
 (req-package projectile
   :init
   (projectile-mode)
-  (helm-projectile-on)
   :config
   (setq projectile-completion-system 'helm
         projectile-switch-project-action 'helm-projectile
         projectile-enable-caching t)
   )
 (req-package helm-projectile
+    :init (helm-projectile-on)
     :config
   (setq projectile-switch-project-action 'helm-projectile-find-file)
   :bind (:map my-keys-minor-mode-map
-              ("C-M-s" . helm-ag-project-root)
-              ("C-M-f" . helm-projectile-find-file))
+              ("C-M-s" . helm-ag-project-root))
   )
 #+END_SRC
 *** Floobits
