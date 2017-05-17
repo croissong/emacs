@@ -250,23 +250,6 @@ Linewrap
   (adaptive-wrap-global-mode)
   )
 #+END_SRC
-*** Theme
-#+BEGIN_SRC emacs-lisp
-(req-package soft-stone-theme
-  :init
-  (load-theme 'soft-stone t)
-  :force t
-  :config
-  )
-#+END_SRC
-**** Alternativen
-- Soft-Morning
-**** Cursor
-#+BEGIN_SRC emacs-lisp
-(set-face-attribute 'region nil :background "darkblue")
-(set-cursor-color "royal blue")
-(setq-default cursor-type 'bar)
-#+END_SRC
 *** Window
 **** Purpose-mode
 [[https://github.com/bmag/emacs-purpose][@github]]
@@ -1656,6 +1639,24 @@ maybe for linux
 ** Tramp
 #+BEGIN_SRC emacs-lisp
 (setq tramp-default-method "ssh")
+#+END_SRC
+** Theme
+moved to bottom because cursor color changed by smth else
+#+BEGIN_SRC emacs-lisp
+(req-package soft-stone-theme
+  :init
+  (load-theme 'soft-stone t)
+  :force t
+  :config
+  )
+#+END_SRC
+*** Alternativen
+- Soft-Morning
+*** Cursor
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'region nil :background "darkblue")
+(set-cursor-color "royal blue")
+(setq-default cursor-type 'bar)
 #+END_SRC
 * Functions
 ** Html-to-React
