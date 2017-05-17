@@ -1,14 +1,3 @@
-* Other .emacs
-** [[http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3][@wisomandwonder]]
-** [[https://github.com/emacs-tw/awesome-emacs][awesome-emacs]]
-** [[https://github.com/jwiegley/dot-emacs][jwiegley dot-emacs]]
-** [[https://www.reddit.com/r/emacs/comments/3obmoh/emacs_for_writers_presentation_by_jay_dixit/][Emacs for writers]]
-- org-bullets
-** packages maybe Futur
-*** Focus [[https://github.com/larstvei/Focus/blob/master/README.md][@github.com]]
-*** finance https://github.com/ledger/ledger-mode
-** elisp tips
-- [[https://www.reddit.com/r/emacs/comments/3nu2xr/emacs_lisp_programming_thoughts/][@reddit.com]]
 * Initialize
 ** Coding Environment
 [[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
@@ -614,6 +603,7 @@ The Spacemacs Modeline
 (req-package projectile
   :init
   (projectile-mode)
+  (helm-projectile-on)
   :config
   (setq projectile-completion-system 'helm
         projectile-switch-project-action 'helm-projectile
@@ -622,7 +612,9 @@ The Spacemacs Modeline
 (req-package helm-projectile
     :config
   (setq projectile-switch-project-action 'helm-projectile-find-file)
-  :bind (:map my-keys-minor-mode-map ("C-M-s" . helm-ag-project-root))
+  :bind (:map my-keys-minor-mode-map
+              ("C-M-s" . helm-ag-project-root)
+              ("C-M-f" . helm-projectile-find-file))
   )
 #+END_SRC
 *** Floobits
@@ -677,7 +669,7 @@ pomodoro-nth-for-longer-break 3))
 (req-package magit
 :ensure t
 :config (setq magit-diff-arguments (quote ("--ignore-space-change"
-"--ignore-all-space" "--no-ext-diff" "--stat" "--color-words"))
+"--ignore-all-space" "--no-ext-diff" "--stat"))
       magit-diff-section-arguments (quote ("--ignore-all-space" "--no-ext-diff" "-U2")))
 )
 #+END_SRC
@@ -1898,3 +1890,17 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 #+END_SRC
 * Calc
 https://www.reddit.com/r/emacs/comments/1mbn0s/the_emacs_calculator/
+* meta
+** other
+*** [[http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3][@wisomandwonder]]
+*** [[https://github.com/emacs-tw/awesome-emacs][awesome-emacs]]
+*** [[https://github.com/jwiegley/dot-emacs][jwiegley dot-emacs]]
+*** [[https://www.reddit.com/r/emacs/comments/3obmoh/emacs_for_writers_presentation_by_jay_dixit/][Emacs for writers]]
+- org-bullets
+** packages maybe Futur
+*** Focus [[https://github.com/larstvei/Focus/blob/master/README.md][@github.com]]
+*** finance https://github.com/ledger/ledger-mode
+** todo
+- magit diff args -> git global config
+** elisp tips
+- [[https://www.reddit.com/r/emacs/comments/3nu2xr/emacs_lisp_programming_thoughts/][@reddit.com]]
