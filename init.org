@@ -614,6 +614,7 @@ The Spacemacs Modeline
 (req-package projectile
   :init
   (projectile-mode)
+  (helm-projectile-on)
   :config
   (setq projectile-completion-system 'helm
         projectile-switch-project-action 'helm-projectile
@@ -622,7 +623,9 @@ The Spacemacs Modeline
 (req-package helm-projectile
     :config
   (setq projectile-switch-project-action 'helm-projectile-find-file)
-  :bind (:map my-keys-minor-mode-map ("C-M-s" . helm-ag-project-root))
+  :bind (:map my-keys-minor-mode-map
+              ("C-M-s" . helm-ag-project-root)
+              ("C-M-f" . helm-projectile-find-file))
   )
 #+END_SRC
 *** Floobits
