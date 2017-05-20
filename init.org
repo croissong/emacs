@@ -313,7 +313,7 @@ https://github.com/lukhas/buffer-move
               ("C-M-ä" . buf-move-down))
   )
 #+END_SRC
-*** AG the_silver_searcher
+*** Ripgrep
 #+BEGIN_SRC emacs-lisp
 (req-package helm-ag
     :config (setq helm-ag-base-command "rg --vimgrep --no-heading --ignore-case")
@@ -1635,10 +1635,9 @@ moved to bottom because cursor color changed by smth else
   :init
   (load-theme 'soft-stone t)
   :force t
-  :config
   )
 #+END_SRC
-*** Alternativen
+*** Alternatives
 - Soft-Morning
 *** Cursor
 #+BEGIN_SRC emacs-lisp
@@ -1647,50 +1646,6 @@ moved to bottom because cursor color changed by smth else
 (setq-default cursor-type 'bar)
 #+END_SRC
 * Functions
-** Html-to-React
-#+BEGIN_SRC emacs-lisp
-(defun my/html-to-react ()
-  (interactive)
-  (with-current-buffer (current-buffer)
-    (goto-char (point-min))
-    (while (search-forward "class" nil t) (replace-match "className" nil t))
-    (goto-char (point-min))
-    (while (search-forward "\"" nil t) (replace-match "'" nil t))
-    (web-mode)
-    (goto-char (point-min))
-    (let* ((html (buffer-string))
-	   (toc (my/html-to-react--get-toc html))
-	   (content (my/html-to-react--get-content html)))
-      (message content)
-      (delete-region (point-min) (point-max))
-      (insert (format "import React from 'react'
-
-export class Toc extends React.Component {
-  render () {
-    return (
-      %s
-    )
-  }
-}
-
-export class Content extends React.Component {
-  render () {
-    return (
-      <div>%s</div>
-    )
-  }
-}"
-		   toc content))))
-  )
-
-(defun my/html-to-react--get-toc (html)
-  (buffer-substring-no-properties (point-min)
-		    (+ (web-mode-element-end-position) 1)))
-
-(defun my/html-to-react--get-content (html)
-  (buffer-substring-no-properties (+ (web-mode-element-end-position) 1)
-				  (point-max)))
-#+END_SRC
 ** Line manouevor functions
 *** New-line-above
 #+BEGIN_SRC emacs-lisp
