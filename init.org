@@ -650,6 +650,13 @@ pomodoro-nth-for-longer-break 3))
 (req-package yaml-mode
 :init (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
 #+END_SRC
+** Read user $PATH
+#+BEGIN_SRC emacs-lisp
+(req-package  exec-path-from-shell
+    :if (my-util-linux?)
+    :init  (exec-path-from-shell-initialize)
+    )
+#+END_SRC
 ** Magit
 [[https://github.com/magit/magit/wiki/Pushing-with-Magit-from-Windows][@github.com]]
 #+BEGIN_SRC emacs-lisp
