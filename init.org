@@ -425,14 +425,15 @@ https://github.com/lukhas/buffer-move
 *** Undo-Tree
 #+BEGIN_SRC emacs-lisp
 (req-package undo-tree
-  :bind (("C-p" . undo-tree-undo)
-         ("M-p" . undo-tree-redo)
-         ("C-M-p" . undo-tree-visualize))
-  :init
-  :config
-  (global-undo-tree-mode t)
-  :diminish undo-tree-mode
-)
+    :bind (("C-p" . undo-tree-undo)
+           ("M-p" . undo-tree-redo)
+           ("C-M-p" . undo-tree-visualize))
+    :init
+    (define-key undo-tree-map (kbd "M-_") nil)
+    :config
+    (global-undo-tree-mode t)
+    :diminish undo-tree-mode
+    )
 #+END_SRC
 *** Ediff
 TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
@@ -484,25 +485,25 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions)
 )
 #+END_SRC
-*** Flycheck [disabled]
-#+BEGIN_SRC emacs-lisp :tangle no
+*** Flycheck
+#+BEGIN_SRC emacs-lisp
 (req-package flycheck
     :init
   ;; (add-hook 'after-init-hook #'global-flycheck-mode) ;
   :config
   ;; disable jshint since we prefer eslint checking
-  (setq-default flycheck-disabled-checkers
-		(append flycheck-disabled-checkers
-			'(javascript-jshint)))
+  ;; (setq-default flycheck-disabled-checkers
+	;; 	(append flycheck-disabled-checkers
+	;; 		'(javascript-jshint)))
 
   ;; use eslint with web-mode for jsx files
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
+  ;; (flycheck-add-mode 'javascript-eslint 'web-mode)
 
   ;;https://github.com/justjake/eslint-project-relative
-  (when (my-util-installed? "eslint-project-relative")
-    (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
+  ;; (when (my-util-installed? "eslint-project-relative")
+    ;; (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
   ;; customize flycheck temp file prefix
-  (setq-default flycheck-temp-prefix ".flycheck")
+  ;; (setq-default flycheck-temp-prefix ".flycheck")
   )
 #+END_SRC
 **** disable in org-src-block
@@ -1507,13 +1508,17 @@ Cargo: Run the tests."
 #+END_SRC
 *** go
 #+BEGIN_SRC emacs-lisp
-(req-package go-mode)
-(req-package company-go
-:init (add-hook 'go-mode-hook (lambda ()
-                          (set (make-local-variable 'company-backends) '(company-go))
-                          (company-mode))))
-(req-package go-eldoc
-:init (add-hook 'go-mode-hook 'go-eldoc-setup))
+(req-package go-mode
+    :require company-go go-eldoc
+    :init (exec-path-from-shell-copy-env "GOPATH")
+    :config (add-hook 'go-mode-hook
+                      (lambda ()
+                        (set (make-local-variable 'company-backends) '(company-go))
+                        (add-hook 'before-save-hook 'gofmt-before-save nil 'local)
+                        (go-eldoc-setup)
+                        (flycheck-mode)
+                        (company-mode)))
+    )
 #+END_SRC
 ** mini
 #+BEGIN_SRC emacs-lisp
