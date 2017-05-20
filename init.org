@@ -1533,6 +1533,10 @@ maybe for linux
     :config
     )
 #+END_SRC
+** restclient
+#+BEGIN_SRC emacs-lisp
+(req-package restclient)
+#+END_SRC
 ** Els
 *** Spell-number
 #+BEGIN_SRC emacs-lisp
