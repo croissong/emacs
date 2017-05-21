@@ -513,11 +513,20 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 		      flycheck-disabled-checkers
 		      '(emacs-lisp-checkdoc))))
 #+END_SRC
-*** ido
+*** helm
 #+BEGIN_SRC emacs-lisp
+(req-package helm-config
+    :init (helm-mode)
+    (setq helm-M-x-fuzzy-match t)
+    :bind(("M-x" . helm-M-x)
+          ("C-x C-f" . helm-find-files)
+          ("C-x b" . helm-buffers-list))
+    )
+#+END_SRC
+*** ido [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package ido
 :init
-
 :config
 (ido-mode t)
 (ido-everywhere t)
@@ -527,8 +536,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
             ("M-#" . ido-next-match)
             ("M-ö" . ido-prev-match)))
 #+END_SRC
-**** config
-#+BEGIN_SRC emacs-lisp
+**** config [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq ido-case-fold t
       ido-enable-flex-matching t
       ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*"
@@ -558,8 +567,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ;;(add-to-list 'ido-ignore-files "\\`media/")
 #+END_SRC
-**** flx-ido
-#+BEGIN_SRC emacs-lisp
+**** flx-ido [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package flx-ido
 :init
 (flx-ido-mode 1)
@@ -570,8 +579,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (setq ido-use-faces nil)
 :ensure t)
 #+END_SRC
-*** smex
-#+BEGIN_SRC emacs-lisp
+**** smex [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package smex
 :bind ("M-x" . smex)
 :init
