@@ -316,7 +316,7 @@ https://github.com/lukhas/buffer-move
 *** Ripgrep
 #+BEGIN_SRC emacs-lisp
 (req-package helm-ag
-    :config (setq helm-ag-base-command "rg --vimgrep --no-heading --ignore-case")
+    :config (setq helm-ag-base-command "rg --vimgrep --no-heading --ignore-case --ignore-file /home/skender/.dotfiles/rgignore")
     :bind (:map my-keys-minor-mode-map
                 ("C-M-f" . helm-projectile-find-file))
     )
@@ -429,9 +429,9 @@ https://github.com/lukhas/buffer-move
            ("M-p" . undo-tree-redo)
            ("C-M-p" . undo-tree-visualize))
     :init
-    (define-key undo-tree-map (kbd "M-_") nil)
     :config
     (global-undo-tree-mode t)
+    (define-key undo-tree-map (kbd "M-_") nil)
     :diminish undo-tree-mode
     )
 #+END_SRC
