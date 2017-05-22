@@ -313,10 +313,10 @@ https://github.com/lukhas/buffer-move
               ("C-M-ä" . buf-move-down))
   )
 #+END_SRC
-*** AG the_silver_searcher
+*** Ripgrep
 #+BEGIN_SRC emacs-lisp
 (req-package helm-ag
-    :config (setq helm-ag-base-command "rg --vimgrep --no-heading --ignore-case")
+    :config (setq helm-ag-base-command "rg --vimgrep --no-heading --ignore-case --ignore-file /home/skender/.dotfiles/rgignore")
     :bind (:map my-keys-minor-mode-map
                 ("C-M-f" . helm-projectile-find-file))
     )
@@ -425,14 +425,15 @@ https://github.com/lukhas/buffer-move
 *** Undo-Tree
 #+BEGIN_SRC emacs-lisp
 (req-package undo-tree
-  :bind (("C-p" . undo-tree-undo)
-         ("M-p" . undo-tree-redo)
-         ("C-M-p" . undo-tree-visualize))
-  :init
-  :config
-  (global-undo-tree-mode t)
-  :diminish undo-tree-mode
-)
+    :bind (("C-p" . undo-tree-undo)
+           ("M-p" . undo-tree-redo)
+           ("C-M-p" . undo-tree-visualize))
+    :init
+    :config
+    (global-undo-tree-mode t)
+    (define-key undo-tree-map (kbd "M-_") nil)
+    :diminish undo-tree-mode
+    )
 #+END_SRC
 *** Ediff
 TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
@@ -484,25 +485,25 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions)
 )
 #+END_SRC
-*** Flycheck [disabled]
-#+BEGIN_SRC emacs-lisp :tangle no
+*** Flycheck
+#+BEGIN_SRC emacs-lisp
 (req-package flycheck
     :init
   ;; (add-hook 'after-init-hook #'global-flycheck-mode) ;
   :config
   ;; disable jshint since we prefer eslint checking
-  (setq-default flycheck-disabled-checkers
-		(append flycheck-disabled-checkers
-			'(javascript-jshint)))
+  ;; (setq-default flycheck-disabled-checkers
+	;; 	(append flycheck-disabled-checkers
+	;; 		'(javascript-jshint)))
 
   ;; use eslint with web-mode for jsx files
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
+  ;; (flycheck-add-mode 'javascript-eslint 'web-mode)
 
   ;;https://github.com/justjake/eslint-project-relative
-  (when (my-util-installed? "eslint-project-relative")
-    (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
+  ;; (when (my-util-installed? "eslint-project-relative")
+    ;; (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
   ;; customize flycheck temp file prefix
-  (setq-default flycheck-temp-prefix ".flycheck")
+  ;; (setq-default flycheck-temp-prefix ".flycheck")
   )
 #+END_SRC
 **** disable in org-src-block
@@ -512,11 +513,20 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 		      flycheck-disabled-checkers
 		      '(emacs-lisp-checkdoc))))
 #+END_SRC
-*** ido
+*** helm
 #+BEGIN_SRC emacs-lisp
+(req-package helm-config
+    :init (helm-mode)
+    (setq helm-M-x-fuzzy-match t)
+    :bind(("M-x" . helm-M-x)
+          ("C-x C-f" . helm-find-files)
+          ("C-x b" . helm-buffers-list))
+    )
+#+END_SRC
+*** ido [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package ido
 :init
-
 :config
 (ido-mode t)
 (ido-everywhere t)
@@ -526,8 +536,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
             ("M-#" . ido-next-match)
             ("M-ö" . ido-prev-match)))
 #+END_SRC
-**** config
-#+BEGIN_SRC emacs-lisp
+**** config [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq ido-case-fold t
       ido-enable-flex-matching t
       ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*"
@@ -557,8 +567,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ;;(add-to-list 'ido-ignore-files "\\`media/")
 #+END_SRC
-**** flx-ido
-#+BEGIN_SRC emacs-lisp
+**** flx-ido [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package flx-ido
 :init
 (flx-ido-mode 1)
@@ -569,8 +579,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (setq ido-use-faces nil)
 :ensure t)
 #+END_SRC
-*** smex
-#+BEGIN_SRC emacs-lisp
+**** smex [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package smex
 :bind ("M-x" . smex)
 :init
@@ -654,6 +664,13 @@ pomodoro-nth-for-longer-break 3))
 #+BEGIN_SRC emacs-lisp
 (req-package yaml-mode
 :init (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+#+END_SRC
+** Read user $PATH
+#+BEGIN_SRC emacs-lisp
+(req-package  exec-path-from-shell
+    :if (my-util-linux?)
+    :init  (exec-path-from-shell-initialize)
+    )
 #+END_SRC
 ** Magit
 [[https://github.com/magit/magit/wiki/Pushing-with-Magit-from-Windows][@github.com]]
@@ -1505,13 +1522,17 @@ Cargo: Run the tests."
 #+END_SRC
 *** go
 #+BEGIN_SRC emacs-lisp
-(req-package go-mode)
-(req-package company-go
-:init (add-hook 'go-mode-hook (lambda ()
-                          (set (make-local-variable 'company-backends) '(company-go))
-                          (company-mode))))
-(req-package go-eldoc
-:init (add-hook 'go-mode-hook 'go-eldoc-setup))
+(req-package go-mode
+    :require company-go go-eldoc
+    :init (exec-path-from-shell-copy-env "GOPATH")
+    :config (add-hook 'go-mode-hook
+                      (lambda ()
+                        (set (make-local-variable 'company-backends) '(company-go))
+                        (add-hook 'before-save-hook 'gofmt-before-save nil 'local)
+                        (go-eldoc-setup)
+                        (flycheck-mode)
+                        (company-mode)))
+    )
 #+END_SRC
 ** mini
 #+BEGIN_SRC emacs-lisp
@@ -1537,6 +1558,10 @@ maybe for linux
     :init (global-hungry-delete-mode)
     :config
     )
+#+END_SRC
+** restclient
+#+BEGIN_SRC emacs-lisp
+(req-package restclient)
 #+END_SRC
 ** Els
 *** Spell-number
@@ -1636,10 +1661,9 @@ moved to bottom because cursor color changed by smth else
   :init
   (load-theme 'soft-stone t)
   :force t
-  :config
   )
 #+END_SRC
-*** Alternativen
+*** Alternatives
 - Soft-Morning
 *** Cursor
 #+BEGIN_SRC emacs-lisp
@@ -1648,50 +1672,6 @@ moved to bottom because cursor color changed by smth else
 (setq-default cursor-type 'bar)
 #+END_SRC
 * Functions
-** Html-to-React
-#+BEGIN_SRC emacs-lisp
-(defun my/html-to-react ()
-  (interactive)
-  (with-current-buffer (current-buffer)
-    (goto-char (point-min))
-    (while (search-forward "class" nil t) (replace-match "className" nil t))
-    (goto-char (point-min))
-    (while (search-forward "\"" nil t) (replace-match "'" nil t))
-    (web-mode)
-    (goto-char (point-min))
-    (let* ((html (buffer-string))
-	   (toc (my/html-to-react--get-toc html))
-	   (content (my/html-to-react--get-content html)))
-      (message content)
-      (delete-region (point-min) (point-max))
-      (insert (format "import React from 'react'
-
-export class Toc extends React.Component {
-  render () {
-    return (
-      %s
-    )
-  }
-}
-
-export class Content extends React.Component {
-  render () {
-    return (
-      <div>%s</div>
-    )
-  }
-}"
-		   toc content))))
-  )
-
-(defun my/html-to-react--get-toc (html)
-  (buffer-substring-no-properties (point-min)
-		    (+ (web-mode-element-end-position) 1)))
-
-(defun my/html-to-react--get-content (html)
-  (buffer-substring-no-properties (+ (web-mode-element-end-position) 1)
-				  (point-max)))
-#+END_SRC
 ** Line manouevor functions
 *** New-line-above
 #+BEGIN_SRC emacs-lisp
