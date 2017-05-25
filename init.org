@@ -1276,7 +1276,7 @@ https://github.com/tonini/alchemist.el
           (or (if (buffer-live-p alchemist-iex-buffer)
                   (get-buffer-process alchemist-iex-buffer))
               (progn
-                (alchemist-iex-start-process '("iex" "-S" "mix" "phoenix.server"))
+                (alchemist-iex-start-process '("iex" "-S" "mix" "phx.server"))
                 (alchemist-iex-process))))
          ))))
   
