@@ -1374,6 +1374,7 @@ https://github.com/tonini/alchemist.el
 ***** css
 #+BEGIN_SRC emacs-lisp
   (setq css-indent-offset 4)
+  (add-to-list 'auto-mode-alist '("\\.less\\'" . css-mode))
   (my/add-format-before-save 'css-mode-hook)
 #+END_SRC
 ***** Scss-Mode [disabled]
