@@ -517,8 +517,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+BEGIN_SRC emacs-lisp
 (req-package helm-config
     :init (helm-mode)
-    (setq helm-M-x-fuzzy-match t
-          helm-buffers-fuzzy-matching t)
+    (setq helm-mode-fuzzy-match t
+          helm-completion-in-region-fuzzy-match t)
+    (helm-adaptive-mode t)
     :bind(("M-x" . helm-M-x)
           ("C-x C-f" . helm-find-files)
           ("C-x b" . helm-buffers-list))
@@ -1275,7 +1276,7 @@ https://github.com/tonini/alchemist.el
           (or (if (buffer-live-p alchemist-iex-buffer)
                   (get-buffer-process alchemist-iex-buffer))
               (progn
-                (alchemist-iex-start-process '("iex" "-S" "mix" "phoenix.server"))
+                (alchemist-iex-start-process '("iex" "-S" "mix" "phx.server"))
                 (alchemist-iex-process))))
          ))))
   
