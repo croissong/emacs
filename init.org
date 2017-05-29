@@ -1402,8 +1402,10 @@ https://github.com/tonini/alchemist.el
   (add-hook 'js-mode-hook 'js2-minor-mode)
   (my/add-format-before-save 'js-mode-hook)
   :config
-  (setq js2-basic-offset 2)
-  (setq js2-strict-inconsistent-return-warning nil)
+  (setq js2-basic-offset 2
+        js2-strict-inconsistent-return-warning nil
+        )
+  (define-key js2-mode-map (kbd "M-.") nil)
 )
 #+END_SRC
 ***** Web-mode
