@@ -673,6 +673,11 @@ pomodoro-nth-for-longer-break 3))
 (req-package yaml-mode
 :init (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
 #+END_SRC
+** Editorconfig
+#+BEGIN_SRC emacs-lisp
+(req-package editorconfig
+:config (editorconfig-mode 1))
+#+END_SRC
 ** Read user $PATH
 #+BEGIN_SRC emacs-lisp
 (req-package  exec-path-from-shell
