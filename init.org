@@ -518,7 +518,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (req-package helm-config
     :init (helm-mode)
     (helm-adaptive-mode t)
-    :config
     (setq helm-mode-fuzzy-match t
           helm-recentf-fuzzy-match t
           helm-buffers-fuzzy-matching t
