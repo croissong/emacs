@@ -1,4 +1,3 @@
-init.elc*
 save/
 elpa/
 eshell/
@@ -19,8 +18,7 @@ projectile.cache
 projectile-bookmarks.eld
 test.el
 scratch/
-*.elc
-/org-init.el
+/init.el
 /custom.el
 /tramp
 /helm-adaptive-history

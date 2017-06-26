@@ -1,3 +1,4 @@
+#+PROPERTY: header-args :tangle init.el
 * Initialize
 ** Coding Environment
 [[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
@@ -19,6 +20,7 @@
 #+BEGIN_SRC emacs-lisp
   (eval-and-compile
     (require 'package)
+    (package-initialize)
     (setq package-enable-at-startup nil
           package-archives
           '(("gnu" . "http://elpa.gnu.org/packages/")

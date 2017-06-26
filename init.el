@@ -1,5 +1,0 @@
-(add-to-list 'load-path (expand-file-name "els/org-init/" user-emacs-directory))
-(package-initialize)
-(require 'org-init)
-(org-init-recompile)
-(org-init-load)
