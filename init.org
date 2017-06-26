@@ -54,21 +54,11 @@
      :load-path "els/my-utils/"))
 #+END_SRC
 * Keybindings
-** Minor Mode Init
-#+BEGIN_SRC emacs-lisp
-(defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
-(define-minor-mode my-keys-minor-mode
-  "A minor mode so that my key settings override annoying major modes."
-  t " my-keys" 'my-keys-minor-mode-map)
-
-(my-keys-minor-mode 1)
-(diminish 'my-keys-minor-mode)
-#+END_SRC
 ** Keybindings
 *** Moving
 **** Between Windows
 #+BEGIN_SRC emacs-lisp
-(bind-keys :map my-keys-minor-mode-map
+(bind-keys*
 	   ("C-ö" . windmove-left)
 	   ("C-#" . windmove-right)
      ("C-ü" . windmove-up)
@@ -81,11 +71,7 @@
   (interactive)
   (delete-window (other-window 1)))
 
-(bind-key "C-q" 'delete-other-window my-keys-minor-mode-map)
-#+END_SRC
-*** find file other window
-#+BEGIN_SRC emacs-lisp
-(bind-key "C-x C-M-f" 'ido-find-file-other-window my-keys-minor-mode-map)
+(bind-key* "C-q" 'delete-other-window)
 #+END_SRC
 *** disable overwrite
 #+BEGIN_SRC emacs-lisp
@@ -93,23 +79,21 @@
 #+END_SRC
 *** search M-s
 #+BEGIN_SRC emacs-lisp
-(bind-keys
- :map my-keys-minor-mode-map
+(bind-keys*
  ("M-s r" . replace-string)
  ("M-s q" . query-replace))
 #+END_SRC
 *** revert buffer
 #+BEGIN_SRC emacs-lisp
-(bind-keys
- :map my-keys-minor-mode-map
+(bind-keys*
  ("M-r" . revert-buffer))
 #+END_SRC
 *** hm
 #+BEGIN_SRC emacs-lisp
-(bind-keys :map my-keys-minor-mode-map
-           ("C-M-k" . kill-this-buffer)
-           ("C-l" . goto-line)
-           ("M-_" . shell-command))
+(bind-keys*
+ ("C-M-k" . kill-this-buffer)
+ ("C-l" . goto-line)
+ ("M-_" . shell-command))
 ;;in global keymap because conflict with org-mode new heading
 (bind-keys ("C-<return>" . new-line-below)
            ("M-<return>" . new-line-above))
@@ -306,19 +290,17 @@ Linewrap
 https://github.com/lukhas/buffer-move
 #+BEGIN_SRC emacs-lisp
 (req-package buffer-move
-  :bind (:map my-keys-minor-mode-map
-	      ("C-M-#" . buf-move-right)
-	      ("C-M-ö" . buf-move-left)
-              ("C-M-ü" . buf-move-up)
-              ("C-M-ä" . buf-move-down))
-  )
+    :bind* ("C-M-#" . buf-move-right)
+    ("C-M-ö" . buf-move-left)
+    ("C-M-ü" . buf-move-up)
+    ("C-M-ä" . buf-move-down)
+    )
 #+END_SRC
 *** Ripgrep
 #+BEGIN_SRC emacs-lisp
 (req-package helm-ag
     :config (setq helm-ag-base-command "rg --vimgrep --no-heading --ignore-case --ignore-file /home/skender/.dotfiles/rgignore")
-    :bind (:map my-keys-minor-mode-map
-                ("C-M-f" . helm-projectile-find-file))
+    :bind* ("C-M-f" . helm-projectile-find-file)
     )
 #+END_SRC
 *** Evil-Nerd-Commenter
@@ -333,7 +315,7 @@ https://github.com/lukhas/buffer-move
 #+BEGIN_SRC emacs-lisp
 (req-package multiple-cursors
   :init
-  :bind (:map my-keys-minor-mode-map ("C-<down-mouse-1>" . mc/add-cursor-on-click))
+  :bind* ("C-<down-mouse-1>" . mc/add-cursor-on-click)
   :config
   (setq mc/list-file (concat user-emacs-directory "config/.mc-lists.el"))
   ;;'(mc/cursor-face ((nil (:background "orange"))))
@@ -345,7 +327,7 @@ https://github.com/lukhas/buffer-move
 (req-package google-translate
   :init
   (require 'google-translate-smooth-ui)
-  :bind (("C-c t" . google-translate-smooth-translate))
+  :bind ("C-c t" . google-translate-smooth-translate)
   :config
   (setq google-translate-translation-directions-alist
 	'(("de" . "en") ("en" . "de") ("de" . "fr") ("de" . "es")))
@@ -477,8 +459,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** Expand-Region
 #+BEGIN_SRC emacs-lisp
 (req-package expand-region
-  :bind (:map my-keys-minor-mode-map
-	      ("C-M-w" . er/expand-region)
+  :bind* (("C-M-w" . er/expand-region)
 	      ("C-M-q" . er/contract-region))
   :init
   :config
@@ -624,8 +605,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :init (helm-projectile-on)
     :config
   (setq projectile-switch-project-action 'helm-projectile-find-file)
-  :bind (:map my-keys-minor-mode-map
-              ("C-M-s" . helm-ag-project-root))
+  :bind* ("C-M-s" . helm-ag-project-root)
   )
 #+END_SRC
 *** Floobits
@@ -654,8 +634,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (req-package dumb-jump
     :config (setq dumb-jump-selector 'helm
                   dumb-jump-force-searcher 'rg)
-    :bind (:map my-keys-minor-mode-map
-                ("M-." . dumb-jump-go))
+    :bind* ("M-." . dumb-jump-go)
     )
 #+END_SRC
 *** pomodoro
