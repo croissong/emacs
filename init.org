@@ -523,7 +523,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
           helm-buffers-fuzzy-matching t
           helm-locate-fuzzy-match t
           helm-M-x-fuzzy-match t
-          helm-completion-in-region-fuzzy-match t)
+          helm-completion-in-region-fuzzy-match t
+          helm-ff-newfile-prompt-p nil)
     :bind(("M-x" . helm-M-x)
           ("C-x C-f" . helm-find-files)
           ("C-x b" . helm-buffers-list)
