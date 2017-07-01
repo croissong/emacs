@@ -46,6 +46,11 @@
    :init (auto-compile-on-load-mode)
  )
 #+END_SRC
+** my/org-init
+#+BEGIN_SRC emacs-lisp
+(req-package org-init
+  :load-path "els/org-init/")
+#+END_SRC
 ** My/Utils
 #+BEGIN_SRC emacs-lisp
   (eval-and-compile
@@ -507,7 +512,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
           helm-locate-fuzzy-match t
           helm-M-x-fuzzy-match t
           helm-completion-in-region-fuzzy-match t
-          helm-ff-newfile-prompt-p nil)
+          helm-ff-newfile-prompt-p nil
+          helm-find-file-ignore-thing-at-point t
+          helm-exit-idle-delay 0
+          )
     :bind(("M-x" . helm-M-x)
           ("C-x C-f" . helm-find-files)
           ("C-x b" . helm-buffers-list)
