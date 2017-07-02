@@ -178,11 +178,9 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (defun my/style-frame()
-  ;; messes with window height
-  ;; (set-frame-parameter nil 'internal-border-width 4)
-  (set-face-attribute 'fringe nil :background "#bisque4")
-  (fringe-mode '(1 . 0))
+  ;;(fringe-mode '(1 . 0))
   (set-face-attribute 'vertical-border nil :foreground "bisque4")
+  (set-cursor-color "royal blue")
   )
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -376,20 +374,13 @@ https://github.com/lukhas/buffer-move
 *** Centered-Window-Mode
 #+BEGIN_SRC emacs-lisp
 (req-package centered-window-mode
-  :init
-  ;; Makes left fringe 10px or so smaller than right one in cwm
-  ;; (defun cwm/center ()
-  ;;   (set-fringe-mode
-  ;;    (let ((right_fringe
-	;;     (/ (- (frame-pixel-width)
-	;; 	  (* 110 (frame-char-width)))
-	;;        2)))
-  ;;      (cons (- right_fringe 50) right_fringe))
-  ;;    ))
-  :config
-  (centered-window-mode t)
-  :diminish centered-window-mode
-  )
+    :init (setq cwm-use-vertical-padding t
+                cwm-frame-internal-border 0
+                cwm-incremental-padding t
+                cwm-left-fringe-ratio 0 )
+    :config (centered-window-mode t)
+    :diminish centered-window-mode
+    )
 #+END_SRC
 
 *** Smartparens
@@ -676,6 +667,16 @@ pomodoro-nth-for-longer-break 3))
     )
 #+END_SRC
 ** Magit
+#+BEGIN_SRC emacs-lisp
+(req-package magit
+:ensure t
+:config (setq magit-diff-arguments (quote ("--ignore-space-change"
+"--ignore-all-space" "--no-ext-diff" "--stat"))
+      magit-diff-section-arguments (quote ("--ignore-all-space" "--no-ext-diff" "-U2")))
+)
+#+END_SRC
+*** ssh
+**** windows
 [[https://github.com/magit/magit/wiki/Pushing-with-Magit-from-Windows][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (req-package ssh-agency
@@ -683,12 +684,6 @@ pomodoro-nth-for-longer-break 3))
   :init
   (setenv "SSH_ASKPASS" "git-gui--askpass")
   )
-(req-package magit
-:ensure t
-:config (setq magit-diff-arguments (quote ("--ignore-space-change"
-"--ignore-all-space" "--no-ext-diff" "--stat"))
-      magit-diff-section-arguments (quote ("--ignore-all-space" "--no-ext-diff" "-U2")))
-)
 #+END_SRC
 *** git-timemachine [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -1263,24 +1258,23 @@ https://github.com/tonini/alchemist.el
     :require elixir-mode
     :init
     (add-hook 'elixir-mode-hook 'alchemist-mode)
-    :config
     :bind (:map alchemist-mode-map
                 ("C-c C-c" . alchemist-iex-compile-this-buffer)
                 ("C-c a s" . my/phoenix-start))
+    :config
+    (defun my/phoenix-start ()
+      (interactive)
+      (if (alchemist-project-p)
+          (let ((default-directory (alchemist-project-root)))
+            (pop-to-buffer
+             (process-buffer
+              (or (if (buffer-live-p alchemist-iex-buffer)
+                      (get-buffer-process alchemist-iex-buffer))
+                  (progn
+                    (alchemist-iex-start-process '("iex" "-S" "mix" "phx.server"))
+                    (alchemist-iex-process))))
+             ))))
     )
-(defun my/phoenix-start ()
-  (interactive)
-  (if (alchemist-project-p)
-      (let ((default-directory (alchemist-project-root)))
-        (pop-to-buffer
-         (process-buffer
-          (or (if (buffer-live-p alchemist-iex-buffer)
-                  (get-buffer-process alchemist-iex-buffer))
-              (progn
-                (alchemist-iex-start-process '("iex" "-S" "mix" "phx.server"))
-                (alchemist-iex-process))))
-         ))))
-  
 #+END_SRC
 *** Markdown
 #+BEGIN_SRC emacs-lisp
@@ -1675,7 +1669,6 @@ moved to bottom because cursor color changed by smth else
 *** Cursor
 #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'region nil :background "darkblue")
-(set-cursor-color "royal blue")
 (setq-default cursor-type 'bar)
 #+END_SRC
 * Functions
