@@ -1050,6 +1050,7 @@ The template may still contain \"%?\" for cursor positioning."
                                                        "monument/lesMysteres.gpg")))
 ;; http://barrenfrozenwasteland.com/2015/06/configuring-pass-on-windows/
 (req-package pass
+:init (exec-path-from-shell-copy-env "PASSWORD_STORE_DIR")
     :config )
 #+END_SRC
 **** Encryption
