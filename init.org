@@ -304,8 +304,8 @@ https://github.com/lukhas/buffer-move
 *** Ripgrep
 #+BEGIN_SRC emacs-lisp
 (req-package helm-ag
-    :config (setq helm-ag-base-command "rg --vimgrep --no-heading --ignore-case --ignore-file /home/skender/.dotfiles/rgignore")
-    :bind* ("C-M-f" . helm-projectile-find-file)
+    :config (setq helm-ag-base-command "rg")
+    :bind* ("C-M-s" . helm-do-ag-project-root)
     )
 #+END_SRC
 *** Evil-Nerd-Commenter
@@ -599,14 +599,14 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (projectile-mode)
   :config
   (setq projectile-completion-system 'helm
-        projectile-switch-project-action 'helm-projectile
+        projectile-file-exists-remote-cache-expire nil
+        projectile-switch-project-action 'helm-projectile-find-file
         projectile-enable-caching t)
   )
 (req-package helm-projectile
     :init (helm-projectile-on)
     :config
-  (setq projectile-switch-project-action 'helm-projectile-find-file)
-  :bind* ("C-M-s" . helm-ag-project-root)
+    :bind* ("C-M-f" . helm-projectile-find-file)
   )
 #+END_SRC
 *** Floobits
