@@ -304,7 +304,7 @@ https://github.com/lukhas/buffer-move
 *** Ripgrep
 #+BEGIN_SRC emacs-lisp
 (req-package helm-ag
-    :config (setq helm-ag-base-command "rg")
+    :config (setq helm-ag-base-command "rg --vimgrep --no-heading --ignore-case --ignore-file /home/skender/.config/ripgrep/ignore")
     :bind* ("C-M-s" . helm-do-ag-project-root)
     )
 #+END_SRC
@@ -635,7 +635,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (req-package dumb-jump
     :config (setq dumb-jump-selector 'helm
                   dumb-jump-force-searcher 'rg)
-    :bind* ("M-." . dumb-jump-go)
+    :bind ("M-." . dumb-jump-go)
     )
 #+END_SRC
 *** pomodoro
@@ -672,7 +672,8 @@ pomodoro-nth-for-longer-break 3))
 :ensure t
 :config (setq magit-diff-arguments (quote ("--ignore-space-change"
 "--ignore-all-space" "--no-ext-diff" "--stat"))
-      magit-diff-section-arguments (quote ("--ignore-all-space" "--no-ext-diff" "-U2")))
+      magit-diff-section-arguments (quote ("--ignore-all-space" "--no-ext-diff" "-U2"))
+      magit-diff-refine-hunk t)
 )
 #+END_SRC
 *** ssh
@@ -1276,6 +1277,15 @@ https://github.com/tonini/alchemist.el
                     (alchemist-iex-process))))
              ))))
     )
+#+END_SRC
+**** flycheck-credo
+#+BEGIN_SRC emacs-lisp
+(req-package flycheck-credo
+    :init
+  (eval-after-load 'flycheck
+    '(flycheck-credo-setup))
+  (add-hook 'elixir-mode-hook 'flycheck-mode)
+  :config (setq flycheck-elixir-credo-strict nil))
 #+END_SRC
 *** Markdown
 #+BEGIN_SRC emacs-lisp
