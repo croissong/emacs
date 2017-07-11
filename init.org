@@ -600,13 +600,14 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :config
   (setq projectile-completion-system 'helm
         projectile-file-exists-remote-cache-expire nil
-        projectile-switch-project-action 'helm-projectile-find-file
+        projectile-switch-project-action 'helm-projectile-find-dir
         projectile-enable-caching t)
   )
 (req-package helm-projectile
     :init (helm-projectile-on)
     :config
-    :bind* ("C-M-f" . helm-projectile-find-file)
+    :bind* (("C-M-f" . helm-projectile-find-file)
+            ("C-M-d" . helm-projectile-find-dir))
   )
 #+END_SRC
 *** Floobits
