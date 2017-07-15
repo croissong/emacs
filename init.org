@@ -1472,9 +1472,10 @@ https://github.com/tonini/alchemist.el
     (company-mode +1))
   (setq company-tooltip-align-annotations t
         tide-tsserver-executable "node_modules/typescript/bin/tsserver"
-        typescript-indent-level 2
-        tide-format-options '(:indentSize: 2))
+        typescript-indent-level 2)
   (add-hook 'typescript-mode-hook #'setup-tide-mode)
+  :bind (:map tide-mode-map
+              ("C-f" . tide-fix))
   )
 #+END_SRC
 *** Elisp
