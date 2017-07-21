@@ -208,471 +208,58 @@ Linewrap
  '(magit-diff-use-overlays nil)
 #+END_SRC
 * Packages
-** AUCTeX
+** Style
+*** Adaptive-Wrap
 #+BEGIN_SRC emacs-lisp
-(req-package tex
+(req-package adaptive-wrap
   :init
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-  :config
-  :ensure auctex
-)
-#+END_SRC
-** Cygwin
-*** Cygwin-Mount
-#+BEGIN_SRC emacs-lisp
-(when (my-util-win?)
-  (setenv "PATH" (concat "c:/cygwin64/bin;" (getenv "PATH")))
-  (setq exec-path (cons "c:/cygwin64/bin/" exec-path))
-  (req-package cygwin-mount
-      :load-path "els/cygwin/"
-      :config (cygwin-mount-activate)
-      ))
-#+END_SRC
-** Dev
-*** Namespaces elisp
-[[https://github.com/Malabarba/Nameless][@github.com]]
-#+BEGIN_SRC emacs-lisp
-(req-package nameless
-  :init
-  :config
-  (setq nameless-private-prefix t)
-)
-#+END_SRC
-*** Testing
-[[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
-#+BEGIN_SRC emacs-lisp
-(req-package xtest
-  :init
-  :config
-)
-#+END_SRC
-** Dired+
-#+BEGIN_SRC emacs-lisp
-(req-package dired+
-  :init
-  (toggle-diredp-find-file-reuse-dir 1)
+  (define-globalized-minor-mode adaptive-wrap-global-mode
+  adaptive-wrap-prefix-mode
+  adaptive-wrap-prefix-mode)
 
   :config
-  (bind-key "?" 'my/dired-get-size dired-mode-map)
-  (setq dired-listing-switches "-aDhl  --group-directories-first")
-)
-#+END_SRC
-*** Functions
-#+BEGIN_SRC emacs-lisp
-(defun my/dired-get-size ()
-  (interactive)
-  (let ((files (dired-get-marked-files)))
-    (with-temp-buffer
-      (apply 'call-process "/usr/bin/du" nil t nil "-sch" files)
-      (message "Size of all marked files: %s"
-               (progn
-                 (re-search-backward "\\(^[0-9.,]+[A-Za-z]+\\).*total$")
-		 (match-string 1))))))
-#+END_SRC
-** Editorconfig
-#+BEGIN_SRC emacs-lisp
-(req-package editorconfig
-:config (editorconfig-mode 1))
-#+END_SRC
-** Els
-*** Spell-number
-#+BEGIN_SRC emacs-lisp
-(req-package spell-number
-             :load-path "els/spell-number/")
-#+END_SRC
-*** Exercism
-#+BEGIN_SRC emacs-lisp
-(req-package exercism
-    :load-path "els/exercism/"
-    :if (my-util-installed? "exercism")
-    :config (when (my-util-win?)
-	      (setq *exercism-cmd*
-		    (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe"))))
-#+END_SRC
-** Finish req-package
-#+BEGIN_SRC emacs-lisp
-(req-package-finish)
-#+END_SRC
-** Ispell/Aspell
-#+BEGIN_SRC emacs-lisp
-(setq ispell-program-name "C:\\cygwin64\\bin\\aspell.exe"
-      ispell-really-aspell t
-      ispell-extra-args '("--sug-mode=fast")
-      ;; TODO name deutsch+english
-      ispell-dictionary "deutsch"
-      flyspell-issue-message-flag nil)
-#+END_SRC
-*** Aspell - spell checking for multiple languages
-[[https://wiki.archlinux.org/index.php/User:Georgek][@wiki.archlinux]]
-combine dictionary deutsch + english
-#+BEGIN_SRC sh :tangle no
-# TODO replace ru with de
-cd /usr/lib/aspell
-grep '^special' en.dat >>ru.dat
-aspell dump master en >w.en
-aspell dump master ru-yo >w.ru
-cat w.ru w.en >w.all
-aspell --lang=ru --encoding=UTF-8 create master ruen.rws < w.all
-rm -f w.ru w.en w.all
-echo "add ruen.rws" > ru.multi
-#+END_SRC
-** Languages
-*** Elixir
-**** Elixir Mode
-https://github.com/elixir-lang/emacs-elixir
-#+BEGIN_SRC emacs-lisp
-(req-package elixir-mode
-    :init
-  :config
-  (my/add-format-before-save 'elixir-mode-hook)
+  (adaptive-wrap-global-mode)
   )
 #+END_SRC
-**** Alchemist
-https://github.com/tonini/alchemist.el
+*** Window
+**** Purpose-mode
+[[https://github.com/bmag/emacs-purpose][@github]]
 #+BEGIN_SRC emacs-lisp
-(req-package alchemist
-    :require elixir-mode
-    :init
-    (add-hook 'elixir-mode-hook 'alchemist-mode)
-    :bind (:map alchemist-mode-map
-                ("C-c C-c" . alchemist-iex-compile-this-buffer)
-                ("C-c a s" . my/phoenix-start))
+(req-package window-purpose
     :config
-    (defun my/phoenix-start ()
-      (interactive)
-      (if (alchemist-project-p)
-          (let ((default-directory (alchemist-project-root)))
-            (pop-to-buffer
-             (process-buffer
-              (or (if (buffer-live-p alchemist-iex-buffer)
-                      (get-buffer-process alchemist-iex-buffer))
-                  (progn
-                    (alchemist-iex-start-process '("iex" "-S" "mix" "phx.server"))
-                    (alchemist-iex-process))))
-             ))))
-    )
-#+END_SRC
-**** flycheck-credo
-#+BEGIN_SRC emacs-lisp
-(req-package flycheck-credo
-    :init
-  (eval-after-load 'flycheck
-    '(flycheck-credo-setup))
-  (add-hook 'elixir-mode-hook 'flycheck-mode)
-  :config (setq flycheck-elixir-credo-strict nil))
-#+END_SRC
-*** Markdown
-#+BEGIN_SRC emacs-lisp
-(req-package markdown-mode
-  :init
-  :config
-)
-#+END_SRC
-*** Python
-**** Elpy
-#+BEGIN_SRC emacs-lisp
-(req-package elpy
-    :init
-  (elpy-enable)
-
-  :config
-  ;; https://github.com/jorgenschaefer/elpy/issues/887
-  ;; probvably enable again, its new with emacs 25
-  (setq python-shell-completion-native-enable nil)
-  (delete 'elpy-module-highlight-indentation elpy-modules)
-  (if (executable-find "ipython")
-      ;; (elpy-use-ipython)
-      (message "'ipython' not found found; please install"))
-  ;; Currently no debugging in elpy afaik
-  ;; (setq elpy-test-pytest-runner-command '("py.test --pdb")) ;
-  ;; (elpy-set-test-runner 'elpy-test-pytest-runner)
-  (setq elpy-rpc-backend "rope"
-        elpy-rpc-python-command "python")
+  (add-to-list 'purpose-user-mode-purposes '(rust-mode . rust))
+  (add-to-list 'purpose-user-mode-purposes '(cargo-process-mode . cargo-process))
+  (purpose-compile-user-configuration)
   )
 #+END_SRC
-**** IPython Emacs Notebook (EIN)
-#+BEGIN_SRC emacs-lisp
-(req-package cl-generic
-  :init
-
-  :config
-  )
-(req-package ein
-  :init
-
-  :config
-  )
-#+END_SRC
-**** My Functions
-***** Jump-to-test
-#+BEGIN_SRC emacs-lisp
-(defun my/jump-to-test ()
-  (interactive)
-
-  (let* ((file-name
-	  (nth 0 (last (split-string buffer-file-name "[\\/]"))))
-	 (test-file
-	  (s-join "/" (append (butlast (split-string buffer-file-name "[\\/]"))
-			      (list (concat "test_" file-name)))))
-	 (func-name "")
-	 (func-args (progn
-		      (unless (looking-at "def")
-			(python-nav-beginning-of-defun))
-		      (right-word)
-		      (right-char)
-		      (set-mark (point))
-                      (while (not (looking-at "("))
-			(sp-forward-sexp))
-		      (setq func-name (buffer-substring-no-properties (mark) (point)))
-		      (set-mark (point))
-		      (sp-forward-sexp)
-		      (buffer-substring-no-properties (mark) (point)))))
-    (with-current-buffer (find-file test-file)
-      (goto-char (point-min))
-      (unless (search-forward-regexp "from .+ import \\*" nil t)
-	(insert (concat "from "
-			(replace-regexp-in-string "\\.py" "" "calc.py")
-			" import *\n")))
-      (let ((test-func (concat "test_" func-name)))
-	(unless (search-forward test-func nil t)
-	  (goto-char (point-max))
-	  (insert "\n"
-		  (format "def %s():\n" test-func)
-		  (format "\tassert %s%s == " func-name func-args))))
-      )))
-#+END_SRC
-*** Web
-**** HTML/CSS
-***** Htmlize
-
-#+BEGIN_SRC emacs-lisp
-(req-package htmlize
-  :init
-  :config
-)
-#+END_SRC
-***** css
-#+BEGIN_SRC emacs-lisp
-  (setq css-indent-offset 4)
-  (add-to-list 'auto-mode-alist '("\\.less\\'" . css-mode))
-  (my/add-format-before-save 'css-mode-hook)
-#+END_SRC
-***** Scss-Mode [disabled]
+**** Winner-mode [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
-(req-package scss-mode
-  :init
-  (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
-  (my/add-format-before-save 'scss-mode-hook)
-  :config
-)
+(winner-mode 1)
 #+END_SRC
-***** Emmet-Mode [disabled]
+**** No Vertical Split [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
-(req-package emmet-mode
-  :init
-  (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-  (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
-  :config
-)
+;; dont allow vertical split (windows top/bottom)
+(setq split-height-threshold nil)
+(setq split-width-threshold 80)
 #+END_SRC
-**** JS
-***** js2-mode
+*** More
 #+BEGIN_SRC emacs-lisp
-(req-package js2-mode
-  :init
-  (add-hook 'js-mode-hook 'js2-minor-mode)
-  (my/add-format-before-save 'js-mode-hook)
-  :config
-  (setq js2-basic-offset 2
-        js2-strict-inconsistent-return-warning nil
-        )
-  (define-key js2-mode-map (kbd "M-.") nil)
-)
+(setq sentence-end-double-space nil)
 #+END_SRC
-***** Web-mode
-[[http://web-mode.org/][@web-mode.org]]
-#+BEGIN_SRC emacs-lisp
-(req-package web-mode
-    :init
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.marko\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-  (my/add-format-before-save 'web-mode-hook)
-  (setq web-mode-content-types-alist
-	'(("css" . "\\.\\(s?css\\|css\\.erb\\)\\'")
-	  ("jsx" . "\\.\\([jt]s\\|[jt]s\\.erb\\)\\'")
-	  ("json" . "\\.\\(api\\|json\\|jsonld\\)\\'")
-	  ("jsx" . "\\.[jt]sx\\'")
-	  ("xml" . "\\.xml\\'")
-	  ("html" . ".")))
-  :config
-  (setq web-mode-code-indent-offset 2
-        web-mode-markup-indent-offset 2
-        web-mode-attr-indent-offset 2
-        web-mode-attr-value-indent-offset 2
-        web-mode-css-indent-offset 2
-        web-mode-style-padding 1
-        web-mode-script-padding 0
-        web-mode-block-padding 0
-        web-mode-enable-control-block-indentation nil
-        web-mode-enable-auto-closing t)
-  )
-  (req-package company-web )
-#+END_SRC
-***** json-mode
-#+BEGIN_SRC emacs-lisp
-(setq js-indent-level 2)
-(req-package json-mode
-:config (setq json-reformat:indent-width 2))
-#+END_SRC
-***** typescript
-#+BEGIN_SRC emacs-lisp
-(req-package tide
-    :init
-      (defun setup-tide-mode ()
-    (interactive)
-    (tide-setup)
-    (flycheck-mode +1)
-    (setq flycheck-check-syntax-automatically '(save mode-enabled))
-    (eldoc-mode +1)
-    (tide-hl-identifier-mode +1)
-    (add-hook 'before-save-hook 'tide-format-before-save nil 'local)
-    ;; company is an optional dependency. You have to
-    ;; install it separately via package-install
-    ;; `M-x package-install [ret] company`
-    (company-mode +1))
-  (setq company-tooltip-align-annotations t
-        tide-tsserver-executable "node_modules/typescript/bin/tsserver"
-        typescript-indent-level 2)
-        (add-hook 'typescript-mode-hook #'setup-tide-mode)
-  :config
-  :bind (:map tide-mode-map
-              ("C-f" . tide-fix))
-  )
-#+END_SRC
-*** Elisp
-#+BEGIN_SRC emacs-lisp
-(setq lisp-indent-function 'common-lisp-indent-function)
-(bind-key "C-h C-f" 'find-function-at-point emacs-lisp-mode-map)
-(bind-key "C-h C-v" 'find-variable-at-point emacs-lisp-mode-map)
-#+END_SRC
-*** Php
-#+BEGIN_SRC emacs-lisp
-(req-package php-mode)
-#+END_SRC
-*** Rust
-#+BEGIN_SRC emacs-lisp
-(req-package rust-mode)
-(req-package company-racer
-    :require company
-    :config
-    (add-to-list 'company-backends 'company-racer)
-    (add-hook 'racer-mode-hook #'company-mode))
-(req-package racer
-    :config
-  (setq racer-cmd "~/.cargo/bin/racer.exe"
-        racer-rust-src-path "C:/Program Files/Rust/source/src/")
-  (add-hook 'rust-mode-hook #'racer-mode)
-  (add-hook 'racer-mode-hook #'eldoc-mode))
-(req-package cargo
-    :require rust-mode
-    :init (add-hook 'rust-mode-hook 'cargo-minor-mode)
-    :config
-    (defun cargo-process--cleanup (buffer)
-      (when (get-buffer-process (get-buffer buffer))
-        (delete-process buffer)))
-    (defvar cargo-process-history '())
-    (defun cargo-process-run ()
-      "Run the Cargo run command.
-With the prefix argument, modify the command's invocation.
-Cargo: Build and execute src/main.rs."
-      (interactive)
-      (cargo-process--start
-       "Run"
-       (read-string "Command: " "cargo run" '(cargo-process-history . 0))))
+** PackageManagement
+*** Auto-update [disabled
+[[https://github.com/rranelli/auto-package-update.el][@Github]]
+#+BEGIN_SRC emacs-lisp :tangle no
+ (req-package auto-package-update
+   :init
 
-    (defun cargo-process-test (enable_print)
-      "Run the Cargo test command.
-With the prefix argument, modify the command's invocation.
-Cargo: Run the tests."
-      (interactive "P")
-      (let* ((command "cargo test"))
-        (when enable_print
-          (concat command " -- --nocapture"))
-        (cargo-process--start "Test" "cargo test"))
-      )
-    )
-(req-package flycheck-rust
-    :config
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+   :config
+   ;;(auto-package-update-now)
+ )
 #+END_SRC
-*** go
+** View large files
 #+BEGIN_SRC emacs-lisp
-(req-package go-mode
-    :require company-go go-eldoc
-    :init (exec-path-from-shell-copy-env "GOPATH")
-    :config (add-hook 'go-mode-hook
-                      (lambda ()
-                        (set (make-local-variable 'company-backends) '(company-go))
-                        (add-hook 'before-save-hook 'gofmt-before-save nil 'local)
-                        (go-eldoc-setup)
-                        (flycheck-mode)
-                        (company-mode)))
-    )
-#+END_SRC
-** logview
-#+BEGIN_SRC emacs-lisp
-(req-package logview)
-#+END_SRC
-** Magit
-#+BEGIN_SRC emacs-lisp
-(req-package magit
-:ensure t
-:config (setq magit-diff-arguments (quote ("--ignore-space-change"
-"--ignore-all-space" "--no-ext-diff" "--stat"))
-      magit-diff-section-arguments (quote ("--ignore-all-space" "--no-ext-diff" "-U2"))
-      magit-diff-refine-hunk t)
-)
-#+END_SRC
-*** ssh
-**** windows
-[[https://github.com/magit/magit/wiki/Pushing-with-Magit-from-Windows][@github.com]]
-#+BEGIN_SRC emacs-lisp
-(req-package ssh-agency
-  :if (my-util-win?)
-  :init
-  (setenv "SSH_ASKPASS" "git-gui--askpass")
-  )
-#+END_SRC
-*** git-timemachine [disabled]
-#+BEGIN_SRC emacs-lisp :tangle no
-(req-package git-timemachine)
-#+END_SRC
-** mini
-#+BEGIN_SRC emacs-lisp
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
-(setq same-window-buffer-names '("*Help*"))
-#+END_SRC
-*** Disabled
-maybe for linux
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq select-active-regions nil)
-#+END_SRC
-**** jabber
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq jabber-account-list
-      '(("jan.moeller0@gmail.com"
-	 (:network-server . "talk.google.com")
-	 (:connection-type . ssl)
-	 (:port . 5223))))
-#+END_SRC
-*** Hungry-delete
-#+BEGIN_SRC emacs-lisp
-(req-package hungry-delete
-    :init (global-hungry-delete-mode)
-    :config
-    )
+(req-package vlf)
 #+END_SRC
 ** Minor Modes
 *** Drag-stuff
@@ -1068,36 +655,45 @@ pomodoro-nth-for-longer-break 3))
 (req-package yaml-mode
 :init (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
 #+END_SRC
-** My
-*** Bonjournal
+** Editorconfig
 #+BEGIN_SRC emacs-lisp
-(req-package bonjournal
-             :load-path "els/bonjournal/"
-             :config (setq bonjournal-dir (expand-file-name meinAll-dir
-                                                            "monument/bonjournal/"))
-             )
+(req-package editorconfig
+:config (editorconfig-mode 1))
 #+END_SRC
-*** Bonquest
-#+BEGIN_SRC emacs-lisp :tangle no
-(req-package bonquest
-    :require request-deferred
-    :load-path "els/bonquest/"
+** Read user $PATH
+#+BEGIN_SRC emacs-lisp
+(req-package  exec-path-from-shell
+    :if (my-util-linux?)
+    :init  (exec-path-from-shell-initialize)
     )
 #+END_SRC
-*** Toutesuit
-[[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
+** logview
 #+BEGIN_SRC emacs-lisp
-(req-package toutesuit
-             :load-path "els/toutesuit/"
-             :config (setq toutesuit-file (expand-file-name
-                                           meinAll-dir "lookingGlass/toutesuit.org")))
+(req-package logview)
 #+END_SRC
-** NeoTree
+** Magit
 #+BEGIN_SRC emacs-lisp
-(req-package neotree
-  :init
-  :config
+(req-package magit
+:ensure t
+:config (setq magit-diff-arguments (quote ("--ignore-space-change"
+"--ignore-all-space" "--no-ext-diff" "--stat"))
+      magit-diff-section-arguments (quote ("--ignore-all-space" "--no-ext-diff" "-U2"))
+      magit-diff-refine-hunk t)
 )
+#+END_SRC
+*** ssh
+**** windows
+[[https://github.com/magit/magit/wiki/Pushing-with-Magit-from-Windows][@github.com]]
+#+BEGIN_SRC emacs-lisp
+(req-package ssh-agency
+  :if (my-util-win?)
+  :init
+  (setenv "SSH_ASKPASS" "git-gui--askpass")
+  )
+#+END_SRC
+*** git-timemachine [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
+(req-package git-timemachine)
 #+END_SRC
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
@@ -1589,6 +1185,435 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
     headline
     ))
 #+END_SRC
+** AUCTeX
+#+BEGIN_SRC emacs-lisp
+(req-package tex
+  :init
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  :config
+  :ensure auctex
+)
+#+END_SRC
+** NeoTree
+#+BEGIN_SRC emacs-lisp
+(req-package neotree
+  :init
+  :config
+)
+#+END_SRC
+** Dired+
+#+BEGIN_SRC emacs-lisp
+(req-package dired+
+  :init
+  (toggle-diredp-find-file-reuse-dir 1)
+
+  :config
+  (bind-key "?" 'my/dired-get-size dired-mode-map)
+  (setq dired-listing-switches "-aDhl  --group-directories-first")
+)
+#+END_SRC
+*** Functions
+#+BEGIN_SRC emacs-lisp
+(defun my/dired-get-size ()
+  (interactive)
+  (let ((files (dired-get-marked-files)))
+    (with-temp-buffer
+      (apply 'call-process "/usr/bin/du" nil t nil "-sch" files)
+      (message "Size of all marked files: %s"
+               (progn
+                 (re-search-backward "\\(^[0-9.,]+[A-Za-z]+\\).*total$")
+		 (match-string 1))))))
+#+END_SRC
+** Ispell/Aspell
+#+BEGIN_SRC emacs-lisp
+(setq ispell-program-name "C:\\cygwin64\\bin\\aspell.exe"
+      ispell-really-aspell t
+      ispell-extra-args '("--sug-mode=fast")
+      ;; TODO name deutsch+english
+      ispell-dictionary "deutsch"
+      flyspell-issue-message-flag nil)
+#+END_SRC
+*** Aspell - spell checking for multiple languages
+[[https://wiki.archlinux.org/index.php/User:Georgek][@wiki.archlinux]]
+combine dictionary deutsch + english
+#+BEGIN_SRC sh :tangle no
+# TODO replace ru with de
+cd /usr/lib/aspell
+grep '^special' en.dat >>ru.dat
+aspell dump master en >w.en
+aspell dump master ru-yo >w.ru
+cat w.ru w.en >w.all
+aspell --lang=ru --encoding=UTF-8 create master ruen.rws < w.all
+rm -f w.ru w.en w.all
+echo "add ruen.rws" > ru.multi
+#+END_SRC
+** Languages
+*** Elixir
+**** Elixir Mode
+https://github.com/elixir-lang/emacs-elixir
+#+BEGIN_SRC emacs-lisp
+(req-package elixir-mode
+    :init
+  :config
+  (my/add-format-before-save 'elixir-mode-hook)
+  )
+#+END_SRC
+**** Alchemist
+https://github.com/tonini/alchemist.el
+#+BEGIN_SRC emacs-lisp
+(req-package alchemist
+    :require elixir-mode
+    :init
+    (add-hook 'elixir-mode-hook 'alchemist-mode)
+    :bind (:map alchemist-mode-map
+                ("C-c C-c" . alchemist-iex-compile-this-buffer)
+                ("C-c a s" . my/phoenix-start))
+    :config
+    (defun my/phoenix-start ()
+      (interactive)
+      (if (alchemist-project-p)
+          (let ((default-directory (alchemist-project-root)))
+            (pop-to-buffer
+             (process-buffer
+              (or (if (buffer-live-p alchemist-iex-buffer)
+                      (get-buffer-process alchemist-iex-buffer))
+                  (progn
+                    (alchemist-iex-start-process '("iex" "-S" "mix" "phx.server"))
+                    (alchemist-iex-process))))
+             ))))
+    )
+#+END_SRC
+**** flycheck-credo
+#+BEGIN_SRC emacs-lisp
+(req-package flycheck-credo
+    :init
+  (eval-after-load 'flycheck
+    '(flycheck-credo-setup))
+  (add-hook 'elixir-mode-hook 'flycheck-mode)
+  :config (setq flycheck-elixir-credo-strict nil))
+#+END_SRC
+*** Markdown
+#+BEGIN_SRC emacs-lisp
+(req-package markdown-mode
+  :init
+  :config
+)
+#+END_SRC
+*** Python
+**** Elpy
+#+BEGIN_SRC emacs-lisp
+(req-package elpy
+    :init
+  (elpy-enable)
+
+  :config
+  ;; https://github.com/jorgenschaefer/elpy/issues/887
+  ;; probvably enable again, its new with emacs 25
+  (setq python-shell-completion-native-enable nil)
+  (delete 'elpy-module-highlight-indentation elpy-modules)
+  (if (executable-find "ipython")
+      ;; (elpy-use-ipython)
+      (message "'ipython' not found found; please install"))
+  ;; Currently no debugging in elpy afaik
+  ;; (setq elpy-test-pytest-runner-command '("py.test --pdb")) ;
+  ;; (elpy-set-test-runner 'elpy-test-pytest-runner)
+  (setq elpy-rpc-backend "rope"
+        elpy-rpc-python-command "python")
+  )
+#+END_SRC
+**** IPython Emacs Notebook (EIN)
+#+BEGIN_SRC emacs-lisp
+(req-package cl-generic
+  :init
+
+  :config
+  )
+(req-package ein
+  :init
+
+  :config
+  )
+#+END_SRC
+**** My Functions
+***** Jump-to-test
+#+BEGIN_SRC emacs-lisp
+(defun my/jump-to-test ()
+  (interactive)
+
+  (let* ((file-name
+	  (nth 0 (last (split-string buffer-file-name "[\\/]"))))
+	 (test-file
+	  (s-join "/" (append (butlast (split-string buffer-file-name "[\\/]"))
+			      (list (concat "test_" file-name)))))
+	 (func-name "")
+	 (func-args (progn
+		      (unless (looking-at "def")
+			(python-nav-beginning-of-defun))
+		      (right-word)
+		      (right-char)
+		      (set-mark (point))
+                      (while (not (looking-at "("))
+			(sp-forward-sexp))
+		      (setq func-name (buffer-substring-no-properties (mark) (point)))
+		      (set-mark (point))
+		      (sp-forward-sexp)
+		      (buffer-substring-no-properties (mark) (point)))))
+    (with-current-buffer (find-file test-file)
+      (goto-char (point-min))
+      (unless (search-forward-regexp "from .+ import \\*" nil t)
+	(insert (concat "from "
+			(replace-regexp-in-string "\\.py" "" "calc.py")
+			" import *\n")))
+      (let ((test-func (concat "test_" func-name)))
+	(unless (search-forward test-func nil t)
+	  (goto-char (point-max))
+	  (insert "\n"
+		  (format "def %s():\n" test-func)
+		  (format "\tassert %s%s == " func-name func-args))))
+      )))
+#+END_SRC
+*** Web
+**** HTML/CSS
+***** Htmlize
+
+#+BEGIN_SRC emacs-lisp
+(req-package htmlize
+  :init
+  :config
+)
+#+END_SRC
+***** css
+#+BEGIN_SRC emacs-lisp
+  (setq css-indent-offset 4)
+  (add-to-list 'auto-mode-alist '("\\.less\\'" . css-mode))
+  (my/add-format-before-save 'css-mode-hook)
+#+END_SRC
+***** Scss-Mode [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
+(req-package scss-mode
+  :init
+  (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+  (my/add-format-before-save 'scss-mode-hook)
+  :config
+)
+#+END_SRC
+***** Emmet-Mode [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
+(req-package emmet-mode
+  :init
+  (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+  (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
+  :config
+)
+#+END_SRC
+**** JS
+***** js2-mode
+#+BEGIN_SRC emacs-lisp
+(req-package js2-mode
+  :init
+  (add-hook 'js-mode-hook 'js2-minor-mode)
+  (my/add-format-before-save 'js-mode-hook)
+  :config
+  (setq js2-basic-offset 2
+        js2-strict-inconsistent-return-warning nil
+        )
+  (define-key js2-mode-map (kbd "M-.") nil)
+)
+#+END_SRC
+***** Web-mode
+[[http://web-mode.org/][@web-mode.org]]
+#+BEGIN_SRC emacs-lisp
+(req-package web-mode
+    :init
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.marko\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  (my/add-format-before-save 'web-mode-hook)
+  (setq web-mode-content-types-alist
+	'(("css" . "\\.\\(s?css\\|css\\.erb\\)\\'")
+	  ("jsx" . "\\.\\([jt]s\\|[jt]s\\.erb\\)\\'")
+	  ("json" . "\\.\\(api\\|json\\|jsonld\\)\\'")
+	  ("jsx" . "\\.[jt]sx\\'")
+	  ("xml" . "\\.xml\\'")
+	  ("html" . ".")))
+  :config
+  (setq web-mode-code-indent-offset 2
+        web-mode-markup-indent-offset 2
+        web-mode-attr-indent-offset 2
+        web-mode-attr-value-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-style-padding 1
+        web-mode-script-padding 0
+        web-mode-block-padding 0
+        web-mode-enable-control-block-indentation nil
+        web-mode-enable-auto-closing t)
+  )
+  (req-package company-web )
+#+END_SRC
+***** json-mode
+#+BEGIN_SRC emacs-lisp
+(setq js-indent-level 2)
+(req-package json-mode
+:config (setq json-reformat:indent-width 2))
+#+END_SRC
+***** typescript
+#+BEGIN_SRC emacs-lisp
+(req-package tide
+    :init
+  :config
+  (defun setup-tide-mode ()
+    (interactive)
+    (tide-setup)
+    (flycheck-mode +1)
+    (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    (eldoc-mode +1)
+    (tide-hl-identifier-mode +1)
+    (add-hook 'before-save-hook 'tide-format-before-save nil 'local)
+    ;; company is an optional dependency. You have to
+    ;; install it separately via package-install
+    ;; `M-x package-install [ret] company`
+    (company-mode +1))
+  (setq company-tooltip-align-annotations t
+        tide-tsserver-executable "node_modules/typescript/bin/tsserver"
+        typescript-indent-level 2)
+  (add-hook 'typescript-mode-hook #'setup-tide-mode)
+  :bind (:map tide-mode-map
+              ("C-f" . tide-fix))
+  )
+#+END_SRC
+*** Elisp
+#+BEGIN_SRC emacs-lisp
+(setq lisp-indent-function 'common-lisp-indent-function)
+(bind-key "C-h C-f" 'find-function-at-point emacs-lisp-mode-map)
+(bind-key "C-h C-v" 'find-variable-at-point emacs-lisp-mode-map)
+#+END_SRC
+*** Php
+#+BEGIN_SRC emacs-lisp
+(req-package php-mode)
+#+END_SRC
+*** Rust
+#+BEGIN_SRC emacs-lisp
+(req-package rust-mode)
+(req-package company-racer
+    :require company
+    :config
+    (add-to-list 'company-backends 'company-racer)
+    (add-hook 'racer-mode-hook #'company-mode))
+(req-package racer
+    :config
+  (setq racer-cmd "~/.cargo/bin/racer.exe"
+        racer-rust-src-path "C:/Program Files/Rust/source/src/")
+  (add-hook 'rust-mode-hook #'racer-mode)
+  (add-hook 'racer-mode-hook #'eldoc-mode))
+(req-package cargo
+    :require rust-mode
+    :init (add-hook 'rust-mode-hook 'cargo-minor-mode)
+    :config
+    (defun cargo-process--cleanup (buffer)
+      (when (get-buffer-process (get-buffer buffer))
+        (delete-process buffer)))
+    (defvar cargo-process-history '())
+    (defun cargo-process-run ()
+      "Run the Cargo run command.
+With the prefix argument, modify the command's invocation.
+Cargo: Build and execute src/main.rs."
+      (interactive)
+      (cargo-process--start
+       "Run"
+       (read-string "Command: " "cargo run" '(cargo-process-history . 0))))
+
+    (defun cargo-process-test (enable_print)
+      "Run the Cargo test command.
+With the prefix argument, modify the command's invocation.
+Cargo: Run the tests."
+      (interactive "P")
+      (let* ((command "cargo test"))
+        (when enable_print
+          (concat command " -- --nocapture"))
+        (cargo-process--start "Test" "cargo test"))
+      )
+    )
+(req-package flycheck-rust
+    :config
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+#+END_SRC
+*** go
+#+BEGIN_SRC emacs-lisp
+(req-package go-mode
+    :require company-go go-eldoc
+    :init (exec-path-from-shell-copy-env "GOPATH")
+    :config (add-hook 'go-mode-hook
+                      (lambda ()
+                        (set (make-local-variable 'company-backends) '(company-go))
+                        (add-hook 'before-save-hook 'gofmt-before-save nil 'local)
+                        (go-eldoc-setup)
+                        (flycheck-mode)
+                        (company-mode)))
+    )
+#+END_SRC
+** mini
+#+BEGIN_SRC emacs-lisp
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+(setq same-window-buffer-names '("*Help*"))
+#+END_SRC
+*** Disabled
+maybe for linux
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq select-active-regions nil)
+#+END_SRC
+**** jabber
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq jabber-account-list
+      '(("jan.moeller0@gmail.com"
+	 (:network-server . "talk.google.com")
+	 (:connection-type . ssl)
+	 (:port . 5223))))
+#+END_SRC
+*** Hungry-delete
+#+BEGIN_SRC emacs-lisp
+(req-package hungry-delete
+    :init (global-hungry-delete-mode)
+    :config
+    )
+#+END_SRC
+** restclient
+#+BEGIN_SRC emacs-lisp
+(req-package restclient)
+#+END_SRC
+** Els
+*** Spell-number
+#+BEGIN_SRC emacs-lisp
+(req-package spell-number
+             :load-path "els/spell-number/")
+#+END_SRC
+*** Exercism
+#+BEGIN_SRC emacs-lisp
+(req-package exercism
+    :load-path "els/exercism/"
+    :if (my-util-installed? "exercism")
+    :config (when (my-util-win?)
+	      (setq *exercism-cmd*
+		    (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe"))))
+#+END_SRC
+** Dev
+*** Namespaces elisp
+[[https://github.com/Malabarba/Nameless][@github.com]]
+#+BEGIN_SRC emacs-lisp
+(req-package nameless
+  :init
+  :config
+  (setq nameless-private-prefix t)
+)
+#+END_SRC
+*** Testing
+[[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
+#+BEGIN_SRC emacs-lisp
+(req-package xtest
+  :init
+  :config
+)
+#+END_SRC
 ** Other
 *** Sqlite [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -1604,65 +1629,48 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
   :config
 )
 #+END_SRC
-** PackageManagement
-*** Auto-update [disabled
-[[https://github.com/rranelli/auto-package-update.el][@Github]]
-#+BEGIN_SRC emacs-lisp :tangle no
- (req-package auto-package-update
-   :init
-
-   :config
-   ;;(auto-package-update-now)
- )
-#+END_SRC
-** Read user $PATH
+** My
+*** Bonjournal
 #+BEGIN_SRC emacs-lisp
-(req-package  exec-path-from-shell
-    :if (my-util-linux?)
-    :init  (exec-path-from-shell-initialize)
+(req-package bonjournal
+             :load-path "els/bonjournal/"
+             :config (setq bonjournal-dir (expand-file-name meinAll-dir
+                                                            "monument/bonjournal/"))
+             )
+#+END_SRC
+*** Bonquest
+#+BEGIN_SRC emacs-lisp :tangle no
+(req-package bonquest
+    :require request-deferred
+    :load-path "els/bonquest/"
     )
 #+END_SRC
-** restclient
+*** Toutesuit
+[[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
 #+BEGIN_SRC emacs-lisp
-(req-package restclient)
+(req-package toutesuit
+             :load-path "els/toutesuit/"
+             :config (setq toutesuit-file (expand-file-name
+                                           meinAll-dir "lookingGlass/toutesuit.org")))
 #+END_SRC
-** Style
-*** Adaptive-Wrap
+** Cygwin
+*** Cygwin-Mount
 #+BEGIN_SRC emacs-lisp
-(req-package adaptive-wrap
-  :init
-  (define-globalized-minor-mode adaptive-wrap-global-mode
-  adaptive-wrap-prefix-mode
-  adaptive-wrap-prefix-mode)
-
-  :config
-  (adaptive-wrap-global-mode)
-  )
+(when (my-util-win?)
+  (setenv "PATH" (concat "c:/cygwin64/bin;" (getenv "PATH")))
+  (setq exec-path (cons "c:/cygwin64/bin/" exec-path))
+  (req-package cygwin-mount
+      :load-path "els/cygwin/"
+      :config (cygwin-mount-activate)
+      ))
 #+END_SRC
-*** Window
-**** Purpose-mode
-[[https://github.com/bmag/emacs-purpose][@github]]
+** Finish req-package
 #+BEGIN_SRC emacs-lisp
-(req-package window-purpose
-    :config
-  (add-to-list 'purpose-user-mode-purposes '(rust-mode . rust))
-  (add-to-list 'purpose-user-mode-purposes '(cargo-process-mode . cargo-process))
-  (purpose-compile-user-configuration)
-  )
+(req-package-finish)
 #+END_SRC
-**** Winner-mode [disabled]
-#+BEGIN_SRC emacs-lisp :tangle no
-(winner-mode 1)
-#+END_SRC
-**** No Vertical Split [disabled]
-#+BEGIN_SRC emacs-lisp :tangle no
-;; dont allow vertical split (windows top/bottom)
-(setq split-height-threshold nil)
-(setq split-width-threshold 80)
-#+END_SRC
-*** More
+** Tramp
 #+BEGIN_SRC emacs-lisp
-(setq sentence-end-double-space nil)
+(setq tramp-default-method "ssh")
 #+END_SRC
 ** Theme
 moved to bottom because cursor color changed by smth else
@@ -1679,14 +1687,6 @@ moved to bottom because cursor color changed by smth else
 #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'region nil :background "darkblue")
 (setq-default cursor-type 'bar)
-#+END_SRC
-** Tramp
-#+BEGIN_SRC emacs-lisp
-(setq tramp-default-method "ssh")
-#+END_SRC
-** View large files
-#+BEGIN_SRC emacs-lisp
-(req-package vlf)
 #+END_SRC
 * Functions
 ** Line manouevor functions
