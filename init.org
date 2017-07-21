@@ -377,7 +377,9 @@ https://github.com/lukhas/buffer-move
     :init (setq cwm-use-vertical-padding t
                 cwm-frame-internal-border 0
                 cwm-incremental-padding t
-                cwm-left-fringe-ratio 0 )
+                cwm-incremental-padding-% 2
+                cwm-left-fringe-ratio 0
+                cwm-centered-window-width 130)
     :config (centered-window-mode t)
     :diminish centered-window-mode
     )
