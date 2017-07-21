@@ -621,6 +621,10 @@ Cargo: Run the tests."
                         (company-mode)))
     )
 #+END_SRC
+** logview
+#+BEGIN_SRC emacs-lisp
+(req-package logview)
+#+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (req-package magit
