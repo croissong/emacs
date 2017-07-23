@@ -304,7 +304,8 @@ https://github.com/lukhas/buffer-move
 *** Ripgrep
 #+BEGIN_SRC emacs-lisp
 (req-package helm-ag
-    :config (setq helm-ag-base-command "rg --vimgrep --no-heading --ignore-case --ignore-file /home/skender/.config/ripgrep/ignore")
+    :config (setq helm-ag-base-command
+    (format "rg --vimgrep --no-heading --ignore-case --ignore-file %s/.config/ripgrep/ignore" (substitute-in-file-name "$HOME")))
     :bind* ("C-M-s" . helm-do-ag-project-root)
     )
 #+END_SRC
@@ -1439,7 +1440,7 @@ https://github.com/tonini/alchemist.el
         web-mode-attr-indent-offset 2
         web-mode-attr-value-indent-offset 2
         web-mode-css-indent-offset 2
-        web-mode-style-padding 1
+        web-mode-style-padding 2
         web-mode-script-padding 0
         web-mode-block-padding 0
         web-mode-enable-control-block-indentation nil
