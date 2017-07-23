@@ -1463,8 +1463,7 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (req-package tide
     :init
-  :config
-  (defun setup-tide-mode ()
+    (defun setup-tide-mode ()
     (interactive)
     (tide-setup)
     (flycheck-mode +1)
@@ -1479,7 +1478,8 @@ https://github.com/tonini/alchemist.el
   (setq company-tooltip-align-annotations t
         tide-tsserver-executable "node_modules/typescript/bin/tsserver"
         typescript-indent-level 2)
-  (add-hook 'typescript-mode-hook #'setup-tide-mode)
+        (add-hook 'typescript-mode-hook #'setup-tide-mode)
+  :config
   :bind (:map tide-mode-map
               ("C-f" . tide-fix))
   )
