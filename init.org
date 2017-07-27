@@ -378,7 +378,9 @@ https://github.com/lukhas/buffer-move
     :init (setq cwm-use-vertical-padding t
                 cwm-frame-internal-border 0
                 cwm-incremental-padding t
-                cwm-left-fringe-ratio 0 )
+                cwm-incremental-padding-% 2
+                cwm-left-fringe-ratio 0
+                cwm-centered-window-width 130)
     :config (centered-window-mode t)
     :diminish centered-window-mode
     )
@@ -601,7 +603,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :config
   (setq projectile-completion-system 'helm
         projectile-file-exists-remote-cache-expire nil
-        projectile-switch-project-action 'helm-projectile-find-dir
+        projectile-switch-project-action 'magit-status
         projectile-enable-caching t)
   )
 (req-package helm-projectile
@@ -667,6 +669,10 @@ pomodoro-nth-for-longer-break 3))
     :if (my-util-linux?)
     :init  (exec-path-from-shell-initialize)
     )
+#+END_SRC
+** logview
+#+BEGIN_SRC emacs-lisp
+(req-package logview)
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
@@ -1458,24 +1464,31 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (req-package tide
     :init
-  :config
   (defun setup-tide-mode ()
     (interactive)
     (tide-setup)
+    (flycheck-add-next-checker 'typescript-tide '(t . typescript-tslint) 'append)
+    (my/use-tslint-from-node-modules)
     (flycheck-mode +1)
     (setq flycheck-check-syntax-automatically '(save mode-enabled))
     (eldoc-mode +1)
     (tide-hl-identifier-mode +1)
     (add-hook 'before-save-hook 'tide-format-before-save nil 'local)
-    ;; company is an optional dependency. You have to
-    ;; install it separately via package-install
-    ;; `M-x package-install [ret] company`
     (company-mode +1))
+
+  (defun my/use-tslint-from-node-modules ()
+    (let* ((root (locate-dominating-file (or (buffer-file-name) default-directory) "node_modules"))
+           (tslint (and root (expand-file-name "node_modules/tslint/bin/tslint" root))))
+      (when (and tslint (file-executable-p tslint))
+        (setq-local flycheck-typescript-tslint-executable tslint))))
+
   (setq company-tooltip-align-annotations t
         tide-tsserver-executable "node_modules/typescript/bin/tsserver"
-        typescript-indent-level 2
-        tide-format-options '(:indentSize: 2))
+        typescript-indent-level 2)
   (add-hook 'typescript-mode-hook #'setup-tide-mode)
+  :config
+  :bind (:map tide-mode-map
+              ("C-f" . tide-fix))
   )
 #+END_SRC
 *** Elisp
