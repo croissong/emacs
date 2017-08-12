@@ -398,6 +398,7 @@ https://github.com/lukhas/buffer-move
   :init
   (setq blink-matching-paren nil)
   (require 'smartparens-config)
+  (set-face-attribute 'show-paren-match nil :background nil)
   (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
   (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil)
   :config
