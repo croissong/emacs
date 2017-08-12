@@ -306,7 +306,7 @@ https://github.com/lukhas/buffer-move
 #+BEGIN_SRC emacs-lisp
 (req-package helm-ag
     :config (setq helm-ag-base-command
-    (format "rg --vimgrep --no-heading --ignore-case --ignore-file %s/.config/ripgrep/ignore" (substitute-in-file-name "$HOME")))
+    (format "rg --vimgrep --no-heading --smart-case --ignore-file %s/.config/ripgrep/ignore" (substitute-in-file-name "$HOME")))
     :bind* ("C-M-s" . helm-do-ag-project-root)
     )
 #+END_SRC
