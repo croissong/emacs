@@ -397,13 +397,13 @@ https://github.com/lukhas/buffer-move
 	      ("C-M-<down>" . sp-select-next-thing))
   :init
   (setq blink-matching-paren nil)
+  :config
+  (smartparens-global-mode t)
+  (show-smartparens-global-mode t)
   (require 'smartparens-config)
   (set-face-attribute 'show-paren-match nil :background nil)
   (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
   (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil)
-  :config
-  (smartparens-global-mode t)
-  (show-smartparens-global-mode t)
   :diminish smartparens-mode
   )
 #+END_SRC
@@ -1713,6 +1713,12 @@ moved to bottom because cursor color changed by smth else
 ** quickrun
 #+BEGIN_SRC emacs-lisp
 (req-package quickrun)
+#+END_SRC
+** wakatime
+#+BEGIN_SRC emacs-lisp
+(req-package wakatime-mode
+:init
+(global-wakatime-mode))
 #+END_SRC
 * Functions
 ** Line manouevor functions
