@@ -117,6 +117,7 @@
 (my-util-ensureEmacsDir "save/autosave")
 (my-util-ensureEmacsDir "save/backup")
 
+;; TODO
 (setq-default indent-tabs-mode nil
               tab-width 2
               indent-line-function 'insert-tab)
@@ -305,7 +306,7 @@ https://github.com/lukhas/buffer-move
 #+BEGIN_SRC emacs-lisp
 (req-package helm-ag
     :config (setq helm-ag-base-command
-    (format "rg --vimgrep --no-heading --ignore-case --ignore-file %s/.config/ripgrep/ignore" (substitute-in-file-name "$HOME")))
+    (format "rg --vimgrep --no-heading --smart-case --ignore-file %s/.config/ripgrep/ignore" (substitute-in-file-name "$HOME")))
     :bind* ("C-M-s" . helm-do-ag-project-root)
     )
 #+END_SRC
@@ -396,12 +397,13 @@ https://github.com/lukhas/buffer-move
 	      ("C-M-<down>" . sp-select-next-thing))
   :init
   (setq blink-matching-paren nil)
-  (require 'smartparens-config)
-  (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
-  (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil)
   :config
   (smartparens-global-mode t)
   (show-smartparens-global-mode t)
+  (require 'smartparens-config)
+  (set-face-attribute 'show-paren-match nil :background nil)
+  (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
+  (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil)
   :diminish smartparens-mode
   )
 #+END_SRC
@@ -605,6 +607,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
         projectile-file-exists-remote-cache-expire nil
         projectile-switch-project-action 'magit-status
         projectile-enable-caching t)
+  :bind* (("C-M-r" . projectile-replace-regexp))
   )
 (req-package helm-projectile
     :init (helm-projectile-on)
@@ -677,6 +680,7 @@ pomodoro-nth-for-longer-break 3))
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (req-package magit
+:init (exec-path-from-shell-copy-env "GPG_TTY")
 :ensure t
 :config (setq magit-diff-arguments (quote ("--ignore-space-change"
 "--ignore-all-space" "--no-ext-diff" "--stat"))
@@ -1561,6 +1565,15 @@ Cargo: Run the tests."
                         (company-mode)))
     )
 #+END_SRC
+*** nim
+#+BEGIN_SRC emacs-lisp
+(req-package nim-mode
+    :init
+  (add-hook 'nim-mode-hook 'nimsuggest-mode)
+  (add-hook 'nim-mode-hook 'company-mode)
+  (add-hook 'nimscript-mode-hook 'company-mode)
+  )
+#+END_SRC
 ** mini
 #+BEGIN_SRC emacs-lisp
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
@@ -1696,6 +1709,16 @@ moved to bottom because cursor color changed by smth else
 #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'region nil :background "darkblue")
 (setq-default cursor-type 'bar)
+#+END_SRC
+** quickrun
+#+BEGIN_SRC emacs-lisp
+(req-package quickrun)
+#+END_SRC
+** wakatime
+#+BEGIN_SRC emacs-lisp
+(req-package wakatime-mode
+:init
+(global-wakatime-mode))
 #+END_SRC
 * Functions
 ** Line manouevor functions
