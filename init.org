@@ -1571,6 +1571,7 @@ Cargo: Run the tests."
     :init
   (add-hook 'nim-mode-hook 'nimsuggest-mode)
   (add-hook 'nim-mode-hook 'company-mode)
+  (add-hook 'nim-mode-hook flycheck-mode)
   (add-hook 'nimscript-mode-hook 'company-mode)
   )
 #+END_SRC
