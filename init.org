@@ -398,9 +398,9 @@ https://github.com/lukhas/buffer-move
   :init
   (setq blink-matching-paren nil)
   :config
+  (require 'smartparens-config)
   (smartparens-global-mode t)
   (show-smartparens-global-mode t)
-  (require 'smartparens-config)
   (set-face-attribute 'show-paren-match nil :background nil)
   (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
   (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil)
@@ -488,6 +488,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     ;; (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
   ;; customize flycheck temp file prefix
   ;; (setq-default flycheck-temp-prefix ".flycheck")
+  :diminish 'flycheck-mode
   )
 #+END_SRC
 **** disable in org-src-block
@@ -517,6 +518,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
           ("C-x b" . helm-buffers-list)
           :map helm-find-files-map
           ("C-o" . helm-ff-run-switch-other-window))
+    :diminish 'helm-mode
     )
 #+END_SRC
 *** ido [disabled]
@@ -608,6 +610,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
         projectile-switch-project-action 'magit-status
         projectile-enable-caching t)
   :bind* (("C-M-r" . projectile-replace-regexp))
+  :diminish 'projectile-mode
   )
 (req-package helm-projectile
     :init (helm-projectile-on)
