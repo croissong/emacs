@@ -182,6 +182,7 @@
   ;;(fringe-mode '(1 . 0))
   (set-face-attribute 'vertical-border nil :foreground "bisque4")
   (set-cursor-color "royal blue")
+  (set-face-attribute 'show-paren-match nil :background nil)
   )
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -396,12 +397,11 @@ https://github.com/lukhas/buffer-move
 	      ("C-S-<backspace>" . sp-backward-kill-sexp)
 	      ("C-M-<down>" . sp-select-next-thing))
   :init
-  (setq blink-matching-paren nil)
-  :config
   (require 'smartparens-config)
   (smartparens-global-mode t)
   (show-smartparens-global-mode t)
-  (set-face-attribute 'show-paren-match nil :background nil)
+  (setq blink-matching-paren nil)
+  :config
   (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
   (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil)
   :diminish smartparens-mode
@@ -500,8 +500,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 *** helm
 #+BEGIN_SRC emacs-lisp
-(req-package helm-config
-    :init (helm-mode)
+(req-package helm-mode
+    :init
+    (require 'helm-config)
+    (helm-mode)
     (helm-adaptive-mode t)
     (setq helm-mode-fuzzy-match t
           helm-recentf-fuzzy-match t
