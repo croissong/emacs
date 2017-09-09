@@ -183,6 +183,11 @@
   (set-face-attribute 'vertical-border nil :foreground "bisque4")
   (set-cursor-color "royal blue")
   (set-face-attribute 'show-paren-match nil :background nil)
+  (split-window-horizontally)
+  (split-window-vertically)
+  (other-window -1)
+  (split-window-vertically)
+  (other-window 2)
   )
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -382,7 +387,7 @@ https://github.com/lukhas/buffer-move
                 cwm-incremental-padding t
                 cwm-incremental-padding-% 2
                 cwm-left-fringe-ratio 0
-                cwm-centered-window-width 130)
+                cwm-centered-window-width 110)
     :config (centered-window-mode t)
     :diminish centered-window-mode
     )
@@ -1936,3 +1941,5 @@ https://www.reddit.com/r/emacs/comments/1mbn0s/the_emacs_calculator/
 - magit diff args -> git global config
 ** elisp tips
 - [[https://www.reddit.com/r/emacs/comments/3nu2xr/emacs_lisp_programming_thoughts/][@reddit.com]]
+*** regexp
+\(Buy: \)\([0-9]+\) \1\,(+ \#2 \#)

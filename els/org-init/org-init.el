@@ -22,9 +22,7 @@
 
 (defun org-init-open () 
   (interactive)
-  (with-current-buffer (find-file org-init--init-org)
-    (org-init--mode 1)
-    (diminish 'org-init--mode)))
+  (find-file org-init--init-org))
 
 (provide 'org-init)
 
