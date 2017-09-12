@@ -553,8 +553,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (setq ivy-use-virtual-buffers t
           ivy-count-format "(%d/%d) "
           ivy-re-builders-alist '((t . ivy--regex-fuzzy))
-          magit-completing-read-function 'ivy-completing-read
-          ivy-use-virtual-buffers t)
+          magit-completing-read-function 'ivy-completing-read)
     :bind(("M-x" . counsel-M-x)
           ("C-x C-f" . counsel-find-file)
           ("C-s" . swiper))
@@ -1510,9 +1509,8 @@ maybe for linux
 moved to bottom because cursor color changed by smth else
 #+BEGIN_SRC emacs-lisp
 (req-package soft-stone-theme
-  :init
+  :config
   (load-theme 'soft-stone t)
-  :force t
   )
 #+END_SRC
 *** Alternatives
