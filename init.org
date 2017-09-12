@@ -549,11 +549,14 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :loader :elpa
     :force t
     :require flx dumb-jump
+    :diminish ivy-mode
     :config
     (ivy-mode 1)
     (setq ivy-use-virtual-buffers t
           ivy-count-format "(%d/%d) "
-          ivy-re-builders-alist '((t . ivy--regex-fuzzy))
+          ivy-re-builders-alist
+          '((swiper . ivy--regex-plus)
+            (t . ivy--regex-fuzzy))
           magit-completing-read-function 'ivy-completing-read
           dumb-jump-selector 'ivy
           counsel-rg-base-command (format "rg --no-heading --smart-case --line-number --color never --ignore-file %s/.config/ripgrep/ignore %%s ." (substitute-in-file-name "$HOME")))
@@ -755,7 +758,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
 (req-package org
-    :require org-plus-contrib
+    :ensure org-plus-contrib
+    :force t
     :config
     (setq org-startup-indented t
       org-blank-before-new-entry '((heading . nil)
