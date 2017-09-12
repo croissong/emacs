@@ -10,9 +10,19 @@
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
+(defun org-tangle-staged (in-file out-file)
+  (let* ((name (concat (file-name-sans-extension in-file) "_staged"))
+         (ext (file-name-extension in-file))
+         (staged-file (make-temp-file name nil (concat "." ext))))
+    (with-temp-file staged-file
+      (call-process-shell-command (concat "git show :" in-file) nil t))
+    (org-babel-tangle-file staged-file out-file)
+    )
+  )
+
 (defun org-init-compile ()
   (interactive)
-  (org-babel-tangle-file org-init--init-org org-init--init-el)
+  (org-tangle-staged "init.org" org-init--init-el)
   (byte-compile-file org-init--init-el)
   )
 
