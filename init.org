@@ -713,11 +713,10 @@ pomodoro-nth-for-longer-break 3))
 #+END_SRC
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
-(req-package org-plus-contrib
+(req-package org
     :init
-
+    :ensure org-plus-contrib
   :config
-  (require 'org)
   ;; (require 'org-drill)
   (require 'org-checklist)
   (add-to-list 'org-modules 'org-checklist)
@@ -1619,8 +1618,8 @@ maybe for linux
 (req-package spell-number
              :load-path "els/spell-number/")
 #+END_SRC
-*** Exercism
-#+BEGIN_SRC emacs-lisp
+*** Exercism [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package exercism
     :load-path "els/exercism/"
     :if (my-util-installed? "exercism")
