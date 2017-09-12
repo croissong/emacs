@@ -545,15 +545,16 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 *** ivy
 #+BEGIN_SRC emacs-lisp
-(req-package counsel
+(req-package ivy
     :loader :elpa
-    :require (flx)
-    :config
-    (ivy-mode 1)
-    (setq ivy-use-virtual-buffers t
+    :commands ivy-mode
+    :require (flx dumb-jump counsel)
+    :init (ivy-mode 1)
+    :config (setq ivy-use-virtual-buffers t
           ivy-count-format "(%d/%d) "
           ivy-re-builders-alist '((t . ivy--regex-fuzzy))
-          magit-completing-read-function 'ivy-completing-read)
+          magit-completing-read-function 'ivy-completing-read
+          dumb-jump-selector 'ivy)
     :bind(("M-x" . counsel-M-x)
           ("C-x C-f" . counsel-find-file)
           ("C-s" . swiper))
@@ -643,37 +644,34 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 *** Projectile
 #+BEGIN_SRC emacs-lisp
-;;asdsd
 (req-package projectile
-  :init
-  (projectile-mode)
-  :config
-  (setq projectile-file-exists-remote-cache-expire nil
-        projectile-switch-project-action 'magit-status
-        projectile-enable-caching t)
-  :bind* (("C-M-r" . projectile-replace-regexp))
-  :diminish 'projectile-mode
-  )
+    :loader :elpa
+    :init (projectile-mode)
+    :config
+    (setq projectile-file-exists-remote-cache-expire nil
+          projectile-switch-project-action 'magit-status
+          projectile-enable-caching t)
+    :bind* (("C-M-r" . projectile-replace-regexp))
+    :diminish 'projectile-mode
+    )
 #+END_SRC
-*** Floobits
-#+BEGIN_SRC emacs-lisp
-(req-package floobits
-:init
-:config
-:ensure t
-)
+*** Floobits [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
+(req-package floobits)
 #+END_SRC
 *** aggressive-indent [disabled]
 [[https://github.com/Malabarba/aggressive-indent-mode][@github.com]]
 #+BEGIN_SRC emacs-lisp :tangle no
 (req-package aggressive-indent
-    :init
-  (global-aggressive-indent-mode 1))
+    :init (global-aggressive-indent-mode 1)
+    
 #+END_SRC
 *** which-key
 [[https://github.com/justbur/emacs-which-key?utm_medium=referral&utm_campaign=ZEEF&utm_source=https%3A%2F%2Femacs.zeef.com%2Fehartc][@github.com]]
 #+BEGIN_SRC emacs-lisp
-(req-package which-key :init (which-key-mode))
+(req-package which-key
+    :init (which-key-mode)
+    :diminish which-key-mode)
 #+END_SRC
 *** dumb-jump
 [[https://github.com/jacktasia/dumb-jump][@github.com]]
@@ -686,46 +684,48 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** pomodoro
 #+BEGIN_SRC emacs-lisp
 (req-package pomodoro
-:config (pomodoro-add-to-mode-line)
-(setq pomodoro-time-format "%.2m"
-pomodoro-play-sounds nil
-pomodoro-work-time 20
-pomodoro-break-time 10
-pomodoro-long-break-time 20
-pomodoro-nth-for-longer-break 3))
+    :config (pomodoro-add-to-mode-line)
+    (setq pomodoro-time-format "%.2m"
+          pomodoro-play-sounds nil
+          pomodoro-work-time 20
+          pomodoro-break-time 10
+          pomodoro-long-break-time 20
+          pomodoro-nth-for-longer-break 3))
 #+END_SRC
 *** yaml
 #+BEGIN_SRC emacs-lisp
 (req-package yaml-mode
-:init (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+    :mode "\\.yml\\'")
 #+END_SRC
 ** Editorconfig
 #+BEGIN_SRC emacs-lisp
 (req-package editorconfig
-    :diminish editorconfig-mode
     :init (editorconfig-mode 1)
+    :diminish editorconfig-mode
     )
 #+END_SRC
 ** Read user $PATH
 #+BEGIN_SRC emacs-lisp
 (req-package  exec-path-from-shell
     :if (my-util-linux?)
-    :init  (exec-path-from-shell-initialize)
+    :init (exec-path-from-shell-initialize)
     )
 #+END_SRC
-** logview
-#+BEGIN_SRC emacs-lisp
-(req-package logview)
+** logview [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
+(req-package logview
+    :commands logview-mode)
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (req-package magit
-:init (exec-path-from-shell-copy-env "GPG_TTY")
-:ensure t
-:config (setq magit-diff-arguments (quote ("--no-ext-diff" "--stat"))
-      magit-diff-section-arguments (quote ("--no-ext-diff" "-U2"))
-      magit-diff-refine-hunk t)
-)
+    :ensure t
+    :config
+    (exec-path-from-shell-copy-env "GPG_TTY")
+    (setq magit-diff-arguments (quote ("--no-ext-diff" "--stat"))
+          magit-diff-section-arguments (quote ("--no-ext-diff" "-U2"))
+          magit-diff-refine-hunk t)
+    )
 #+END_SRC
 *** ssh
 **** windows
@@ -744,24 +744,9 @@ pomodoro-nth-for-longer-break 3))
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
 (req-package org
-    :init
-    :ensure org-plus-contrib
-  :config
-  ;; (require 'org-drill)
-  (require 'org-checklist)
-  (add-to-list 'org-modules 'org-checklist)
-  (setq org-default-notes-file (concat meinAll-dir "milkyway.org"))
-  :diminish org-indent-mode)
-
-  (req-package my-org
-  :force t
-  :bind (:map org-mode-map
-	      ("C-c C-M-e" . my-org-export-all))
-  :load-path "els/my-org/")
-#+END_SRC
-*** Config
-#+BEGIN_SRC emacs-lisp
-(setq org-startup-indented t
+    :require org-plus-contrib
+    :config
+    (setq org-startup-indented t
       org-blank-before-new-entry '((heading . nil)
 				  (plain-list-item . nil))
       org-return-follows-link nil
@@ -770,11 +755,22 @@ pomodoro-nth-for-longer-break 3))
       org-list-allow-alphabetical t
       org-use-property-inheritance t
       org-use-sub-superscripts nil
-      org-checkbox-hierarchical-statistics t)
-(bind-keys ("C-c l" 'org-store-link)
-	   ("C-c a" 'org-agenda)
-	   ("C-c b" 'org-iswitchb))
+      org-checkbox-hierarchical-statistics t
+      org-default-notes-file (concat meinAll-dir "milkyway.org"))
+    
+    (require 'org-checklist)
+    (add-to-list 'org-modules 'org-checklist)
+    :bind (("C-c l" . org-store-link)
+           ("C-c a" . org-agenda)
+           ("C-c b" . org-iswitchb))
+    :diminish org-indent-mode)
+
+(req-package my-org
+    :bind (:map org-mode-map
+                ("C-c C-M-e" . my-org-export-all))
+    :load-path "els/my-org/")
 #+END_SRC
+*** Config
 **** Export
 #+BEGIN_SRC emacs-lisp
 (setq org-export-with-toc nil
@@ -1015,23 +1011,21 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
   :ensure auctex
 )
 #+END_SRC
-** NeoTree
-#+BEGIN_SRC emacs-lisp
+** NeoTree [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package neotree
-  :init
-  :config
-)
+    :commands neotree
+    )
 #+END_SRC
 ** Dired+
 #+BEGIN_SRC emacs-lisp
 (req-package dired+
-  :init
+    :config
   (toggle-diredp-find-file-reuse-dir 1)
-
-  :config
-  (bind-key "?" 'my/dired-get-size dired-mode-map)
   (setq dired-listing-switches "-aDhl  --group-directories-first")
-)
+  :bind (:map dired-mode-map
+              ("?" . my/dired-get-size))
+  )
 #+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp
@@ -1074,18 +1068,18 @@ echo "add ruen.rws" > ru.multi
 https://github.com/elixir-lang/emacs-elixir
 #+BEGIN_SRC emacs-lisp
 (req-package elixir-mode
-    :init
-  :config
-  (my/add-format-before-save 'elixir-mode-hook)
-  )
+    :defer t
+    :config
+    (my/add-format-before-save 'elixir-mode-hook)
+    )
 #+END_SRC
 **** Alchemist
 https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (req-package alchemist
     :require elixir-mode
-    :init
-    (add-hook 'elixir-mode-hook 'alchemist-mode)
+    :commands alchemist-mode
+    :init (add-hook-exec 'elixir-mode 'alchemist-mode)
     :bind (:map alchemist-mode-map
                 ("C-c C-c" . alchemist-iex-compile-this-buffer)
                 ("C-c a s" . my/phoenix-start))
@@ -1104,21 +1098,22 @@ https://github.com/tonini/alchemist.el
              ))))
     )
 #+END_SRC
+**** 
 **** flycheck-credo
 #+BEGIN_SRC emacs-lisp
 (req-package flycheck-credo
+    :require (elixir-mode flycheck)
     :init
-  (eval-after-load 'flycheck
-    '(flycheck-credo-setup))
-  (add-hook 'elixir-mode-hook 'flycheck-mode)
-  :config (setq flycheck-elixir-credo-strict nil))
+    (flycheck-credo-setup)
+    (add-hook-exec 'elixir-mode 'flycheck-mode)
+    :config
+    (setq flycheck-elixir-credo-strict nil))
 #+END_SRC
 *** Markdown
 #+BEGIN_SRC emacs-lisp
 (req-package markdown-mode
-  :init
-  :config
-)
+    :mode "\\.md\\'"
+    )
 #+END_SRC
 *** Python
 **** Elpy
@@ -1126,7 +1121,6 @@ https://github.com/tonini/alchemist.el
 (req-package elpy
     :init
   (elpy-enable)
-
   :config
   ;; https://github.com/jorgenschaefer/elpy/issues/887
   ;; probvably enable again, its new with emacs 25
@@ -1144,15 +1138,9 @@ https://github.com/tonini/alchemist.el
 #+END_SRC
 **** IPython Emacs Notebook (EIN)
 #+BEGIN_SRC emacs-lisp
-(req-package cl-generic
-  :init
-
-  :config
-  )
+(req-package cl-generic)
 (req-package ein
-  :init
-
-  :config
+    :commands ein:notebooklist-open
   )
 #+END_SRC
 **** My Functions
@@ -1196,18 +1184,17 @@ https://github.com/tonini/alchemist.el
 *** Web
 **** HTML/CSS
 ***** Htmlize
-
-#+BEGIN_SRC emacs-lisp
-(req-package htmlize
-  :init
-  :config
-)
+#+BEGIN_SRC emacs-lisp :tangle no
+(req-package htmlize)
 #+END_SRC
 ***** css
 #+BEGIN_SRC emacs-lisp
-  (setq css-indent-offset 4)
-  (add-to-list 'auto-mode-alist '("\\.less\\'" . css-mode))
-  (my/add-format-before-save 'css-mode-hook)
+(req-package css-mode
+    :mode "\\.less\\'"
+    :config
+    (setq css-indent-offset 4)
+    (my/add-format-before-save 'css-mode-hook)
+    )
 #+END_SRC
 ***** Scss-Mode [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -1231,83 +1218,81 @@ https://github.com/tonini/alchemist.el
 ***** js2-mode
 #+BEGIN_SRC emacs-lisp
 (req-package js2-mode
-  :init
-  (add-hook 'js-mode-hook 'js2-minor-mode)
-  (my/add-format-before-save 'js-mode-hook)
-  :config
-  (setq js2-basic-offset 2
-        js2-strict-inconsistent-return-warning nil
-        )
-  (define-key js2-mode-map (kbd "M-.") nil)
-)
+    :mode "\\.js\\'"
+    :config
+    (my/add-format-before-save 'js-mode-hook)
+    (setq js2-basic-offset 2
+          js2-strict-inconsistent-return-warning nil)
+    )
 #+END_SRC
 ***** Web-mode
 [[http://web-mode.org/][@web-mode.org]]
 #+BEGIN_SRC emacs-lisp
 (req-package web-mode
-    :init
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.marko\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-  (my/add-format-before-save 'web-mode-hook)
-  (setq web-mode-content-types-alist
-	'(("css" . "\\.\\(s?css\\|css\\.erb\\)\\'")
-	  ("jsx" . "\\.\\([jt]s\\|[jt]s\\.erb\\)\\'")
-	  ("json" . "\\.\\(api\\|json\\|jsonld\\)\\'")
-	  ("jsx" . "\\.[jt]sx\\'")
-	  ("xml" . "\\.xml\\'")
-	  ("html" . ".")))
-  :config
-  (setq web-mode-code-indent-offset 2
-        web-mode-markup-indent-offset 2
-        web-mode-attr-indent-offset 2
-        web-mode-attr-value-indent-offset 2
-        web-mode-css-indent-offset 2
-        web-mode-style-padding 2
-        web-mode-script-padding 0
-        web-mode-block-padding 0
-        web-mode-enable-control-block-indentation nil
-        web-mode-enable-auto-closing t)
-  )
-  (req-package company-web )
+    :mode ("\\.html?\\'" "\\.jsx\\'")
+    :config
+    (require  'company-web-html)
+    (my/add-format-before-save 'web-mode-hook)
+    (setq web-mode-code-indent-offset 2
+          web-mode-markup-indent-offset 2
+          web-mode-attr-indent-offset 2
+          web-mode-attr-value-indent-offset 2
+          web-mode-css-indent-offset 2
+          web-mode-style-padding 2
+          web-mode-script-padding 0
+          web-mode-block-padding 0
+          web-mode-enable-control-block-indentation nil
+          web-mode-enable-auto-closing t
+          web-mode-content-types-alist
+          '(("css" . "\\.\\(s?css\\|css\\.erb\\)\\'")
+            ("jsx" . "\\.\\([jt]s\\|[jt]s\\.erb\\)\\'")
+            ("json" . "\\.\\(api\\|json\\|jsonld\\)\\'")
+            ("jsx" . "\\.[jt]sx\\'")
+            ("xml" . "\\.xml\\'")
+            ("html" . ".")))
+    )
 #+END_SRC
 ***** json-mode
 #+BEGIN_SRC emacs-lisp
-(setq js-indent-level 2)
 (req-package json-mode
-:config (setq json-reformat:indent-width 2))
+    :mode "\\.json\\'"
+    :config
+    (setq json-reformat:indent-width 2
+          js-indent-level 2)
+    )
 #+END_SRC
 ***** typescript
 #+BEGIN_SRC emacs-lisp
 (req-package tide
+    :require (company flycheck)
+    :commands tide-setup
     :init
-  (defun setup-tide-mode ()
-    (interactive)
-    (tide-setup)
-    (flycheck-add-next-checker 'typescript-tide '(t . typescript-tslint) 'append)
-    (my/use-tslint-from-node-modules)
-    (flycheck-mode +1)
-    (setq flycheck-check-syntax-automatically '(save mode-enabled))
-    (eldoc-mode +1)
-    (tide-hl-identifier-mode +1)
-    (add-hook 'before-save-hook 'tide-format-before-save nil 'local)
-    (company-mode +1))
+    (defun setup-tide-mode ()
+      (interactive)
+      (tide-setup)
+      (flycheck-add-next-checker 'typescript-tide '(t . typescript-tslint) 'append)
+      (my/use-tslint-from-node-modules)
+      (flycheck-mode +1)
+      (setq flycheck-check-syntax-automatically '(save mode-enabled))
+      (eldoc-mode +1)
+      (tide-hl-identifier-mode +1)
+      (add-hook 'before-save-hook 'tide-format-before-save nil 'local)
+      (company-mode +1))
+    
+    (add-hook-exec 'typescript-mode 'setup-tide-mode)
+    :config
+    (defun my/use-tslint-from-node-modules ()
+      (let* ((root (locate-dominating-file (or (buffer-file-name) default-directory) "node_modules"))
+             (tslint (and root (expand-file-name "node_modules/tslint/bin/tslint" root))))
+        (when (and tslint (file-executable-p tslint))
+          (setq-local flycheck-typescript-tslint-executable tslint))))
 
-  (defun my/use-tslint-from-node-modules ()
-    (let* ((root (locate-dominating-file (or (buffer-file-name) default-directory) "node_modules"))
-           (tslint (and root (expand-file-name "node_modules/tslint/bin/tslint" root))))
-      (when (and tslint (file-executable-p tslint))
-        (setq-local flycheck-typescript-tslint-executable tslint))))
-
-  (setq company-tooltip-align-annotations t
-        tide-tsserver-executable "node_modules/typescript/bin/tsserver"
-        typescript-indent-level 2)
-  (add-hook 'typescript-mode-hook #'setup-tide-mode)
-  :config
-  :bind (:map tide-mode-map
-              ("C-f" . tide-fix))
-  )
+    (setq company-tooltip-align-annotations t
+          tide-tsserver-executable "node_modules/typescript/bin/tsserver"
+          typescript-indent-level 2)
+    :bind (:map tide-mode-map
+                ("C-f" . tide-fix))
+    )
 #+END_SRC
 *** Elisp
 #+BEGIN_SRC emacs-lisp
@@ -1317,14 +1302,17 @@ https://github.com/tonini/alchemist.el
 #+END_SRC
 *** Php
 #+BEGIN_SRC emacs-lisp
-(req-package php-mode)
+(req-package php-mode
+    :mode "\\.php\\'")
 #+END_SRC
 *** Rust
 #+BEGIN_SRC emacs-lisp
-(req-package rust-mode)
+(req-package rust-mode
+    :mode "\\.rs\\'"
+    )
 (req-package company-racer
     :require company
-    :config
+    :init
     (add-to-list 'company-backends 'company-racer)
     (add-hook 'racer-mode-hook #'company-mode))
 (req-package racer
@@ -1527,7 +1515,7 @@ moved to bottom because cursor color changed by smth else
 ** wakatime
 #+BEGIN_SRC emacs-lisp
 (req-package wakatime-mode
-    :loader 'elpa
+    :loader :elpa
     :commands (global-wakatime-mode)
 )
 #+END_SRC
