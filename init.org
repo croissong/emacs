@@ -1035,13 +1035,13 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 ** Dired+
 #+BEGIN_SRC emacs-lisp
 (req-package dired+
+    :force t
     :config
-  :force t
-  (toggle-diredp-find-file-reuse-dir 1)
-  (setq dired-listing-switches "-aDhl  --group-directories-first")
-  :bind (:map dired-mode-map
-              ("?" . my/dired-get-size))
-  )
+    (toggle-diredp-find-file-reuse-dir 1)
+    (setq dired-listing-switches "-aDhl  --group-directories-first")
+    :bind (:map dired-mode-map
+                ("?" . my/dired-get-size))
+    )
 #+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp
@@ -1094,6 +1094,7 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (req-package alchemist
     :require elixir-mode
+    :diminish alchemist-mode
     :commands alchemist-mode
     :init (add-hook-exec 'elixir-mode 'alchemist-mode)
     :bind (:map alchemist-mode-map
@@ -1415,7 +1416,7 @@ maybe for linux
 #+BEGIN_SRC emacs-lisp
 (req-package hungry-delete
     :init (global-hungry-delete-mode)
-    :config
+    :diminish hungry-delete-mode
     )
 #+END_SRC
 ** restclient
