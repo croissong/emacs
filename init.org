@@ -65,11 +65,11 @@
 **** Between Windows
 #+BEGIN_SRC emacs-lisp
 (bind-keys*
-("C-ö"  . windmove-left)
-	   ("C-#" . windmove-right)
-     ("C-ü" . windmove-up)
-     ("C-ä" . windmove-down)
-     ("C-Ü" . clone-indirect-buffer))
+ ("C-ö"  . windmove-left)
+ ("C-#" . windmove-right)
+ ("C-ü" . windmove-up)
+ ("C-ä" . windmove-down)
+ ("C-Ü" . clone-indirect-buffer))
 #+END_SRC
 *** delete other window
 #+BEGIN_SRC emacs-lisp
@@ -691,9 +691,8 @@ pomodoro-nth-for-longer-break 3))
 (req-package magit
 :init (exec-path-from-shell-copy-env "GPG_TTY")
 :ensure t
-:config (setq magit-diff-arguments (quote ("--ignore-space-change"
-"--ignore-all-space" "--no-ext-diff" "--stat"))
-      magit-diff-section-arguments (quote ("--ignore-all-space" "--no-ext-diff" "-U2"))
+:config (setq magit-diff-arguments (quote ("--no-ext-diff" "--stat"))
+      magit-diff-section-arguments (quote ("--no-ext-diff" "-U2"))
       magit-diff-refine-hunk t)
 )
 #+END_SRC
