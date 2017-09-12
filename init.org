@@ -547,10 +547,14 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+BEGIN_SRC emacs-lisp
 (req-package counsel
     :loader :elpa
-    :init (ivy-mode 1)
+    :require (flx)
     :config
+    (ivy-mode 1)
     (setq ivy-use-virtual-buffers t
-          ivy-count-format "(%d/%d) ")
+          ivy-count-format "(%d/%d) "
+          ivy-re-builders-alist '((t . ivy--regex-fuzzy))
+          magit-completing-read-function 'ivy-completing-read
+          ivy-use-virtual-buffers t)
     :bind(("M-x" . counsel-M-x)
           ("C-x C-f" . counsel-find-file)
           ("C-s" . swiper))
@@ -558,7 +562,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (req-package counsel-projectile
     :require (counsel projectile)
     :loader :elpa
-    :init (counsel-projectile-on))
+    :config (counsel-projectile-on)
+    (setq projectile-completion-system 'ivy))
 #+END_SRC
 *** ido [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -1497,10 +1502,6 @@ maybe for linux
       :config (cygwin-mount-activate)
       ))
 #+END_SRC
-** Finish req-package
-#+BEGIN_SRC emacs-lisp
-(req-package-finish)
-#+END_SRC
 ** Tramp
 #+BEGIN_SRC emacs-lisp
 (setq tramp-default-method "ssh")
@@ -1528,8 +1529,13 @@ moved to bottom because cursor color changed by smth else
 ** wakatime
 #+BEGIN_SRC emacs-lisp
 (req-package wakatime-mode
-:init
-(global-wakatime-mode))
+    :loader 'elpa
+    :commands (global-wakatime-mode)
+)
+#+END_SRC
+* Finish req-package
+#+BEGIN_SRC emacs-lisp
+(req-package-finish)
 #+END_SRC
 * Functions
 ** Line manouevor functions
