@@ -378,7 +378,7 @@ https://github.com/lukhas/buffer-move
                 cwm-incremental-padding t
                 cwm-incremental-padding-% 2
                 cwm-left-fringe-ratio 0
-                cwm-centered-window-width 110)
+                cwm-centered-window-width 130)
     :config (centered-window-mode t)
     :diminish centered-window-mode
     )
@@ -514,10 +514,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
         dumb-jump-selector 'helm)
   (helm-adaptive-mode t)
   :bind (("M-x" . helm-M-x)
-        ("C-x C-f" . helm-find-files)
-        ("C-x b" . helm-buffers-list)
-        :map helm-find-files-map
-        ("C-o" . helm-ff-run-switch-other-window))
+         ("C-x C-f" . helm-find-files)
+         ("C-x b" . helm-buffers-list)
+         :map helm-find-files-map
+         ("C-o" . helm-ff-run-switch-other-window))
   :diminish 'helm-mode
   )
 #+END_SRC
