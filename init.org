@@ -1117,7 +1117,6 @@ https://github.com/tonini/alchemist.el
              ))))
     )
 #+END_SRC
-**** 
 **** flycheck-credo
 #+BEGIN_SRC emacs-lisp
 (req-package flycheck-credo
@@ -1127,6 +1126,10 @@ https://github.com/tonini/alchemist.el
     (add-hook-exec 'elixir-mode 'flycheck-mode)
     :config
     (setq flycheck-elixir-credo-strict nil))
+#+END_SRC
+*** Sh
+#+BEGIN_SRC emacs-lisp
+(my/add-format-before-save 'sh-mode-hook)
 #+END_SRC
 *** Markdown
 #+BEGIN_SRC emacs-lisp
