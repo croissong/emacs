@@ -271,6 +271,27 @@ Linewrap
     :loader :elpa
     )
 #+END_SRC
+** persp
+#+BEGIN_SRC emacs-lisp
+(req-package persp-mode
+    :loader :elpa
+    :init
+    (setq persp-autokill-buffer-on-remove 'kill-weak
+          persp-keymap-prefix "C-x p")
+    :config
+    (persp-mode 1)
+    )
+
+(req-package persp-mode-projectile-bridge
+    :loader :elpa
+    :require projectile persp-mode
+    :init (persp-mode-projectile-bridge-mode 1)
+    :config
+    (if persp-mode-projectile-bridge-mode
+        (persp-mode-projectile-bridge-find-perspectives-for-all-buffers)
+      (persp-mode-projectile-bridge-kill-perspectives))
+    )
+#+END_SRC
 ** Minor Modes
 *** Drag-stuff
 #+BEGIN_SRC emacs-lisp
