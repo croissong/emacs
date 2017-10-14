@@ -38,12 +38,13 @@
     (require 'req-package)
     (require 'bind-key))
 #+END_SRC
-** Auto-Compile
+** Auto-Compile [disabled]
 [[https://github.com/tarsius/auto-compile][@github]]
 #+BEGIN_SRC emacs-lisp :tangle no
- (req-package auto-compile
-   :init (auto-compile-on-load-mode)
- )
+(req-package auto-compile
+    :loader :elpa
+    :init (auto-compile-on-load-mode)
+    )
 #+END_SRC
 ** my/org-init
 #+BEGIN_SRC emacs-lisp
@@ -218,20 +219,21 @@ Linewrap
 *** Adaptive-Wrap
 #+BEGIN_SRC emacs-lisp
 (req-package adaptive-wrap
-  :init
-  (define-globalized-minor-mode adaptive-wrap-global-mode
-  adaptive-wrap-prefix-mode
-  adaptive-wrap-prefix-mode)
-
-  :config
-  (adaptive-wrap-global-mode)
-  )
+    :loader :elpa
+    :init
+    (define-globalized-minor-mode adaptive-wrap-global-mode
+        adaptive-wrap-prefix-mode
+      adaptive-wrap-prefix-mode)
+    :config
+    (adaptive-wrap-global-mode)
+    )
 #+END_SRC
 *** Window
 **** Purpose-mode
 [[https://github.com/bmag/emacs-purpose][@github]]
 #+BEGIN_SRC emacs-lisp
 (req-package window-purpose
+    :loader :elpa
     :config
   (add-to-list 'purpose-user-mode-purposes '(rust-mode . rust))
   (add-to-list 'purpose-user-mode-purposes '(cargo-process-mode . cargo-process))
@@ -265,25 +267,28 @@ Linewrap
 #+END_SRC
 ** View large files
 #+BEGIN_SRC emacs-lisp
-(req-package vlf)
+(req-package vlf
+    :loader :elpa
+    )
 #+END_SRC
 ** Minor Modes
 *** Drag-stuff
 #+BEGIN_SRC emacs-lisp
 (req-package drag-stuff
+    :loader :elpa
     :init
-  :config
-  (if (my-util-cb?)
+    :config
+    (if (my-util-cb?)
+        (bind-keys :map drag-stuff-mode-map
+                   ("M-S-<prior" . drag-stuff-up)
+                   ("M-S-<next>" . drag-stuff-down))
       (bind-keys :map drag-stuff-mode-map
-                 ("M-S-<prior" . drag-stuff-up)
-                 ("M-S-<next>" . drag-stuff-down))
-    (bind-keys :map drag-stuff-mode-map
-               ("M-<up>" . drag-stuff-up)
-               ("M-<down>" . drag-stuff-down)))
-  (add-to-list 'drag-stuff-except-modes 'org-mode)
-  (drag-stuff-global-mode)
-  :diminish drag-stuff-mode
-  )
+                 ("M-<up>" . drag-stuff-up)
+                 ("M-<down>" . drag-stuff-down)))
+    (add-to-list 'drag-stuff-except-modes 'org-mode)
+    (drag-stuff-global-mode)
+    :diminish drag-stuff-mode
+    )
 #+END_SRC
 *** YASnippet [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -301,7 +306,9 @@ Linewrap
 https://github.com/lukhas/buffer-move
 #+BEGIN_SRC emacs-lisp
 (req-package buffer-move
-    :bind* ("C-M-#" . buf-move-right)
+    :loader :elpa
+    :bind*
+    ("C-M-#" . buf-move-right)
     ("C-M-ö" . buf-move-left)
     ("C-M-ü" . buf-move-up)
     ("C-M-ä" . buf-move-down)
@@ -310,22 +317,23 @@ https://github.com/lukhas/buffer-move
 *** Evil-Nerd-Commenter
 #+BEGIN_SRC emacs-lisp
 (req-package evil-nerd-commenter
-  :init
-  :config
-  (evilnc-default-hotkeys)
-)
+    :loader :elpa
+    :init
+    :config
+    (evilnc-default-hotkeys)
+    )
 #+END_SRC
 *** Multiple-Cursors
 #+BEGIN_SRC emacs-lisp
 (req-package multiple-cursors
-  :init
-  :bind* ("C-<down-mouse-1>" . mc/add-cursor-on-click)
-  :config
-  (setq mc/list-file (concat user-emacs-directory "config/.mc-lists.el"))
-  ;;'(mc/cursor-face ((nil (:background "orange"))))
-)
+    :loader :elpa
+    :init
+    :bind* ("C-<down-mouse-1>" . mc/add-cursor-on-click)
+    :config
+    (setq mc/list-file (concat user-emacs-directory "config/.mc-lists.el"))
+    ;;'(mc/cursor-face ((nil (:background "orange"))))
+    )
 #+END_SRC
-
 *** Google-translate
 #+BEGIN_SRC emacs-lisp
 (req-package google-translate
@@ -338,7 +346,6 @@ https://github.com/lukhas/buffer-move
   (setq google-translate-pop-up-buffer-set-focus t)
 )
 #+END_SRC
-
 *** Outshine
 **** Outshine + Navi-Mode
 #+BEGIN_SRC emacs-lisp
@@ -361,18 +368,22 @@ https://github.com/lukhas/buffer-move
 *** Company-Mode
 #+BEGIN_SRC emacs-lisp
 (req-package company
-:config
-(add-hook 'after-init-hook 'global-company-mode)
-(define-key company-active-map (kbd "C-ä") 'company-select-next)
-(define-key company-active-map (kbd "C-ü") 'company-select-previous)
-(setq company-idle-delay 0.2
-      company-minimum-prefix-length 1
-      company-tooltip-align-annotations t
-      company-dabbrev-downcase nil))
+    :loader :elpa
+    :config
+    (add-hook 'after-init-hook 'global-company-mode)    
+    (setq company-idle-delay 0.2
+          company-minimum-prefix-length 1
+          company-tooltip-align-annotations t
+          company-dabbrev-downcase nil)
+    :bind (:map company-active-map
+                ("C-ä" . company-select-next)
+                ("C-ü" . company-select-previous))
+    )
 #+END_SRC
 *** Centered-Window-Mode
 #+BEGIN_SRC emacs-lisp
 (req-package centered-window-mode
+    :loader :elpa
     :init (setq cwm-use-vertical-padding t
                 cwm-frame-internal-border 0
                 cwm-incremental-padding t
@@ -383,29 +394,30 @@ https://github.com/lukhas/buffer-move
     :diminish centered-window-mode
     )
 #+END_SRC
-
 *** Smartparens
 #+BEGIN_SRC emacs-lisp
 (req-package smartparens
-  :bind (:map smartparens-mode-map
-	      ("C-M-<left>" . sp-backward-sexp)
-	      ("C-M-<right>" . sp-forward-sexp)
-	      ("C-S-<backspace>" . sp-backward-kill-sexp)
-	      ("C-M-<down>" . sp-select-next-thing))
-  :init
-  (require 'smartparens-config)
-  (smartparens-global-mode t)
-  (show-smartparens-global-mode t)
-  (setq blink-matching-paren nil)
-  :config
-  (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
-  (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil)
-  :diminish smartparens-mode
-  )
+    :loader :elpa
+    :bind (:map smartparens-mode-map
+                ("C-M-<left>" . sp-backward-sexp)
+                ("C-M-<right>" . sp-forward-sexp)
+                ("C-S-<backspace>" . sp-backward-kill-sexp)
+                ("C-M-<down>" . sp-select-next-thing))
+    :init
+    (require 'smartparens-config)
+    (smartparens-global-mode t)
+    (show-smartparens-global-mode t)
+    (setq blink-matching-paren nil)
+    :config
+    (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
+    (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil)
+    :diminish smartparens-mode
+    )
 #+END_SRC
 *** Undo-Tree
 #+BEGIN_SRC emacs-lisp
 (req-package undo-tree
+    :loader :elpa
     :bind (("C-p" . undo-tree-undo)
            ("M-p" . undo-tree-redo)
            ("C-M-p" . undo-tree-visualize))
@@ -458,34 +470,36 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** Expand-Region
 #+BEGIN_SRC emacs-lisp
 (req-package expand-region
-  :bind* (("C-M-w" . er/expand-region)
-	      ("C-M-q" . er/contract-region))
-  :init
-  :config
-  (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions)
-)
+    :loader :elpa
+    :bind* (("C-M-w" . er/expand-region)
+            ("C-M-q" . er/contract-region))
+    :init
+    :config
+    (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions)
+    )
 #+END_SRC
 *** Flycheck
 #+BEGIN_SRC emacs-lisp
 (req-package flycheck
+    :loader :elpa
     :init
-  ;; (add-hook 'after-init-hook #'global-flycheck-mode) ;
-  :config
-  ;; disable jshint since we prefer eslint checking
-  ;; (setq-default flycheck-disabled-checkers
-	;; 	(append flycheck-disabled-checkers
-	;; 		'(javascript-jshint)))
+    ;; (add-hook 'after-init-hook #'global-flycheck-mode) ;
+    :config
+    ;; disable jshint since we prefer eslint checking
+    ;; (setq-default flycheck-disabled-checkers
+    ;; 	(append flycheck-disabled-checkers
+    ;; 		'(javascript-jshint)))
 
-  ;; use eslint with web-mode for jsx files
-  ;; (flycheck-add-mode 'javascript-eslint 'web-mode)
+    ;; use eslint with web-mode for jsx files
+    ;; (flycheck-add-mode 'javascript-eslint 'web-mode)
 
-  ;;https://github.com/justjake/eslint-project-relative
-  ;; (when (my-util-installed? "eslint-project-relative")
+    ;;https://github.com/justjake/eslint-project-relative
+    ;; (when (my-util-installed? "eslint-project-relative")
     ;; (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
-  ;; customize flycheck temp file prefix
-  ;; (setq-default flycheck-temp-prefix ".flycheck")
-  :diminish 'flycheck-mode
-  )
+    ;; customize flycheck temp file prefix
+    ;; (setq-default flycheck-temp-prefix ".flycheck")
+    :diminish 'flycheck-mode
+    )
 #+END_SRC
 **** disable in org-src-block
 #+BEGIN_SRC emacs-lisp
@@ -494,36 +508,38 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 		      flycheck-disabled-checkers
 		      '(emacs-lisp-checkdoc))))
 #+END_SRC
-*** helm
-#+BEGIN_SRC emacs-lisp
+*** helm [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package helm-mode
+    :loader :elpa
     :disabled
-  :require (dumb-jump)
-  :init (helm-mode)
-  :config
-  (require 'helm-config)
-  (setq helm-mode-fuzzy-match t
-        helm-recentf-fuzzy-match t
-        helm-buffers-fuzzy-matching t
-        helm-locate-fuzzy-match t
-        helm-M-x-fuzzy-match t
-        helm-completion-in-region-fuzzy-match t
-        helm-ff-newfile-prompt-p nil
-        helm-find-file-ignore-thing-at-point t
-        helm-exit-idle-delay 0
-        dumb-jump-selector 'helm)
-  (helm-adaptive-mode t)
-  :bind (("M-x" . helm-M-x)
-         ("C-x C-f" . helm-find-files)
-         ("C-x b" . helm-buffers-list)
-         :map helm-find-files-map
-         ("C-o" . helm-ff-run-switch-other-window))
-  :diminish 'helm-mode
-  )
+    :require (dumb-jump)
+    :init (helm-mode)
+    :config
+    (require 'helm-config)
+    (setq helm-mode-fuzzy-match t
+          helm-recentf-fuzzy-match t
+          helm-buffers-fuzzy-matching t
+          helm-locate-fuzzy-match t
+          helm-M-x-fuzzy-match t
+          helm-completion-in-region-fuzzy-match t
+          helm-ff-newfile-prompt-p nil
+          helm-find-file-ignore-thing-at-point t
+          helm-exit-idle-delay 0
+          dumb-jump-selector 'helm)
+    (helm-adaptive-mode t)
+    :bind (("M-x" . helm-M-x)
+           ("C-x C-f" . helm-find-files)
+           ("C-x b" . helm-buffers-list)
+           :map helm-find-files-map
+           ("C-o" . helm-ff-run-switch-other-window))
+    :diminish 'helm-mode
+    )
 #+END_SRC
 **** Ripgrep
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package helm-ag
+    :loader :elpa
     :disabled
     :require (helm-mode projectile)
     :config
@@ -650,13 +666,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 [[https://github.com/TheBB/spaceline/tree/master/][The Spacemacs Modeline @github]]
 #+BEGIN_SRC emacs-lisp
 (req-package spaceline
-  :init
-  (require 'spaceline-config)
-  (spaceline-spacemacs-theme)
-
-  :config
-  (spaceline-toggle-buffer-size-off)
-  )
+    :loader :elpa
+    :init
+    (require 'spaceline-config)
+    (spaceline-spacemacs-theme)
+    :config
+    (spaceline-toggle-buffer-size-off)
+    )
 #+END_SRC
 *** Projectile
 #+BEGIN_SRC emacs-lisp
@@ -686,19 +702,22 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 [[https://github.com/justbur/emacs-which-key?utm_medium=referral&utm_campaign=ZEEF&utm_source=https%3A%2F%2Femacs.zeef.com%2Fehartc][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (req-package which-key
+    :loader :elpa
     :init (which-key-mode)
-    :diminish which-key-mode)
+    :diminish which-key-mode
+    )
 #+END_SRC
 *** dumb-jump
 [[https://github.com/jacktasia/dumb-jump][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (req-package dumb-jump
+    :loader :elpa
     :config (setq dumb-jump-force-searcher 'rg)
     :bind ("M-." . dumb-jump-go)
     )
 #+END_SRC
-*** pomodoro
-#+BEGIN_SRC emacs-lisp
+*** pomodoro [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package pomodoro
     :config (pomodoro-add-to-mode-line)
     (setq pomodoro-time-format "%.2m"
@@ -711,11 +730,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** yaml
 #+BEGIN_SRC emacs-lisp
 (req-package yaml-mode
+    :loader :elpa
     :mode "\\.yml\\'")
 #+END_SRC
 ** Editorconfig
 #+BEGIN_SRC emacs-lisp
 (req-package editorconfig
+    :loader :elpa
     :init (editorconfig-mode 1)
     :diminish editorconfig-mode
     )
@@ -723,6 +744,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** Read user $PATH
 #+BEGIN_SRC emacs-lisp
 (req-package  exec-path-from-shell
+    :loader :elpa
     :if (my-util-linux?)
     :init (exec-path-from-shell-initialize)
     )
@@ -735,7 +757,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (req-package magit
-    :ensure t
+    :loader :elpa
     :config
     (exec-path-from-shell-copy-env "GPG_TTY")
     (setq magit-diff-arguments (quote ("--no-ext-diff" "--stat"))
@@ -1022,11 +1044,12 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 ** AUCTeX
 #+BEGIN_SRC emacs-lisp
 (req-package tex
-  :init
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-  :config
-  :ensure auctex
-)
+    :require auctex
+    :loader :elpa
+    :init
+    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+    :config
+    )
 #+END_SRC
 ** NeoTree [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -1086,6 +1109,7 @@ echo "add ruen.rws" > ru.multi
 https://github.com/elixir-lang/emacs-elixir
 #+BEGIN_SRC emacs-lisp
 (req-package elixir-mode
+    :loader :elpa
     :defer t
     :config
     (my/add-format-before-save 'elixir-mode-hook)
@@ -1095,6 +1119,7 @@ https://github.com/elixir-lang/emacs-elixir
 https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (req-package alchemist
+    :loader :elpa
     :require elixir-mode
     :diminish alchemist-mode
     :commands alchemist-mode
@@ -1120,6 +1145,7 @@ https://github.com/tonini/alchemist.el
 **** flycheck-credo
 #+BEGIN_SRC emacs-lisp
 (req-package flycheck-credo
+    :loader :elpa
     :require (elixir-mode flycheck)
     :init
     (flycheck-credo-setup)
@@ -1134,6 +1160,7 @@ https://github.com/tonini/alchemist.el
 *** Markdown
 #+BEGIN_SRC emacs-lisp
 (req-package markdown-mode
+    :loader :elpa
     :mode "\\.md\\'"
     )
 #+END_SRC
@@ -1141,27 +1168,29 @@ https://github.com/tonini/alchemist.el
 **** Elpy
 #+BEGIN_SRC emacs-lisp
 (req-package elpy
+    :loader :elpa
     :init
-  (elpy-enable)
-  :config
-  ;; https://github.com/jorgenschaefer/elpy/issues/887
-  ;; probvably enable again, its new with emacs 25
-  (setq python-shell-completion-native-enable nil)
-  (delete 'elpy-module-highlight-indentation elpy-modules)
-  (if (executable-find "ipython")
-      ;; (elpy-use-ipython)
-      (message "'ipython' not found found; please install"))
-  ;; Currently no debugging in elpy afaik
-  ;; (setq elpy-test-pytest-runner-command '("py.test --pdb")) ;
-  ;; (elpy-set-test-runner 'elpy-test-pytest-runner)
-  (setq elpy-rpc-backend "rope"
-        elpy-rpc-python-command "python")
-  )
+    (elpy-enable)
+    :config
+    ;; https://github.com/jorgenschaefer/elpy/issues/887
+    ;; probvably enable again, its new with emacs 25
+    (setq python-shell-completion-native-enable nil)
+    (delete 'elpy-module-highlight-indentation elpy-modules)
+    (if (executable-find "ipython")
+        ;; (elpy-use-ipython)
+        (message "'ipython' not found found; please install"))
+    ;; Currently no debugging in elpy afaik
+    ;; (setq elpy-test-pytest-runner-command '("py.test --pdb")) ;
+    ;; (elpy-set-test-runner 'elpy-test-pytest-runner)
+    (setq elpy-rpc-backend "rope"
+          elpy-rpc-python-command "python")
+    )
 #+END_SRC
-**** IPython Emacs Notebook (EIN)
-#+BEGIN_SRC emacs-lisp
+**** IPython Emacs Notebook (EIN) [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package cl-generic)
 (req-package ein
+    :loader :elpa
     :commands ein:notebooklist-open
   )
 #+END_SRC
@@ -1205,13 +1234,16 @@ https://github.com/tonini/alchemist.el
 #+END_SRC
 *** Web
 **** HTML/CSS
-***** Htmlize
+***** Htmlize [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
-(req-package htmlize)
+(req-package htmlize
+    :loader :elpa
+    )
 #+END_SRC
 ***** css
 #+BEGIN_SRC emacs-lisp
 (req-package css-mode
+    :loader :elpa
     :mode "\\.less\\'"
     :config
     (setq css-indent-offset 4)
@@ -1240,6 +1272,7 @@ https://github.com/tonini/alchemist.el
 ***** js2-mode
 #+BEGIN_SRC emacs-lisp
 (req-package js2-mode
+    :loader :elpa
     :mode "\\.js\\'"
     :config
     (my/add-format-before-save 'js-mode-hook)
@@ -1251,6 +1284,7 @@ https://github.com/tonini/alchemist.el
 [[http://web-mode.org/][@web-mode.org]]
 #+BEGIN_SRC emacs-lisp
 (req-package web-mode
+    :loader :elpa
     :mode ("\\.html?\\'" "\\.jsx\\'")
     :config
     (require  'company-web-html)
@@ -1277,6 +1311,7 @@ https://github.com/tonini/alchemist.el
 ***** json-mode
 #+BEGIN_SRC emacs-lisp
 (req-package json-mode
+    :loader :elpa
     :mode "\\.json\\'"
     :config
     (setq json-reformat:indent-width 2
@@ -1286,6 +1321,7 @@ https://github.com/tonini/alchemist.el
 ***** typescript
 #+BEGIN_SRC emacs-lisp
 (req-package tide
+    :loader :elpa
     :require (company flycheck)
     :commands tide-setup
     :init
@@ -1325,25 +1361,30 @@ https://github.com/tonini/alchemist.el
 *** Php
 #+BEGIN_SRC emacs-lisp
 (req-package php-mode
+    :loader :elpa
     :mode "\\.php\\'")
 #+END_SRC
 *** Rust
 #+BEGIN_SRC emacs-lisp
 (req-package rust-mode
+    :loader :elpa
     :mode "\\.rs\\'"
     )
 (req-package company-racer
+    :loader :elpa
     :require company
     :init
     (add-to-list 'company-backends 'company-racer)
     (add-hook 'racer-mode-hook #'company-mode))
 (req-package racer
+    :loader :elpa
     :config
   (setq racer-cmd "~/.cargo/bin/racer.exe"
         racer-rust-src-path "C:/Program Files/Rust/source/src/")
   (add-hook 'rust-mode-hook #'racer-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode))
 (req-package cargo
+    :loader :elpa
     :require rust-mode
     :init (add-hook 'rust-mode-hook 'cargo-minor-mode)
     :config
@@ -1372,12 +1413,14 @@ Cargo: Run the tests."
       )
     )
 (req-package flycheck-rust
+    :loader :elpa
     :config
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 #+END_SRC
 *** go
 #+BEGIN_SRC emacs-lisp
 (req-package go-mode
+    :loader :elpa
     :require company-go go-eldoc
     :init (exec-path-from-shell-copy-env "GOPATH")
     :config (add-hook 'go-mode-hook
@@ -1392,12 +1435,13 @@ Cargo: Run the tests."
 *** nim
 #+BEGIN_SRC emacs-lisp
 (req-package nim-mode
+    :loader :elpa
     :init
-  (add-hook 'nim-mode-hook 'nimsuggest-mode)
-  (add-hook 'nim-mode-hook 'company-mode)
-  (add-hook 'nim-mode-hook flycheck-mode)
-  (add-hook 'nimscript-mode-hook 'company-mode)
-  )
+    (add-hook 'nim-mode-hook 'nimsuggest-mode)
+    (add-hook 'nim-mode-hook 'company-mode)
+    (add-hook 'nim-mode-hook flycheck-mode)
+    (add-hook 'nimscript-mode-hook 'company-mode)
+    )
 #+END_SRC
 ** mini
 #+BEGIN_SRC emacs-lisp
@@ -1420,13 +1464,16 @@ maybe for linux
 *** Hungry-delete
 #+BEGIN_SRC emacs-lisp
 (req-package hungry-delete
+    :loader :elpa
     :init (global-hungry-delete-mode)
     :diminish hungry-delete-mode
     )
 #+END_SRC
 ** restclient
 #+BEGIN_SRC emacs-lisp
-(req-package restclient)
+(req-package restclient
+    :loader :elpa
+    )
 #+END_SRC
 ** Els
 *** Spell-number
