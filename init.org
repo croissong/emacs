@@ -277,7 +277,7 @@ Linewrap
     :loader :elpa
     :init
     (setq persp-autokill-buffer-on-remove 'kill-weak
-          persp-keymap-prefix "C-x p")
+          persp-keymap-prefix (kbd "C-x p"))
     :config
     (persp-mode 1)
     )
