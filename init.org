@@ -335,6 +335,11 @@ https://github.com/lukhas/buffer-move
     ("C-M-ä" . buf-move-down)
     )
 #+END_SRC
+*** rainbow-mode
+#+BEGIN_SRC emacs-lisp
+(req-package rainbow-mode
+        :loader :elpa)
+#+END_SRC
 *** Evil-Nerd-Commenter
 #+BEGIN_SRC emacs-lisp
 (req-package evil-nerd-commenter
