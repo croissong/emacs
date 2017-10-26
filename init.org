@@ -604,12 +604,24 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
           magit-completing-read-function 'ivy-completing-read
           dumb-jump-selector 'ivy
           counsel-rg-base-command (format "rg --no-heading --smart-case --line-number --color never --ignore-file %s/.config/ripgrep/ignore %%s ." (substitute-in-file-name "$HOME")))
+
+    (custom-set-faces
+     '(swiper-match-face-2
+       ((t :inherit isearch :foreground "white" :background "#8a498a")))
+     '(ivy-minibuffer-match-face-2
+       ((t :foreground "white" :background "#8a498a" :weight bold)))
+     '(swiper-line-face
+       ((t :foreground nil))))
+    
+    
     :bind (("M-x" . counsel-M-x)
            ("C-x C-f" . counsel-find-file)
            ("C-s" . counsel-grep-or-swiper)
            :map ivy-minibuffer-map
-                 ("<left>" . counsel-up-directory)
-                 ("<right>" . ivy-alt-done))
+           ("<left>" . counsel-up-directory)
+           ("<right>" . ivy-alt-done)
+           ("C-s" . ivy-next-line)
+           ("C-r" . ivy-previous-line))
     )
 (req-package counsel-projectile
     :require (counsel projectile)
@@ -618,9 +630,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (counsel-projectile-on)
     (setq projectile-completion-system 'ivy)
     :bind (("C-M-f" . counsel-projectile-find-file)
-            ("C-M-d" . counsel-projectile-find-dir)
-            ("C-M-x" . counsel-projectile-switch-to-buffer)
-            ("C-M-s" . counsel-projectile-rg))
+           ("C-M-d" . counsel-projectile-find-dir)
+           ("C-M-x" . counsel-projectile-switch-to-buffer)
+           ("C-M-s" . counsel-projectile-rg))
     )
 #+END_SRC
 *** ido [disabled]
@@ -816,6 +828,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 				  (plain-list-item . nil))
       org-return-follows-link nil
       org-completion-use-ido t
+      org-support-shift-select t
       org-image-actual-width '(500)
       org-list-allow-alphabetical t
       org-use-property-inheritance t
