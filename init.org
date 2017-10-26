@@ -204,8 +204,8 @@
 ;; (set-face-attribute 'mode-line-inactive nil :height 135 :foreground "#995400" :background "#2a2a28")
 #+END_SRC
 ** Generic
-Linewrap
-#+BEGIN_SRC emacs-lisp
+*** visual-line-mode [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (global-visual-line-mode t)
 (diminish 'visual-line-mode)
 #+END_SRC
