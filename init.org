@@ -618,10 +618,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
            ("C-x C-f" . counsel-find-file)
            ("C-s" . counsel-grep-or-swiper)
            :map ivy-minibuffer-map
-           ("<left>" . counsel-up-directory)
-           ("<right>" . ivy-alt-done)
-           ("C-s" . ivy-next-line)
-           ("C-r" . ivy-previous-line))
+           ("M-ö" . counsel-up-directory)
+           ("M-#" . ivy-alt-done)
+           ("M-ä" . ivy-next-line)
+           ("M-ü" . ivy-previous-line))
     )
 (req-package counsel-projectile
     :require (counsel projectile)
