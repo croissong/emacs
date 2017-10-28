@@ -72,6 +72,14 @@
  ("C-ä" . windmove-down)
  ("C-Ü" . clone-indirect-buffer))
 #+END_SRC
+**** around
+#+BEGIN_SRC emacs-lisp
+(bind-keys*
+ ("M-ö"  . left-char)
+ ("M-#" . right-char)
+ ("M-ü" . previous-line)
+ ("M-ä" . next-line))
+#+END_SRC
 *** delete other window
 #+BEGIN_SRC emacs-lisp
 (defun delete-other-window ()
