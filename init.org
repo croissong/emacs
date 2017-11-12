@@ -154,11 +154,22 @@
 #+END_SRC
 ** before-save
 #+BEGIN_SRC emacs-lisp
+(defun my/format-buff()
+  (interactive)
+  (delete-trailing-whitespace)
+  (indent-region (point-min) (point-max) nil)
+  )
+
 (defun my/add-format-before-save(mode-hook)
   (add-hook mode-hook
             (lambda ()
-              (add-hook 'before-save-hook 'delete-trailing-whitespace nil 'local)
-              (add-hook 'before-save-hook (lambda() (indent-region (point-min) (point-max) nil)) nil 'local))))
+              (add-hook 'before-save-hook 'my/format-buff nil 'local)))
+  )
+
+(defun my/rm-format-before-save()
+  (interactive)
+  (remove-hook 'before-save-hook 'my/format-buff 'local)
+  )
 #+END_SRC
 ** littlest things
 #+BEGIN_SRC emacs-lisp
@@ -1717,13 +1728,7 @@ When `universal-argument' is called first, cut whole buffer (but respect `narrow
 (bind-key "C-<backspace>" 'my/backward-delete-whitespace-or-word)
 (bind-key "C-M-<backspace>" 'my/delete-whitespace-or-word)
 
-;; because back-to-indentation doesn't take me back to visual line
-(defun my/back-to-indentation ()
-  (interactive)
-  (beginning-of-visual-line)
-  (indent-for-tab-command))
-
-(bind-key "C-a" 'my/back-to-indentation)
+(bind-key "C-a" 'back-to-indentation)
 #+END_SRC
 ** Not in use
 *** Delete-No-Kill
