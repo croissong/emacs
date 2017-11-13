@@ -150,6 +150,7 @@
 ** Start-Up
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-screen t)
+(setq-default major-mode 'indented-text-mode)
 (add-hook 'emacs-startup-hook (lambda () (kill-buffer "*scratch*")))
 #+END_SRC
 ** before-save
