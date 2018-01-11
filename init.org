@@ -38,14 +38,14 @@
   (require 'req-package)
   (require 'bind-key))
 (req-package diminish
-    :loader :elpa
+    :ensure t
     )
 #+END_SRC
 ** Auto-Compile [disabled]
 [[https://github.com/tarsius/auto-compile][@github]]
 #+BEGIN_SRC emacs-lisp :tangle no
 (req-package auto-compile
-    :loader :elpa
+    :ensure t
     :init (auto-compile-on-load-mode)
     )
 #+END_SRC
@@ -245,7 +245,7 @@
 *** Adaptive-Wrap
 #+BEGIN_SRC emacs-lisp
 (req-package adaptive-wrap
-    :loader :elpa
+    :ensure t
     :init
     (define-globalized-minor-mode adaptive-wrap-global-mode
         adaptive-wrap-prefix-mode
@@ -259,7 +259,7 @@
 [[https://github.com/bmag/emacs-purpose][@github]]
 #+BEGIN_SRC emacs-lisp
 (req-package window-purpose
-    :loader :elpa
+    :ensure t
     :config
   (add-to-list 'purpose-user-mode-purposes '(rust-mode . rust))
   (add-to-list 'purpose-user-mode-purposes '(cargo-process-mode . cargo-process))
@@ -294,13 +294,13 @@
 ** View large files
 #+BEGIN_SRC emacs-lisp
 (req-package vlf
-    :loader :elpa
+    :ensure t
     )
 #+END_SRC
 ** persp
 #+BEGIN_SRC emacs-lisp
 (req-package persp-mode
-    :loader :elpa
+    :ensure t
     :init
     (setq persp-autokill-buffer-on-remove 'kill-weak
           persp-keymap-prefix (kbd "C-x p"))
@@ -309,7 +309,7 @@
     )
 
 (req-package persp-mode-projectile-bridge
-    :loader :elpa
+    :ensure t
     :require projectile persp-mode
     :init (persp-mode-projectile-bridge-mode 1)
     :config
@@ -322,7 +322,7 @@
 *** Drag-stuff
 #+BEGIN_SRC emacs-lisp
 (req-package drag-stuff
-    :loader :elpa
+    :ensure t
     :init
     :config
     (if (my-util-cb?)
@@ -353,7 +353,7 @@
 https://github.com/lukhas/buffer-move
 #+BEGIN_SRC emacs-lisp
 (req-package buffer-move
-    :loader :elpa
+    :ensure t
     :bind*
     ("C-M-#" . buf-move-right)
     ("C-M-ö" . buf-move-left)
@@ -364,12 +364,12 @@ https://github.com/lukhas/buffer-move
 *** rainbow-mode
 #+BEGIN_SRC emacs-lisp
 (req-package rainbow-mode
-        :loader :elpa)
+    :ensure t)
 #+END_SRC
 *** Evil-Nerd-Commenter
 #+BEGIN_SRC emacs-lisp
 (req-package evil-nerd-commenter
-    :loader :elpa
+    :ensure t
     :init
     :config
     (evilnc-default-hotkeys)
@@ -378,7 +378,7 @@ https://github.com/lukhas/buffer-move
 *** Multiple-Cursors
 #+BEGIN_SRC emacs-lisp
 (req-package multiple-cursors
-    :loader :elpa
+    :ensure t
     :init
     :bind* ("C-<down-mouse-1>" . mc/add-cursor-on-click)
     :config
@@ -420,7 +420,7 @@ https://github.com/lukhas/buffer-move
 *** Company-Mode
 #+BEGIN_SRC emacs-lisp
 (req-package company
-    :loader :elpa
+    :ensure t
     :config
     (add-hook 'after-init-hook 'global-company-mode)    
     (setq company-idle-delay 0.2
@@ -435,7 +435,7 @@ https://github.com/lukhas/buffer-move
 *** Centered-Window-Mode
 #+BEGIN_SRC emacs-lisp
 (req-package centered-window-mode
-    :loader :elpa
+    :ensure t
     :init (setq cwm-use-vertical-padding t
                 cwm-frame-internal-border 0
                 cwm-incremental-padding t
@@ -449,7 +449,7 @@ https://github.com/lukhas/buffer-move
 *** Smartparens
 #+BEGIN_SRC emacs-lisp
 (req-package smartparens
-    :loader :elpa
+    :ensure t
     :bind (:map smartparens-mode-map
                 ("C-M-<left>" . sp-backward-sexp)
                 ("C-M-<right>" . sp-forward-sexp)
@@ -469,7 +469,7 @@ https://github.com/lukhas/buffer-move
 *** Undo-Tree
 #+BEGIN_SRC emacs-lisp
 (req-package undo-tree
-    :loader :elpa
+    :ensure t
     :bind (("C-p" . undo-tree-undo)
            ("M-p" . undo-tree-redo)
            ("C-M-p" . undo-tree-visualize))
@@ -522,7 +522,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** Expand-Region
 #+BEGIN_SRC emacs-lisp
 (req-package expand-region
-    :loader :elpa
+    :ensure t
     :bind* (("C-M-w" . er/expand-region)
             ("C-M-q" . er/contract-region))
     :init
@@ -533,7 +533,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** Flycheck
 #+BEGIN_SRC emacs-lisp
 (req-package flycheck
-    :loader :elpa
+    :ensure t
     :init
     ;; (add-hook 'after-init-hook #'global-flycheck-mode) ;
     :config
@@ -563,14 +563,14 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** Ripgrep
 #+BEGIN_SRC emacs-lisp
 (req-package rg
-    :loader :elpa
+    :ensure t
     :require (wgrep)
     )
 #+END_SRC
 *** helm [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
 (req-package helm-mode
-    :loader :elpa
+    :ensure t
     :disabled
     :require (dumb-jump)
     :init (helm-mode)
@@ -598,7 +598,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 **** Ripgrep
 #+BEGIN_SRC emacs-lisp :tangle no
 (req-package helm-ag
-    :loader :elpa
+    :ensure t
     :require (helm-mode projectile)
     :config
     (setq helm-ag-base-command
@@ -619,9 +619,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** ivy
 #+BEGIN_SRC emacs-lisp
 (req-package ivy-hydra
-    :loader :elpa)
+    :ensure t)
 (req-package counsel
-    :loader :elpa
+    :ensure t
     :force t
     :require flx dumb-jump smex ivy-hydra
     :diminish ivy-mode
@@ -656,7 +656,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     )
 (req-package counsel-projectile
     :require (counsel projectile)
-    :loader :elpa
+    :ensure t
     :config
     (counsel-projectile-on)
     (setq projectile-completion-system 'ivy)
@@ -735,7 +735,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 [[https://github.com/TheBB/spaceline/tree/master/][The Spacemacs Modeline @github]]
 #+BEGIN_SRC emacs-lisp
 (req-package spaceline
-    :loader :elpa
+    :ensure t
     :init
     (require 'spaceline-config)
     (spaceline-spacemacs-theme)
@@ -746,7 +746,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** Projectile
 #+BEGIN_SRC emacs-lisp
 (req-package projectile
-    :loader :elpa
+    :ensure t
     :init (projectile-mode)
     :config
     (setq projectile-file-exists-remote-cache-expire nil
@@ -771,7 +771,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 [[https://github.com/justbur/emacs-which-key?utm_medium=referral&utm_campaign=ZEEF&utm_source=https%3A%2F%2Femacs.zeef.com%2Fehartc][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (req-package which-key
-    :loader :elpa
+    :ensure t
     :init (which-key-mode)
     :diminish which-key-mode
     )
@@ -780,7 +780,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 [[https://github.com/jacktasia/dumb-jump][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (req-package dumb-jump
-    :loader :elpa
+    :ensure t
     :config (setq dumb-jump-force-searcher 'rg)
     :bind ("M-." . dumb-jump-go)
     )
@@ -799,13 +799,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** yaml
 #+BEGIN_SRC emacs-lisp
 (req-package yaml-mode
-    :loader :elpa
+    :ensure t
     :mode "\\.yml\\'")
 #+END_SRC
 ** Editorconfig
 #+BEGIN_SRC emacs-lisp
 (req-package editorconfig
-    :loader :elpa
+    :ensure t
     :init (editorconfig-mode 1)
     :diminish editorconfig-mode
     )
@@ -813,7 +813,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** Read user $PATH
 #+BEGIN_SRC emacs-lisp
 (req-package  exec-path-from-shell
-    :loader :elpa
+    :ensure t
     :if (my-util-linux?)
     :init (exec-path-from-shell-initialize)
     )
@@ -826,7 +826,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (req-package magit
-    :loader :elpa
+    :ensure t
     :config
     (exec-path-from-shell-copy-env "GPG_TTY")
     (setq magit-diff-arguments (quote ("--no-ext-diff" "--stat"))
@@ -1115,7 +1115,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 #+BEGIN_SRC emacs-lisp
 (req-package tex
     :require auctex
-    :loader :elpa
+    :ensure t
     :init
     (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
     :config
@@ -1181,7 +1181,7 @@ echo "add ruen.rws" > ru.multi
 https://github.com/elixir-lang/emacs-elixir
 #+BEGIN_SRC emacs-lisp
 (req-package elixir-mode
-    :loader :elpa
+    :ensure t
     :defer t
     :config
     (my/add-format-before-save 'elixir-mode-hook)
@@ -1191,7 +1191,7 @@ https://github.com/elixir-lang/emacs-elixir
 https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (req-package alchemist
-    :loader :elpa
+    :ensure t
     :require elixir-mode
     :diminish alchemist-mode
     :commands alchemist-mode
@@ -1217,7 +1217,7 @@ https://github.com/tonini/alchemist.el
 **** flycheck-credo
 #+BEGIN_SRC emacs-lisp
 (req-package flycheck-credo
-    :loader :elpa
+    :ensure t
     :require (elixir-mode flycheck)
     :init
     (flycheck-credo-setup)
@@ -1232,7 +1232,7 @@ https://github.com/tonini/alchemist.el
 *** Markdown
 #+BEGIN_SRC emacs-lisp
 (req-package markdown-mode
-    :loader :elpa
+    :ensure t
     :mode "\\.md\\'"
     )
 #+END_SRC
@@ -1240,7 +1240,7 @@ https://github.com/tonini/alchemist.el
 **** Elpy
 #+BEGIN_SRC emacs-lisp
 (req-package elpy
-    :loader :elpa
+    :ensure t
     :init
     (elpy-enable)
     :config
@@ -1262,7 +1262,7 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp :tangle no
 (req-package cl-generic)
 (req-package ein
-    :loader :elpa
+    :ensure t
     :commands ein:notebooklist-open
   )
 #+END_SRC
@@ -1309,13 +1309,13 @@ https://github.com/tonini/alchemist.el
 ***** Htmlize [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
 (req-package htmlize
-    :loader :elpa
+    :ensure t
     )
 #+END_SRC
 ***** css
 #+BEGIN_SRC emacs-lisp
 (req-package css-mode
-    :loader :elpa
+    :ensure t
     :mode "\\.less\\'"
     :config
     (setq css-indent-offset 4)
@@ -1344,7 +1344,7 @@ https://github.com/tonini/alchemist.el
 ***** js2-mode
 #+BEGIN_SRC emacs-lisp
 (req-package js2-mode
-    :loader :elpa
+    :ensure t
     :mode "\\.js\\'"
     :config
     (my/add-format-before-save 'js-mode-hook)
@@ -1356,7 +1356,7 @@ https://github.com/tonini/alchemist.el
 [[http://web-mode.org/][@web-mode.org]]
 #+BEGIN_SRC emacs-lisp
 (req-package web-mode
-    :loader :elpa
+    :ensure t
     :mode ("\\.html?\\'" "\\.jsx\\'")
     :config
     (require  'company-web-html)
@@ -1383,7 +1383,7 @@ https://github.com/tonini/alchemist.el
 ***** json-mode
 #+BEGIN_SRC emacs-lisp
 (req-package json-mode
-    :loader :elpa
+    :ensure t
     :mode "\\.json\\'"
     :config
     (setq json-reformat:indent-width 2
@@ -1393,7 +1393,7 @@ https://github.com/tonini/alchemist.el
 ***** typescript
 #+BEGIN_SRC emacs-lisp
 (req-package tide
-    :loader :elpa
+    :ensure t
     :require (company flycheck)
     :commands tide-setup
     :init
@@ -1433,30 +1433,30 @@ https://github.com/tonini/alchemist.el
 *** Php
 #+BEGIN_SRC emacs-lisp
 (req-package php-mode
-    :loader :elpa
+    :ensure t
     :mode "\\.php\\'")
 #+END_SRC
 *** Rust
 #+BEGIN_SRC emacs-lisp
 (req-package rust-mode
-    :loader :elpa
+    :ensure t
     :mode "\\.rs\\'"
     )
 (req-package company-racer
-    :loader :elpa
+    :ensure t
     :require company
     :init
     (add-to-list 'company-backends 'company-racer)
     (add-hook 'racer-mode-hook #'company-mode))
 (req-package racer
-    :loader :elpa
+    :ensure t
     :config
   (setq racer-cmd "~/.cargo/bin/racer.exe"
         racer-rust-src-path "C:/Program Files/Rust/source/src/")
   (add-hook 'rust-mode-hook #'racer-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode))
 (req-package cargo
-    :loader :elpa
+    :ensure t
     :require rust-mode
     :init (add-hook 'rust-mode-hook 'cargo-minor-mode)
     :config
@@ -1485,14 +1485,14 @@ Cargo: Run the tests."
       )
     )
 (req-package flycheck-rust
-    :loader :elpa
+    :ensure t
     :config
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 #+END_SRC
 *** go
 #+BEGIN_SRC emacs-lisp
 (req-package go-mode
-    :loader :elpa
+    :ensure t
     :require company-go go-eldoc
     :init (exec-path-from-shell-copy-env "GOPATH")
     :config (add-hook 'go-mode-hook
@@ -1507,7 +1507,7 @@ Cargo: Run the tests."
 *** nim
 #+BEGIN_SRC emacs-lisp
 (req-package nim-mode
-    :loader :elpa
+    :ensure t
     :init
     (add-hook 'nim-mode-hook 'nimsuggest-mode)
     (add-hook 'nim-mode-hook 'company-mode)
@@ -1536,7 +1536,7 @@ maybe for linux
 *** Hungry-delete
 #+BEGIN_SRC emacs-lisp
 (req-package hungry-delete
-    :loader :elpa
+    :ensure t
     :init (global-hungry-delete-mode)
     :diminish hungry-delete-mode
     )
@@ -1544,7 +1544,7 @@ maybe for linux
 ** restclient
 #+BEGIN_SRC emacs-lisp
 (req-package restclient
-    :loader :elpa
+    :ensure t
     )
 #+END_SRC
 ** Els
@@ -1656,7 +1656,7 @@ moved to bottom because cursor color changed by smth else
 ** wakatime
 #+BEGIN_SRC emacs-lisp
 (req-package wakatime-mode
-    :loader :elpa
+    :ensure t
     :commands (global-wakatime-mode)
 )
 #+END_SRC
