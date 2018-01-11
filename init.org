@@ -30,13 +30,16 @@
 #+END_SRC
 ** Bootstrap req-package
 #+BEGIN_SRC emacs-lisp
-  (eval-and-compile
-    (unless (package-installed-p 'req-package)
-      (package-refresh-contents)
-      (package-install 'req-package))
-    (require 'cl-lib)
-    (require 'req-package)
-    (require 'bind-key))
+(eval-and-compile
+  (unless (package-installed-p 'req-package)
+    (package-refresh-contents)
+    (package-install 'req-package))
+  (require 'cl-lib)
+  (require 'req-package)
+  (require 'bind-key))
+(req-package diminish
+    :loader :elpa
+    )
 #+END_SRC
 ** Auto-Compile [disabled]
 [[https://github.com/tarsius/auto-compile][@github]]
@@ -557,6 +560,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 		      flycheck-disabled-checkers
 		      '(emacs-lisp-checkdoc))))
 #+END_SRC
+*** Ripgrep
+#+BEGIN_SRC emacs-lisp
+(req-package rg
+    :loader :elpa
+    :require (wgrep)
+    )
+#+END_SRC
 *** helm [disabled]
 #+BEGIN_SRC emacs-lisp :tangle no
 (req-package helm-mode
@@ -650,7 +660,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :config
     (counsel-projectile-on)
     (setq projectile-completion-system 'ivy)
-    :bind (("C-M-f" . counsel-projectile-find-file)
+    :bind* (("C-M-f" . counsel-projectile-find-file)
            ("C-M-d" . counsel-projectile-find-dir)
            ("C-M-x" . counsel-projectile-switch-to-buffer)
            ("C-M-s" . counsel-projectile-rg))
@@ -961,7 +971,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
  '((latex . t)
    (python . t)
    (gnuplot . t)
-   (sh . t)
+   (shell . t)
    (sql . t)))
 #+END_SRC
 **** Passwords
@@ -1121,6 +1131,8 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 #+BEGIN_SRC emacs-lisp
 (req-package dired+
     :force t
+    :init
+    (require dired+)
     :config
     (toggle-diredp-find-file-reuse-dir 1)
     (setq dired-listing-switches "-aDhl  --group-directories-first")
@@ -1834,6 +1846,12 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
   (interactive)
   (capitalize-word -1))
   (bind-key "M-c" 'my/capitalize-previous-word org-mode-map)
+#+END_SRC
+** kill all buffers
+#+BEGIN_SRC emacs-lisp
+(defun my/kill-all-buffers ()
+  (interactive)
+  (mapc 'kill-buffer (buffer-list)))
 #+END_SRC
 * Emacs Server (Windows)
 #+BEGIN_SRC emacs-lisp
