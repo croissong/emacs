@@ -243,7 +243,7 @@
 * Packages
 ** Style
 *** Adaptive-Wrap
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp tangle: yes
 (req-package adaptive-wrap
     :ensure t
     :init
@@ -298,7 +298,7 @@
     )
 #+END_SRC
 ** persp
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (req-package persp-mode
     :ensure t
     :init
@@ -752,7 +752,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (setq projectile-file-exists-remote-cache-expire nil
           projectile-switch-project-action 'magit-status
           projectile-enable-caching t)
-    :bind* (("C-M-r" . projectile-replace-regexp))
+    :bind* (("C-M-r" . projectile-replace-regexp)
+            ("C-c p" . projectile-command-map))
     :diminish 'projectile-mode
     )
 #+END_SRC
@@ -782,7 +783,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (req-package dumb-jump
     :ensure t
     :config (setq dumb-jump-force-searcher 'rg)
-    :bind ("M-." . dumb-jump-go)
+    :bind* ("M-." . dumb-jump-go)
     )
 #+END_SRC
 *** pomodoro [disabled]
@@ -968,12 +969,16 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((latex . t)
+ '((emacs-lisp . t)
+   (latex . t)
    (python . t)
    (gnuplot . t)
    (shell . t)
    (sql . t)))
 #+END_SRC
+
+#+RESULTS:
+
 **** Passwords
 #+BEGIN_SRC emacs-lisp
 (req-package org-passwords

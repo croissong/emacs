@@ -23,7 +23,6 @@
 (defun org-init-compile ()
   (interactive)
   (org-tangle-staged "init.org" org-init--init-el)
-  (byte-compile-file org-init--init-el)
   )
 
 (defun org-init-git ()
