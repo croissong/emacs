@@ -20,9 +20,12 @@
     )
   )
 
+(defun org-tangle-all (in-file out-file)
+  (org-babel-tangle-file in-file out-file))
+
 (defun org-init-compile ()
   (interactive)
-  (org-tangle-staged "init.org" org-init--init-el)
+  (org-tangle-all "init.org" org-init--init-el)
   )
 
 (defun org-init-git ()

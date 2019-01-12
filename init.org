@@ -158,6 +158,88 @@
 #+BEGIN_SRC emacs-lisp :tangle no
  '(magit-diff-use-overlays nil)
 #+END_SRC
+* Generic
+** My Values
+#+BEGIN_SRC emacs-lisp
+(setq default-directory "~/")
+(defvar gdrive-dir (concat default-directory "cloud/"))
+(defvar meinAll-dir (concat gdrive-dir "dokumente/meinAll/"))
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(my-util-ensureEmacsDir "config/")
+(my-util-ensureEmacsDir "save/autosave")
+(my-util-ensureEmacsDir "save/backup")
+(exec-path-from-shell-copy-env "BROWSER")
+(setq browse-url-generic-program 
+    (executable-find (getenv "BROWSER")) 
+     browse-url-browser-function 'browse-url-generic)
+;; TODO
+(setq-default indent-tabs-mode nil
+              tab-width 2
+              indent-line-function 'insert-tab)
+#+END_SRC
+*** Backup
+[[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
+#+BEGIN_SRC emacs-lisp
+(setq delete-old-versions t
+  kept-new-versions 6
+  create-lockfiles nil
+  kept-old-versions 2
+  version-control t
+  backup-directory-alist '((".*" . "~/.emacs.d/save/backup/")))
+#+END_SRC
+*** Autosave
+#+BEGIN_SRC emacs-lisp
+(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+#+END_SRC
+** Start-Up
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-startup-screen t)
+(setq-default major-mode 'indented-text-mode)
+(add-hook 'emacs-startup-hook (lambda () (kill-buffer "*scratch*")))
+#+END_SRC
+** before-save
+#+BEGIN_SRC emacs-lisp
+(defun my/format-buff()
+  (interactive)
+  (delete-trailing-whitespace)
+  (indent-region (point-min) (point-max) nil)
+  )
+
+(defun my/add-format-before-save(mode-hook)
+  (add-hook mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook 'my/format-buff nil 'local)))
+  )
+
+(defun my/rm-format-before-save()
+  (interactive)
+  (remove-hook 'before-save-hook 'my/format-buff 'local)
+  )
+#+END_SRC
+** littlest things
+#+BEGIN_SRC emacs-lisp
+(tooltip-mode -1)
+(fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+(delete-selection-mode 1)
+(setq backup-inhibited 1
+      ring-bell-function 'ignore
+      vc-follow-symlinks t)
+;; http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3
+#+END_SRC
+*** Kill active process buffer no prompt
+#+BEGIN_SRC emacs-lisp
+(setq kill-buffer-query-functions
+  (remq 'process-kill-buffer-query-function
+         kill-buffer-query-functions))
+#+END_SRC
+** async shell buffer
+#+BEGIN_SRC emacs-lisp
+(setq display-buffer-alist
+      '(("*Async Shell Command*" . (display-buffer-no-window))))
+#+END_SRC
 * Packages
 ** Style
 *** Adaptive-Wrap
@@ -733,7 +815,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (req-package exec-path-from-shell
     :ensure t
     :if (my-util-linux?)
-    :init (exec-path-from-shell-initialize)
+    :init
+    (exec-path-from-shell-initialize)
+    (exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
     )
 #+END_SRC
 ** logview [disabled]
@@ -1586,88 +1670,6 @@ moved to bottom because cursor color changed by smth else
 #+BEGIN_SRC emacs-lisp
 (req-package-finish)
 #+END_SRC
-* Generic
-** My Values
-#+BEGIN_SRC emacs-lisp
-(setq default-directory "~/")
-(defvar gdrive-dir (concat default-directory "cloud/"))
-(defvar meinAll-dir (concat gdrive-dir "dokumente/meinAll/"))
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-(my-util-ensureEmacsDir "config/")
-(my-util-ensureEmacsDir "save/autosave")
-(my-util-ensureEmacsDir "save/backup")
-(exec-path-from-shell-copy-env "BROWSER")
-(setq browse-url-generic-program 
-    (executable-find (getenv "BROWSER")) 
-     browse-url-browser-function 'browse-url-generic)
-;; TODO
-(setq-default indent-tabs-mode nil
-              tab-width 2
-              indent-line-function 'insert-tab)
-#+END_SRC
-*** Backup
-[[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
-#+BEGIN_SRC emacs-lisp
-(setq delete-old-versions t
-  kept-new-versions 6
-  create-lockfiles nil
-  kept-old-versions 2
-  version-control t
-  backup-directory-alist '((".*" . "~/.emacs.d/save/backup/")))
-#+END_SRC
-*** Autosave
-#+BEGIN_SRC emacs-lisp
-(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
-#+END_SRC
-** Start-Up
-#+BEGIN_SRC emacs-lisp
-(setq inhibit-startup-screen t)
-(setq-default major-mode 'indented-text-mode)
-(add-hook 'emacs-startup-hook (lambda () (kill-buffer "*scratch*")))
-#+END_SRC
-** before-save
-#+BEGIN_SRC emacs-lisp
-(defun my/format-buff()
-  (interactive)
-  (delete-trailing-whitespace)
-  (indent-region (point-min) (point-max) nil)
-  )
-
-(defun my/add-format-before-save(mode-hook)
-  (add-hook mode-hook
-            (lambda ()
-              (add-hook 'before-save-hook 'my/format-buff nil 'local)))
-  )
-
-(defun my/rm-format-before-save()
-  (interactive)
-  (remove-hook 'before-save-hook 'my/format-buff 'local)
-  )
-#+END_SRC
-** littlest things
-#+BEGIN_SRC emacs-lisp
-(tooltip-mode -1)
-(fset 'yes-or-no-p 'y-or-n-p)
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
-(delete-selection-mode 1)
-(setq backup-inhibited 1
-      ring-bell-function 'ignore
-      vc-follow-symlinks t)
-;; http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3
-#+END_SRC
-*** Kill active process buffer no prompt
-#+BEGIN_SRC emacs-lisp
-(setq kill-buffer-query-functions
-  (remq 'process-kill-buffer-query-function
-         kill-buffer-query-functions))
-#+END_SRC
-** async shell buffer
-#+BEGIN_SRC emacs-lisp
-(setq display-buffer-alist
-      '(("*Async Shell Command*" . (display-buffer-no-window))))
-#+END_SRC
 * Functions
 ** Line manouevor functions
 *** New-line-above
@@ -1862,6 +1864,7 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 (defun my/base64-encode-region-no-break ()
   (interactive)
   (base64-encode-region (mark) (point) t))
+#+END_SRC  
 * Emacs Server (Windows)
 #+BEGIN_SRC emacs-lisp
 (when (my-util-win?)
