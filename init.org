@@ -1857,6 +1857,11 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
 #+END_SRC
+** b64encode-no-break
+#+BEGIN_SRC emacs-lisp
+(defun my/base64-encode-region-no-break ()
+  (interactive)
+  (base64-encode-region (mark) (point) t))
 * Emacs Server (Windows)
 #+BEGIN_SRC emacs-lisp
 (when (my-util-win?)
