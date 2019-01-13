@@ -25,7 +25,7 @@
 
 (defun org-init-compile ()
   (interactive)
-  (org-tangle-all "init.org" org-init--init-el)
+  (org-tangle-all org-init--init-org org-init--init-el)
   )
 
 (defun org-init-git ()
