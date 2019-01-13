@@ -687,10 +687,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :ensure org-plus-contrib
     :mode "\\.org\\'"
     :init
-    (org-indent-mode)
     (require 'org-checklist)
     (add-to-list 'org-modules 'org-checklist)
     :config
+    (org-indent-mode)
     (setq org-startup-indented t
       org-blank-before-new-entry '((heading . nil)
 				  (plain-list-item . nil))
@@ -982,7 +982,7 @@ https://github.com/elixir-lang/emacs-elixir
 #+BEGIN_SRC emacs-lisp
 (use-package elixir-mode
     :ensure
-    :defer t
+    :mode "\\.ex\\'"
     :config
     (my/add-format-before-save 'elixir-mode-hook)
     )
@@ -1104,7 +1104,7 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (use-package css-mode
     :ensure
-    :mode "\\.less\\'"
+    :mode ("\\.less\\'" "\\.css\\'" "\\.sass\\'" "\\.scss\\'")
     :config
     (setq css-indent-offset 4)
     (my/add-format-before-save 'css-mode-hook)
@@ -1207,7 +1207,7 @@ https://github.com/tonini/alchemist.el
     )
 (use-package company-racer
     :ensure
-    :after company
+    :after (company rust-mode racer)
     :init
     (add-to-list 'company-backends 'company-racer)
     (add-hook 'racer-mode-hook #'company-mode))
@@ -1248,9 +1248,10 @@ Cargo: Run the tests."
       )
     )
 (use-package flycheck-rust
+    :after rust-mode
     :ensure
     :config
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 #+END_SRC
 *** go
 #+BEGIN_SRC emacs-lisp
@@ -1277,7 +1278,8 @@ Cargo: Run the tests."
 *** nim
 #+BEGIN_SRC emacs-lisp
 (use-package nim-mode
-    :ensure
+    :ensure t
+    :mode "\\.nim\\'"
     :init
     (add-hook 'nim-mode-hook 'nimsuggest-mode)
     (add-hook 'nim-mode-hook 'company-mode)
