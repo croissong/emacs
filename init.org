@@ -499,6 +499,10 @@ https://github.com/lukhas/buffer-move
 #+BEGIN_SRC emacs-lisp
 (use-package buffer-move
     :ensure t
+    :init
+    (bind-key* "C-M-Ö" (lambda () (interactive) (insert "ö")))
+    (bind-key* "C-M-Ä" (lambda () (interactive) (insert "ä")))
+    (bind-key* "C-M-'" (lambda () (interactive) (insert "#")))
     :bind*
     ("C-M-#" . buf-move-right)
     ("C-M-ö" . buf-move-left)
@@ -571,8 +575,8 @@ https://github.com/lukhas/buffer-move
 (use-package smartparens
     :ensure t
     :bind (:map smartparens-mode-map
-                ("C-M-<left>" . sp-backward-sexp)
-                ("C-M-<right>" . sp-forward-sexp)
+                ("C-M-a" . sp-backward-sexp)
+                ("C-M-e" . sp-forward-sexp)
                 ("C-S-<backspace>" . sp-backward-kill-sexp)
                 ("C-M-<down>" . sp-select-next-thing))
     :init
@@ -646,6 +650,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :bind* (("C-M-w" . er/expand-region)
             ("C-M-q" . er/contract-region))
     :config
+    (setq expand-region-fast-keys-enabled nil)
     (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions)
     )
 #+END_SRC
@@ -731,6 +736,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
            ("M-#" . ivy-alt-done)
            ("C-r" . ivy-previous-line-or-history)
            ("M-ä" . ivy-next-line)
+           ("C-x C-s" . ivy-occur)
            ("M-ü" . ivy-previous-line))
     )
 
@@ -831,6 +837,25 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package logview
     :ensure t
     :commands logview-mode)
+#+END_SRC
+** emamux
+#+BEGIN_SRC emacs-lisp
+(use-package emamux
+    :ensure t
+    :config (setq emamux:show-buffers-with-index nil
+                  emamux:get-buffers-regexp  "^\\(buffer[0-9]+\\): +\\([0-9]+\\) +\\(bytes\\): +[\"]\\(.*\\)[\"]")
+    )
+#+END_SRC
+** hydra
+#+BEGIN_SRC emacs-lisp
+(use-package hydra
+    :ensure t
+)
+(use-package my-hydra
+    :after hydra
+    :load-path "els/my-hydra/"
+    :bind* ("C-." . hydra-my/init/body)
+)
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
@@ -1124,9 +1149,14 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
   :quelpa (dired+ :fetcher github :repo "emacsmirror/dired-plus")
   :config
     (toggle-diredp-find-file-reuse-dir 1)
-    (setq dired-listing-switches "-aDhl  --group-directories-first")
-    :bind (:map dired-mode-map
-                ("?" . my/dired-get-size)))
+    (setq dired-listing-switches "-aDhl  --group-directories-first"
+          dired-auto-revert-buffer t)
+    :bind (("C-x d" . nil)
+           :map dired-mode-map
+                ("?" . my/dired-get-size)
+                ("M-ö" . dired-up-directory)
+                ("M-#" . dired-find-file))
+    )
 #+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp
@@ -1360,20 +1390,20 @@ https://github.com/tonini/alchemist.el
 ***** Namespaces elisp
 [[https://github.com/Malabarba/Nameless][@github.com]]
 #+BEGIN_SRC emacs-lisp
-(use-package nameless
-  :ensure t
-  :mode "\\.el\\'"
-  :config
-  (setq nameless-private-prefix t)
-)
+;; (use-package nameless
+;;   :ensure t
+;;   :hook emacs-lisp-mode
+;;   :config
+;;   (setq nameless-private-prefix t)
+;; )
 #+END_SRC
 ***** Testing
 [[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
 #+BEGIN_SRC emacs-lisp
-(use-package xtest
-    :ensure t
-    :mode "\\.el\\'"
-)
+;; (use-package xtest
+;;     :ensure t
+;;     :hook emacs-lisp-mode
+;; )
 #+END_SRC
 *** Php
 #+BEGIN_SRC emacs-lisp
