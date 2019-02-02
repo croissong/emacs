@@ -729,6 +729,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package ivy-hydra
     :ensure t)
+(use-package avy
+    :ensure t)
 (use-package flx
     :ensure t)
 
@@ -740,17 +742,19 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package ivy
     :ensure t
-    :after (flx smex ivy-hydra)
+    :after (flx smex ivy-hydra avy)
     :diminish ivy-mode
     :config
     (ivy-mode)
+    (setq ivy-extra-directories '("./"))
     (setq ivy-use-virtual-buffers t
           ivy-count-format "(%d/%d) "
-          ivy-re-builders-alist
-          '((swiper . ivy--regex-plus)
-            (t . ivy--regex-fuzzy))
+          ;; ivy-re-builders-alist
+          ;; '((swiper . ivy--regex-plus)
+          ;;   (t . ivy--regex-fuzzy))
           magit-completing-read-function 'ivy-completing-read
-          counsel-rg-base-command (format "rg --no-heading --smart-case --line-number --color never --ignore-file %s/.config/ripgrep/ignore %%s ." (substitute-in-file-name "$HOME")))
+          counsel-rg-base-command (format "rg --no-heading -S --line-number --color never --ignore-file %s/.config/ripgrep/ignore %%s ." (substitute-in-file-name "$HOME"))
+          counsel-grep-base-command counsel-rg-base-command)
 
     (custom-set-faces
      '(swiper-match-face-2
