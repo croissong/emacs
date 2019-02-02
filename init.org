@@ -853,6 +853,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :bind* ("M-." . dumb-jump-go)
     )
 #+END_SRC
+*** flymake
+#+BEGIN_SRC emacs-lisp
+(remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake)
+#+END_SRC
 *** Other
 **** Sql-Indent
 #+BEGIN_SRC emacs-lisp
@@ -1505,34 +1509,32 @@ Cargo: Run the tests."
 *** go
 #+BEGIN_SRC emacs-lisp
 (use-package company-go
-    :mode "\\.go\\'"
+    :after (go-mode)
     :ensure t)
 (use-package go-eldoc
-    :mode "\\.go\\'"
+    :after (go-mode)
     :ensure t)
 (use-package go-mode
     :ensure t
-    :after company-go go-eldoc
     :mode "\\.go\\'"
-    :config (add-hook 'go-mode-hook
-                      (lambda ()
-                        (set (make-local-variable 'company-backends) '(company-go))
-                        (add-hook 'before-save-hook 'gofmt-before-save nil 'local)
-                        (go-eldoc-setup)
-                        (flycheck-mode)
-                        (company-mode)))
-    )
+    :hook
+    (go-mode . (lambda ()
+                 (set (make-local-variable 'company-backends) '(company-go))
+                 (add-hook 'before-save-hook 'gofmt-before-save nil 'local)
+                 (go-eldoc-setup)
+                 (flycheck-mode)
+                 (company-mode))
+             ))
+    
 #+END_SRC
 *** nim
 #+BEGIN_SRC emacs-lisp
 (use-package nim-mode
     :ensure t
     :mode "\\.nim\\'"
-    :init
-    (add-hook 'nim-mode-hook 'nimsuggest-mode)
-    (add-hook 'nim-mode-hook 'company-mode)
-    (add-hook 'nim-mode-hook flycheck-mode)
-    (add-hook 'nimscript-mode-hook 'company-mode)
+    :hook ((nim-mode . nimsuggest-mode)
+           (nimsuggest-mode . company-mode)
+           (nimsuggest-mode . flymake-mode))
     )
 #+END_SRC
 *** AUCTeX
