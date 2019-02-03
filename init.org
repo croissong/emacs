@@ -1,3 +1,4 @@
+; -*- eval: (org-init-mode); -*-
 * Initialize
 ** Coding Environment
 [[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
@@ -53,7 +54,8 @@
 ** my/org-init
 #+BEGIN_SRC emacs-lisp
 (use-package org-init
-  :load-path "els/org-init/")
+    :commands (org-init-mode)
+    :load-path "els/org-init/")
 #+END_SRC
 ** My/Utils
 #+BEGIN_SRC emacs-lisp
@@ -92,7 +94,7 @@
 #+END_SRC
 ** disable overwrite
 #+BEGIN_SRC emacs-lisp
-(define-key global-map [(insert)] nil)
+(bind-key "<insert>" nil)
 #+END_SRC
 ** search M-s
 #+BEGIN_SRC emacs-lisp
@@ -215,7 +217,6 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 (defun my/capitalize-previous-word()
   (interactive)
   (capitalize-word -1))
-(bind-key "M-c" 'my/capitalize-previous-word org-mode-map)
 #+END_SRC
 ** b64encode-no-break
 #+BEGIN_SRC emacs-lisp
@@ -277,7 +278,8 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
  #+END_SRC
 ** My Values
 #+BEGIN_SRC emacs-lisp
-(setq default-directory "~/")
+(setq default-directory "~/"
+      custom-file (expand-file-name "custom.el" user-emacs-directory))
 (defvar gdrive-dir (concat default-directory "cloud/"))
 (my-util-ensureEmacsDir "config/")
 (setq browse-url-generic-program (executable-find (getenv "BROWSER"))
@@ -809,10 +811,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package org
     :ensure org-plus-contrib
     :mode ("\\.org\\'" . org-mode)
-    :init
-    (require 'org-checklist)
-    (add-to-list 'org-modules 'org-checklist)
     :config
+    (require 'org-checklist)
     (org-indent-mode)
     (setq org-startup-indented t
       org-blank-before-new-entry '((heading . nil)
@@ -834,7 +834,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package my-org
     :after org-mode
     :bind (:map org-mode-map
-                ("C-c C-M-e" . my-org-export-all))
+                ("C-c C-M-e" . my-org-export-all)
+                ("M-c" . my/capitalize-previous-word))
     :load-path "els/my-org/")
 #+END_SRC
 *** Config
