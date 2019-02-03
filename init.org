@@ -319,24 +319,6 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 (setq inhibit-startup-screen t)
 (setq-default major-mode 'indented-text-mode)
 #+END_SRC
-** before-save
-#+BEGIN_SRC emacs-lisp
-(defun my/format-buff()
-  (interactive)
-  (delete-trailing-whitespace)
-  (indent-region (point-min) (point-max) nil))
-
-(defun my/add-format-before-save(mode-hook)
-  (add-hook mode-hook
-            (lambda ()
-              (add-hook 'before-save-hook 'my/format-buff nil 'local)))
-  )
-
-(defun my/rm-format-before-save()
-  (interactive)
-  (remove-hook 'before-save-hook 'my/format-buff 'local)
-  )
-#+END_SRC
 ** littlest things
 #+BEGIN_SRC emacs-lisp
 (tooltip-mode -1)
@@ -425,6 +407,16 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
  :init (global-whitespace-cleanup-mode)
  :diminish whitespace-cleanup-mode
  )
+#+END_SRC
+*** format-all
+[[https://github.com/purcell/whitespace-cleanup-mode][@github.com]]
+#+BEGIN_SRC emacs-lisp
+(use-package format-all
+    :ensure t
+    :bind* ("C-f f" . format-all-buffer)
+    :commands format-all-mode
+    :diminish format-all-mode
+    )
 #+END_SRC
 *** Buffer-move
 https://github.com/lukhas/buffer-move
@@ -1162,8 +1154,7 @@ https://github.com/elixir-lang/emacs-elixir
 (use-package elixir-mode
     :ensure t
     :mode "\\.ex\\'"
-    :config
-    (my/add-format-before-save 'elixir-mode-hook)
+    :hook (elixir-mode . format-all-mode)
     )
 #+END_SRC
 **** Alchemist
@@ -1206,7 +1197,7 @@ https://github.com/tonini/alchemist.el
 #+END_SRC
 *** Sh
 #+BEGIN_SRC emacs-lisp
-(my/add-format-before-save 'sh-mode-hook)
+(add-hook 'sh-mode-hook #'format-all-mode)
 #+END_SRC
 *** Markdown
 #+BEGIN_SRC emacs-lisp
@@ -1282,9 +1273,9 @@ https://github.com/tonini/alchemist.el
 (use-package css-mode
     :ensure t
     :mode ("\\.less\\'" "\\.css\\'" "\\.sass\\'" "\\.scss\\'")
+    :hook (css-mode . format-all-mode)
     :config
     (setq css-indent-offset 4)
-    (my/add-format-before-save 'css-mode-hook)
     )
 #+END_SRC
 **** JS
@@ -1293,8 +1284,8 @@ https://github.com/tonini/alchemist.el
 (use-package js2-mode
     :ensure t
     :mode "\\.js\\'"
+    :hook (js-mode . format-all-mode)
     :config
-    (my/add-format-before-save 'js-mode-hook)
     (setq js2-basic-offset 2
           js2-strict-inconsistent-return-warning nil)
     )
@@ -1305,9 +1296,9 @@ https://github.com/tonini/alchemist.el
 (use-package web-mode
     :ensure t
     :mode ("\\.html?\\'" "\\.jsx\\'")
+    :hook (web-mode . format-all-mode)
     :config
     (require  'company-web-html)
-    (my/add-format-before-save 'web-mode-hook)
     (setq web-mode-code-indent-offset 2
           web-mode-markup-indent-offset 2
           web-mode-attr-indent-offset 2
@@ -1346,10 +1337,9 @@ https://github.com/tonini/alchemist.el
 (use-package tide
     :ensure t
     :mode "\\.ts\\'"
-    :after (company flycheck typescript-mode)
     :hook ((typescript-mode . tide-setup)
-         (typescript-mode . tide-hl-identifier-mode)
-         (before-save . tide-format-before-save))
+           (typescript-mode . tide-hl-identifier-mode)
+           (before-save . tide-format-before-save))
     :config
       (flycheck-mode +1)
       (setq flycheck-check-syntax-automatically '(save mode-enabled))
@@ -1807,10 +1797,8 @@ echo "add ruen.rws" > ru.multi
 *** Scss-Mode
 #+BEGIN_SRC emacs-lisp
 (use-package scss-mode
-  :init
-  (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
-  (my/add-format-before-save 'scss-mode-hook)
-  :config
+  :mode ("\\.scss\\'")
+  :hook (scss-mode . format-all-mode)
 )
 #+END_SRC
 *** Emmet-Mode
