@@ -65,9 +65,8 @@
      :load-path "els/my-utils/"))
 #+END_SRC
 * Keybindings
-** Keybindings
-*** Moving
-**** Between Windows
+** Moving
+*** Between Windows
 #+BEGIN_SRC emacs-lisp
 (bind-keys*
  ("C-ö"  . windmove-left)
@@ -76,7 +75,7 @@
  ("C-ä" . windmove-down)
  ("C-Ü" . clone-indirect-buffer))
 #+END_SRC
-**** around
+*** around
 #+BEGIN_SRC emacs-lisp
 (bind-keys
  ("M-ö"  . left-char)
@@ -84,7 +83,7 @@
  ("M-ü" . previous-line)
  ("M-ä" . next-line))
 #+END_SRC
-*** delete other window
+** delete other window
 #+BEGIN_SRC emacs-lisp
 (defun delete-other-window ()
   (interactive)
@@ -92,22 +91,22 @@
 
 (bind-key* "C-q" 'delete-other-window)
 #+END_SRC
-*** disable overwrite
+** disable overwrite
 #+BEGIN_SRC emacs-lisp
 (define-key global-map [(insert)] nil)
 #+END_SRC
-*** search M-s
+** search M-s
 #+BEGIN_SRC emacs-lisp
 (bind-keys*
  ("M-s r" . replace-string)
  ("M-s q" . query-replace))
 #+END_SRC
-*** revert buffer
+** revert buffer
 #+BEGIN_SRC emacs-lisp
 (bind-keys*
  ("M-r" . revert-buffer))
 #+END_SRC
-*** hm
+** hm
 #+BEGIN_SRC emacs-lisp
 (bind-keys*
  ("C-M-k" . kill-this-buffer)
@@ -171,11 +170,6 @@ Repeated invocations toggle between the two most recently open buffers."
   (split-window-right)
   (ido-find-file-other-window))
 
-(defun space-right()
-  (interactive)
-  (insert-char 32)
-  (left-char))
-
 (defvar xah-switch-buffer-ignore-dired t)
 (defun xah-previous-user-buffer ()
   "Switch to the previous user buffer.
@@ -222,7 +216,7 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 (defun my/capitalize-previous-word()
   (interactive)
   (capitalize-word -1))
-  (bind-key "M-c" 'my/capitalize-previous-word org-mode-map)
+(bind-key "M-c" 'my/capitalize-previous-word org-mode-map)
 #+END_SRC
 ** b64encode-no-break
 #+BEGIN_SRC emacs-lisp
