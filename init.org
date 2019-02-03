@@ -730,7 +730,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package dumb-jump
     :config
-    (setq dumb-jump-force-searcher 'rg
+    (setq dumb-jump-prefer-searcher 'rg
           dumb-jump-selector 'ivy)
     :bind ("M-." . dumb-jump-go)
     )
@@ -1384,6 +1384,12 @@ Cargo: Run the tests."
            (nimsuggest-mode . flymake-mode))
     )
 #+END_SRC
+*** terraform
+#+BEGIN_SRC emacs-lisp
+(use-package terraform-mode
+    :mode "\\.tf\\'"
+    )
+#+END_SRC
 *** graphql
 #+BEGIN_SRC emacs-lisp
 (use-package graphql-mode
@@ -1455,6 +1461,12 @@ moved to bottom because cursor color changed by smth else
 ** quickrun
 #+BEGIN_SRC emacs-lisp
 (use-package quickrun)
+#+END_SRC
+** esup
+Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
+#+BEGIN_SRC emacs-lisp
+(use-package esup
+    :commands esup)
 #+END_SRC
 ** wakatime
 #+BEGIN_SRC emacs-lisp
