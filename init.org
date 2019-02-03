@@ -235,11 +235,8 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
   (set-face-attribute 'vertical-border nil :foreground "bisque4")
   (set-cursor-color "royal blue")
   (set-face-attribute 'show-paren-match nil :background nil)
-  (dired "~/code")
   (split-window-horizontally)
-  (other-window 1)
-  (switch-to-buffer "*Messages*")
-  (other-window 1)
+  (display-buffer "*Messages*")
   )
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -338,6 +335,10 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 #+BEGIN_SRC emacs-lisp
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
 (setq same-window-buffer-names '("*Help*"))
+#+END_SRC
+** eldoc
+#+BEGIN_SRC emacs-lisp
+(diminish 'eldoc-mode)
 #+END_SRC
 * Packages
 ** Style
@@ -474,6 +475,7 @@ https://github.com/bbatsov/crux
     :bind (:map company-active-map
                 ("C-ä" . company-select-next)
                 ("C-ü" . company-select-previous))
+    :diminish company-mode
     )
 #+END_SRC
 *** Centered-Window-Mode
@@ -1071,18 +1073,19 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 #+BEGIN_SRC emacs-lisp
 (use-package dired+
   :quelpa (dired+ :fetcher github :repo "emacsmirror/dired-plus")
-  :hook ((dired-load . (lambda () (load "dired-x")))
-         (dired-mode . dired-omit-mode))
+  :hook ((dired-mode . dired-omit-mode))
   :demand t
   :config
-  (toggle-diredp-find-file-reuse-dir 1)
+  (diredp-make-find-file-keys-reuse-dirs)
   (setq dired-listing-switches "-aDhl  --group-directories-first"
-        dired-auto-revert-buffer t)
+        dired-auto-revert-buffer t
+        dired-omit-verbose nil)
   :bind (("C-x d" . nil)
          :map dired-mode-map
          ("?" . my/dired-get-size)
          ("M-ö" . dired-up-directory)
          ("M-#" . dired-find-file))
+  :diminish dired-omit-mode
   )
 #+END_SRC
 *** Functions
