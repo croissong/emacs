@@ -469,7 +469,8 @@ https://github.com/bbatsov/crux
     (setq company-idle-delay 0.3
           company-minimum-prefix-length 1
           company-tooltip-align-annotations t
-          company-dabbrev-downcase nil)
+          company-dabbrev-downcase nil
+          company-echo-delay 0)
     :bind (:map company-active-map
                 ("C-ä" . company-select-next)
                 ("C-ü" . company-select-previous))
@@ -779,11 +780,14 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 ** realgud
 #+BEGIN_SRC emacs-lisp
-(use-package realgud)
+;; M-x load-library realgud
+(use-package realgud :defer t)
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (use-package magit
+    :init
+    (setq magit-auto-revert-mode nil)
     :config
     (setq magit-diff-arguments (quote ("--no-ext-diff" "--stat"))
           magit-diff-section-arguments (quote ("--no-ext-diff" "-U2"))
@@ -1186,6 +1190,7 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (use-package elpy
     :after python
+    :commands elpy-enable
     :config
     (elpy-enable)
     ;; https://github.com/jorgenschaefer/elpy/issues/887
@@ -1370,12 +1375,8 @@ Cargo: Run the tests."
 #+BEGIN_SRC emacs-lisp
 (use-package company-go
     :after go-mode
-    :hook (go-mode . (lambda () (setq-local company-idle-delay 0.8)))
     :config
     (add-to-list 'company-backends 'company-go)
-    )
-(use-package go-eldoc
-    :hook (go-mode . go-eldoc-setup)
     )
 (use-package go-mode
     :mode "\\.go\\'"
