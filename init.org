@@ -396,7 +396,9 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 #+BEGIN_SRC emacs-lisp
 (use-package format-all
     :bind* ("C-f f" . format-all-buffer)
-    :hook ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode) . format-all-mode)
+    :hook
+    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode)
+     . format-all-mode)
     :diminish format-all-mode
     )
 #+END_SRC
@@ -758,13 +760,21 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 ** hydra
 #+BEGIN_SRC emacs-lisp
-(use-package hydra
-)
+(use-package hydra)
 (use-package my-hydra
     :after hydra
     :load-path "els/my-hydra/"
     :bind* ("C-." . hydra-my/init/body)
 )
+#+END_SRC
+** lsp-mode
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode
+    :commands lsp)
+#+END_SRC
+** realgud
+#+BEGIN_SRC emacs-lisp
+(use-package realgud)
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
@@ -1352,7 +1362,7 @@ Cargo: Run the tests."
            (flycheck-mode . flycheck-rust-setup))
     )
 #+END_SRC
-*** go
+*** golang
 #+BEGIN_SRC emacs-lisp
 (use-package company-go
     :hook (go-mode . company-mode)
@@ -1362,8 +1372,7 @@ Cargo: Run the tests."
     )
 (use-package go-mode
     :mode "\\.go\\'"
-    :hook ((go-mode . flycheck-mode)
-           (go-mode . (lambda () (add-hook 'before-save-hook 'gofmt-before-save nil 'local))))
+    :hook (go-mode . flycheck-mode)
     )
 #+END_SRC
 *** nim
