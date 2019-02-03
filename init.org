@@ -1077,7 +1077,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
   :demand t
   :config
   (diredp-make-find-file-keys-reuse-dirs)
-  (setq dired-listing-switches "-aDhl  --group-directories-first"
+  (setq dired-listing-switches "-aDhvl --group-directories-first"
         dired-auto-revert-buffer t
         dired-omit-verbose nil)
   :bind (("C-x d" . nil)
