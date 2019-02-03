@@ -781,6 +781,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
                              'magit-insert-modules-unpushed-to-upstream
                              'magit-insert-unpulled-from-upstream)
     )
+
+(use-package forge)
 #+END_SRC
 *** ssh
 **** windows
@@ -1371,6 +1373,18 @@ Cargo: Run the tests."
     :hook ((nim-mode . nimsuggest-mode)
            (nimsuggest-mode . company-mode)
            (nimsuggest-mode . flymake-mode))
+    )
+#+END_SRC
+*** graphql
+#+BEGIN_SRC emacs-lisp
+(use-package graphql-mode
+    :mode ("\\.gql\\'" "\\.graphql\\'")
+    )
+#+END_SRC
+*** lua
+#+BEGIN_SRC emacs-lisp
+(use-package lua-mode
+    :mode ("\\.lua\\'")
     )
 #+END_SRC
 *** AUCTeX
