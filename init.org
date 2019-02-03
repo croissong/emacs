@@ -54,7 +54,7 @@
 ** my/org-init
 #+BEGIN_SRC emacs-lisp
 (use-package org-init
-    :commands (org-init-mode)
+    :commands (org-init-mode org-init-open)
     :load-path "els/org-init/")
 #+END_SRC
 ** My/Utils
@@ -466,7 +466,7 @@ https://github.com/bbatsov/crux
     :init
     (add-hook 'after-init-hook 'global-company-mode)
     :config
-    (setq company-idle-delay 0.2
+    (setq company-idle-delay 0.3
           company-minimum-prefix-length 1
           company-tooltip-align-annotations t
           company-dabbrev-downcase nil)
@@ -575,6 +575,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :init
     ;; (add-hook 'after-init-hook #'global-flycheck-mode) ;
     :config
+    (setq flycheck-idle-change-delay 2)
     ;; disable jshint since we prefer eslint checking
     ;; (setq-default flycheck-disabled-checkers
     ;;  (append flycheck-disabled-checkers
@@ -665,7 +666,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
            ("C-r" . ivy-previous-line-or-history)
            ("M-ä" . ivy-next-line)
            ("C-x C-s" . ivy-occur)
-           ("M-ü" . ivy-previous-line))
+           ("M-ü" . ivy-previous-line)
+           :map ivy-switch-buffer-map
+           ("C-k" . ivy-switch-buffer-kill))
     )
 
 (use-package ivy-rich
@@ -1366,7 +1369,10 @@ Cargo: Run the tests."
 *** golang
 #+BEGIN_SRC emacs-lisp
 (use-package company-go
-    :hook (go-mode . company-mode)
+    :after go-mode
+    :hook (go-mode . (lambda () (setq-local company-idle-delay 0.8)))
+    :config
+    (add-to-list 'company-backends 'company-go)
     )
 (use-package go-eldoc
     :hook (go-mode . go-eldoc-setup)
