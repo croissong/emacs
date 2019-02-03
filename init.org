@@ -229,7 +229,7 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 (defun my/base64-encode-region-no-break ()
   (interactive)
   (base64-encode-region (mark) (point) t))
-#+END_SRC  
+#+END_SRC
 * Style
 ** Frame
 #+BEGIN_SRC emacs-lisp
@@ -289,19 +289,19 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 (setq default-directory "~/")
 (defvar gdrive-dir (concat default-directory "cloud/"))
 (my-util-ensureEmacsDir "config/")
-(my-util-ensureEmacsDir "save/autosave")
-(my-util-ensureEmacsDir "save/backup")
-(setq browse-url-generic-program 
-    (executable-find (getenv "BROWSER")) 
-     browse-url-browser-function 'browse-url-generic)
+(setq browse-url-generic-program
+      (executable-find (getenv "BROWSER"))
+      browse-url-browser-function 'browse-url-generic)
 ;; TODO
 (setq-default indent-tabs-mode nil
               tab-width 2
               indent-line-function 'insert-tab)
+(setq require-final-newline t)
 #+END_SRC
 *** Backup
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
 #+BEGIN_SRC emacs-lisp
+(my-util-ensureEmacsDir "save/backup")
 (setq delete-old-versions t
   kept-new-versions 6
   create-lockfiles nil
@@ -311,6 +311,7 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 #+END_SRC
 *** Autosave
 #+BEGIN_SRC emacs-lisp
+(my-util-ensureEmacsDir "save/autosave")
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 #+END_SRC
 ** Start-Up
@@ -320,7 +321,6 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 #+END_SRC
 ** before-save
 #+BEGIN_SRC emacs-lisp
-(setq require-final-newline t)
 (defun my/format-buff()
   (interactive)
   (delete-trailing-whitespace)
@@ -417,6 +417,15 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
     :diminish drag-stuff-mode
     )
 #+END_SRC
+*** whitespace-cleanup-mode
+[[https://github.com/purcell/whitespace-cleanup-mode][@github.com]]
+#+BEGIN_SRC emacs-lisp
+(use-package whitespace-cleanup-mode
+ :ensure t
+ :init (global-whitespace-cleanup-mode)
+ :diminish whitespace-cleanup-mode
+ )
+#+END_SRC
 *** Buffer-move
 https://github.com/lukhas/buffer-move
 #+BEGIN_SRC emacs-lisp
@@ -444,7 +453,7 @@ https://github.com/bbatsov/crux
       (if (use-region-p)
           (kill-region (region-beginning) (region-end))
         (crux-smart-kill-line)))
-    
+
     :bind* (("C-f r" . crux-rename-file-and-buffer)
             ("C-f d" . crux-delete-file-and-buffer)
             ("C-w" . my/kill-line-or-region))
@@ -508,7 +517,7 @@ https://github.com/bbatsov/crux
     :ensure t
     :init
     (centered-window-mode t)
-    :config 
+    :config
     (setq cwm-use-vertical-padding t
                 cwm-frame-internal-border 0
                 cwm-incremental-padding t
@@ -573,7 +582,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   "If buffer exists and is orgmode then execute command"
   (if buf
       (if (eq (buffer-local-value 'major-mode (get-buffer buf)) 'org-mode)
-	  (with-current-buffer (apply command cmdargs)))
+    (with-current-buffer (apply command cmdargs)))
     )
   )
 
@@ -611,8 +620,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :config
     ;; disable jshint since we prefer eslint checking
     ;; (setq-default flycheck-disabled-checkers
-    ;; 	(append flycheck-disabled-checkers
-    ;; 		'(javascript-jshint)))
+    ;;  (append flycheck-disabled-checkers
+    ;;    '(javascript-jshint)))
 
     ;; use eslint with web-mode for jsx files
     ;; (flycheck-add-mode 'javascript-eslint 'web-mode)
@@ -628,9 +637,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 **** disable in org-src-block
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-src-mode-hook
-	  (lambda () (setq-local
-		      flycheck-disabled-checkers
-		      '(emacs-lisp-checkdoc))))
+    (lambda () (setq-local
+          flycheck-disabled-checkers
+          '(emacs-lisp-checkdoc))))
 #+END_SRC
 *** Ripgrep
 #+BEGIN_SRC emacs-lisp
@@ -667,21 +676,23 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
           ;; fuzzy matching for counsel-M-x
           ivy-re-builders-alist
           '((counsel-M-x . ivy--regex-fuzzy)
+            (counsel-describe-function . ivy--regex-fuzzy)
+            (counsel-describe-variable . ivy--regex-fuzzy)
             (t . ivy--regex-plus))
 
-          ;; no ^ in counsel-M-x for better fuzzy match order
+          ;; no ^ for the fuzzy matching cmds
           ivy-initial-inputs-alist
           '((counsel-package . "^+ ")
             (org-refile . "^")
             (org-agenda-refile . "^")
             (org-capture-refile . "^")
             (counsel-M-x . "")
-            (counsel-describe-function . "^")
-            (counsel-describe-variable . "^")
+            (counsel-describe-function . "")
+            (counsel-describe-variable . "")
             (counsel-org-capture . "^")
             (Man-completion-table . "^")
             (woman . "^"))
-          
+
           ivy-extra-directories '("./")
           magit-completing-read-function 'ivy-completing-read
           counsel-rg-base-command (format "rg --no-heading -S --line-number --color never --ignore-file %s/.config/ripgrep/ignore %%s ." (substitute-in-file-name "$HOME"))
@@ -694,8 +705,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
        ((t :foreground "white" :background "#8a498a" :weight bold)))
      '(swiper-line-face
        ((t :foreground nil))))
-    
-    
+
+
     :bind (("M-x" . counsel-M-x)
            ("C-x C-f" . counsel-find-file)
            ("C-s" . counsel-grep-or-swiper)
@@ -836,6 +847,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :config
     (setq magit-diff-arguments (quote ("--no-ext-diff" "--stat"))
           magit-diff-section-arguments (quote ("--no-ext-diff" "-U2"))
+          magit-diff-refine-ignore-whitespace nil
           magit-diff-refine-hunk t)
      (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules-unpulled-from-upstream
@@ -867,7 +879,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (org-indent-mode)
     (setq org-startup-indented t
       org-blank-before-new-entry '((heading . nil)
-				  (plain-list-item . nil))
+          (plain-list-item . nil))
       org-return-follows-link nil
       org-completion-use-ido t
       org-support-shift-select t
@@ -876,7 +888,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
       org-use-property-inheritance t
       org-use-sub-superscripts nil
       org-checkbox-hierarchical-statistics t)
-    
+
     :bind (("C-c l" . org-store-link)
            ("C-c a" . org-agenda)
            ("C-c b" . org-iswitchb))
@@ -915,51 +927,51 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (defun my/insert-link ()
   (interactive)
   (let* ((keymap (copy-keymap minibuffer-local-map))
-	 (get-stored-link
-	  '(lambda ()
-	     (setq url (caar org-stored-links))
-	    (if url
-		(concat "::" (car (last (split-string (nth 1 (split-string url "[\\:]")) "[\\/]"))))
-	      nil)))
-	 (get-url-link
-	  '(lambda ()
-	     (setq url (org-get-x-clipboard 'CLIPBOARD))
-	     (if (string= (substring url 0 4) "http")
-		 (let* ((urlParts
-			 (last (split-string (nth 2 (split-string url "[\\/]")) "[\\.]") 2)))
-		   (concat "@" (nth 0 urlParts) "." (nth 1 urlParts)))
-	       nil
-	       )))
-	 url urlDescription)
+   (get-stored-link
+    '(lambda ()
+       (setq url (caar org-stored-links))
+      (if url
+    (concat "::" (car (last (split-string (nth 1 (split-string url "[\\:]")) "[\\/]"))))
+        nil)))
+   (get-url-link
+    '(lambda ()
+       (setq url (org-get-x-clipboard 'CLIPBOARD))
+       (if (string= (substring url 0 4) "http")
+     (let* ((urlParts
+       (last (split-string (nth 2 (split-string url "[\\/]")) "[\\.]") 2)))
+       (concat "@" (nth 0 urlParts) "." (nth 1 urlParts)))
+         nil
+         )))
+   url urlDescription)
 
     (define-key keymap (kbd "<tab>")
       (lambda () (interactive)
-	(let (link message)
-	  (if (string= "@" (substring (minibuffer-contents) 0 1))
-	      (setq link (funcall get-stored-link)
-		    message "No link stored")
-	    (setq link (funcall get-url-link)
-		  message "No Url in Clipboard"))
-	  (if link (progn
-		     (delete-minibuffer-contents)
-		     (insert link))
-	    (minibuffer-message message))
-	  )))
+  (let (link message)
+    (if (string= "@" (substring (minibuffer-contents) 0 1))
+        (setq link (funcall get-stored-link)
+        message "No link stored")
+      (setq link (funcall get-url-link)
+      message "No Url in Clipboard"))
+    (if link (progn
+         (delete-minibuffer-contents)
+         (insert link))
+      (minibuffer-message message))
+    )))
 
     (define-key keymap (kbd "C-g")
       (lambda () (interactive)
-	(delete-minibuffer-contents)
-	(exit-minibuffer)
-	))
+  (delete-minibuffer-contents)
+  (exit-minibuffer)
+  ))
     (setq urlDescription
-	  (or (funcall get-url-link) (funcall get-stored-link)))
+    (or (funcall get-url-link) (funcall get-stored-link)))
 
     (if urlDescription
-	(progn
-	  (setq urlDescription (read-from-minibuffer "Link" urlDescription keymap))
-	  (if (string= "" urlDescription)
-	      (minibuffer-message "Aborted")
-	    (insert (format "[[%s][%s]]" url urlDescription))))
+  (progn
+    (setq urlDescription (read-from-minibuffer "Link" urlDescription keymap))
+    (if (string= "" urlDescription)
+        (minibuffer-message "Aborted")
+      (insert (format "[[%s][%s]]" url urlDescription))))
       (minibuffer-message "No Link to insert. Aborted"))
     ))
 #+END_SRC
@@ -1071,14 +1083,14 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
   (mkdir foldername))
 
 (setq imgName (concat
-	       (format "%s." name) (nth 0 (last(split-string url "\\.")))))
+         (format "%s." name) (nth 0 (last(split-string url "\\.")))))
 (setq imgPath (concat foldername imgName))
 
 (url-copy-file url imgPath)
 
 (setq width (let
-		((w (car (image-size (create-image imgPath) :pixel))))
-	      (if (> w 500) 500 w)))
+    ((w (car (image-size (create-image imgPath) :pixel))))
+        (if (> w 500) 500 w)))
 
 (insert (format "#+ATTR_HTML: :width %dpx" width))
 (newline-and-indent)
@@ -1105,11 +1117,11 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 #+BEGIN_SRC emacs-lisp
 (when (my-util-cb?)
     (bind-keys :map org-mode-map
-	       ("M-S-<prior>" . org-shiftmetaup)
-	       ("M-S-<next>" . org-shiftmetadown)
-	       ;; ("M-right" . drag-stuff-right)
-	       ;; ("M-right" . drag-stuff-left)
-	       ))
+         ("M-S-<prior>" . org-shiftmetaup)
+         ("M-S-<next>" . org-shiftmetadown)
+         ;; ("M-right" . drag-stuff-right)
+         ;; ("M-right" . drag-stuff-left)
+         ))
 #+END_SRC
 ** Dired+
 #+BEGIN_SRC emacs-lisp
@@ -1140,7 +1152,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
       (message "Size of all marked files: %s"
                (progn
                  (re-search-backward "\\(^[0-9.,]+[A-Za-z]+\\).*total$")
-		 (match-string 1))))))
+     (match-string 1))))))
 #+END_SRC
 ** Languages
 *** Elixir
@@ -1232,35 +1244,35 @@ https://github.com/tonini/alchemist.el
   (interactive)
 
   (let* ((file-name
-	  (nth 0 (last (split-string buffer-file-name "[\\/]"))))
-	 (test-file
-	  (s-join "/" (append (butlast (split-string buffer-file-name "[\\/]"))
-			      (list (concat "test_" file-name)))))
-	 (func-name "")
-	 (func-args (progn
-		      (unless (looking-at "def")
-			(python-nav-beginning-of-defun))
-		      (right-word)
-		      (right-char)
-		      (set-mark (point))
+    (nth 0 (last (split-string buffer-file-name "[\\/]"))))
+   (test-file
+    (s-join "/" (append (butlast (split-string buffer-file-name "[\\/]"))
+            (list (concat "test_" file-name)))))
+   (func-name "")
+   (func-args (progn
+          (unless (looking-at "def")
+      (python-nav-beginning-of-defun))
+          (right-word)
+          (right-char)
+          (set-mark (point))
                       (while (not (looking-at "("))
-			(sp-forward-sexp))
-		      (setq func-name (buffer-substring-no-properties (mark) (point)))
-		      (set-mark (point))
-		      (sp-forward-sexp)
-		      (buffer-substring-no-properties (mark) (point)))))
+      (sp-forward-sexp))
+          (setq func-name (buffer-substring-no-properties (mark) (point)))
+          (set-mark (point))
+          (sp-forward-sexp)
+          (buffer-substring-no-properties (mark) (point)))))
     (with-current-buffer (find-file test-file)
       (goto-char (point-min))
       (unless (search-forward-regexp "from .+ import \\*" nil t)
-	(insert (concat "from "
-			(replace-regexp-in-string "\\.py" "" "calc.py")
-			" import *\n")))
+  (insert (concat "from "
+      (replace-regexp-in-string "\\.py" "" "calc.py")
+      " import *\n")))
       (let ((test-func (concat "test_" func-name)))
-	(unless (search-forward test-func nil t)
-	  (goto-char (point-max))
-	  (insert "\n"
-		  (format "def %s():\n" test-func)
-		  (format "\tassert %s%s == " func-name func-args))))
+  (unless (search-forward test-func nil t)
+    (goto-char (point-max))
+    (insert "\n"
+      (format "def %s():\n" test-func)
+      (format "\tassert %s%s == " func-name func-args))))
       )))
 #+END_SRC
 *** Web
@@ -1456,7 +1468,7 @@ Cargo: Run the tests."
                  (flycheck-mode)
                  (company-mode))
              ))
-    
+
 #+END_SRC
 *** nim
 #+BEGIN_SRC emacs-lisp
@@ -1506,7 +1518,7 @@ Cargo: Run the tests."
 moved to bottom because cursor color changed by smth else
 #+BEGIN_SRC emacs-lisp
 (use-package soft-stone-theme
-  :ensure t  
+  :ensure t
   :init
   (load-theme 'soft-stone t)
   )
@@ -1663,7 +1675,7 @@ moved to bottom because cursor color changed by smth else
   :bind ("C-c t" . google-translate-smooth-translate)
   :config
   (setq google-translate-translation-directions-alist
-	'(("de" . "en") ("en" . "de") ("de" . "fr") ("de" . "es")))
+  '(("de" . "en") ("en" . "de") ("de" . "fr") ("de" . "es")))
   (setq google-translate-pop-up-buffer-set-focus t)
 )
 #+END_SRC
@@ -1685,7 +1697,7 @@ moved to bottom because cursor color changed by smth else
 (setq ido-case-fold t
       ido-enable-flex-matching t
       ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*"
-			   "*Messages*" "Async Shell Command"))
+         "*Messages*" "Async Shell Command"))
 
 ;; ;; If a buffer name that doesn't exist is chosen, just make a new one without prompting
 ;; (setq ido-create-new-buffer 'always)
@@ -1732,7 +1744,7 @@ moved to bottom because cursor color changed by smth else
 #+BEGIN_SRC emacs-lisp
 (use-package aggressive-indent
     :init (global-aggressive-indent-mode 1)
-    
+
 #+END_SRC
 *** pomodoro
 #+BEGIN_SRC emacs-lisp
@@ -1819,9 +1831,9 @@ maybe for linux
 #+BEGIN_SRC emacs-lisp
 (setq jabber-account-list
       '(("jan.moeller0@gmail.com"
-	 (:network-server . "talk.google.com")
-	 (:connection-type . ssl)
-	 (:port . 5223))))
+   (:network-server . "talk.google.com")
+   (:connection-type . ssl)
+   (:port . 5223))))
 #+END_SRC
 *** Exercism
 #+BEGIN_SRC emacs-lisp
@@ -1829,8 +1841,8 @@ maybe for linux
     :load-path "els/exercism/"
     :if (my-util-installed? "exercism")
     :config (when (my-util-win?)
-	      (setq *exercism-cmd*
-		    (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe"))))
+        (setq *exercism-cmd*
+        (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe"))))
 #+END_SRC
 *** Sqlite
 #+BEGIN_SRC emacs-lisp
