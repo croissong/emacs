@@ -36,12 +36,12 @@
   (require 'cl-lib)
   (require 'use-package)
   (require 'bind-key))
-(use-package diminish :ensure t)
+(use-package diminish)
+(setq use-package-always-ensure t)
 #+END_SRC
 ** quelpa
 #+BEGIN_SRC emacs-lisp
 (use-package quelpa
-    :ensure t
     :config
     (setq quelpa-checkout-melpa-p nil)
     (quelpa '(quelpa-use-package
@@ -88,7 +88,7 @@
   (interactive)
   (delete-window (other-window 1)))
 
-(bind-key* "C-q" 'delete-other-window)
+(bind-key "C-x q" 'delete-other-window)
 #+END_SRC
 ** disable overwrite
 #+BEGIN_SRC emacs-lisp
@@ -267,7 +267,6 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 ** Read env vars
  #+BEGIN_SRC emacs-lisp
 (use-package exec-path-from-shell
-    :ensure t
     :config
     (setq exec-path-from-shell-arguments '("-i")
           exec-path-from-shell-variables '("DISPLAY" "XAUTHORITY"))
@@ -343,7 +342,6 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 *** Adaptive-Wrap
 #+BEGIN_SRC emacs-lisp
 (use-package adaptive-wrap
-    :ensure t
     :init
     (define-globalized-minor-mode adaptive-wrap-global-mode
         adaptive-wrap-prefix-mode
@@ -356,7 +354,6 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 [[https://github.com/bmag/emacs-purpose][@github]]
 #+BEGIN_SRC emacs-lisp
 (use-package window-purpose
-    :ensure t
     :commands purpose-mode
     :config
   (add-to-list 'purpose-user-mode-purposes '(rust-mode . rust))
@@ -367,7 +364,6 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 ** View large files
 #+BEGIN_SRC emacs-lisp
 (use-package vlf
-    :ensure t
     :commands (vlf-mode vlf)
     :init
     (require 'vlf-setup)
@@ -377,7 +373,6 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 *** Drag-stuff
 #+BEGIN_SRC emacs-lisp
 (use-package drag-stuff
-    :ensure t
     :init
     (drag-stuff-global-mode)
     :config
@@ -392,16 +387,14 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 [[https://github.com/purcell/whitespace-cleanup-mode][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package whitespace-cleanup-mode
- :ensure t
- :init (global-whitespace-cleanup-mode)
- :diminish whitespace-cleanup-mode
- )
+    :init (global-whitespace-cleanup-mode)
+    :diminish whitespace-cleanup-mode
+    )
 #+END_SRC
 *** format-all
 [[https://github.com/purcell/whitespace-cleanup-mode][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package format-all
-    :ensure t
     :bind* ("C-f f" . format-all-buffer)
     :hook ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode) . format-all-mode)
     :diminish format-all-mode
@@ -411,7 +404,6 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 https://github.com/lukhas/buffer-move
 #+BEGIN_SRC emacs-lisp
 (use-package buffer-move
-    :ensure t
     :init
     (bind-key* "C-M-Ö" (lambda () (interactive) (insert "ö")))
     (bind-key* "C-M-Ä" (lambda () (interactive) (insert "ä")))
@@ -427,7 +419,6 @@ https://github.com/lukhas/buffer-move
 https://github.com/bbatsov/crux
 #+BEGIN_SRC emacs-lisp
 (use-package crux
-    :ensure t
     :config
     (defun my/kill-line-or-region ()
       (interactive)
@@ -447,14 +438,12 @@ https://github.com/bbatsov/crux
 *** rainbow-mode
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-mode
-    :ensure t
     :hook (css-mode)
     :diminish rainbow-mode)
 #+END_SRC
 *** Evil-Nerd-Commenter
 #+BEGIN_SRC emacs-lisp
 (use-package evil-nerd-commenter
-    :ensure t
     :config
     (evilnc-default-hotkeys)
     )
@@ -462,17 +451,14 @@ https://github.com/bbatsov/crux
 *** Outshine
 #+BEGIN_SRC emacs-lisp
 (use-package outshine
-    :ensure t
     :commands outshine-mode
-  )
+    )
 (use-package navi-mode
- :ensure t
- :commands navi-mode)
+    :commands navi-mode)
 #+END_SRC
 *** Company-Mode
 #+BEGIN_SRC emacs-lisp
 (use-package company
-    :ensure t
     :init
     (add-hook 'after-init-hook 'global-company-mode)
     :config
@@ -488,7 +474,6 @@ https://github.com/bbatsov/crux
 *** Centered-Window-Mode
 #+BEGIN_SRC emacs-lisp
 (use-package centered-window
-    :ensure t
     :init
     (centered-window-mode t)
     :config
@@ -504,7 +489,6 @@ https://github.com/bbatsov/crux
 *** Smartparens
 #+BEGIN_SRC emacs-lisp
 (use-package smartparens
-    :ensure t
     :bind (:map smartparens-mode-map
                 ("C-M-a" . sp-backward-sexp)
                 ("C-M-e" . sp-forward-sexp)
@@ -524,7 +508,6 @@ https://github.com/bbatsov/crux
 *** Undo-Tree
 #+BEGIN_SRC emacs-lisp
 (use-package undo-tree
-    :ensure t
     :init
     (global-undo-tree-mode t)
     :bind* (("C-p" . undo-tree-undo)
@@ -575,7 +558,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** Expand-Region
 #+BEGIN_SRC emacs-lisp
 (use-package expand-region
-    :ensure t
     :bind* (("C-M-w" . er/expand-region)
             ("C-M-q" . er/contract-region))
     :config
@@ -586,7 +568,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** Flycheck
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
-    :ensure t
     :init
     ;; (add-hook 'after-init-hook #'global-flycheck-mode) ;
     :config
@@ -615,26 +596,21 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 *** Ripgrep
 #+BEGIN_SRC emacs-lisp
-(use-package wgrep :ensure t)
-(use-package rg :ensure t)
+(use-package wgrep)
+(use-package rg)
 #+END_SRC
 *** ivy
 #+BEGIN_SRC emacs-lisp
-(use-package ivy-hydra
-    :ensure t)
-(use-package avy
-    :ensure t)
-(use-package flx
-    :ensure t)
+(use-package ivy-hydra)
+(use-package avy)
+(use-package flx)
 
 (use-package counsel
     :after ivy
-    :ensure t
     :diminish counsel-mode
     :config (counsel-mode))
 
 (use-package ivy
-    :ensure t
     :after (flx smex ivy-hydra avy)
     :diminish ivy-mode
     :config
@@ -690,20 +666,17 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package ivy-rich
     :after ivy
-    :ensure t
     :config
     (ivy-rich-mode 1))
 
 
 (use-package swiper
-    :ensure t
     :after ivy
     :bind (("C-s" . swiper)
            ("C-r" . swiper)))
 
 (use-package counsel-projectile
     :after (counsel projectile)
-    :ensure t
     :init (counsel-projectile-mode)
     :config
     (setq projectile-completion-system 'ivy
@@ -716,13 +689,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 *** smex
 #+BEGIN_SRC emacs-lisp
-(use-package smex :ensure t)
+(use-package smex)
 #+END_SRC
 *** Space-line
 [[https://github.com/TheBB/spaceline/tree/master/][The Spacemacs Modeline @github]]
 #+BEGIN_SRC emacs-lisp
 (use-package spaceline
-    :ensure t
     :init
     (require 'spaceline-config)
     (spaceline-spacemacs-theme)
@@ -733,7 +705,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** Projectile
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
-    :ensure t
     :init (projectile-mode)
     :config
     (setq projectile-file-exists-remote-cache-expire nil
@@ -748,7 +719,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 [[https://github.com/justbur/emacs-which-key?utm_medium=referral&utm_campaign=ZEEF&utm_source=https%3A%2F%2Femacs.zeef.com%2Fehartc][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
-    :ensure t
     :init (which-key-mode)
     :diminish which-key-mode
     )
@@ -757,7 +727,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 [[https://github.com/jacktasia/dumb-jump][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package dumb-jump
-    :ensure t
     :config
     (setq dumb-jump-force-searcher 'rg
           dumb-jump-selector 'ivy)
@@ -771,7 +740,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** Editorconfig
 #+BEGIN_SRC emacs-lisp
 (use-package editorconfig
-    :ensure t
     :init (editorconfig-mode 1)
     :diminish editorconfig-mode
     )
@@ -779,13 +747,11 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** logview
 #+BEGIN_SRC emacs-lisp
 (use-package logview
-    :ensure t
     :commands logview-mode)
 #+END_SRC
 ** emamux
 #+BEGIN_SRC emacs-lisp
 (use-package emamux
-    :ensure t
     :config (setq emamux:show-buffers-with-index nil
                   emamux:get-buffers-regexp  "^\\(buffer[0-9]+\\): +\\([0-9]+\\) +\\(bytes\\): +[\"]\\(.*\\)[\"]")
     )
@@ -793,7 +759,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** hydra
 #+BEGIN_SRC emacs-lisp
 (use-package hydra
-    :ensure t
 )
 (use-package my-hydra
     :after hydra
@@ -804,7 +769,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (use-package magit
-    :ensure t
     :config
     (setq magit-diff-arguments (quote ("--no-ext-diff" "--stat"))
           magit-diff-section-arguments (quote ("--no-ext-diff" "-U2"))
@@ -963,7 +927,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 **** Passwords
 #+BEGIN_SRC emacs-lisp
 (use-package pass
-    :ensure t
     :config )
 #+END_SRC
 **** Encryption
@@ -1086,22 +1049,21 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 #+END_SRC
 ** Dired+
 #+BEGIN_SRC emacs-lisp
-(use-package dired-x
-  :hook (dired-mode . dired-omit-mode)
-  )
-
 (use-package dired+
   :quelpa (dired+ :fetcher github :repo "emacsmirror/dired-plus")
+  :hook ((dired-load . (lambda () (load "dired-x")))
+         (dired-mode . dired-omit-mode))
+  :demand t
   :config
-    (toggle-diredp-find-file-reuse-dir 1)
-    (setq dired-listing-switches "-aDhl  --group-directories-first"
-          dired-auto-revert-buffer t)
-    :bind (("C-x d" . nil)
-           :map dired-mode-map
-                ("?" . my/dired-get-size)
-                ("M-ö" . dired-up-directory)
-                ("M-#" . dired-find-file))
-    )
+  (toggle-diredp-find-file-reuse-dir 1)
+  (setq dired-listing-switches "-aDhl  --group-directories-first"
+        dired-auto-revert-buffer t)
+  :bind (("C-x d" . nil)
+         :map dired-mode-map
+         ("?" . my/dired-get-size)
+         ("M-ö" . dired-up-directory)
+         ("M-#" . dired-find-file))
+  )
 #+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp
@@ -1121,7 +1083,6 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 https://github.com/elixir-lang/emacs-elixir
 #+BEGIN_SRC emacs-lisp
 (use-package elixir-mode
-    :ensure t
     :mode "\\.ex\\'"
     )
 #+END_SRC
@@ -1129,7 +1090,6 @@ https://github.com/elixir-lang/emacs-elixir
 https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (use-package alchemist
-    :ensure t
     :diminish alchemist-mode
     :hook (elixir-mode . alchemist-mode)
     :bind (:map alchemist-mode-map
@@ -1153,7 +1113,6 @@ https://github.com/tonini/alchemist.el
 **** flycheck-credo
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck-credo
-    :ensure t
     :after elixir-mode
     :hook (elixir-mode . flycheck-mode)
     :config
@@ -1163,14 +1122,12 @@ https://github.com/tonini/alchemist.el
 *** Markdown
 #+BEGIN_SRC emacs-lisp
 (use-package markdown-mode
-    :ensure t
     :mode "\\.md\\'"
     )
 #+END_SRC
 *** Python
 #+BEGIN_SRC emacs-lisp
 (use-package python
-  :ensure t
   :mode ("\\.py\\'" . python-mode)
   :config
   (defun my/jump-to-test ()
@@ -1212,7 +1169,6 @@ https://github.com/tonini/alchemist.el
 **** Elpy
 #+BEGIN_SRC emacs-lisp
 (use-package elpy
-    :ensure t
     :after python
     :config
     (elpy-enable)
@@ -1235,7 +1191,6 @@ https://github.com/tonini/alchemist.el
 ***** css
 #+BEGIN_SRC emacs-lisp
 (use-package css-mode
-    :ensure t
     :mode ("\\.less\\'" "\\.css\\'" "\\.sass\\'" "\\.scss\\'")
     :config
     (setq css-indent-offset 4)
@@ -1245,7 +1200,6 @@ https://github.com/tonini/alchemist.el
 ***** js2-mode
 #+BEGIN_SRC emacs-lisp
 (use-package js2-mode
-    :ensure t
     :mode "\\.js\\'"
     :config
     (setq js2-basic-offset 2
@@ -1256,7 +1210,6 @@ https://github.com/tonini/alchemist.el
 [[http://web-mode.org/][@web-mode.org]]
 #+BEGIN_SRC emacs-lisp
 (use-package web-mode
-    :ensure t
     :mode ("\\.html?\\'" "\\.jsx\\'")
     :config
     (require  'company-web-html)
@@ -1282,7 +1235,6 @@ https://github.com/tonini/alchemist.el
 ***** json-mode
 #+BEGIN_SRC emacs-lisp
 (use-package json-mode
-    :ensure t
     :mode "\\.json\\'"
     :config
     (setq json-reformat:indent-width 2
@@ -1292,12 +1244,10 @@ https://github.com/tonini/alchemist.el
 ***** typescript
 #+BEGIN_SRC emacs-lisp
 (use-package typescript-mode
-    :ensure t
     :mode "\\.ts\\'"
     )
 
 (use-package tide
-    :ensure t
     :hook ((typescript-mode . #'setup-tide-mode)
            (before-save . tide-format-before-save))
     :init
@@ -1331,7 +1281,6 @@ https://github.com/tonini/alchemist.el
 [[https://github.com/Malabarba/Nameless][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package nameless
-  :ensure t
   :hook (emacs-lisp-mode . nameless-mode)
   :config
   (setq nameless-private-prefix t)
@@ -1341,31 +1290,26 @@ https://github.com/tonini/alchemist.el
 [[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package xtest
-    :ensure t
 )
 #+END_SRC
 *** Php
 #+BEGIN_SRC emacs-lisp
 (use-package php-mode
-    :ensure t
     :mode "\\.php\\'")
 #+END_SRC
 *** Rust
 #+BEGIN_SRC emacs-lisp
 (use-package rust-mode
-    :ensure t
     :mode "\\.rs\\'"
     )
 
 (use-package company-racer
-    :ensure t
     :hook (racer-mode . company-mode)
     :config
     (add-to-list 'company-backends 'company-racer)
     )
 
 (use-package racer
-    :ensure t
     :hook ((rust-mode . racer-mode)
            (racer-mode . eldoc-mode))
     :config
@@ -1374,7 +1318,6 @@ https://github.com/tonini/alchemist.el
   )
 
 (use-package cargo
-    :ensure t
     :hook (rust-mode . cargo-minor-mode)
     :config
     (defun cargo-process--cleanup (buffer)
@@ -1403,7 +1346,6 @@ Cargo: Run the tests."
     )
 
 (use-package flycheck-rust
-    :ensure t
     :hook ((rust-mode . flycheck-mode)
            (flycheck-mode . flycheck-rust-setup))
     )
@@ -1411,15 +1353,12 @@ Cargo: Run the tests."
 *** go
 #+BEGIN_SRC emacs-lisp
 (use-package company-go
-    :ensure t
     :hook (go-mode . company-mode)
     )
 (use-package go-eldoc
-    :ensure t
     :hook (go-mode . go-eldoc-setup)
     )
 (use-package go-mode
-    :ensure t
     :mode "\\.go\\'"
     :hook ((go-mode . flycheck-mode)
            (go-mode . (lambda () (add-hook 'before-save-hook 'gofmt-before-save nil 'local))))
@@ -1428,7 +1367,6 @@ Cargo: Run the tests."
 *** nim
 #+BEGIN_SRC emacs-lisp
 (use-package nim-mode
-    :ensure t
     :mode "\\.nim\\'"
     :hook ((nim-mode . nimsuggest-mode)
            (nimsuggest-mode . company-mode)
@@ -1446,21 +1384,18 @@ Cargo: Run the tests."
 *** yaml
 #+BEGIN_SRC emacs-lisp
 (use-package yaml-mode
-    :ensure t
     :mode ("\\.yml\\'" "\\.yaml\\'"))
 #+END_SRC
 *** sql
 **** Sql-Indent
 #+BEGIN_SRC emacs-lisp
 (use-package sql-indent
-    :ensure t
     :mode "\\.sql\\'"
 )
 #+END_SRC
 ** Hungry-delete
 #+BEGIN_SRC emacs-lisp
 (use-package hungry-delete
-    :ensure t
     :init (global-hungry-delete-mode)
     :diminish hungry-delete-mode
     )
@@ -1468,13 +1403,12 @@ Cargo: Run the tests."
 ** restclient
 #+BEGIN_SRC emacs-lisp
 (use-package restclient
-    :ensure t
     :commands restclient-mode
     )
 #+END_SRC
 ** x509-mode
 #+BEGIN_SRC emacs-lisp
-(use-package x509-mode :ensure t)
+(use-package x509-mode)
 #+END_SRC
 ** Tramp
 #+BEGIN_SRC emacs-lisp
@@ -1484,7 +1418,6 @@ Cargo: Run the tests."
 moved to bottom because cursor color changed by smth else
 #+BEGIN_SRC emacs-lisp
 (use-package soft-stone-theme
-  :ensure t
   :init
   (load-theme 'soft-stone t)
   )
@@ -1498,12 +1431,11 @@ moved to bottom because cursor color changed by smth else
 - Soft-Morning
 ** quickrun
 #+BEGIN_SRC emacs-lisp
-(use-package quickrun :ensure t)
+(use-package quickrun)
 #+END_SRC
 ** wakatime
 #+BEGIN_SRC emacs-lisp
 (use-package wakatime-mode
-    :ensure t
     :commands (global-wakatime-mode)
 )
 #+END_SRC
@@ -1525,7 +1457,6 @@ moved to bottom because cursor color changed by smth else
 *** helm
 #+BEGIN_SRC emacs-lisp
 (use-package helm-mode
-    :ensure t
     :disabled
     :after dumb-jump
     :init (helm-mode)
@@ -1553,7 +1484,6 @@ moved to bottom because cursor color changed by smth else
 **** Ripgrep
 #+BEGIN_SRC emacs-lisp
 (use-package helm-ag
-    :ensure t
     :after (helm-mode projectile)
     :config
     (setq helm-ag-base-command
@@ -1575,7 +1505,6 @@ moved to bottom because cursor color changed by smth else
 [[https://github.com/tarsius/auto-compile][@github]]
 #+BEGIN_SRC emacs-lisp
 (use-package auto-compile
-    :ensure t
     :init (auto-compile-on-load-mode)
     )
 #+END_SRC
@@ -1603,7 +1532,6 @@ moved to bottom because cursor color changed by smth else
 *** persp
 #+BEGIN_SRC emacs-lisp
 (use-package persp-mode
-    :ensure t
     :init
     (setq persp-autokill-buffer-on-remove 'kill-weak
           persp-keymap-prefix (kbd "C-x p"))
@@ -1612,7 +1540,6 @@ moved to bottom because cursor color changed by smth else
     )
 
 (use-package persp-mode-projectile-bridge
-    :ensure t
     :after (projectile persp-mode)
     :init (persp-mode-projectile-bridge-mode 1)
     :config
@@ -1699,7 +1626,7 @@ moved to bottom because cursor color changed by smth else
 ;; disable ido faces to see flx highlights.
 (setq ido-enable-flex-matching t)
 (setq ido-use-faces nil)
-:ensure t)
+)
 #+END_SRC
 *** Floobits
 #+BEGIN_SRC emacs-lisp
@@ -1760,14 +1687,12 @@ echo "add ruen.rws" > ru.multi
 #+BEGIN_SRC emacs-lisp
 (use-package cl-generic)
 (use-package ein
-    :ensure t
     :commands ein:notebooklist-open
   )
 #+END_SRC
 *** Htmlize
 #+BEGIN_SRC emacs-lisp
 (use-package htmlize
-    :ensure t
     )
 #+END_SRC
 *** Scss-Mode
@@ -1817,7 +1742,6 @@ maybe for linux
 *** Multiple-Cursors
 #+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors
-    :ensure t
     :bind* ("C-<down-mouse-1>" . mc/add-cursor-on-click)
     :config
     (setq mc/list-file (concat user-emacs-directory "config/.mc-lists.el"))
