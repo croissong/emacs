@@ -438,11 +438,11 @@ https://github.com/bbatsov/crux
 #+BEGIN_SRC emacs-lisp
 (use-package crux
     :ensure t
-    :bind (("C-f r" . crux-rename-file-and-buffer)
-           ("C-f d" . crux-delete-file-and-buffer)
-           ("C-<return>" . crux-smart-open-line)
-           ("M-<return>" . crux-smart-open-line-above)
-           ("C-w" . crux-smart-kill-line))
+    :bind* (("C-f r" . crux-rename-file-and-buffer)
+            ("C-f d" . crux-delete-file-and-buffer)
+            ("C-<return>" . crux-smart-open-line)
+            ("M-<return>" . crux-smart-open-line-above)
+            ("C-w" . crux-smart-kill-line))
     )
 #+END_SRC
 *** rainbow-mode
@@ -637,10 +637,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :ensure t)
 
 (use-package counsel
-  :after ivy
-  :ensure t
-  :diminish counsel-mode
-  :config (counsel-mode))
+    :after ivy
+    :ensure t
+    :diminish counsel-mode
+    :config (counsel-mode))
 
 (use-package ivy
     :ensure t
@@ -648,12 +648,28 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :diminish ivy-mode
     :config
     (ivy-mode)
-    (setq ivy-extra-directories '("./"))
     (setq ivy-use-virtual-buffers t
           ivy-count-format "(%d/%d) "
-          ;; ivy-re-builders-alist
-          ;; '((swiper . ivy--regex-plus)
-          ;;   (t . ivy--regex-fuzzy))
+
+          ;; fuzzy matching for counsel-M-x
+          ivy-re-builders-alist
+          '((counsel-M-x . ivy--regex-fuzzy)
+            (t . ivy--regex-plus))
+
+          ;; no ^ in counsel-M-x for better fuzzy match order
+          ivy-initial-inputs-alist
+          '((counsel-package . "^+ ")
+            (org-refile . "^")
+            (org-agenda-refile . "^")
+            (org-capture-refile . "^")
+            (counsel-M-x . "")
+            (counsel-describe-function . "^")
+            (counsel-describe-variable . "^")
+            (counsel-org-capture . "^")
+            (Man-completion-table . "^")
+            (woman . "^"))
+          
+          ivy-extra-directories '("./")
           magit-completing-read-function 'ivy-completing-read
           counsel-rg-base-command (format "rg --no-heading -S --line-number --color never --ignore-file %s/.config/ripgrep/ignore %%s ." (substitute-in-file-name "$HOME"))
           counsel-grep-base-command counsel-rg-base-command)
@@ -680,17 +696,17 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     )
 
 (use-package ivy-rich
-  :after ivy
-  :ensure t
-  :config
-  (ivy-rich-mode 1))
+    :after ivy
+    :ensure t
+    :config
+    (ivy-rich-mode 1))
 
 
 (use-package swiper
     :ensure t
-  :after ivy
-  :bind (("C-s" . swiper)
-         ("C-r" . swiper)))
+    :after ivy
+    :bind (("C-s" . swiper)
+           ("C-r" . swiper)))
 
 (use-package counsel-projectile
     :after (counsel projectile)
@@ -700,9 +716,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (setq projectile-completion-system 'ivy
           counsel-projectile-switch-project-action 'magit-status)
     :bind* (("C-M-f" . counsel-projectile-find-file)
-           ("C-M-d" . counsel-projectile-find-dir)
-           ("C-M-x" . counsel-projectile-switch-to-buffer)
-           ("C-M-s" . counsel-projectile-rg))
+            ("C-M-d" . counsel-projectile-find-dir)
+            ("C-M-x" . counsel-projectile-switch-to-buffer)
+            ("C-M-s" . counsel-projectile-rg))
     )
 #+END_SRC
 *** smex
