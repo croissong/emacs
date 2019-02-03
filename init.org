@@ -438,12 +438,25 @@ https://github.com/bbatsov/crux
 #+BEGIN_SRC emacs-lisp
 (use-package crux
     :ensure t
+    :config
+    (defun my/kill-line-or-region ()
+      (interactive)
+      (if (use-region-p)
+          (kill-region (region-beginning) (region-end))
+        (crux-smart-kill-line)))
+    
     :bind* (("C-f r" . crux-rename-file-and-buffer)
             ("C-f d" . crux-delete-file-and-buffer)
-            ("C-<return>" . crux-smart-open-line)
-            ("M-<return>" . crux-smart-open-line-above)
-            ("C-w" . crux-smart-kill-line))
+            ("C-w" . my/kill-line-or-region))
+    :bind (
+           ;; not global because conflict with org-mode new heading
+           ("C-<return>" . crux-smart-open-line)
+           ("M-<return>" . crux-smart-open-line-above))
     )
+#+END_SRC
+*** sudo-edit
+#+BEGIN_SRC emacs-lisp
+(use-package sudo-edit :ensure t)
 #+END_SRC
 *** rainbow-mode
 #+BEGIN_SRC emacs-lisp
