@@ -102,39 +102,6 @@
  ("M-s r" . replace-string)
  ("M-s q" . query-replace))
 #+END_SRC
-*** file
-#+BEGIN_SRC emacs-lisp
-(defun rename-current-buffer-file ()
-  "Renames current buffer and file it is visiting."
-  (interactive)
-  (let* ((name (buffer-name))
-        (filename (buffer-file-name))
-        (basename (file-name-nondirectory filename)))
-    (if (not (and filename (file-exists-p filename)))
-        (error "Buffer '%s' is not visiting a file!" name)
-      (let ((new-name (read-file-name "New name: " (file-name-directory filename))))
-        (if (get-buffer new-name)
-            (error "A buffer named '%s' already exists!" new-name)
-          (rename-file filename new-name 1)
-          (rename-buffer new-name)
-          (set-visited-file-name new-name)
-          (set-buffer-modified-p nil)
-          (message "File '%s' successfully renamed to '%s'"
-                   name (file-name-nondirectory new-name)))))))
-
-(defun delete-current-buffer-file (buffername)
-  "Delete the file visited by the buffer named BUFFERNAME."
-  (interactive "b")
-  (let* ((buffer (get-buffer buffername))
-         (filename (buffer-file-name buffer)))
-    (when filename
-      (delete-file filename)
-      (kill-buffer-ask buffer))))
-
-(bind-keys*
- ("C-f r" . rename-current-buffer-file)
- ("C-f d" . delete-current-buffer-file))
-#+END_SRC
 *** revert buffer
 #+BEGIN_SRC emacs-lisp
 (bind-keys*
@@ -146,32 +113,9 @@
  ("C-M-k" . kill-this-buffer)
  ("C-l" . goto-line)
  ("M-_" . shell-command))
-;;in global keymap because conflict with org-mode new heading
-(bind-keys ("C-<return>" . new-line-below)
-           ("M-<return>" . new-line-above))
 #+END_SRC
 * Functions
 ** Line manouevor functions
-*** New-line-above
-#+BEGIN_SRC emacs-lisp
-(defun new-line-above ()
-  "Insert a newline above the current line and put point at beginning."
-  (interactive)
-  (unless (bolp)
-    (beginning-of-line))
-  (newline)
-  (forward-line -1)
-  (indent-according-to-mode))
-#+END_SRC
-*** New-line-below
-#+BEGIN_SRC emacs-lisp
-(defun new-line-below ()
-  "Insert a newline below the current line and put point at beginning."
-  (interactive)
-  (unless (eolp)
-    (end-of-line))
-  (newline-and-indent))
-#+END_SRC
 *** Copy-line-or-Region
 #+BEGIN_SRC emacs-lisp
 (defun xah-copy-line-or-region ()
@@ -191,38 +135,19 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
 
 (bind-key "M-w" 'xah-copy-line-or-region)
 #+END_SRC
-*** Cut-line-or-Region
-#+BEGIN_SRC emacs-lisp
-(defun xah-cut-line-or-region ()
-  "Cut current line, or text selection.
-When `universal-argument' is called first, cut whole buffer (but respect `narrow-to-region')."
-  (interactive)
-  (let (p1 p2)
-    (if (null current-prefix-arg)
-        (progn (if (use-region-p)
-                   (progn (setq p1 (region-beginning))
-                          (setq p2 (region-end)))
-                 (progn (setq p1 (line-beginning-position))
-                        (setq p2 (line-beginning-position 2)))))
-      (progn (setq p1 (point-min))
-             (setq p2 (point-max))))
-    (kill-region p1 p2)))
-
-(bind-key "C-w" 'xah-cut-line-or-region)
-#+END_SRC
-*** More
+*** Smart delete
 #+BEGIN_SRC emacs-lisp
 (defun my/delete-whitespace-or-word ()
   (interactive)
   (if (looking-at "\\(\t\\|  \\)")
       (delete-horizontal-space)
-    (delete-word)))
+    (kill-word 1)))
 
 (defun my/backward-delete-whitespace-or-word ()
   (interactive)
   (if (looking-back "\\(\t\\|  \\)")
       (delete-horizontal-space)
-    (backward-delete-word)))
+    (backward-kill-word 1)))
 
 (bind-key "C-<backspace>" 'my/backward-delete-whitespace-or-word)
 (bind-key "C-M-<backspace>" 'my/delete-whitespace-or-word)
@@ -230,24 +155,6 @@ When `universal-argument' is called first, cut whole buffer (but respect `narrow
 (bind-key "C-a" 'back-to-indentation)
 #+END_SRC
 ** Not in use
-*** Delete-No-Kill
-#+BEGIN_SRC emacs-lisp
-;; maybe kill is actually okay
-(defun delete-line-no-kill ()
-  (interactive)
-  (delete-region
-   (line-end-position 0)
-   (line-end-position))
-  (indent-for-tab-command))
-
-(defun backward-delete-word()
-  (interactive)
-  (delete-region (point) (progn (backward-word) (point))))
-
-(defun delete-word()
-  (interactive)
-  (delete-region (point) (progn (forward-word) (point))))
-#+END_SRC
 *** switch to previous buffer
 [[http://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/][emacsredux.com]]
 #+BEGIN_SRC emacs-lisp
@@ -310,27 +217,12 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
         (progn (setq i 100))))))
 #+END_SRC
 ** Misc
-*** Sudo-Save (Linux)
-#+BEGIN_SRC emacs-lisp
-(if (my-util-linux?)
-    (defun sudo-save ()
-      (interactive)
-      (if (not buffer-file-name)
-	  (write-file (concat "/sudo:root@localhost:" (ido-read-file-name "File:")))
-	(write-file (concat "/sudo:root@localhost:" buffer-file-name)))))
-#+END_SRC
 *** Capitalize Word
 #+BEGIN_SRC emacs-lisp
 (defun my/capitalize-previous-word()
   (interactive)
   (capitalize-word -1))
   (bind-key "M-c" 'my/capitalize-previous-word org-mode-map)
-#+END_SRC
-** kill all buffers
-#+BEGIN_SRC emacs-lisp
-(defun my/kill-all-buffers ()
-  (interactive)
-  (mapc 'kill-buffer (buffer-list)))
 #+END_SRC
 ** b64encode-no-break
 #+BEGIN_SRC emacs-lisp
@@ -396,8 +288,6 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 #+BEGIN_SRC emacs-lisp
 (setq default-directory "~/")
 (defvar gdrive-dir (concat default-directory "cloud/"))
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
 (my-util-ensureEmacsDir "config/")
 (my-util-ensureEmacsDir "save/autosave")
 (my-util-ensureEmacsDir "save/backup")
@@ -541,6 +431,18 @@ https://github.com/lukhas/buffer-move
     ("C-M-ö" . buf-move-left)
     ("C-M-ü" . buf-move-up)
     ("C-M-ä" . buf-move-down)
+    )
+#+END_SRC
+*** crux
+https://github.com/bbatsov/crux
+#+BEGIN_SRC emacs-lisp
+(use-package crux
+    :ensure t
+    :bind (("C-f r" . crux-rename-file-and-buffer)
+           ("C-f d" . crux-delete-file-and-buffer)
+           ("C-<return>" . crux-smart-open-line)
+           ("M-<return>" . crux-smart-open-line-above)
+           ("C-w" . crux-smart-kill-line))
     )
 #+END_SRC
 *** rainbow-mode
