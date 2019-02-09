@@ -1013,16 +1013,6 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 ("C-M-<end>" . org-sentence-newline)
 ("C-c l" . my/insert-link))
 #+END_SRC
-**** chromebook
-#+BEGIN_SRC emacs-lisp
-(when (my-util-cb?)
-    (bind-keys :map org-mode-map
-         ("M-S-<prior>" . org-shiftmetaup)
-         ("M-S-<next>" . org-shiftmetadown)
-         ;; ("M-right" . drag-stuff-right)
-         ;; ("M-right" . drag-stuff-left)
-         ))
-#+END_SRC
 ** Dired
 #+BEGIN_SRC emacs-lisp
 (use-package dired+
