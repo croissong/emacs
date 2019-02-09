@@ -152,53 +152,6 @@ Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 #+END_SRC
-*** Useless?
-#+BEGIN_SRC emacs-lisp
-(defun find-file-right()
-  (interactive)
-  (split-window-right)
-  (ido-find-file-other-window))
-
-(defvar xah-switch-buffer-ignore-dired t)
-(defun xah-previous-user-buffer ()
-  "Switch to the previous user buffer.
- `user buffer' is a buffer whose name does not start with `*'.
-If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
-2015-01-05 URL `http://ergoemacs.org/emacs/elisp_next_prev_user_buffer.html'"
-  (interactive)
-  (previous-buffer)
-  (let ((i 0))
-    (while (< i 20)
-      (if (or
-           (string-equal "*" (substring (buffer-name) 0 1))
-           (if (string-equal major-mode "dired-mode")
-               xah-switch-buffer-ignore-dired
-             nil
-             ))
-          (progn (previous-buffer)
-                 (setq i (1+ i)))
-        (progn (setq i 100))))))
-
-
-(defun xah-next-user-buffer ()
- "Switch to the next user buffer.
- `user buffer' is a buffer whose name does not start with `*'.
-If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
-2015-01-05 URL `http://ergoemacs.org/emacs/elisp_next_prev_user_buffer.html'"
-  (interactive)
-  (next-buffer)
-  (let ((i 0))
-    (while (< i 20)
-      (if (or
-           (string-equal "*" (substring (buffer-name) 0 1))
-           (if (string-equal major-mode "dired-mode")
-               xah-switch-buffer-ignore-dired
-             nil
-             ))
-          (progn (next-buffer)
-                 (setq i (1+ i)))
-        (progn (setq i 100))))))
-#+END_SRC
 ** Misc
 *** Capitalize Word
 #+BEGIN_SRC emacs-lisp
@@ -279,7 +232,8 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 #+END_SRC
 ** mini
 #+BEGIN_SRC emacs-lisp
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+(setq mouse-wheel-scroll-amount '(2 ((shift) . 2)))
+(setq mouse-wheel-progressive-speed nil)
 (setq same-window-buffer-names '("*Help*"))
 #+END_SRC
 ** eldoc
