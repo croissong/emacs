@@ -1108,8 +1108,6 @@ https://github.com/tonini/alchemist.el
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :config
-  (elpy-enable)
-
   (defun my/jump-to-test ()
     (interactive)
 
@@ -1148,7 +1146,13 @@ https://github.com/tonini/alchemist.el
 #+END_SRC
 **** Elpy
 #+BEGIN_SRC emacs-lisp
-(use-package elpy :after python)
+(use-package elpy
+    :after python
+    :config
+    (setq elpy-modules (delq 'elpy-module-django
+                             (delq 'elpy-module-highlight-indentation elpy-modules))
+    (elpy-enable)
+    )
 #+END_SRC
 *** Web
 **** HTML/CSS
