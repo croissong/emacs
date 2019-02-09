@@ -556,20 +556,24 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 *** ivy
 #+BEGIN_SRC emacs-lisp
-(use-package ivy-hydra)
-(use-package avy)
 (use-package flx)
+(use-package avy)
+(use-package smex)
+
+(use-package ivy-hydra
+    :after (ivy hydra))
 
 (use-package counsel
     :after ivy
     :delight counsel-mode
-    :config (counsel-mode))
+    :config
+    (counsel-mode))
 
 (use-package ivy
-    :after (flx smex ivy-hydra avy)
-    :delight ivy-mode
-    :config
+    :after (flx avy smex)
+    :init
     (ivy-mode)
+    :config
     (setq ivy-use-virtual-buffers t
           ivy-count-format "(%d/%d) "
 
@@ -611,6 +615,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
            ("M-ü" . ivy-previous-line)
            :map ivy-switch-buffer-map
            ("C-k" . ivy-switch-buffer-kill))
+    :delight ivy-mode
     )
 
 (use-package ivy-rich
@@ -626,8 +631,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package counsel-projectile
     :after (counsel projectile)
-    :init (counsel-projectile-mode)
     :config
+    (counsel-projectile-mode)
     (setq projectile-completion-system 'ivy
           counsel-projectile-switch-project-action 'magit-status)
     :bind* (("C-M-f" . counsel-projectile-find-file)
@@ -635,10 +640,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
             ("C-M-x" . counsel-projectile-switch-to-buffer)
             ("C-M-s" . counsel-projectile-rg))
     )
-#+END_SRC
-*** smex
-#+BEGIN_SRC emacs-lisp
-(use-package smex)
 #+END_SRC
 *** Space-line
 [[https://github.com/TheBB/spaceline/tree/master/][The Spacemacs Modeline @github]]
