@@ -73,3 +73,5 @@
   )
 
 (provide 'my-hydra)
+
+;; TODO C-x C-+ for zoom

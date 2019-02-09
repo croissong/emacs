@@ -1,5 +1,20 @@
 ; -*- eval: (org-init-mode); -*-
 * Initialize
+** Initialize straight.el
+#+BEGIN_SRC emacs-lisp
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+#+END_SRC
 ** Coding Environment
 [[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
 #+BEGIN_SRC emacs-lisp
@@ -16,54 +31,28 @@
     (unless (eq system-type 'windows-nt)
       (set-selection-coding-system 'utf-8-unix)))
 #+END_SRC
-** Initialize package.el
-#+BEGIN_SRC emacs-lisp
-  (eval-and-compile
-    (require 'package)
-    (package-initialize)
-    (setq package-enable-at-startup nil
-          package-archives
-          '(("gnu" . "http://elpa.gnu.org/packages/")
-            ("melpa" . "http://melpa.milkbox.net/packages/")
-            ("org" . "http://orgmode.org/elpa/"))
-          load-prefer-newer t))
-#+END_SRC
 ** Bootstrap use-package
 #+BEGIN_SRC emacs-lisp
-(eval-and-compile
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package))
-  (require 'cl-lib)
-  (require 'use-package)
-  (require 'bind-key))
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
+(require 'bind-key)
 (use-package diminish)
-(setq use-package-always-ensure t)
-#+END_SRC
-** quelpa
-#+BEGIN_SRC emacs-lisp
-(use-package quelpa
-    :config
-    (setq quelpa-checkout-melpa-p nil)
-    (quelpa '(quelpa-use-package
-              :fetcher git
-              :url "https://framagit.org/steckerhalter/quelpa-use-package.git"))
-    (require 'quelpa-use-package)
-    )
+(use-package delight)
 #+END_SRC
 ** my/org-init
 #+BEGIN_SRC emacs-lisp
 (use-package org-init
+    :after org
+    :straight nil
     :commands (org-init-mode org-init-open)
     :load-path "els/org-init/")
 #+END_SRC
 ** My/Utils
 #+BEGIN_SRC emacs-lisp
-  (eval-and-compile
-    (use-package
-     my-util
-     :functions my-util-ensureEmacsDir my-util-cb? my-util-win? my-util-linux?
-     :load-path "els/my-utils/"))
+(use-package my-util
+    :straight nil
+    :functions my-util-ensureEmacsDir my-util-cb? my-util-win? my-util-linux?
+    :load-path "els/my-utils/")
 #+END_SRC
 * Keybindings
 ** Moving
@@ -224,43 +213,6 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
   (interactive)
   (base64-encode-region (mark) (point) t))
 #+END_SRC
-* Style
-** Frame
-#+BEGIN_SRC emacs-lisp
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(defun my/style-frame()
-  ;;(fringe-mode '(1 . 0))
-  (set-face-attribute 'vertical-border nil :foreground "bisque4")
-  (set-cursor-color "royal blue")
-  (set-face-attribute 'show-paren-match nil :background nil)
-  (split-window-horizontally)
-  (display-buffer "*Messages*")
-  )
-(if (daemonp)
-    (add-hook 'after-make-frame-functions
-              (lambda (frame)
-                (select-frame frame)
-                (my/style-frame)
-                ))
-  (my/style-frame)
-  )
-#+END_SRC
-** Mode-line
-#+BEGIN_SRC emacs-lisp
-;; (set-face-attribute 'mode-line nil :height 135 :foreground "#28a428" :background "#2a2a28")
-;; (set-face-attribute 'mode-line-inactive nil :height 135 :foreground "#995400" :background "#2a2a28")
-#+END_SRC
-** [disabled]
-:PROPERTIES:
-:header-args: :tangle no
-:END:
-*** visual-line-mode
-#+BEGIN_SRC emacs-lisp
-(global-visual-line-mode t)
-(diminish 'visual-line-mode)
-#+END_SRC
 * Generic
 ** Read env vars
  #+BEGIN_SRC emacs-lisp
@@ -286,7 +238,8 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
               tab-width 2
               indent-line-function 'insert-tab
               sentence-end-double-space nil)
-(setq require-final-newline t)
+(setq require-final-newline t
+      enable-local-eval t)
 #+END_SRC
 *** Backup
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
@@ -443,7 +396,7 @@ https://github.com/bbatsov/crux
 *** rainbow-mode
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-mode
-    :hook (css-mode)
+    :hook (css-mode org-mode help-mode)
     :diminish rainbow-mode)
 #+END_SRC
 *** Evil-Nerd-Commenter
@@ -507,8 +460,6 @@ https://github.com/bbatsov/crux
     (require 'smartparens-config)
     (show-smartparens-global-mode t)
     (setq blink-matching-paren nil)
-    (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
-    (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil)
     :diminish smartparens-mode
     )
 #+END_SRC
@@ -651,14 +602,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
           counsel-rg-base-command (format "rg --no-heading -S --line-number --color never --ignore-file %s/.config/ripgrep/ignore %%s ." (substitute-in-file-name "$HOME"))
           counsel-grep-base-command counsel-rg-base-command)
 
-    (custom-set-faces
-     '(swiper-match-face-2
-       ((t :inherit isearch :foreground "white" :background "#8a498a")))
-     '(ivy-minibuffer-match-face-2
-       ((t :foreground "white" :background "#8a498a" :weight bold)))
-     '(swiper-line-face
-       ((t :foreground nil))))
-
 
     :bind (("M-x" . counsel-M-x)
            ("C-x C-f" . counsel-find-file)
@@ -707,7 +650,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package spaceline
     :init
     (require 'spaceline-config)
-    (spaceline-spacemacs-theme)
     :config
     (spaceline-toggle-buffer-size-off)
     )
@@ -771,6 +713,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package hydra)
 (use-package my-hydra
     :after hydra
+    :straight nil
     :load-path "els/my-hydra/"
     :bind* ("C-." . hydra-my/init/body)
 )
@@ -783,7 +726,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** realgud
 #+BEGIN_SRC emacs-lisp
 ;; M-x load-library realgud
-(use-package realgud :defer t)
+(use-package realgud
+    :straight (:host github :repo "realgud/realgud" :no-autoloads t)
+    :defer t)
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
@@ -803,7 +748,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
                              'magit-insert-unpulled-from-upstream)
     )
 
-(use-package forge)
+(use-package forge
+  :after magit
+  :straight (:host github :repo "magit/forge"))
 #+END_SRC
 *** ssh
 **** windows
@@ -817,23 +764,53 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
+(require 'subr-x)
+(straight-use-package 'git)
+
+(defun org-git-version ()
+  "The Git version of org-mode.
+Inserted by installing org-mode or when a release is made."
+  (require 'git)
+  (let ((git-repo (expand-file-name
+                   "straight/repos/org/" user-emacs-directory)))
+    (string-trim
+     (git-run "describe"
+              "--match=release\*"
+              "--abbrev=6"
+              "HEAD"))))
+
+(defun org-release ()
+  "The release version of org-mode.
+Inserted by installing org-mode or when a release is made."
+  (require 'git)
+  (let ((git-repo (expand-file-name
+                   "straight/repos/org/" user-emacs-directory)))
+    (string-trim
+     (string-remove-prefix
+      "release_"
+      (git-run "describe"
+               "--match=release\*"
+               "--abbrev=0"
+               "HEAD")))))
+
+(provide 'org-version)
+
 (use-package org
-    :ensure org-plus-contrib
+    :straight org-plus-contrib
     :mode ("\\.org\\'" . org-mode)
     :config
     (require 'org-checklist)
     (org-indent-mode)
     (setq org-startup-indented t
-      org-blank-before-new-entry '((heading . nil)
-          (plain-list-item . nil))
-      org-return-follows-link nil
-      org-completion-use-ido t
-      org-support-shift-select t
-      org-image-actual-width '(500)
-      org-list-allow-alphabetical t
-      org-use-property-inheritance t
-      org-use-sub-superscripts nil
-      org-checkbox-hierarchical-statistics t)
+          org-blank-before-new-entry '((heading . nil)
+                                       (plain-list-item . nil))
+          org-return-follows-link nil
+          org-support-shift-select t
+          org-image-actual-width '(500)
+          org-list-allow-alphabetical t
+          org-use-property-inheritance t
+          org-use-sub-superscripts nil
+          org-checkbox-hierarchical-statistics t)
 
     :bind (("C-c l" . org-store-link)
            ("C-c a" . org-agenda)
@@ -842,6 +819,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package my-org
     :after org-mode
+    :straight nil
     :bind (:map org-mode-map
                 ("C-c C-M-e" . my-org-export-all)
                 ("M-c" . my/capitalize-previous-word))
@@ -972,24 +950,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 (setq org-latex-preview-ltxpng-directory (concat temporary-file-directory "ltxpng/"))
 #+END_SRC
-*** Style
-#+BEGIN_SRC emacs-lisp
-(custom-set-faces
- `(org-level-4 ((t (:foreground "darkorange"))))
- `(org-level-2 ((t (:foreground "cadet blue"))))
- `(org-level-3 ((t (:foreground "#b75761"))))
- `(org-property-value ((t (:foreground "purple"))))
- `(org-special-keyword ((t (:foreground "#990099"))))
- `(org-link ((t (:foreground "bisque4"))))
- ;; weird issue with line-wrap, wrapped lines (the indent) don't get this face
- ;; `(org-block-background ((t (:background "#133436"))))
- ;; Underline/overline is weird
- ;; `(org-block-begin-line ((t (:foreground ,"#446a5d" :underline ,"#b3e"))))
- ;; `(org-block-end-line ((t (:foreground ,"#446a5d" :overline  ,"#b3e"))))
- `(org-block-begin-line ((t (:foreground ,"#446a5d"))))
- `(org-block-end-line ((t (:foreground ,"#446a5d"))))
- )
-#+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp
 (defun org-sentence-newline()
@@ -1069,24 +1029,22 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
          ;; ("M-right" . drag-stuff-left)
          ))
 #+END_SRC
-** Dired+
+** Dired
 #+BEGIN_SRC emacs-lisp
 (use-package dired+
-  :quelpa (dired+ :fetcher github :repo "emacsmirror/dired-plus")
-  :hook ((dired-mode . dired-omit-mode))
   :demand t
   :config
   (diredp-make-find-file-keys-reuse-dirs)
   (setq dired-listing-switches "-aDhvl --group-directories-first"
-        dired-auto-revert-buffer t
-        dired-omit-verbose nil)
+        dired-auto-revert-buffer t)
   :bind (("C-x d" . nil)
          :map dired-mode-map
          ("?" . my/dired-get-size)
          ("M-ö" . dired-up-directory)
-         ("M-#" . dired-find-file))
-  :diminish dired-omit-mode
-  )
+         ("M-#" . dired-find-file)))
+
+(use-package dired-filter
+    :hook (dired-mode . dired-filter-mode))
 #+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp
@@ -1416,7 +1374,7 @@ Cargo: Run the tests."
 *** AUCTeX
  #+BEGIN_SRC emacs-lisp
 (use-package tex-mode
-    :ensure auctex
+    :straight auctex
     :mode "\\.tex\\'"
     :hook (LaTeX-mode . turn-on-reftex)
     )
@@ -1454,21 +1412,6 @@ Cargo: Run the tests."
 #+BEGIN_SRC emacs-lisp
 (setq tramp-default-method "ssh")
 #+END_SRC
-** Theme
-moved to bottom because cursor color changed by smth else
-#+BEGIN_SRC emacs-lisp
-(use-package soft-stone-theme
-  :init
-  (load-theme 'soft-stone t)
-  )
-#+END_SRC
-*** Cursor
-#+BEGIN_SRC emacs-lisp
-(set-face-attribute 'region nil :background "darkblue")
-(setq-default cursor-type 'bar)
-#+END_SRC
-*** Alternatives
-- Soft-Morning
 ** quickrun
 #+BEGIN_SRC emacs-lisp
 (use-package quickrun)
@@ -1731,7 +1674,6 @@ echo "add ruen.rws" > ru.multi
 #+END_SRC
 *** IPython Emacs Notebook (EIN)
 #+BEGIN_SRC emacs-lisp
-(use-package cl-generic)
 (use-package ein
     :commands ein:notebooklist-open
   )
@@ -1799,6 +1741,57 @@ maybe for linux
 #+BEGIN_SRC emacs-lisp
 (use-package spell-number
              :load-path "els/spell-number/")
+#+END_SRC
+* Style
+** Theme
+todo https://github.com/alezost/alect-themes
+#+BEGIN_SRC emacs-lisp
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(setq-default cursor-type 'bar)
+(use-package gruvbox-theme
+    :defer t
+    :init
+    (defun my/load-theme ()
+      (load-theme 'gruvbox-light-hard t)
+      (spaceline-spacemacs-theme)
+      (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
+      (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil)
+      ;; (set-face-attribute 'region nil :background "darkblue")
+      (set-cursor-color "royal blue")
+      (set-face-attribute 'show-paren-match nil :background nil)
+      (split-window-horizontally)
+      (display-buffer "*Messages*")
+
+      (set-face-attribute 'magit-diff-added-highlight nil :background "#bde9bd" :foreground "#22aa22")
+      (set-face-attribute 'magit-diff-added nil :background "#ddffdd" :foreground "#22aa22")
+      (set-face-attribute 'diff-refine-added nil :background "#b3fcb3")
+      (set-face-attribute 'magit-diff-removed-highlight nil :background "#e9bdbd" :foreground "#aa2222")
+      (set-face-attribute 'magit-diff-removed nil :background "#efd0d0" :foreground "#aa2222")
+
+      (set-face-attribute 'magit-section-highlight nil :background "#efe2c2")
+      (set-face-attribute 'org-block nil :foreground "#282828")
+
+      (set-face-attribute 'isearch nil :foreground "#f4ecd6")
+      (set-face-attribute 'highlight nil :background "#e4cf9a")
+      )
+
+    (if (daemonp)
+        (add-hook 'after-make-frame-functions (lambda (frame)
+                                                (select-frame frame)
+                                                (my/load-theme)))
+      (my/load-theme)
+      ))
+#+END_SRC
+** [disabled]
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+*** visual-line-mode
+#+BEGIN_SRC emacs-lisp
+(global-visual-line-mode t)
+(diminish 'visual-line-mode)
 #+END_SRC
 * Emacs Server (Windows)
 #+BEGIN_SRC emacs-lisp
