@@ -1108,62 +1108,47 @@ https://github.com/tonini/alchemist.el
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :config
-  (defun my/jump-to-test ()
-  (interactive)
+  (elpy-enable)
 
-  (let* ((file-name
-    (nth 0 (last (split-string buffer-file-name "[\\/]"))))
-   (test-file
-    (s-join "/" (append (butlast (split-string buffer-file-name "[\\/]"))
-            (list (concat "test_" file-name)))))
-   (func-name "")
-   (func-args (progn
-          (unless (looking-at "def")
-      (python-nav-beginning-of-defun))
-          (right-word)
-          (right-char)
-          (set-mark (point))
-                      (while (not (looking-at "("))
-      (sp-forward-sexp))
-          (setq func-name (buffer-substring-no-properties (mark) (point)))
-          (set-mark (point))
-          (sp-forward-sexp)
-          (buffer-substring-no-properties (mark) (point)))))
-    (with-current-buffer (find-file test-file)
-      (goto-char (point-min))
-      (unless (search-forward-regexp "from .+ import \\*" nil t)
-  (insert (concat "from "
-      (replace-regexp-in-string "\\.py" "" "calc.py")
-      " import *\n")))
-      (let ((test-func (concat "test_" func-name)))
-  (unless (search-forward test-func nil t)
-    (goto-char (point-max))
-    (insert "\n"
-      (format "def %s():\n" test-func)
-      (format "\tassert %s%s == " func-name func-args))))
-      )))
+  (defun my/jump-to-test ()
+    (interactive)
+
+    (let* ((file-name
+            (nth 0 (last (split-string buffer-file-name "[\\/]"))))
+           (test-file
+            (s-join "/" (append (butlast (split-string buffer-file-name "[\\/]"))
+                                (list (concat "test_" file-name)))))
+           (func-name "")
+           (func-args (progn
+                        (unless (looking-at "def")
+                          (python-nav-beginning-of-defun))
+                        (right-word)
+                        (right-char)
+                        (set-mark (point))
+                        (while (not (looking-at "("))
+                          (sp-forward-sexp))
+                        (setq func-name (buffer-substring-no-properties (mark) (point)))
+                        (set-mark (point))
+                        (sp-forward-sexp)
+                        (buffer-substring-no-properties (mark) (point)))))
+      (with-current-buffer (find-file test-file)
+        (goto-char (point-min))
+        (unless (search-forward-regexp "from .+ import \\*" nil t)
+          (insert (concat "from "
+                          (replace-regexp-in-string "\\.py" "" "calc.py")
+                          " import *\n")))
+        (let ((test-func (concat "test_" func-name)))
+          (unless (search-forward test-func nil t)
+            (goto-char (point-max))
+            (insert "\n"
+                    (format "def %s():\n" test-func)
+                    (format "\tassert %s%s == " func-name func-args))))
+        )))
   )
 #+END_SRC
 **** Elpy
 #+BEGIN_SRC emacs-lisp
-(use-package elpy
-    :after python
-    :commands elpy-enable
-    :config
-    (elpy-enable)
-    ;; https://github.com/jorgenschaefer/elpy/issues/887
-    ;; probvably enable again, its new with emacs 25
-    (setq python-shell-completion-native-enable nil)
-    (delete 'elpy-module-highlight-indentation elpy-modules)
-    (if (executable-find "ipython")
-        ;; (elpy-use-ipython)
-        (message "'ipython' not found found; please install"))
-    ;; Currently no debugging in elpy afaik
-    ;; (setq elpy-test-pytest-runner-command '("py.test --pdb")) ;
-    ;; (elpy-set-test-runner 'elpy-test-pytest-runner)
-    (setq elpy-rpc-backend "rope"
-          elpy-rpc-python-command "python")
-    )
+(use-package elpy :after python)
 #+END_SRC
 *** Web
 **** HTML/CSS
