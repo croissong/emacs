@@ -15,7 +15,7 @@
     (remove-hook 'after-save-hook 'org-init--compile 'local)))
 
 (defun org-init--compile ()
-  (org-babel-tangle-file (file-truename org-init-init-org) org-init--init-el))
+  (org-babel-tangle-file org-init-init-org org-init--init-el))
 
 ;;;###autoload
 (defun org-init-open () 

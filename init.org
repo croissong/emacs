@@ -1150,7 +1150,7 @@ https://github.com/tonini/alchemist.el
     :after python
     :config
     (setq elpy-modules (delq 'elpy-module-django
-                             (delq 'elpy-module-highlight-indentation elpy-modules))
+                             (delq 'elpy-module-highlight-indentation elpy-modules)))
     (elpy-enable)
     )
 #+END_SRC
