@@ -1,17 +1,13 @@
 ;;; my-util.el --- Write journal in emacs org-mode  -*- lexical-binding: t; -*-
 
-(defun my-util-linux? ()
-  (eq system-type 'gnu/linux))
-
 (defun my-util-win? ()
   (eq system-type 'windows-nt))
 
-(defun my-util-cb? ()
-  (file-exists-p "/etc/crouton/name"))
-
-(defun my-util-ensureEmacsDir (path)
-  (unless (file-directory-p (concat user-emacs-directory path))
-    (mkdir (concat user-emacs-directory path) t)))
+(defun my-util-ensure-emacs-dir (path)
+  (let ((expanded-path (expand-file-name path user-emacs-directory )))
+    (unless (file-directory-p expanded-path)
+      (mkdir expanded-path t))
+    expanded-path))
 
 (defun my-util-installed? (exe)
   (unless (executable-find exe)

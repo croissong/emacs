@@ -44,14 +44,14 @@
     :after org
     :straight nil
     :commands (org-init-mode org-init-open)
-    :load-path "els/org-init/")
+    :load-path "my/org-init")
 #+END_SRC
 ** My/Utils
 #+BEGIN_SRC emacs-lisp
 (use-package my-util
     :straight nil
-    :functions my-util-ensureEmacsDir my-util-cb? my-util-win? my-util-linux?
-    :load-path "els/my-utils/")
+    :functions my-util-ensure-emacs-dir my-util-win?
+    :load-path "my/my-utils")
 #+END_SRC
 * Keybindings
 ** Moving
@@ -226,7 +226,7 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 (setq default-directory "~/"
       custom-file (expand-file-name "custom.el" user-emacs-directory))
 (defvar gdrive-dir (concat default-directory "cloud/"))
-(my-util-ensureEmacsDir "config/")
+(my-util-ensure-emacs-dir "config/")
 (setq browse-url-generic-program (executable-find (getenv "BROWSER"))
       browse-url-browser-function 'browse-url-generic)
 ;; TODO
@@ -237,21 +237,18 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 (setq require-final-newline t
       enable-local-eval t)
 #+END_SRC
-*** Backup
+*** Backup & autosave
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
 #+BEGIN_SRC emacs-lisp
-(my-util-ensureEmacsDir "save/backup")
 (setq delete-old-versions t
   kept-new-versions 6
   create-lockfiles nil
   kept-old-versions 2
   version-control t
-  backup-directory-alist '((".*" . "~/.emacs.d/save/backup/")))
-#+END_SRC
-*** Autosave
-#+BEGIN_SRC emacs-lisp
-(my-util-ensureEmacsDir "save/autosave")
-(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+  emacs-tmp-dir (my-util-ensure-emacs-dir "tmp")
+  backup-directory-alist `((".*" . ,emacs-tmp-dir))
+  auto-save-file-name-transforms `((".*" ,emacs-tmp-dir t))
+  auto-save-list-file-prefix emacs-tmp-dir)
 #+END_SRC
 ** Start-Up
 #+BEGIN_SRC emacs-lisp
@@ -711,7 +708,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package my-hydra
     :after hydra
     :straight nil
-    :load-path "els/my-hydra/"
+    :load-path "my/my-hydra"
     :bind* ("C-." . hydra-my/init/body)
 )
 #+END_SRC
@@ -820,7 +817,7 @@ Inserted by installing org-mode or when a release is made."
     :bind (:map org-mode-map
                 ("C-c C-M-e" . my-org-export-all)
                 ("M-c" . my/capitalize-previous-word))
-    :load-path "els/my-org/")
+    :load-path "my/my-org")
 #+END_SRC
 *** Config
 **** Export
@@ -1418,17 +1415,6 @@ Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
 :PROPERTIES:
 :header-args: :tangle no
 :END:
-*** Cygwin
-**** Cygwin-Mount
-#+BEGIN_SRC emacs-lisp
-(when (my-util-win?)
-  (setenv "PATH" (concat "c:/cygwin64/bin;" (getenv "PATH")))
-  (setq exec-path (cons "c:/cygwin64/bin/" exec-path))
-  (use-package cygwin-mount
-      :load-path "els/cygwin/"
-      :config (cygwin-mount-activate)
-      ))
-#+END_SRC
 *** helm
 #+BEGIN_SRC emacs-lisp
 (use-package helm-mode
@@ -1700,7 +1686,7 @@ maybe for linux
 *** Exercism
 #+BEGIN_SRC emacs-lisp
 (use-package exercism
-    :load-path "els/exercism/"
+    :load-path "my/exercism/"
     :if (my-util-installed? "exercism")
     :config (when (my-util-win?)
         (setq *exercism-cmd*
@@ -1726,7 +1712,7 @@ maybe for linux
 **** Spell-number
 #+BEGIN_SRC emacs-lisp
 (use-package spell-number
-             :load-path "els/spell-number/")
+             :load-path "my/spell-number")
 #+END_SRC
 * Style
 ** Theme
@@ -1806,3 +1792,4 @@ https://www.reddit.com/r/emacs/comments/1mbn0s/the_emacs_calculator/
 \(Buy: \)\([0-9]+\) -> \1\,(+ \#2 \#)
 ** my-own-tips
 C-c C-o save search results
+reset var: `(setq foo (eval (car (get 'foo 'standard-value))))`
