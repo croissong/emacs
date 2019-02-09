@@ -1,4 +1,4 @@
-; -*- eval: (org-init-mode); -*-
+; -*- eval: (my/org-init-mode); -*-
 * Initialize
 ** Initialize straight.el
 #+BEGIN_SRC emacs-lisp
@@ -40,10 +40,10 @@
 #+END_SRC
 ** my/org-init
 #+BEGIN_SRC emacs-lisp
-(use-package org-init
+(use-package my/org-init
     :after org
     :straight nil
-    :commands (org-init-mode org-init-open)
+    :commands (my/org-init-mode my/org-init-open)
     :load-path "my/org-init")
 #+END_SRC
 ** My/Utils
@@ -284,7 +284,7 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 #+END_SRC
 ** eldoc
 #+BEGIN_SRC emacs-lisp
-(delight 'eldoc-mode)
+(delight 'eldoc-mode nil "eldoc")
 #+END_SRC
 * Packages
 ** Style
@@ -346,7 +346,7 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 (use-package format-all
     :bind* ("C-f f" . format-all-buffer)
     :hook
-    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode)
+    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode python-mode)
      . format-all-mode)
     :delight format-all-mode
     )
@@ -536,7 +536,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     ;; (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
     ;; customize flycheck temp file prefix
     ;; (setq-default flycheck-temp-prefix ".flycheck")
-    :delight flycheck-mode
     )
 #+END_SRC
 **** disable in org-src-block
@@ -1055,7 +1054,6 @@ https://github.com/elixir-lang/emacs-elixir
 https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (use-package alchemist
-    :delight alchemist-mode
     :hook (elixir-mode . alchemist-mode)
     :bind (:map alchemist-mode-map
                 ("C-c C-c" . alchemist-iex-compile-this-buffer)
