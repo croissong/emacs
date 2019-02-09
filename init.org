@@ -36,7 +36,6 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 (require 'bind-key)
-(use-package diminish)
 (use-package delight)
 #+END_SRC
 ** my/org-init
@@ -220,9 +219,6 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
     :config
     (setq exec-path-from-shell-arguments '("-i")
           exec-path-from-shell-variables '("DISPLAY" "XAUTHORITY"))
-    (add-hook 'after-make-frame-functions
-              (lambda (frame)
-                (exec-path-from-shell-initialize)))
     )
  #+END_SRC
 ** My Values
@@ -291,7 +287,7 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 #+END_SRC
 ** eldoc
 #+BEGIN_SRC emacs-lisp
-(diminish 'eldoc-mode)
+(delight 'eldoc-mode)
 #+END_SRC
 * Packages
 ** Style
@@ -336,7 +332,7 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
     :bind (:map drag-stuff-mode-map
                 ("M-<up>" . drag-stuff-up)
                 ("M-<down>" . drag-stuff-down))
-    :diminish drag-stuff-mode
+    :delight drag-stuff-mode
     )
 #+END_SRC
 *** whitespace-cleanup-mode
@@ -344,7 +340,7 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
 #+BEGIN_SRC emacs-lisp
 (use-package whitespace-cleanup-mode
     :init (global-whitespace-cleanup-mode)
-    :diminish whitespace-cleanup-mode
+    :delight whitespace-cleanup-mode
     )
 #+END_SRC
 *** format-all
@@ -355,7 +351,7 @@ If `xah-switch-buffer-ignore-dired' is true, also skip directory buffer.
     :hook
     ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode)
      . format-all-mode)
-    :diminish format-all-mode
+    :delight format-all-mode
     )
 #+END_SRC
 *** Buffer-move
@@ -397,7 +393,7 @@ https://github.com/bbatsov/crux
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-mode
     :hook (css-mode org-mode help-mode)
-    :diminish rainbow-mode)
+    :delight rainbow-mode)
 #+END_SRC
 *** Evil-Nerd-Commenter
 #+BEGIN_SRC emacs-lisp
@@ -428,7 +424,7 @@ https://github.com/bbatsov/crux
     :bind (:map company-active-map
                 ("C-ä" . company-select-next)
                 ("C-ü" . company-select-previous))
-    :diminish company-mode
+    :delight company-mode
     )
 #+END_SRC
 *** Centered-Window-Mode
@@ -443,7 +439,7 @@ https://github.com/bbatsov/crux
                 cwm-incremental-padding-% 2
                 cwm-left-fringe-ratio 0
                 cwm-centered-window-width 130)
-    :diminish centered-window-mode
+    :delight centered-window-mode
     )
 #+END_SRC
 *** Smartparens
@@ -460,7 +456,7 @@ https://github.com/bbatsov/crux
     (require 'smartparens-config)
     (show-smartparens-global-mode t)
     (setq blink-matching-paren nil)
-    :diminish smartparens-mode
+    :delight smartparens-mode
     )
 #+END_SRC
 *** Undo-Tree
@@ -471,7 +467,7 @@ https://github.com/bbatsov/crux
     :bind* (("C-p" . undo-tree-undo)
             ("M-p" . undo-tree-redo)
             ("C-M-p" . undo-tree-visualize))
-    :diminish undo-tree-mode
+    :delight undo-tree-mode
     )
 #+END_SRC
 *** Ediff
@@ -543,7 +539,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     ;; (setq flycheck-javascript-eslint-executable "eslint-project-relative"))
     ;; customize flycheck temp file prefix
     ;; (setq-default flycheck-temp-prefix ".flycheck")
-    :diminish flycheck-mode
+    :delight flycheck-mode
     )
 #+END_SRC
 **** disable in org-src-block
@@ -566,12 +562,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package counsel
     :after ivy
-    :diminish counsel-mode
+    :delight counsel-mode
     :config (counsel-mode))
 
 (use-package ivy
     :after (flx smex ivy-hydra avy)
-    :diminish ivy-mode
+    :delight ivy-mode
     :config
     (ivy-mode)
     (setq ivy-use-virtual-buffers t
@@ -664,7 +660,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
           projectile-enable-caching t)
     :bind* (("C-M-r" . projectile-replace-regexp)
             ("C-c p" . projectile-command-map))
-    :diminish projectile-mode
+    :delight projectile-mode
     )
 #+END_SRC
 *** which-key
@@ -672,7 +668,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
     :init (which-key-mode)
-    :diminish which-key-mode
+    :delight which-key-mode
     )
 #+END_SRC
 *** dumb-jump
@@ -693,7 +689,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package editorconfig
     :init (editorconfig-mode 1)
-    :diminish editorconfig-mode
+    :delight editorconfig-mode
     )
 #+END_SRC
 ** logview
@@ -815,7 +811,7 @@ Inserted by installing org-mode or when a release is made."
     :bind (("C-c l" . org-store-link)
            ("C-c a" . org-agenda)
            ("C-c b" . org-iswitchb))
-    :diminish org-indent-mode)
+    :delight org-indent-mode)
 
 (use-package my-org
     :after org-mode
@@ -1071,7 +1067,7 @@ https://github.com/elixir-lang/emacs-elixir
 https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (use-package alchemist
-    :diminish alchemist-mode
+    :delight alchemist-mode
     :hook (elixir-mode . alchemist-mode)
     :bind (:map alchemist-mode-map
                 ("C-c C-c" . alchemist-iex-compile-this-buffer)
@@ -1395,7 +1391,7 @@ Cargo: Run the tests."
 #+BEGIN_SRC emacs-lisp
 (use-package hungry-delete
     :init (global-hungry-delete-mode)
-    :diminish hungry-delete-mode
+    :delight hungry-delete-mode
     )
 #+END_SRC
 ** restclient
@@ -1467,7 +1463,7 @@ Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
            ("C-x b" . helm-buffers-list)
            :map helm-find-files-map
            ("C-o" . helm-ff-run-switch-other-window))
-    :diminish 'helm-mode
+    :delight 'helm-mode
     )
 #+END_SRC
 **** Ripgrep
@@ -1780,7 +1776,9 @@ todo https://github.com/alezost/alect-themes
     (if (daemonp)
         (add-hook 'after-make-frame-functions (lambda (frame)
                                                 (select-frame frame)
-                                                (my/load-theme)))
+                                                (my/load-theme)
+                                                (exec-path-from-shell-initialize)
+                                                ))
       (my/load-theme)
       ))
 #+END_SRC
@@ -1791,7 +1789,7 @@ todo https://github.com/alezost/alect-themes
 *** visual-line-mode
 #+BEGIN_SRC emacs-lisp
 (global-visual-line-mode t)
-(diminish 'visual-line-mode)
+(delight 'visual-line-mode)
 #+END_SRC
 * Emacs Server (Windows)
 #+BEGIN_SRC emacs-lisp
