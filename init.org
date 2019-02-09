@@ -1,4 +1,4 @@
-; -*- eval: (my/org-init-mode); -*-
+; -*- eval: (org-init-mode); -*-
 * Initialize
 ** Initialize straight.el
 #+BEGIN_SRC emacs-lisp
@@ -40,10 +40,10 @@
 #+END_SRC
 ** my/org-init
 #+BEGIN_SRC emacs-lisp
-(use-package my/org-init
+(use-package org-init
     :after org
     :straight nil
-    :commands (my/org-init-mode my/org-init-open)
+    :commands (org-init-mode org-init-open)
     :load-path "my/org-init")
 #+END_SRC
 ** My/Utils
