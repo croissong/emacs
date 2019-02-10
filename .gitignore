@@ -1,4 +1,4 @@
-save/
+tmp/
 elpa/
 quelpa/
 /straight/
@@ -21,7 +21,6 @@ projectile-bookmarks.eld
 test.el
 scratch/
 /init.el
-/custom.el
 /tramp
 /helm-adaptive-history
 /timelog

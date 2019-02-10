@@ -1,4 +1,4 @@
-; -*- eval: (org-init-mode); -*-
+; -*- eval: (org-init-mode); lexical-binding: t -*-
 * Initialize
 ** Initialize straight.el
 #+BEGIN_SRC emacs-lisp
@@ -34,9 +34,12 @@
 ** Bootstrap use-package
 #+BEGIN_SRC emacs-lisp
 (straight-use-package 'use-package)
-(setq straight-use-package-by-default t)
+(setq straight-use-package-by-default t
+      use-package-compute-statistics nil)
+
 (require 'bind-key)
 (use-package delight)
+(use-package cl-lib)
 #+END_SRC
 ** my/org-init
 #+BEGIN_SRC emacs-lisp
@@ -101,6 +104,7 @@
  ("C-M-k" . kill-this-buffer)
  ("C-l" . goto-line)
  ("M-_" . shell-command))
+(unbind-key "C-x b")
 #+END_SRC
 * Functions
 ** Line manouevor functions
@@ -252,18 +256,6 @@ Repeated invocations toggle between the two most recently open buffers."
     (adaptive-wrap-global-mode)
     )
 #+END_SRC
-*** Window
-**** Purpose-mode
-[[https://github.com/bmag/emacs-purpose][@github]]
-#+BEGIN_SRC emacs-lisp
-(use-package window-purpose
-    :commands purpose-mode
-    :config
-  (add-to-list 'purpose-user-mode-purposes '(rust-mode . rust))
-  (add-to-list 'purpose-user-mode-purposes '(cargo-process-mode . cargo-process))
-  (purpose-compile-user-configuration)
-  )
-#+END_SRC
 ** View large files
 #+BEGIN_SRC emacs-lisp
 (use-package vlf
@@ -304,6 +296,73 @@ Repeated invocations toggle between the two most recently open buffers."
      . format-all-mode)
     :delight format-all-mode
     )
+#+END_SRC
+*** persp
+#+BEGIN_SRC emacs-lisp
+(use-package persp-mode
+    :after (counsel-projectile)
+    :delight persp-mode
+    :config
+    (setq persp-autokill-buffer-on-remove 'kill-weak
+          persp-nil-name "0"
+          persp-auto-save-opt 1
+          persp-add-buffer-on-find-file nil
+          persp-restrict-buffers-to-if-foreign-buffer nil
+          persp-init-frame-behaviour (function my/persp)
+          persp-auto-resume-time 0.1)
+    (persp-mode 1)
+    (set-persp-parameter 'dont-save-to-file t nil)
+    :init
+    (defun my/persp (frame new-frame)
+      (select-frame frame)
+      (unless new-frame
+        (persp-def-auto-persp
+         "my"
+         :parameters '((dont-save-to-file . t) (persp-ignore-wconf . t))
+         :switch nil
+         :delete nil
+         :buffer-name "\\*scratch\\|Messages\\*")
+
+        (persp-def-auto-persp
+         "projectile-file"
+         :parameters '((dont-save-to-file . t))
+         :hooks '(projectile-find-file-hooka find-file-hook)
+         :switch 'frame
+         :predicate '(lambda (buffer &optional state) (my/pred "find" buffer state))
+         :get-name  '(lambda (state) (my/get-name "find" state)))
+
+        (persp-def-auto-persp
+         "projectile-switch-after"
+         :parameters '((dont-save-to-file . t))
+         :hooks '(projectile-after-switch-project-hook)
+         :get-buffer '(lambda (state)
+                       (push (cons 'buffer (car (projectile-project-buffers))) state) state)
+         :switch nil
+         :predicate '(lambda (buffer &optional state) (my/pred "switch-A" buffer state))
+         :get-name  '(lambda (state) (my/get-name "switch-A" state))
+         :after-match '(lambda (state)
+                        (persp-frame-switch (alist-get 'persp-name state))
+                        (persp--auto-persp-default-after-match state)))
+        )
+      (persp-switch "my" frame)
+      (switch-to-buffer "*scratch*")
+      (delete-other-windows)
+      (split-window-horizontally)
+      (display-buffer "*Messages*")
+      )
+
+    (defun my/pred (hook buffer &optional state)
+      (and (buffer-live-p buffer)
+           (not (or (persp--buffer-in-persps buffer) (persp-buffer-in-other-p buffer)))
+           (projectile-project-p)
+           (or state t)))
+
+    (defun my/get-name (hook state)
+      (let* ((project-name (with-current-buffer (alist-get 'buffer state)
+                             (projectile-project-name)))
+             (persp-name project-name))
+        (push (cons 'persp-name persp-name) state)
+        state)))
 #+END_SRC
 *** Buffer-move
 https://github.com/lukhas/buffer-move
@@ -515,9 +574,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package counsel
     :after ivy
-    :delight counsel-mode
-    :config
-    (counsel-mode))
+    :init (counsel-mode)
+    :delight counsel-mode)
 
 (use-package ivy
     :after (flx avy smex)
@@ -580,14 +638,16 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
            ("C-r" . swiper)))
 
 (use-package counsel-projectile
+    :commands (counsel-projectile-mode)
     :after (counsel projectile)
+    :init (counsel-projectile-mode)
     :config
-    (counsel-projectile-mode)
     (setq projectile-completion-system 'ivy
-          counsel-projectile-switch-project-action 'magit-status)
+          counsel-projectile-switch-project-action 'counsel-projectile-switch-project-action-vc)
     :bind* (("C-M-f" . counsel-projectile-find-file)
             ("C-M-d" . counsel-projectile-find-dir)
             ("C-M-x" . counsel-projectile-switch-to-buffer)
+            ("C-M-c" . counsel-projectile-switch-project)
             ("C-M-s" . counsel-projectile-rg))
     )
 #+END_SRC
@@ -604,10 +664,11 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** Projectile
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
+    :commands projectile-mode
     :init (projectile-mode)
     :config
     (setq projectile-file-exists-remote-cache-expire nil
-          projectile-switch-project-action 'magit-status
+          projectile-switch-project-action 'counsel-vc
           projectile-enable-caching t)
     :bind* (("C-M-r" . projectile-replace-regexp)
             ("C-c p" . projectile-command-map))
@@ -981,7 +1042,8 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
          ("M-#" . dired-find-file)))
 
 (use-package dired-filter
-    :hook (dired-mode . dired-filter-mode))
+    :hook (dired-mode . dired-filter-mode)
+    :config (setq dired-filter-verbose nil))
 #+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp
@@ -1432,25 +1494,6 @@ Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
    ;;(auto-package-update-now)
  )
 #+END_SRC
-*** persp
-#+BEGIN_SRC emacs-lisp
-(use-package persp-mode
-    :init
-    (setq persp-autokill-buffer-on-remove 'kill-weak
-          persp-keymap-prefix (kbd "C-x p"))
-    :config
-    (persp-mode 1)
-    )
-
-(use-package persp-mode-projectile-bridge
-    :after (projectile persp-mode)
-    :init (persp-mode-projectile-bridge-mode 1)
-    :config
-    (if persp-mode-projectile-bridge-mode
-        (persp-mode-projectile-bridge-find-perspectives-for-all-buffers)
-      (persp-mode-projectile-bridge-kill-perspectives))
-    )
-#+END_SRC
 *** YASnippet
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
@@ -1634,6 +1677,18 @@ maybe for linux
         (setq *exercism-cmd*
         (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe"))))
 #+END_SRC
+*** Purpose-mode
+[[https://github.com/bmag/emacs-purpose][@github]]
+#+BEGIN_SRC emacs-lisp
+(use-package window-purpose
+    :commands purpose-mode
+    :config
+  (add-to-list 'purpose-user-mode-purposes '(rust-mode . rust))
+  (add-to-list 'purpose-user-mode-purposes '(cargo-process-mode . cargo-process))
+  (purpose-compile-user-configuration)
+  )
+#+END_SRC
+
 *** Sqlite
 #+BEGIN_SRC emacs-lisp
 (use-package esqlite
@@ -1675,8 +1730,6 @@ todo https://github.com/alezost/alect-themes
       ;; (set-face-attribute 'region nil :background "darkblue")
       (set-cursor-color "royal blue")
       (set-face-attribute 'show-paren-match nil :background nil)
-      (split-window-horizontally)
-      (display-buffer "*Messages*")
 
       (set-face-attribute 'magit-diff-added-highlight nil :background "#bde9bd" :foreground "#22aa22")
       (set-face-attribute 'magit-diff-added nil :background "#ddffdd" :foreground "#22aa22")
