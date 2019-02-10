@@ -308,12 +308,25 @@ Repeated invocations toggle between the two most recently open buffers."
           persp-auto-save-opt 1
           persp-add-buffer-on-find-file nil
           persp-restrict-buffers-to-if-foreign-buffer nil
-          persp-init-frame-behaviour (function my/persp)
+          persp-init-frame-behaviour 'my/persp-init-frame
           persp-auto-resume-time 0.1)
     (persp-mode 1)
     (set-persp-parameter 'dont-save-to-file t nil)
     :init
-    (defun my/persp (frame new-frame)
+     (defun my/persp-predicate (buffer &optional state)
+      (and (buffer-live-p buffer)
+           (not (or (persp--buffer-in-persps buffer) (persp-buffer-in-other-p buffer)))
+           (projectile-project-p)
+           (or state t)))
+
+     (defun my/persp-get-name (state)
+      (let* ((project-name (with-current-buffer (alist-get 'buffer state)
+                             (projectile-project-name)))
+             (persp-name project-name))
+        (cl-pushnew (cons 'persp-name persp-name) state)
+        state)))
+
+    (defun my/persp-init-frame (frame new-frame)
       (select-frame frame)
       (unless new-frame
         (persp-def-auto-persp
@@ -324,45 +337,31 @@ Repeated invocations toggle between the two most recently open buffers."
          :buffer-name "\\*scratch\\|Messages\\*")
 
         (persp-def-auto-persp
-         "projectile-file"
+         "projectile"
          :parameters '((dont-save-to-file . t))
-         :hooks '(projectile-find-file-hooka find-file-hook)
+         :hooks '(projectile-after-switch-project-hook
+                  projectile-find-file-hook
+                  find-file-hook)
          :switch 'frame
-         :predicate '(lambda (buffer &optional state) (my/pred "find" buffer state))
-         :get-name  '(lambda (state) (my/get-name "find" state)))
-
-        (persp-def-auto-persp
-         "projectile-switch-after"
-         :parameters '((dont-save-to-file . t))
-         :hooks '(projectile-after-switch-project-hook)
-         :get-buffer '(lambda (state)
-                       (push (cons 'buffer (car (projectile-project-buffers))) state) state)
-         :switch nil
-         :predicate '(lambda (buffer &optional state) (my/pred "switch-A" buffer state))
-         :get-name  '(lambda (state) (my/get-name "switch-A" state))
-         :after-match '(lambda (state)
-                        (persp-frame-switch (alist-get 'persp-name state))
-                        (persp--auto-persp-default-after-match state)))
-        )
+         :predicate 'my/persp-predicate
+         :get-name 'my/persp-get-name
+         :get-buffer (function (lambda (state)
+                       (let ((buf (if (eq hook 'projectile-after-switch-project-hook)
+                                      (car (projectile-project-buffers))
+                                    (current-buffer))))
+                         (cl-pushnew (cons 'buffer buf) state)
+                         state)))
+         :after-match (function (lambda (state)
+                        (when (eq hook 'projectile-after-switch-project-hook)
+                          (setcdr (assq :switch state) nil)
+                          (persp-frame-switch (alist-get 'persp-name state)))
+                        (persp--auto-persp-default-after-match state))))
       (persp-switch "my" frame)
       (switch-to-buffer "*scratch*")
       (delete-other-windows)
       (split-window-horizontally)
       (display-buffer "*Messages*")
-      )
-
-    (defun my/pred (hook buffer &optional state)
-      (and (buffer-live-p buffer)
-           (not (or (persp--buffer-in-persps buffer) (persp-buffer-in-other-p buffer)))
-           (projectile-project-p)
-           (or state t)))
-
-    (defun my/get-name (hook state)
-      (let* ((project-name (with-current-buffer (alist-get 'buffer state)
-                             (projectile-project-name)))
-             (persp-name project-name))
-        (push (cons 'persp-name persp-name) state)
-        state)))
+      ))
 #+END_SRC
 *** Buffer-move
 https://github.com/lukhas/buffer-move
