@@ -512,10 +512,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** Flycheck
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
-    :init
-    ;; (add-hook 'after-init-hook #'global-flycheck-mode) ;
+    :commands flycheck-mode
     :config
-    (setq flycheck-idle-change-delay 2)
+    (setq flycheck-idle-change-delay 1)
     ;; disable jshint since we prefer eslint checking
     ;; (setq-default flycheck-disabled-checkers
     ;;  (append flycheck-disabled-checkers
@@ -540,8 +539,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 *** Ripgrep
 #+BEGIN_SRC emacs-lisp
-(use-package wgrep)
-(use-package rg)
+(use-package wgrep :defer t)
+(use-package rg :defer t)
 #+END_SRC
 *** ivy
 #+BEGIN_SRC emacs-lisp
@@ -693,6 +692,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** emamux
 #+BEGIN_SRC emacs-lisp
 (use-package emamux
+    :defer t
     :config (setq emamux:show-buffers-with-index nil
                   emamux:get-buffers-regexp  "^\\(buffer[0-9]+\\): +\\([0-9]+\\) +\\(bytes\\): +[\"]\\(.*\\)[\"]")
     )
@@ -722,24 +722,24 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (use-package magit
+    :commands magit-status
     :init
     (setq magit-auto-revert-mode nil)
     :config
-    (setq magit-diff-arguments (quote ("--no-ext-diff" "--stat"))
-          magit-diff-section-arguments (quote ("--no-ext-diff" "-U2"))
+    (setq magit-diff-section-arguments (quote ("--no-ext-diff" "-U2"))
           magit-diff-refine-ignore-whitespace nil
           magit-diff-refine-hunk t)
-     (magit-add-section-hook 'magit-status-sections-hook
-                          'magit-insert-modules-unpulled-from-upstream
-                          'magit-insert-unpulled-from-upstream)
-     (magit-add-section-hook 'magit-status-sections-hook
-                             'magit-insert-modules-unpushed-to-upstream
-                             'magit-insert-unpulled-from-upstream)
-    )
+    (magit-add-section-hook 'magit-status-sections-hook
+                            'magit-insert-modules-unpulled-from-upstream
+                            'magit-insert-unpulled-from-upstream)
+    (magit-add-section-hook 'magit-status-sections-hook
+                            'magit-insert-modules-unpushed-to-upstream
+                            'magit-insert-unpulled-from-upstream))
 
 (use-package forge
-  :after magit
-  :straight (:host github :repo "magit/forge"))
+    :after magit
+    :defer t
+    :straight (:host github :repo "magit/forge"))
 #+END_SRC
 *** ssh
 **** windows
@@ -1074,9 +1074,7 @@ https://github.com/tonini/alchemist.el
 #+END_SRC
 *** Markdown
 #+BEGIN_SRC emacs-lisp
-(use-package markdown-mode
-    :mode "\\.md\\'"
-    )
+(use-package markdown-mode :mode "\\.md\\'")
 #+END_SRC
 *** Python
 #+BEGIN_SRC emacs-lisp
@@ -1233,7 +1231,7 @@ https://github.com/tonini/alchemist.el
 [[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package xtest
-)
+    :defer t)
 #+END_SRC
 *** Php
 #+BEGIN_SRC emacs-lisp
@@ -1363,7 +1361,7 @@ Cargo: Run the tests."
 #+END_SRC
 ** x509-mode
 #+BEGIN_SRC emacs-lisp
-(use-package x509-mode)
+(use-package x509-mode :defer t)
 #+END_SRC
 ** Tramp
 #+BEGIN_SRC emacs-lisp
@@ -1371,7 +1369,7 @@ Cargo: Run the tests."
 #+END_SRC
 ** quickrun
 #+BEGIN_SRC emacs-lisp
-(use-package quickrun)
+(use-package quickrun :commands quickrun)
 #+END_SRC
 ** esup
 Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
@@ -1699,13 +1697,13 @@ todo https://github.com/alezost/alect-themes
       (set-cursor-color "royal blue")
       (set-face-attribute 'show-paren-match nil :background nil)
 
-      (set-face-attribute 'magit-diff-added-highlight nil :background "#bde9bd" :foreground "#22aa22")
-      (set-face-attribute 'magit-diff-added nil :background "#ddffdd" :foreground "#22aa22")
-      (set-face-attribute 'diff-refine-added nil :background "#b3fcb3")
-      (set-face-attribute 'magit-diff-removed-highlight nil :background "#e9bdbd" :foreground "#aa2222")
-      (set-face-attribute 'magit-diff-removed nil :background "#efd0d0" :foreground "#aa2222")
-
-      (set-face-attribute 'magit-section-highlight nil :background "#efe2c2")
+      (with-eval-after-load 'magit
+        (set-face-attribute 'magit-diff-added-highlight nil :background "#bde9bd" :foreground "#22aa22")
+        (set-face-attribute 'magit-diff-added nil :background "#ddffdd" :foreground "#22aa22")
+        (set-face-attribute 'diff-refine-added nil :background "#b3fcb3")
+        (set-face-attribute 'magit-diff-removed-highlight nil :background "#e9bdbd" :foreground "#aa2222")
+        (set-face-attribute 'magit-diff-removed nil :background "#efd0d0" :foreground "#aa2222")
+        (set-face-attribute 'magit-section-highlight nil :background "#efe2c2"))
       (set-face-attribute 'org-block nil :foreground "#282828")
 
       (set-face-attribute 'isearch nil :foreground "#f4ecd6")
