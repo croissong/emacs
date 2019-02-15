@@ -308,23 +308,25 @@ Repeated invocations toggle between the two most recently open buffers."
           persp-auto-save-opt 1
           persp-add-buffer-on-find-file nil
           persp-restrict-buffers-to-if-foreign-buffer nil
+          persp-switch-to-added-buffer nil
           persp-init-frame-behaviour 'my/persp-init-frame
           persp-auto-resume-time 0.1)
+
     (persp-mode 1)
     (set-persp-parameter 'dont-save-to-file t nil)
     (remove-hook 'kill-buffer-query-functions 'persp-kill-buffer-query-function)
     :init
-     (defun my/persp-predicate (buffer &optional state)
+    (defun my/persp-predicate (buffer &optional state)
       (and (buffer-live-p buffer)
            (not (or (persp--buffer-in-persps buffer) (persp-buffer-in-other-p buffer)))
            (projectile-project-p)
            (or state t)))
 
-     (defun my/persp-get-name (state)
+    (defun my/persp-get-name (state)
       (let* ((project-name (with-current-buffer (alist-get 'buffer state)
                              (projectile-project-name)))
              (persp-name project-name))
-        (cl-pushnew (cons 'persp-name persp-name) state :test 'equal))))
+        (cl-pushnew (cons 'persp-name persp-name) state :test 'equal)))
 
     (defun my/persp-init-frame (frame new-frame)
       (select-frame frame)
@@ -355,12 +357,12 @@ Repeated invocations toggle between the two most recently open buffers."
                           (setcdr (assq :switch state) nil)
                           (persp-frame-switch (alist-get 'persp-name state)))
                         (persp--auto-persp-default-after-match state))))
-      (persp-switch "my" frame)
-      (switch-to-buffer "*scratch*")
-      (delete-other-windows)
-      (split-window-horizontally)
-      (display-buffer "*Messages*")
-      ))
+
+        (persp-switch "my" frame)
+        (switch-to-buffer "*scratch*")
+        (delete-other-windows)
+        (split-window-horizontally)
+        (display-buffer "*Messages*"))))
 #+END_SRC
 *** Buffer-move
 https://github.com/lukhas/buffer-move
@@ -910,17 +912,8 @@ Inserted by installing org-mode or when a release is made."
    (shell . t)
    (sql . t)))
 #+END_SRC
-
-#+RESULTS:
-
-**** Passwords
-#+BEGIN_SRC emacs-lisp
-(use-package pass
-    :config )
-#+END_SRC
 **** Encryption
 #+BEGIN_SRC  emacs-lisp
-(setenv "GPG_AGENT_INFO" nil)
 (require 'epa-file)
 (setq epa-file-select-keys nil)
 #+END_SRC
@@ -1356,6 +1349,11 @@ Cargo: Run the tests."
     :init (global-hungry-delete-mode)
     :delight hungry-delete-mode
     )
+#+END_SRC
+** Passwords
+#+BEGIN_SRC emacs-lisp
+(use-package pass
+    :commands pass)
 #+END_SRC
 ** restclient
 #+BEGIN_SRC emacs-lisp
