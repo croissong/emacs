@@ -103,7 +103,9 @@
 (bind-keys*
  ("C-M-k" . kill-this-buffer)
  ("C-l" . goto-line)
- ("M-_" . shell-command))
+ ("M-_" . shell-command)
+ ("C-h C-f" . find-function)
+ ("C-h C-v" . find-variable))
 (unbind-key "C-x b")
 #+END_SRC
 * Functions
@@ -548,18 +550,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package avy)
 (use-package smex)
 
-(use-package ivy-hydra
-    :after (ivy hydra))
-
-(use-package counsel
-    :after ivy
-    :init (counsel-mode)
-    :delight counsel-mode)
-
 (use-package ivy
     :after (flx avy smex)
-    :init
-    (ivy-mode)
+    :commands ivy-mode
+    :init (ivy-mode 1)
     :config
     (setq ivy-use-virtual-buffers t
           ivy-count-format "(%d/%d) "
@@ -585,37 +579,45 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
             (woman . "^"))
 
           ivy-extra-directories '("./")
-          magit-completing-read-function 'ivy-completing-read
-          counsel-rg-base-command (format "rg --no-heading -S --line-number --color never --ignore-file %s/.config/ripgrep/ignore %%s ." (substitute-in-file-name "$HOME"))
-          counsel-grep-base-command counsel-rg-base-command)
+          magit-completing-read-function 'ivy-completing-read)
 
 
-    :bind (("M-x" . counsel-M-x)
-           ("C-x C-f" . counsel-find-file)
-           ("C-v" . counsel-switch-buffer)
-           ("C-s" . counsel-grep-or-swiper)
-           :map ivy-minibuffer-map
-           ("M-ö" . counsel-up-directory)
-           ("M-#" . ivy-alt-done)
-           ("C-r" . ivy-previous-line-or-history)
-           ("M-ä" . ivy-next-line)
-           ("C-x C-s" . ivy-occur)
-           ("M-ü" . ivy-previous-line)
-           :map ivy-switch-buffer-map
-           ("C-k" . ivy-switch-buffer-kill))
-    :delight ivy-mode
-    )
+    :bind (:map ivy-minibuffer-map
+                ("M-ö" . counsel-up-directory)
+                ("M-#" . ivy-alt-done)
+                ("C-r" . ivy-previous-line-or-history)
+                ("M-ä" . ivy-next-line)
+                ("C-x C-s" . ivy-occur)
+                ("M-ü" . ivy-previous-line)
+                :map ivy-switch-buffer-map
+                ("C-k" . ivy-switch-buffer-kill))
+    :delight ivy-mode)
 
-(use-package ivy-rich
-    :after ivy
-    :config
-    (ivy-rich-mode 1))
+(use-package ivy-hydra
+    :after (ivy hydra))
 
 
 (use-package swiper
     :after ivy
     :bind (("C-s" . swiper)
            ("C-r" . swiper)))
+
+(use-package counsel
+    :after swiper
+    :init (counsel-mode 1)
+    :config
+    (setq counsel-rg-base-command (format "rg --no-heading -S --line-number --color never --ignore-file %s/.config/ripgrep/ignore %%s ." (substitute-in-file-name "$HOME"))
+          counsel-grep-base-command counsel-rg-base-command)
+    :bind (("M-x" . counsel-M-x)
+           ("C-x C-f" . counsel-find-file)
+           ("C-v" . counsel-switch-buffer)
+           ("C-s" . counsel-grep-or-swiper))
+    :delight counsel-mode)
+
+(use-package ivy-rich
+    :after ivy
+    :config
+    (ivy-rich-mode 1))
 
 (use-package counsel-projectile
     :commands (counsel-projectile-mode)
@@ -628,8 +630,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
             ("C-M-d" . counsel-projectile-find-dir)
             ("C-M-x" . counsel-projectile-switch-to-buffer)
             ("C-M-c" . counsel-projectile-switch-project)
-            ("C-M-s" . counsel-projectile-rg))
-    )
+            ("C-M-s" . counsel-projectile-rg)))
 #+END_SRC
 *** Space-line
 [[https://github.com/TheBB/spaceline/tree/master/][The Spacemacs Modeline @github]]
@@ -638,30 +639,33 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :init
     (require 'spaceline-config)
     :config
-    (spaceline-toggle-buffer-size-off)
-    )
+    (spaceline-toggle-buffer-size-off))
 #+END_SRC
 *** Projectile
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
     :commands projectile-mode
-    :init (projectile-mode)
+    :init (projectile-mode 1)
     :config
     (setq projectile-file-exists-remote-cache-expire nil
           projectile-switch-project-action 'counsel-vc
-          projectile-enable-caching t)
+          projectile-enable-caching t
+          projectile-ignored-project-function
+          (function (lambda (path)
+            (let ((straight-dir (format "%s/%s" (f-filename user-emacs-directory) "straight")))
+              (message "%s" path)
+              (string-match-p (regexp-quote straight-dir) path)))))
+
     :bind* (("C-M-r" . projectile-replace-regexp)
             ("C-c p" . projectile-command-map))
-    :delight projectile-mode
-    )
+    :delight projectile-mode)
 #+END_SRC
 *** which-key
 [[https://github.com/justbur/emacs-which-key?utm_medium=referral&utm_campaign=ZEEF&utm_source=https%3A%2F%2Femacs.zeef.com%2Fehartc][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
-    :init (which-key-mode)
-    :delight which-key-mode
-    )
+    :init (which-key-mode 1)
+    :delight which-key-mode)
 #+END_SRC
 *** dumb-jump
 [[https://github.com/jacktasia/dumb-jump][@github.com]]
@@ -670,8 +674,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :config
     (setq dumb-jump-prefer-searcher 'rg
           dumb-jump-selector 'ivy)
-    :bind ("M-." . dumb-jump-go)
-    )
+    :bind ("M-." . dumb-jump-go))
 #+END_SRC
 *** flymake
 #+BEGIN_SRC emacs-lisp
