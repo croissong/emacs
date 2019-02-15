@@ -149,10 +149,11 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
 ** Read env vars
  #+BEGIN_SRC emacs-lisp
 (use-package exec-path-from-shell
-    :config
+    :init
     (setq exec-path-from-shell-arguments '("-i")
           exec-path-from-shell-variables '("DISPLAY" "XAUTHORITY"))
-    )
+    (my-util-with-eval-after-frame
+     (exec-path-from-shell-initialize)))
  #+END_SRC
 ** My Values
 #+BEGIN_SRC emacs-lisp
@@ -218,38 +219,34 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
     (define-globalized-minor-mode adaptive-wrap-global-mode
         adaptive-wrap-prefix-mode
       adaptive-wrap-prefix-mode)
-    (adaptive-wrap-global-mode)
-    )
+    (adaptive-wrap-global-mode))
 #+END_SRC
 ** View large files
 #+BEGIN_SRC emacs-lisp
 (use-package vlf
     :commands (vlf-mode vlf)
     :init
-    (require 'vlf-setup)
-    )
+    (require 'vlf-setup))
 #+END_SRC
 ** Minor Modes
 *** Drag-stuff
 #+BEGIN_SRC emacs-lisp
 (use-package drag-stuff
     :init
-    (drag-stuff-global-mode)
+    (drag-stuff-global-mode 1)
     :config
     (cl-pushnew 'org-mode drag-stuff-except-modes)
     :bind (:map drag-stuff-mode-map
                 ("M-<up>" . drag-stuff-up)
                 ("M-<down>" . drag-stuff-down))
-    :delight drag-stuff-mode
-    )
+    :delight drag-stuff-mode)
 #+END_SRC
 *** whitespace-cleanup-mode
 [[https://github.com/purcell/whitespace-cleanup-mode][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package whitespace-cleanup-mode
-    :init (global-whitespace-cleanup-mode)
-    :delight whitespace-cleanup-mode
-    )
+    :init (global-whitespace-cleanup-mode 1)
+    :delight whitespace-cleanup-mode)
 #+END_SRC
 *** format-all
 [[https://github.com/purcell/whitespace-cleanup-mode][@github.com]]
@@ -259,8 +256,7 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
     :hook
     ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode python-mode)
      . format-all-mode)
-    :delight format-all-mode
-    )
+    :delight format-all-mode)
 #+END_SRC
 *** persp
 #+BEGIN_SRC emacs-lisp
@@ -1091,8 +1087,7 @@ https://github.com/tonini/alchemist.el
     :config
     (setq elpy-modules (delq 'elpy-module-django
                              (delq 'elpy-module-highlight-indentation elpy-modules)))
-    (elpy-enable)
-    )
+    (elpy-enable))
 #+END_SRC
 *** Web
 **** HTML/CSS
@@ -1101,8 +1096,7 @@ https://github.com/tonini/alchemist.el
 (use-package css-mode
     :mode ("\\.less\\'" "\\.css\\'" "\\.sass\\'" "\\.scss\\'")
     :config
-    (setq css-indent-offset 4)
-    )
+    (setq css-indent-offset 4))
 #+END_SRC
 **** JS
 ***** js2-mode
@@ -1146,17 +1140,16 @@ https://github.com/tonini/alchemist.el
     :mode "\\.json\\'"
     :config
     (setq json-reformat:indent-width 2
-          js-indent-level 2)
-    )
+          js-indent-level 2))
 #+END_SRC
 ***** typescript
 #+BEGIN_SRC emacs-lisp
 (use-package typescript-mode
-    :mode "\\.ts\\'"
-    )
+    :mode "\\.ts\\'")
 
 (use-package tide
-    :hook ((typescript-mode . #'setup-tide-mode)
+    :after typescript-mode
+    :hook ((typescript-mode . 'setup-tide-mode)
            (before-save . tide-format-before-save))
     :init
     (defun setup-tide-mode ()
@@ -1305,8 +1298,7 @@ Cargo: Run the tests."
 #+BEGIN_SRC emacs-lisp
 (use-package hungry-delete
     :init (global-hungry-delete-mode)
-    :delight hungry-delete-mode
-    )
+    :delight hungry-delete-mode)
 #+END_SRC
 ** Passwords
 #+BEGIN_SRC emacs-lisp
@@ -1337,12 +1329,6 @@ Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
 (use-package esup
     :commands esup)
 #+END_SRC
-** wakatime
-#+BEGIN_SRC emacs-lisp
-(use-package wakatime-mode
-    :commands (global-wakatime-mode)
-)
-#+END_SRC
 * Style
 ** Theme
 todo https://github.com/alezost/alect-themes
@@ -1370,20 +1356,14 @@ todo https://github.com/alezost/alect-themes
         (set-face-attribute 'magit-diff-removed-highlight nil :background "#e9bdbd" :foreground "#aa2222")
         (set-face-attribute 'magit-diff-removed nil :background "#efd0d0" :foreground "#aa2222")
         (set-face-attribute 'magit-section-highlight nil :background "#efe2c2"))
-      (set-face-attribute 'org-block nil :foreground "#282828")
 
+      (set-face-attribute 'org-block nil :foreground "#282828")
       (set-face-attribute 'isearch nil :foreground "#f4ecd6")
       (set-face-attribute 'highlight nil :background "#e4cf9a")
       )
 
-    (if (daemonp)
-        (add-hook 'after-make-frame-functions (lambda (frame)
-                                                (select-frame frame)
-                                                (my/load-theme)
-                                                (exec-path-from-shell-initialize)
-                                                ))
-      (my/load-theme)
-      ))
+    (my-util-with-eval-after-frame
+     (my/load-theme)))
 #+END_SRC
 * [disabled]
 :PROPERTIES:
@@ -1552,6 +1532,11 @@ todo https://github.com/alezost/alect-themes
 (use-package aggressive-indent
     :init (global-aggressive-indent-mode 1)
 
+#+END_SRC
+** wakatime
+#+BEGIN_SRC emacs-lisp
+(use-package wakatime-mode
+    :commands (global-wakatime-mode))
 #+END_SRC
 ** pomodoro
 #+BEGIN_SRC emacs-lisp

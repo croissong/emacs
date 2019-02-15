@@ -14,6 +14,14 @@
     (message "%s not found found; please install" exe)
     nil))
 
+(defmacro my-util-with-eval-after-frame (&rest body)
+  `(if (daemonp)
+      (add-hook 'after-make-frame-functions
+                (function (lambda (frame)
+                  (select-frame frame)
+                  ,@body)))
+      ,@body))
+
 (provide 'my-util)
 
 ;;; my-util.el ends here
