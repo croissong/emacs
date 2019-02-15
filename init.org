@@ -271,7 +271,7 @@ Repeated invocations toggle between the two most recently open buffers."
     :init
     (drag-stuff-global-mode)
     :config
-    (add-to-list 'drag-stuff-except-modes 'org-mode)
+    (cl-pushnew 'org-mode drag-stuff-except-modes)
     :bind (:map drag-stuff-mode-map
                 ("M-<up>" . drag-stuff-up)
                 ("M-<down>" . drag-stuff-down))
@@ -312,6 +312,7 @@ Repeated invocations toggle between the two most recently open buffers."
           persp-auto-resume-time 0.1)
     (persp-mode 1)
     (set-persp-parameter 'dont-save-to-file t nil)
+    (remove-hook 'kill-buffer-query-functions 'persp-kill-buffer-query-function)
     :init
      (defun my/persp-predicate (buffer &optional state)
       (and (buffer-live-p buffer)
@@ -323,8 +324,7 @@ Repeated invocations toggle between the two most recently open buffers."
       (let* ((project-name (with-current-buffer (alist-get 'buffer state)
                              (projectile-project-name)))
              (persp-name project-name))
-        (cl-pushnew (cons 'persp-name persp-name) state)
-        state)))
+        (cl-pushnew (cons 'persp-name persp-name) state :test 'equal))))
 
     (defun my/persp-init-frame (frame new-frame)
       (select-frame frame)
@@ -349,8 +349,7 @@ Repeated invocations toggle between the two most recently open buffers."
                        (let ((buf (if (eq hook 'projectile-after-switch-project-hook)
                                       (car (projectile-project-buffers))
                                     (current-buffer))))
-                         (cl-pushnew (cons 'buffer buf) state)
-                         state)))
+                         (cl-pushnew (cons 'buffer buf) state :test 'equal))))
          :after-match (function (lambda (state)
                         (when (eq hook 'projectile-after-switch-project-hook)
                           (setcdr (assq :switch state) nil)
@@ -403,6 +402,10 @@ https://github.com/bbatsov/crux
 (use-package rainbow-mode
     :hook (css-mode org-mode help-mode)
     :delight rainbow-mode)
+#+END_SRC
+*** kurecolor
+#+BEGIN_SRC emacs-lisp
+(use-package kurecolor :defer t)
 #+END_SRC
 *** Evil-Nerd-Commenter
 #+BEGIN_SRC emacs-lisp
@@ -492,31 +495,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 **** Org-mode fix
 #+BEGIN_SRC emacs-lisp
-;; diff hooks for org mode
-(add-hook 'ediff-select-hook 'f-ediff-org-unfold-tree-element)
-(add-hook 'ediff-unselect-hook 'f-ediff-org-fold-tree)
-;; Check for org mode and existence of buffer
-(defun f-ediff-org-showhide(buf command &rest cmdargs)
-  "If buffer exists and is orgmode then execute command"
-  (if buf
-      (if (eq (buffer-local-value 'major-mode (get-buffer buf)) 'org-mode)
-    (with-current-buffer (apply command cmdargs)))
-    )
-  )
-
-(defun f-ediff-org-unfold-tree-element ()
-  "Unfold tree at diff location"
-  (f-ediff-org-showhide ediff-buffer-A 'org-reveal)
-  (f-ediff-org-showhide ediff-buffer-B 'org-reveal)
-  (f-ediff-org-showhide ediff-buffer-C 'org-reveal)
-  )
-;;
-(defun f-ediff-org-fold-tree ()
-  "Fold tree back to top level"
-  (f-ediff-org-showhide ediff-buffer-A 'hide-sublevels 1)
-  (f-ediff-org-showhide ediff-buffer-B 'hide-sublevels 1)
-  (f-ediff-org-showhide ediff-buffer-C 'hide-sublevels 1)
-  )
+(add-hook 'ediff-prepare-buffer-hook 'show-all)
 #+END_SRC
 *** Expand-Region
 #+BEGIN_SRC emacs-lisp
@@ -612,6 +591,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
     :bind (("M-x" . counsel-M-x)
            ("C-x C-f" . counsel-find-file)
+           ("C-v" . counsel-switch-buffer)
            ("C-s" . counsel-grep-or-swiper)
            :map ivy-minibuffer-map
            ("M-ö" . counsel-up-directory)
@@ -639,7 +619,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package counsel-projectile
     :commands (counsel-projectile-mode)
     :after (counsel projectile)
-    :init (counsel-projectile-mode)
+    :init (counsel-projectile-mode 1)
     :config
     (setq projectile-completion-system 'ivy
           counsel-projectile-switch-project-action 'counsel-projectile-switch-project-action-vc)
@@ -806,8 +786,10 @@ Inserted by installing org-mode or when a release is made."
     :straight org-plus-contrib
     :mode ("\\.org\\'" . org-mode)
     :config
+    (global-reveal-mode 1)
+
     (require 'org-checklist)
-    (org-indent-mode)
+    (org-indent-mode 1)
     (setq org-startup-indented t
           org-blank-before-new-entry '((heading . nil)
                                        (plain-list-item . nil))
@@ -947,14 +929,14 @@ Inserted by installing org-mode or when a release is made."
 ;;(require 'ox-latex)
 (unless (boundp 'org-latex-classes)
   (setq org-latex-classes nil))
-(add-to-list 'org-latex-classes
-             '("article"
+(cl-pushnew '("article"
                "\\documentclass{article}"
                ("\\section{%s}" . "\\section*{%s}")
                ("\\subsection{%s}" . "\\subsection*{%s}")
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                ("\\paragraph{%s}" . "\\paragraph*{%s}")
-               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+            org-latex-classes :test 'equal)
 (setq org-latex-preview-ltxpng-directory (concat temporary-file-directory "ltxpng/"))
 #+END_SRC
 *** Functions
@@ -1268,22 +1250,16 @@ https://github.com/tonini/alchemist.el
 *** Rust
 #+BEGIN_SRC emacs-lisp
 (use-package rust-mode
-    :mode "\\.rs\\'"
-    )
+    :mode "\\.rs\\'")
 
 (use-package company-racer
     :hook (racer-mode . company-mode)
     :config
-    (add-to-list 'company-backends 'company-racer)
-    )
+    (cl-pushnew 'company-racer company-backends))
 
 (use-package racer
     :hook ((rust-mode . racer-mode)
-           (racer-mode . eldoc-mode))
-    :config
-    (setq racer-cmd "~/.cargo/bin/racer.exe"
-          racer-rust-src-path "C:/Program Files/Rust/source/src/")
-  )
+           (racer-mode . eldoc-mode)))
 
 (use-package cargo
     :hook (rust-mode . cargo-minor-mode)
@@ -1322,13 +1298,10 @@ Cargo: Run the tests."
 #+BEGIN_SRC emacs-lisp
 (use-package company-go
     :after go-mode
-    :config
-    (add-to-list 'company-backends 'company-go)
-    )
+    :config (cl-pushnew 'company-go company-backends))
 (use-package go-mode
     :mode "\\.go\\'"
-    :hook (go-mode . flycheck-mode)
-    )
+    :hook (go-mode . flycheck-mode))
 #+END_SRC
 *** nim
 #+BEGIN_SRC emacs-lisp
@@ -1558,8 +1531,6 @@ Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
                                                 "*Shell Command Output*"
                                                 "*vc-diff*")
                                             eos)))))
-
-;;(add-to-list 'ido-ignore-files "\\`media/")
 #+END_SRC
 **** flx-ido
 #+BEGIN_SRC emacs-lisp
@@ -1682,8 +1653,8 @@ maybe for linux
 (use-package window-purpose
     :commands purpose-mode
     :config
-  (add-to-list 'purpose-user-mode-purposes '(rust-mode . rust))
-  (add-to-list 'purpose-user-mode-purposes '(cargo-process-mode . cargo-process))
+  (cl-pushnew '((rust-mode . rust)
+                (cargo-process-mode . cargo-process)) purpose-user-mode-purposes :test 'equal)
   (purpose-compile-user-configuration)
   )
 #+END_SRC
