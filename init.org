@@ -74,9 +74,7 @@
  ("C-h C-v" . find-variable-at-point)
 
  ;; delete other window
- ("C-x q" . (function (lambda ()
-              (interactive)
-              (delete-window (other-window 1))))))
+ ("C-x q" . (lambda () (interactive) (delete-window (other-window 1)))))
 
 (bind-keys
  ("M-ö"  . left-char)
@@ -1253,6 +1251,11 @@ Cargo: Run the tests."
     :straight auctex
     :mode "\\.tex\\'"
     :hook (LaTeX-mode . turn-on-reftex))
+ #+END_SRC
+*** adoc
+ #+BEGIN_SRC emacs-lisp
+(use-package adoc-mode
+    :mode "\\.adoc\\'")
  #+END_SRC
 *** yaml
 #+BEGIN_SRC emacs-lisp
