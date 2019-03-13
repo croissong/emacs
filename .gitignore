@@ -28,3 +28,4 @@ scratch/
 /persp-confs/
 irony/
 forge-database.sqlite
+/transient/
