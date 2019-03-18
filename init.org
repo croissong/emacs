@@ -1273,6 +1273,22 @@ Cargo: Run the tests."
     :init (global-hungry-delete-mode)
     :delight hungry-delete-mode)
 #+END_SRC
+** mu4e
+#+BEGIN_SRC emacs-lisp
+(use-package mu4e
+    :straight nil
+    :commands mu4e
+    :config
+    (setq
+     mu4e-get-mail-command "offlineimap"
+     mu4e-maildir       "~/mail"   ;; top-level Maildir
+     mu4e-sent-folder   "/sent"       ;; folder for sent messages
+     mu4e-drafts-folder "/drafts"     ;; unfinished messages
+     mu4e-trash-folder  "/trash"      ;; trashed messages
+     mu4e-refile-folder "/archive")   ;; saved messages
+
+    :load-path "/usr/share/emacs/site-lisp/mu4e")
+#+END_SRC
 ** Passwords
 #+BEGIN_SRC emacs-lisp
 (use-package pass
