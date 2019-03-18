@@ -1309,6 +1309,7 @@ todo https://github.com/alezost/alect-themes
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (setq-default cursor-type 'bar)
+(add-to-list 'default-frame-alist '(font . "Monospace-12"))
 (use-package gruvbox-theme
     :defer t
     :init
