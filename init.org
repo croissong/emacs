@@ -202,6 +202,13 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
   (remq 'process-kill-buffer-query-function
          kill-buffer-query-functions))
 #+END_SRC
+** secrets
+#+BEGIN_SRC emacs-lisp
+(require 'auth-source-pass)
+(require 'secrets)
+(auth-source-pass-enable)
+(setq auth-sources '(password-store))
+#+END_SRC
 ** eldoc
 #+BEGIN_SRC emacs-lisp
 (delight 'eldoc-mode nil "eldoc")
@@ -1287,10 +1294,6 @@ Cargo: Run the tests."
     :commands mu4e
     :config
 
-    (require 'auth-source-pass)
-    (auth-source-pass-enable)
-    (setq auth-sources '(password-store))
-
     (setq starttls-use-gnutls t
       starttls-gnutls-program "gnutls-cli"
       starttls-extra-arguments nil)
@@ -1326,6 +1329,15 @@ Cargo: Run the tests."
          (smtpmail-default-smtp-server "smtp.office365.com")
          (smtpmail-smtp-server "smtp.office365.com")
          (smtpmail-stream-type starttls)
+         (smtpmail-smtp-service 587)
+         )
+        ("gmail"
+         (mu4e-sent-folder "/gmail/sent")
+         (user-mail-address "jan.moeller0@gmail.com")
+         (smtpmail-smtp-user "jan.moeller0@gmail.com")
+         (smtpmail-local-domain "gmail.com")
+         (smtpmail-default-smtp-server "smtp.gmail.com")
+         (smtpmail-smtp-server "smtp.gmail.com")
          (smtpmail-smtp-service 587)
          )
         ;; Include any other accounts here ...
