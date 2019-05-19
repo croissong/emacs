@@ -1278,16 +1278,6 @@ Cargo: Run the tests."
      mu4e-refile-folder "/archive")   ;; saved messages
 
 
-    ;; http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-/
-    ;; I have my "default" parameters from Gmail
-    ;; (setq mu4e-sent-folder "/Users/Greg/Maildir/sent"
-    ;;   ;; mu4e-sent-messages-behavior 'delete ;; Unsure how this should be configured
-    ;;   mu4e-drafts-folder "/Users/Greg/Maildir/drafts"
-    ;;   user-mail-address "gregory.j.stein@gmail.com"
-    ;;   smtpmail-default-smtp-server "smtp.gmail.com"
-    ;;   smtpmail-smtp-server "smtp.gmail.com"
-    ;;   smtpmail-smtp-service 587)
-
     ;; Now I set a list of
     (defvar my-mu4e-account-alist
       '(("iogroup"
@@ -1335,6 +1325,8 @@ Cargo: Run the tests."
 
 
     :load-path "/usr/share/emacs/site-lisp/mu4e")
+
+(use-package mu4e-overview)
 
 (use-package mu4e-alert
     :hook (message-send . mml-secure-message-sign-pgpmime)
