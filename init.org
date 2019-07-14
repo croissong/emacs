@@ -1239,7 +1239,7 @@ Cargo: Run the tests."
 *** yaml
 #+BEGIN_SRC emacs-lisp
 (use-package yaml-mode
-    :mode ("\\.yml\\'" "\\.yaml\\'"))
+    :mode ("\\.yml.*\\'" "\\.yaml.*\\'"))
 #+END_SRC
 *** sql
 #+BEGIN_SRC emacs-lisp
