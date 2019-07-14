@@ -1067,7 +1067,7 @@ https://github.com/tonini/alchemist.el
 [[http://web-mode.org/][@web-mode.org]]
 #+BEGIN_SRC emacs-lisp
 (use-package web-mode
-    :mode ("\\.html?\\'" "\\.jsx\\'")
+    :mode ("\\.html?\\'" "\\.jsx\\'" "\\.tsx\\'")
     :config
     (require  'company-web-html)
     (setq web-mode-code-indent-offset 2
@@ -1105,11 +1105,15 @@ https://github.com/tonini/alchemist.el
 (use-package tide
     :after typescript-mode
     :hook ((typescript-mode . 'setup-tide-mode)
-           (before-save . tide-format-before-save))
+           (before-save . tide-format-before-save)
+           (web-mode . (lambda ()
+            (when (string-equal "tsx" (file-name-extension buffer-file-name))
+              (setup-tide-mode)))))
     :init
     (defun setup-tide-mode ()
       (interactive)
       (tide-setup)
+      (flycheck-add-mode 'typescript-tslint 'web-mode)
       (flycheck-mode 1)
       (setq flycheck-check-syntax-automatically '(save mode-enabled))
       (eldoc-mode 1)
@@ -1119,7 +1123,8 @@ https://github.com/tonini/alchemist.el
           tide-tsserver-executable "node_modules/typescript/bin/tsserver"
           typescript-indent-level 2)
     :bind (:map tide-mode-map
-                ("C-f" . tide-fix)))
+                ("C-f" . tide-fix))
+    )
 #+END_SRC
 *** Elisp
 #+BEGIN_SRC emacs-lisp
