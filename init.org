@@ -1277,7 +1277,9 @@ Cargo: Run the tests."
      mu4e-sent-folder   "/sent"       ;; folder for sent messages
      mu4e-drafts-folder "/drafts"     ;; unfinished messages
      mu4e-trash-folder  "/trash"      ;; trashed messages
-     mu4e-refile-folder "/archive")   ;; saved messages
+     mu4e-refile-folder "/archive"
+     mu4e-attachment-dir "~/downloads"
+     mu4e-sent-messages-behavior 'delete)   ;; saved messages
 
 
     ;; Now I set a list of
@@ -1293,7 +1295,9 @@ Cargo: Run the tests."
          (smtpmail-smtp-service 587)
          )
         ("gmail"
-         (mu4e-sent-folder "/gmail/sent")
+         (mu4e-drafts-folder "/[Google Mail].Drafts")
+         (mu4e-sent-folder   "/[Google Mail].Sent Mail")
+         (mu4e-trash-folder  "/[Google Mail].Trash")
          (user-mail-address "jan.moeller0@gmail.com")
          (smtpmail-smtp-user "jan.moeller0@gmail.com")
          (smtpmail-local-domain "gmail.com")
