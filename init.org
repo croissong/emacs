@@ -478,7 +478,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 (use-package format-all
     :bind* ("C-f f" . format-all-buffer)
     :hook
-    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode python-mode)
+    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode python-mode typescript-mode)
      . format-all-mode)
     :delight format-all-mode)
 #+END_SRC
@@ -1069,7 +1069,7 @@ https://github.com/tonini/alchemist.el
 (use-package web-mode
     :mode ("\\.html?\\'" "\\.jsx\\'" "\\.tsx\\'")
     :config
-    (require  'company-web-html)
+    ;; (require  'company-web-html)
     (setq web-mode-code-indent-offset 2
           web-mode-markup-indent-offset 2
           web-mode-attr-indent-offset 2
@@ -1080,6 +1080,7 @@ https://github.com/tonini/alchemist.el
           web-mode-block-padding 0
           web-mode-enable-control-block-indentation nil
           web-mode-enable-auto-closing t
+          web-mode-enable-auto-indentation nil
           web-mode-content-types-alist
           '(("css" . "\\.\\(s?css\\|css\\.erb\\)\\'")
             ("jsx" . "\\.\\([jt]s\\|[jt]s\\.erb\\)\\'")
@@ -1105,7 +1106,8 @@ https://github.com/tonini/alchemist.el
 (use-package tide
     :after typescript-mode
     :hook ((typescript-mode . 'setup-tide-mode)
-           (before-save . tide-format-before-save)
+           ;; conflicting with format-all-mode (and formats worse, atleast in web-mode / tsx)
+           ;; (before-save . tide-format-before-save)
            (web-mode . (lambda ()
             (when (string-equal "tsx" (file-name-extension buffer-file-name))
               (setup-tide-mode)))))
