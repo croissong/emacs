@@ -195,6 +195,8 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
 (delete-selection-mode 1)
 (setq ring-bell-function 'ignore
       vc-follow-symlinks t)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
 #+END_SRC
 *** Kill active process buffer no prompt
 #+BEGIN_SRC emacs-lisp
@@ -1104,8 +1106,8 @@ https://github.com/tonini/alchemist.el
     :mode "\\.ts\\'")
 
 (use-package tide
-    :after typescript-mode
-    :hook ((typescript-mode . 'setup-tide-mode)
+    :after (typescript-mode web-mode)
+    :hook ((typescript-mode . setup-tide-mode)
            ;; conflicting with format-all-mode (and formats worse, atleast in web-mode / tsx)
            ;; (before-save . tide-format-before-save)
            (web-mode . (lambda ()
@@ -1738,3 +1740,4 @@ https://www.reddit.com/r/emacs/comments/1mbn0s/the_emacs_calculator/
 ** my-own-tips
 C-c C-o save search results
 reset var: `(setq foo (eval (car (get 'foo 'standard-value))))`
+(setq require-final-newline nil)
