@@ -480,7 +480,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 (use-package format-all
     :bind* ("C-f f" . format-all-buffer)
     :hook
-    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode python-mode typescript-mode)
+    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode python-mode typescript-mode terraform-mode)
      . format-all-mode)
     :delight format-all-mode)
 #+END_SRC
