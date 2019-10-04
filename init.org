@@ -141,6 +141,16 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
   (interactive)
   (base64-encode-region (mark) (point) t))
 #+END_SRC
+** rm newlines
+#+BEGIN_SRC emacs-lisp
+(defun my/remove-newlines-in-region ()
+  "Removes all newlines in the region."
+  (interactive)
+  (save-restriction
+    (narrow-to-region (point) (mark))
+    (goto-char (point-min))
+    (while (search-forward "\n" nil t) (replace-match "" nil t))))
+#+END_SRC
 * Generic
 ** Read env vars
  #+BEGIN_SRC emacs-lisp
@@ -193,6 +203,7 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
 (tooltip-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
 (delete-selection-mode 1)
+(global-so-long-mode 1)
 (setq ring-bell-function 'ignore
       vc-follow-symlinks t)
 (put 'upcase-region 'disabled nil)
