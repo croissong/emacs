@@ -85,7 +85,12 @@
  ("M-ä" . next-line)
 
  ;; disable overwrite
- ("<insert>" . nil))
+ ("<insert>" . nil)
+
+;; disable mouse-wheel zoom
+("<C-mouse-4>" . nil)
+("<C-mouse-5>" . nil)
+)
 
 (unbind-key "C-x b")
 #+END_SRC
