@@ -824,15 +824,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
             ("C-M-c" . counsel-projectile-switch-project)
             ("C-M-s" . counsel-projectile-rg)))
 #+END_SRC
-*** Space-line
-[[https://github.com/TheBB/spaceline/tree/master/][The Spacemacs Modeline @github]]
-#+BEGIN_SRC emacs-lisp
-(use-package spaceline
-    :init
-    (require 'spaceline-config)
-    :config
-    (spaceline-toggle-buffer-size-off))
-#+END_SRC
 *** Projectile
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
@@ -1427,7 +1418,6 @@ todo https://github.com/alezost/alect-themes
     :init
     (defun my/load-theme ()
       (load-theme 'gruvbox-light-hard t)
-      (spaceline-spacemacs-theme)
       (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
       (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil)
       ;; (set-face-attribute 'region nil :background "darkblue")
