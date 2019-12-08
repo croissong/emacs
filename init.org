@@ -902,8 +902,18 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 ** lsp-mode
 #+BEGIN_SRC emacs-lisp
-(use-package lsp-mode
-    :commands lsp)
+(use-package lsp-mode :commands lsp
+             :config (setq lsp-enable-snippet nil))
+
+(use-package company-lsp :commands company-lsp)
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+(use-package dap-mode
+    :config (add-hook 'dap-stopped-hook
+          (lambda (arg) (call-interactively #'dap-hydra))))
+
+(use-package lsp-ui :commands lsp-ui-mode
+             :init (setq lsp-ui-doc-enable nil
+                         lsp-ui-sideline-enable nil))
 #+END_SRC
 ** realgud
 #+BEGIN_SRC emacs-lisp
@@ -1230,12 +1240,9 @@ Cargo: Run the tests."
 #+END_SRC
 *** golang
 #+BEGIN_SRC emacs-lisp
-(use-package company-go
-    :after go-mode
-    :config (cl-pushnew 'company-go company-backends))
 (use-package go-mode
     :mode "\\.go\\'"
-    :hook (go-mode . flycheck-mode))
+    :hook (go-mode . lsp-deferred))
 #+END_SRC
 *** nim
 #+BEGIN_SRC emacs-lisp
