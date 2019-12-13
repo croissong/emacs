@@ -214,6 +214,7 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
 ** littlest things
 #+BEGIN_SRC emacs-lisp
 (tooltip-mode -1)
+(column-number-mode 1)
 (fset 'yes-or-no-p 'y-or-n-p)
 (delete-selection-mode 1)
 (global-so-long-mode 1)
@@ -504,7 +505,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 (use-package format-all
     :bind* ("C-f f" . format-all-buffer)
     :hook
-    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode python-mode typescript-mode terraform-mode)
+    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode typescript-mode terraform-mode)
      . format-all-mode)
     :delight format-all-mode)
 #+END_SRC
@@ -894,6 +895,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** lsp-mode
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-mode :commands lsp
+             :hook (lsp-mode . (lambda ()
+                     (add-hook 'before-save-hook
+                               (lambda () ((lsp-format-buffer) (lsp-organize-imports)) 'local))))
              :config (setq lsp-enable-snippet nil))
 
 (use-package company-lsp :commands company-lsp)
@@ -904,7 +908,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package lsp-ui :commands lsp-ui-mode
              :init (setq lsp-ui-doc-enable nil
-                         lsp-ui-sideline-enable nil))
+                         lsp-ui-sideline-enable t))
 #+END_SRC
 ** realgud
 #+BEGIN_SRC emacs-lisp
@@ -1028,51 +1032,10 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (use-package python
   :mode ("\\.py\\'" . python-mode)
-  :config
-  (defun my/jump-to-test ()
-    (interactive)
-
-    (let* ((file-name
-            (nth 0 (last (split-string buffer-file-name "[\\/]"))))
-           (test-file
-            (s-join "/" (append (butlast (split-string buffer-file-name "[\\/]"))
-                                (list (concat "test_" file-name)))))
-           (func-name "")
-           (func-args (progn
-                        (unless (looking-at "def")
-                          (python-nav-beginning-of-defun))
-                        (right-word)
-                        (right-char)
-                        (set-mark (point))
-                        (while (not (looking-at "("))
-                          (sp-forward-sexp))
-                        (setq func-name (buffer-substring-no-properties (mark) (point)))
-                        (set-mark (point))
-                        (sp-forward-sexp)
-                        (buffer-substring-no-properties (mark) (point)))))
-      (with-current-buffer (find-file test-file)
-        (goto-char (point-min))
-        (unless (search-forward-regexp "from .+ import \\*" nil t)
-          (insert (concat "from "
-                          (replace-regexp-in-string "\\.py" "" "calc.py")
-                          " import *\n")))
-        (let ((test-func (concat "test_" func-name)))
-          (unless (search-forward test-func nil t)
-            (goto-char (point-max))
-            (insert "\n"
-                    (format "def %s():\n" test-func)
-                    (format "\tassert %s%s == " func-name func-args))))
-        )))
+  :hook (python-mode . lsp-deferred)
+  :config (setq lsp-pyls-plugins-pylint-enabled nil
+                lsp-pyls-configuration-sources ["flake8"])
   )
-#+END_SRC
-**** Elpy
-#+BEGIN_SRC emacs-lisp
-(use-package elpy
-    :after python
-    :config
-    (setq elpy-modules (delq 'elpy-module-django
-                             (delq 'elpy-module-highlight-indentation elpy-modules)))
-    (elpy-enable))
 #+END_SRC
 *** Web
 **** HTML/CSS
