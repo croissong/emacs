@@ -164,7 +164,7 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
     (goto-char (point-min))
     (while (search-forward "\n" nil t) (replace-match "" nil t))))
 #+END_SRC
-* Generic
+* Core
 ** Read env vars
  #+BEGIN_SRC emacs-lisp
 (use-package exec-path-from-shell
@@ -505,7 +505,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
 (use-package format-all
     :bind* ("C-f f" . format-all-buffer)
     :hook
-    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode typescript-mode terraform-mode)
+    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode terraform-mode)
      . format-all-mode)
     :delight format-all-mode)
 #+END_SRC
@@ -894,21 +894,31 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 ** lsp-mode
 #+BEGIN_SRC emacs-lisp
-(use-package lsp-mode :commands lsp
-             :hook (lsp-mode . (lambda ()
-                     (add-hook 'before-save-hook
-                               (lambda () ((lsp-format-buffer) (lsp-organize-imports)) 'local))))
-             :config (setq lsp-enable-snippet nil))
+(use-package lsp-mode
+    :commands lsp
+    :hook (lsp-mode . (lambda ()
+                        (add-hook 'before-save-hook
+                                  (lambda () (lsp-format-buffer) (lsp-organize-imports)) 0 t)))
+    :config (setq lsp-enable-snippet nil))
 
 (use-package company-lsp :commands company-lsp)
 (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 (use-package dap-mode
     :config (add-hook 'dap-stopped-hook
-          (lambda (arg) (call-interactively #'dap-hydra))))
+                      (lambda (arg) (call-interactively #'dap-hydra))))
 
-(use-package lsp-ui :commands lsp-ui-mode
-             :init (setq lsp-ui-doc-enable nil
-                         lsp-ui-sideline-enable t))
+(use-package lsp-ui
+    :commands lsp-ui-mode
+    :init (setq lsp-ui-doc-enable nil
+                lsp-ui-sideline-enable t)
+    :config
+    (custom-set-faces
+     ;; custom-set-faces was added by Custom.
+     ;; If you edit it by hand, you could mess it up, so be careful.
+     ;; Your init file should contain only one such instance.
+     ;; If there is more than one, they won't work right.
+     '(fringe ((t (:background "#f9f5d7"))))
+     '(lsp-ui-sideline-code-action ((t (:foreground "goldenrod"))))))
 #+END_SRC
 ** realgud
 #+BEGIN_SRC emacs-lisp
@@ -1094,32 +1104,8 @@ https://github.com/tonini/alchemist.el
 ***** typescript
 #+BEGIN_SRC emacs-lisp
 (use-package typescript-mode
-    :mode "\\.ts\\'")
-
-(use-package tide
-    :after (typescript-mode web-mode)
-    :hook ((typescript-mode . setup-tide-mode)
-           ;; conflicting with format-all-mode (and formats worse, atleast in web-mode / tsx)
-           ;; (before-save . tide-format-before-save)
-           (web-mode . (lambda ()
-            (when (string-equal "tsx" (file-name-extension buffer-file-name))
-              (setup-tide-mode)))))
-    :init
-    (defun setup-tide-mode ()
-      (interactive)
-      (tide-setup)
-      (flycheck-add-mode 'typescript-tslint 'web-mode)
-      (flycheck-mode 1)
-      (setq flycheck-check-syntax-automatically '(save mode-enabled))
-      (eldoc-mode 1)
-      (tide-hl-identifier-mode 1))
-    :config
-    (setq company-tooltip-align-annotations t
-          tide-tsserver-executable "node_modules/typescript/bin/tsserver"
-          typescript-indent-level 2)
-    :bind (:map tide-mode-map
-                ("C-f" . tide-fix))
-    )
+    :mode "\\.ts\\'"
+    :hook (typescript-mode . lsp-deferred))
 #+END_SRC
 *** Elisp
 #+BEGIN_SRC emacs-lisp
