@@ -148,6 +148,7 @@
  ("C-M-k" . kill-this-buffer)
  ("C-l" . goto-line)
  ("M-_" . shell-command)
+ ("M-," . pop-global-mark)
  ("C-h C-f" . find-function-at-point)
  ("C-h C-v" . find-variable-at-point)
 
@@ -165,8 +166,7 @@
 
 ;; disable mouse-wheel zoom
 ("<C-mouse-4>" . nil)
-("<C-mouse-5>" . nil)
-)
+("<C-mouse-5>" . nil))
 
 (unbind-key "C-x b")
 #+END_SRC
@@ -799,8 +799,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :init (counsel-mode 1)
     :config
     (setq counsel-rg-base-command
-          (format "rg --no-heading --hidden -S --line-number --color never --ignore-file %s/.config/ripgrep/ignore %%s ." (substitute-in-file-name "$HOME"))
-          counsel-grep-base-command counsel-rg-base-command)
+          (format "rg --no-heading --hidden -S --line-number --color never --ignore-file %s/.config/ripgrep/ignore %%s ." (substitute-in-file-name "$HOME")))
     :bind (("M-x" . counsel-M-x)
            ("C-x C-f" . counsel-find-file)
            ("C-v" . counsel-switch-buffer)
@@ -899,7 +898,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :hook (lsp-mode . (lambda ()
                         (add-hook 'before-save-hook
                                   (lambda () (lsp-format-buffer) (lsp-organize-imports)) 0 t)))
-    :config (setq lsp-enable-snippet nil))
+    :config (setq lsp-enable-snippet nil)
+    :bind (:map lsp-mode-map
+                ("M-." . lsp-goto-implementation)
+                ("M--" . lsp-execute-code-action)))
 
 (use-package company-lsp :commands company-lsp)
 (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
@@ -910,15 +912,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package lsp-ui
     :commands lsp-ui-mode
     :init (setq lsp-ui-doc-enable nil
-                lsp-ui-sideline-enable t)
-    :config
-    (custom-set-faces
-     ;; custom-set-faces was added by Custom.
-     ;; If you edit it by hand, you could mess it up, so be careful.
-     ;; Your init file should contain only one such instance.
-     ;; If there is more than one, they won't work right.
-     '(fringe ((t (:background "#f9f5d7"))))
-     '(lsp-ui-sideline-code-action ((t (:foreground "goldenrod"))))))
+                lsp-ui-sideline-enable t))
 #+END_SRC
 ** realgud
 #+BEGIN_SRC emacs-lisp
@@ -1135,48 +1129,10 @@ https://github.com/tonini/alchemist.el
 *** Rust
 #+BEGIN_SRC emacs-lisp
 (use-package rust-mode
-    :mode "\\.rs\\'")
-
-(use-package company-racer
-    :hook (racer-mode . company-mode)
-    :config
-    (cl-pushnew 'company-racer company-backends))
-
-(use-package racer
-    :hook ((rust-mode . racer-mode)
-           (racer-mode . eldoc-mode)))
-
-(use-package cargo
-    :hook (rust-mode . cargo-minor-mode)
-    :config
-    (defun cargo-process--cleanup (buffer)
-      (when (get-buffer-process (get-buffer buffer))
-        (delete-process buffer)))
-    (defvar cargo-process-history '())
-    (defun cargo-process-run ()
-      "Run the Cargo run command.
-With the prefix argument, modify the command's invocation.
-Cargo: Build and execute src/main.rs."
-      (interactive)
-      (cargo-process--start
-       "Run"
-       (read-string "Command: " "cargo run" '(cargo-process-history . 0))))
-
-    (defun cargo-process-test (enable_print)
-      "Run the Cargo test command.
-With the prefix argument, modify the command's invocation.
-Cargo: Run the tests."
-      (interactive "P")
-      (let* ((command "cargo test"))
-        (when enable_print
-          (concat command " -- --nocapture"))
-        (cargo-process--start "Test" "cargo test"))
-      )
-    )
-
-(use-package flycheck-rust
-    :hook ((rust-mode . flycheck-mode)
-           (flycheck-mode . flycheck-rust-setup)))
+    :mode "\\.rs\\'"
+    :config (setq lsp-rust-server 'rust-analyzer
+                  rust-match-angle-brackets nil)
+    :hook (rust-mode . lsp-deferred))
 #+END_SRC
 *** golang
 #+BEGIN_SRC emacs-lisp
@@ -1325,11 +1281,6 @@ Cargo: Run the tests."
     :config
     (mu4e-alert-set-default-style 'libnotify))
 #+END_SRC
-** Passwords
-#+BEGIN_SRC emacs-lisp
-(use-package pass
-    :commands pass)
-#+END_SRC
 ** restclient
 #+BEGIN_SRC emacs-lisp
 (use-package restclient
@@ -1384,6 +1335,9 @@ todo https://github.com/alezost/alect-themes
       (set-face-attribute 'org-block nil :foreground "#282828")
       (set-face-attribute 'isearch nil :foreground "#f4ecd6")
       (set-face-attribute 'highlight nil :background "#e4cf9a")
+      (set-face-attribute 'org-block nil :background nil)
+      (with-eval-after-load 'lsp-ui
+        (set-face-attribute 'lsp-ui-sideline-code-action nil :foreground "goldenrod"))
       )
 
     (my-util-with-eval-after-frame
