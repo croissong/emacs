@@ -1039,6 +1039,8 @@ https://github.com/tonini/alchemist.el
   :hook (python-mode . lsp-deferred)
   :config (setq lsp-pyls-plugins-pylint-enabled nil
                 lsp-pyls-configuration-sources ["flake8"])
+  (with-eval-after-load 'lsp-mode  ; try this or similar
+    (lsp-register-custom-settings '(("pyls.plugins.pyls_mypy.enabled" t t))))
   )
 #+END_SRC
 *** Web
