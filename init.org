@@ -288,11 +288,10 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
 (setq org-refile-use-outline-path t
       org-datetree-add-timestamp 1
       org-extend-today-until 6
+      org-duration-format (quote h:mm)
       org-outline-path-complete-in-steps nil
       org-hide-emphasis-markers t
-      org-time-stamp-custom-formats '("<%e. %B '%y>" . "<%b %e, %Y %H:%M>")
       org-refile-targets '((nil :level . 2)))
-(setq-default org-display-custom-times t)
 (bind-key "C-c c" 'org-capture)
 #+END_SRC
 ***** Functions
@@ -898,7 +897,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :hook (lsp-mode . (lambda ()
                         (add-hook 'before-save-hook
                                   (lambda () (lsp-format-buffer) (lsp-organize-imports)) 0 t)))
-    :config (setq lsp-enable-snippet nil)
+    :config (setq lsp-enable-snippet nil
+                  lsp-eldoc-render-all nil)
     :bind (:map lsp-mode-map
                 ("M-." . lsp-goto-implementation)
                 ("M--" . lsp-execute-code-action)))
@@ -1138,7 +1138,8 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (use-package go-mode
     :mode "\\.go\\'"
-    :hook (go-mode . lsp-deferred))
+    :hook (go-mode . lsp-deferred)
+    :init (require 'dap-go))
 #+END_SRC
 *** nim
 #+BEGIN_SRC emacs-lisp
