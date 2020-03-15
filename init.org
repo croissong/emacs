@@ -518,7 +518,7 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
   :config
   (setq bufler-workspace-switch-buffer-sets-workspace t)
   ;; delight doesn't work
-  (defun bufler-workspace-mode-lighter () "")
+  (defun bufler-workspace-mode-lighter () ""))
 #+END_SRC
 *** Buffer-move
 https://github.com/lukhas/buffer-move
@@ -1439,7 +1439,7 @@ todo https://github.com/alezost/alect-themes
 [[https://github.com/Malabarba/aggressive-indent-mode][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package aggressive-indent
-    :init (global-aggressive-indent-mode 1)
+    :init (global-aggressive-indent-mode 1))
 
 #+END_SRC
 ** wakatime
@@ -1529,15 +1529,6 @@ maybe for linux
    (:network-server . "talk.google.com")
    (:connection-type . ssl)
    (:port . 5223))))
-#+END_SRC
-** Exercism
-#+BEGIN_SRC emacs-lisp
-(use-package exercism
-    :load-path "my/exercism/"
-    :if (my-util-installed? "exercism")
-    :config (when (my-util-win?)
-        (setq *exercism-cmd*
-        (shell-quote-argument "C:\\\\Program Files\\\\Exercism\\\\exercism.exe"))))
 #+END_SRC
 ** Purpose-mode
 [[https://github.com/bmag/emacs-purpose][@github]]
