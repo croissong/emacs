@@ -515,7 +515,10 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
   :bind* (("C-M-x" . bufler-switch-buffer)
           ("C-v" . bufler))
   :init (bufler-mode)
-  :config (setq bufler-workspace-switch-buffer-sets-workspace t))
+  :config
+  (setq bufler-workspace-switch-buffer-sets-workspace t)
+  ;; delight doesn't work
+  (defun bufler-workspace-mode-lighter () "")
 #+END_SRC
 *** Buffer-move
 https://github.com/lukhas/buffer-move
@@ -757,7 +760,11 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :init (counsel-projectile-mode 1)
     :config
     (setq projectile-completion-system 'ivy
-          counsel-projectile-switch-project-action 'counsel-projectile-switch-project-action-vc)
+          counsel-projectile-switch-project-action
+          (lambda (p)
+            (counsel-projectile-switch-project-action-vc p)
+            (bufler-workspace-frame-set
+             (butlast (bufler-group-tree-leaf-path (bufler-buffers) (current-buffer))))))
     :bind* (("C-M-f" . counsel-projectile-find-file)
             ("C-M-d" . counsel-projectile-find-dir)
             ("C-M-c" . counsel-projectile-switch-project)
