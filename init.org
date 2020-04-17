@@ -774,11 +774,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :init (counsel-projectile-mode 1)
     :config
     (setq projectile-completion-system 'ivy
-          counsel-projectile-switch-project-action
-          (lambda (p)
-            (counsel-projectile-switch-project-action-vc p)
-            (bufler-workspace-frame-set
-             (butlast (bufler-group-tree-leaf-path (bufler-buffers) (current-buffer))))))
+          counsel-projectile-switch-project-action 'counsel-projectile-switch-project-by-name)
     :bind* (("C-M-f" . counsel-projectile-find-file)
             ("C-M-d" . counsel-projectile-find-dir)
             ("C-M-c" . counsel-projectile-switch-project)
@@ -791,7 +787,17 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :init (projectile-mode 1)
     :config
     (setq projectile-file-exists-remote-cache-expire nil
-          projectile-switch-project-action 'counsel-vc
+          projectile-switch-project-action
+          (lambda ()
+            (let ((project-buffer (car (projectile-project-buffers))))
+              (if project-buffer
+                  (progn
+                    (bufler-workspace-focus-buffer project-buffer)
+                    (bufler-switch-buffer))
+                (progn
+                  (projectile-vc)
+                  (bufler-workspace-focus-buffer (current-buffer)))
+                )))
           projectile-enable-caching t
           projectile-ignored-project-function
           (function (lambda (path)
@@ -1280,12 +1286,12 @@ todo https://github.com/alezost/alect-themes
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (setq-default cursor-type 'bar)
-(add-to-list 'default-frame-alist '(font . "Monospace-12"))
 (use-package modus-operandi-theme
     :ensure t
     :init
    (defun my/load-theme ()
       (load-theme 'modus-operandi t)
+      (set-frame-font "Monospace-10" nil t)
       (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
       (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil))
 
