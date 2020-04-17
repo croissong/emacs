@@ -240,6 +240,20 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
     (goto-char (point-min))
     (while (search-forward "\n" nil t) (replace-match "" nil t))))
 #+END_SRC
+*** indent-rigidly
+#+BEGIN_SRC emacs-lisp
+;; do not skip first line when indenting
+(defun my/indent-rigidly(start end arg &optional interactive)
+  (interactive "r\nP\np")
+  (when (use-region-p)
+    (goto-char start)
+    (beginning-of-line)
+    (deactivate-mark)
+    (set-mark (point))
+    (goto-char end))
+  (call-interactively 'indent-rigidly))
+(bind-key* "C-x <tab>"  'my/indent-rigidly)
+#+END_SRC
 * Packages
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
