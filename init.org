@@ -532,7 +532,44 @@ sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
   :config
   (setq bufler-workspace-switch-buffer-sets-workspace t)
   ;; delight doesn't work
-  (defun bufler-workspace-mode-lighter () ""))
+  (defun bufler-workspace-mode-lighter () "")
+  (setq bufler-groups
+        (bufler-defgroups
+            (group
+             ;; Subgroup collecting all named workspaces.
+             (auto-workspace))
+            (group
+            (group-or "*Special*"
+             ;; Subgroup collecting these "special special" buffers
+             ;; separately for convenience.
+             (name-match "**Special**"
+                         (rx bos "*" (or "Messages" "Warnings" "scratch" "Backtrace") "*"))
+             (mode-match "*Help*" (rx bos "help-"))
+             (mode-match "*Info*" (rx bos "info-"))))
+          (group
+           ;; Subgroup collecting buffers in a version-control project,
+           ;; grouping them by directory.
+           (auto-project))
+          ;; Group remaining buffers by directory, then major mode.
+          (group
+           ;; Subgroup collecting all special buffers (i.e. ones that are not
+           ;; file-backed), except `magit-status-mode' buffers (which are allowed to fall
+           ;; through to other groups, so they end up grouped with their project buffers).
+           (group-and "*Meta*"
+                      (lambda (buffer)
+                        (unless (or (funcall (mode-match "Magit" (rx bos "magit-status"))
+                                             buffer)
+                                    (funcall (mode-match "Dired" (rx bos "dired"))
+                                             buffer)
+                                    (funcall (auto-file) buffer))
+                          "*Special*")))
+           (group
+            ;; Subgroup collecting all other Magit buffers, grouped by directory.
+            (mode-match "*Magit* (non-status)" (rx bos (or "magit" "forge") "-"))
+            )
+           ;; Remaining special buffers are grouped automatically by mode.
+           (auto-directory))
+          )))
 #+END_SRC
 *** Buffer-move
 https://github.com/lukhas/buffer-move
