@@ -84,7 +84,6 @@
 
 (setq-default indent-tabs-mode nil
               tab-width 2
-              indent-line-function 'insert-tab
               sentence-end-double-space nil)
 #+END_SRC
 *** Backup & autosave
@@ -1317,7 +1316,6 @@ Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
 #+END_SRC
 * Style
 ** Theme
-todo https://github.com/alezost/alect-themes
 #+BEGIN_SRC emacs-lisp
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -1328,7 +1326,7 @@ todo https://github.com/alezost/alect-themes
     :init
    (defun my/load-theme ()
       (load-theme 'modus-operandi t)
-      (set-frame-font "Monospace-10" nil t)
+      (set-frame-font "Monospace-12" nil t)
       (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
       (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil))
 
