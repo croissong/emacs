@@ -15,6 +15,10 @@
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t
+      use-package-compute-statistics nil)
 #+END_SRC
 ** Coding Environment
 [[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
@@ -31,12 +35,6 @@
   (set-default-coding-systems 'utf-8-unix)
   (unless (eq system-type 'windows-nt)
     (set-selection-coding-system 'utf-8-unix)))
-#+END_SRC
-** Bootstrap use-package
-#+BEGIN_SRC emacs-lisp
-(straight-use-package 'use-package)
-(setq straight-use-package-by-default t
-      use-package-compute-statistics nil)
 
 (require 'bind-key)
 (use-package delight)
@@ -1052,7 +1050,11 @@ https://github.com/tonini/alchemist.el
                 lsp-pyls-plugins-autopep8-enabled nil
                 lsp-pyls-configuration-sources ["flake8"])
   (with-eval-after-load 'lsp-mode  ; try this or similar
-    (lsp-register-custom-settings '(("pyls.plugins.pyls_mypy.enabled" t t) ("pyls.plugins.pyls_black.enabled" t t))))
+    (lsp-register-custom-settings
+     '(
+       ("pyls.plugins.pyls_mypy.enabled" t t)
+       ("pyls.plugins.pyls_black.enabled" t t))
+     ))
   )
 #+END_SRC
 *** Web
