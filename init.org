@@ -369,9 +369,6 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
 #+END_SRC
 **** Babel
 #+BEGIN_SRC emacs-lisp
-(when (my-util-win?)
-  (setq org-babel-sh-command "C:/cygwin64/bin/bash.exe"))
-
 (setq org-src-fontify-natively t
       org-src-tab-acts-natively t
       org-pretty-entities t
@@ -859,7 +856,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :config
     (setq dumb-jump-prefer-searcher 'rg
           dumb-jump-selector 'ivy)
-    :bind ("M-." . dumb-jump-go))
+    :bind ("C-M-." . dumb-jump-go))
 #+END_SRC
 *** flymake
 #+BEGIN_SRC emacs-lisp
@@ -935,6 +932,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :config
     (setq magit-diff-section-arguments (quote ("--no-ext-diff" "-U2"))
           magit-diff-refine-ignore-whitespace nil
+          magit-refs-margin '(t age magit-log-margin-width nil 18)
           magit-diff-refine-hunk t)
     (magit-add-section-hook 'magit-status-sections-hook
                             'magit-insert-modules-unpulled-from-upstream
@@ -1331,7 +1329,7 @@ Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
     :init
    (defun my/load-theme ()
       (load-theme 'modus-operandi t)
-      (set-frame-font "Monospace-10" nil t)
+      (set-face-attribute 'default nil :height 125 :family "Monospace")
       (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
       (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil))
 
