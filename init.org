@@ -1225,53 +1225,6 @@ Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
 :PROPERTIES:
 :header-args: :tangle no
 :END:
-** helm
-#+BEGIN_SRC emacs-lisp
-(use-package helm-mode
-    :disabled
-    :after dumb-jump
-    :init (helm-mode 1)
-    :config
-    (require 'helm-config)
-    (setq helm-mode-fuzzy-match t
-          helm-recentf-fuzzy-match t
-          helm-buffers-fuzzy-matching t
-          helm-locate-fuzzy-match t
-          helm-M-x-fuzzy-match t
-          helm-completion-in-region-fuzzy-match t
-          helm-ff-newfile-prompt-p nil
-          helm-find-file-ignore-thing-at-point t
-          helm-exit-idle-delay 0
-          dumb-jump-selector 'helm)
-    (helm-adaptive-mode 1)
-    :bind (("M-x" . helm-M-x)
-           ("C-x C-f" . helm-find-files)
-           ("C-x b" . helm-buffers-list)
-           :map helm-find-files-map
-           ("C-o" . helm-ff-run-switch-other-window))
-    :delight 'helm-mode
-    )
-#+END_SRC
-*** Ripgrep
-#+BEGIN_SRC emacs-lisp
-(use-package helm-ag
-    :after (helm-mode projectile)
-    :config
-    (setq helm-ag-base-command
-          (format "rg --vimgrep --no-heading --smart-case --ignore-file %s/.config/ripgrep/ignore" (substitute-in-file-name "$HOME"))
-          projectile-completion-system 'helm)
-    :bind* ("C-M-s" . helm-do-ag-project-root)
-    )
-#+END_SRC
-*** projectile
-#+BEGIN_SRC emacs-lisp
-(use-package helm-projectile
-    :after (helm-mode projectile)
-    :init (helm-projectile-on)
-    :bind* (("C-M-f" . helm-projectile-find-file)
-            ("C-M-d" . helm-projectile-find-dir))
-  )
-#+END_SRC
 ** Auto-Compile
 [[https://github.com/tarsius/auto-compile][@github]]
 #+BEGIN_SRC emacs-lisp
