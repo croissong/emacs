@@ -310,63 +310,6 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
       org-refile-targets '((nil :level . 2)))
 (bind-key "C-c c" 'org-capture)
 #+END_SRC
-***** Functions
-****** My/insert-link
-#+BEGIN_SRC emacs-lisp
-;; TODO change minibuffer prompt while read-from-minibuffer to display Url: or File: in minibuffer prompt depending on what is inserted
-;; TODO maybe change stevinho.justnetwork.eu from @justnetwork.eu to @stevinho.eu
-;; replace www. and use first and last (idea)
-(defun my/insert-link ()
-  (interactive)
-  (let* ((keymap (copy-keymap minibuffer-local-map))
-   (get-stored-link
-    '(lambda ()
-       (setq url (caar org-stored-links))
-      (if url
-    (concat "::" (car (last (split-string (nth 1 (split-string url "[\\:]")) "[\\/]"))))
-        nil)))
-   (get-url-link
-    '(lambda ()
-       (setq url (org-get-x-clipboard 'CLIPBOARD))
-       (if (string= (substring url 0 4) "http")
-     (let* ((urlParts
-       (last (split-string (nth 2 (split-string url "[\\/]")) "[\\.]") 2)))
-       (concat "@" (nth 0 urlParts) "." (nth 1 urlParts)))
-         nil
-         )))
-   url urlDescription)
-
-    (define-key keymap (kbd "<tab>")
-      (lambda () (interactive)
-  (let (link message)
-    (if (string= "@" (substring (minibuffer-contents) 0 1))
-        (setq link (funcall get-stored-link)
-        message "No link stored")
-      (setq link (funcall get-url-link)
-      message "No Url in Clipboard"))
-    (if link (progn
-         (delete-minibuffer-contents)
-         (insert link))
-      (minibuffer-message message))
-    )))
-
-    (define-key keymap (kbd "C-g")
-      (lambda () (interactive)
-  (delete-minibuffer-contents)
-  (exit-minibuffer)
-  ))
-    (setq urlDescription
-    (or (funcall get-url-link) (funcall get-stored-link)))
-
-    (if urlDescription
-  (progn
-    (setq urlDescription (read-from-minibuffer "Link" urlDescription keymap))
-    (if (string= "" urlDescription)
-        (minibuffer-message "Aborted")
-      (insert (format "[[%s][%s]]" url urlDescription))))
-      (minibuffer-message "No Link to insert. Aborted"))
-    ))
-#+END_SRC
 **** Babel
 #+BEGIN_SRC emacs-lisp
 (setq org-src-fontify-natively t
@@ -404,65 +347,6 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
             org-latex-classes :test 'equal)
 (setq org-latex-preview-ltxpng-directory (concat temporary-file-directory "ltxpng/"))
-#+END_SRC
-*** Functions
-#+BEGIN_SRC emacs-lisp
-(defun org-sentence-newline()
-  (interactive)
-  (org-backward-sentence)
-  (org-delete-backward-char 1)
-  (org-return-indent))
-(defun my/org-delete-heading-or-line ()
-  (interactive)
-  (if (org-at-heading-p)
-      (org-cut-subtree)
-    (kill-line)))
-#+END_SRC
-**** [disabled]
-:PROPERTIES:
-:header-args: :tangle no
-:END:
-***** Checkboxes toggle DONE State (not working)
-[[http://osdir.com/ml/emacs-orgmode-gnu/2010-05/msg00506.html][mailinglist]]
-#+BEGIN_SRC emacs-lisp
-(defun org-summary-todo-checkbox (c-on c-off)
-  "Switch entry to DONE when all subentry-checkboxes are done, to TODO otherwise."
-  (outline-previous-visible-heading 1)
-  (let (org-log-done org-log-states)	; turn off logging
-    (org-todo (if (= c-off 0) "DONE" "TODO"))))
-(add-hook 'org-checkbox-statistics-hook 'org-summary-todo-checkbox)
-#+END_SRC
-***** Insert Image
-#+BEGIN_SRC emacs-lisp
-(defun org-insert-image (url name)
-"Take a screenshot into a time stamped unique-named file in the
-sub-directory (%filenameIMG) as the org-buffer and insert a link to this file."
-(interactive "sEnter url: \nsEnter file name: ")
-
-(setq foldername (concat user-emacs-directory "meinAll/media/" (file-name-base buffer-file-name) "/"))
-(if (not (file-exists-p foldername))
-  (mkdir foldername))
-
-(setq imgName (concat
-         (format "%s." name) (nth 0 (last(split-string url "\\.")))))
-(setq imgPath (concat foldername imgName))
-
-(url-copy-file url imgPath)
-
-(setq width (let
-    ((w (car (image-size (create-image imgPath) :pixel))))
-        (if (> w 500) 500 w)))
-
-(insert (format "#+ATTR_HTML: :width %dpx" width))
-(newline-and-indent)
-(insert (concat "[[" imgPath "]]"))
-(newline-and-indent)
-(insert (concat ":PROPERTIES:"))
-(newline-and-indent)
-(insert (concat ":Quelle: [[" url "][Quelle]]"))
-(newline-and-indent)
-(insert (concat ":END:"))
-(org-display-inline-images nil t))
 #+END_SRC
 *** Keybindings
 #+BEGIN_SRC emacs-lisp
