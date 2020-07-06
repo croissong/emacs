@@ -573,8 +573,8 @@ https://github.com/bbatsov/crux
 TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 **** Config
 #+BEGIN_SRC emacs-lisp
-;; (setq diff-command "ediff")
-;; (add-hook 'ediff-after-quit-hook-internal 'winner-undo)
+(setq diff-command "ediff")
+(setq ediff-keep-variants nil)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain
       ediff-split-window-function 'split-window-horizontally)
 (add-hook 'ediff-prepare-buffer-hook 'show-all)

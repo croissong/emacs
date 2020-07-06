@@ -10,43 +10,22 @@
   (let ((x (pop hydra-stack)))
     (when x
       (funcall x))))
-  
 
 (defhydra hydra-my/init (:color teal)
   "my init"
   ("s" (switch-to-buffer "*scratch*") "scratch")
-  ("d" (progn
-         (hydra-my/dotfiles/body)
-         (hydra-push '(hydra-my/init/body)))
+  ("d" (magit-status-internal "~/dotfiles")
        "dotfiles")
   ("c" (progn
          (hydra-my/code/body)
          (hydra-push '(hydra-my/init/body)))
        "code")
-  ("i" (progn
-         (hydra-my/org-init/body)
-         (hydra-push '(hydra-my/init/body)))
+  ("i" (org-init-open)
        "org-init")
   ("t" (progn
          (hydra-my/tmux/body)
          (hydra-push '(hydra-my/init/body)))
        "tmux")
-  ("q" hydra-pop "exit"))
-
-(defhydra hydra-my/org-init (:color teal)
-  "org-init"
-  ("o" (org-init-open)
-       "open")
-  ("c" (org-init-compile)
-       "compile")
-  ("g" (org-init-git)
-       "git")
-  ("q" hydra-pop "exit"))
-
-(defhydra hydra-my/dotfiles (:color teal)
-  "d"
-  ("o" (magit-status-internal "~/dotfiles")
-       "open")
   ("q" hydra-pop "exit"))
 
 (defhydra hydra-my/code (:color teal)
