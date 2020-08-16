@@ -2,8 +2,8 @@
 * Initialize
 ** Initialize straight.el
 #+BEGIN_SRC emacs-lisp
+(setq comp-deferred-compilation t)
 (defvar bootstrap-version)
-(setq straight-repository-branch "develop")
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))
@@ -696,7 +696,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :init (counsel-projectile-mode 1)
     :config
     (setq projectile-completion-system 'ivy
-          counsel-projectile-switch-project-action 'counsel-projectile-switch-project-by-name)
+          counsel-projectile-switch-project-action 'counsel-projectile-switch-project-by-name
+          )
     :bind* (("C-M-f" . counsel-projectile-find-file)
             ("C-M-d" . counsel-projectile-find-dir)
             ("C-M-c" . counsel-projectile-switch-project)
@@ -931,6 +932,7 @@ https://github.com/tonini/alchemist.el
   :mode ("\\.py\\'" . python-mode)
   :hook (python-mode . lsp-deferred)
   :init (require 'dap-python)
+  ;; TODO: https://github.com/emacs-lsp/lsp-pyright
   :config (setq lsp-pyls-plugins-pylint-enabled nil
                 lsp-pyls-plugins-pycodestyle-enabled nil
                 lsp-pyls-plugins-autopep8-enabled nil
