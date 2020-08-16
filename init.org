@@ -40,6 +40,11 @@
 (use-package delight)
 (use-package cl-lib)
 (use-package f)
+(use-package explain-pause-mode
+  :straight (explain-pause-mode :type git :host github :repo "lastquestion/explain-pause-mode")
+  :config
+  ;; (explain-pause-mode)
+  )
 #+END_SRC
 ** my/org-init
 #+BEGIN_SRC emacs-lisp
@@ -791,9 +796,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 (use-package dap-mode
     :config
-  (add-hook 'dap-stopped-hook
-            (lambda (arg) (call-interactively #'dap-hydra)))
-  (dap-ui-mode 1))
+    (dap-auto-configure-mode)
+    (add-hook 'dap-stopped-hook
+              (lambda (arg) (call-interactively #'dap-hydra)))
+    (dap-ui-mode 1))
 
 (use-package lsp-ui
     :commands lsp-ui-mode
