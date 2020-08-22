@@ -142,6 +142,8 @@
 ** Navigation
 #+BEGIN_SRC emacs-lisp
 (bind-keys*
+ ("C-q" . universal-argument)
+
  ("C-ö" . windmove-left)
  ("C-#" . windmove-right)
  ("C-ü" . windmove-up)
@@ -266,7 +268,7 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
 #+BEGIN_SRC emacs-lisp
 (use-package reveal
     :hook (org-mode . reveal-mode)
-    :diminish reveal-mode)
+    :delight reveal-mode)
 
 (use-package org
     :straight org-plus-contrib
