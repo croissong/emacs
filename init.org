@@ -121,6 +121,7 @@
       vc-follow-symlinks t)
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+(mouse-avoidance-mode)
 #+END_SRC
 *** Kill active process buffer no prompt
 #+BEGIN_SRC emacs-lisp
