@@ -2,7 +2,6 @@
 * Initialize
 ** Initialize straight.el
 #+BEGIN_SRC emacs-lisp
-(setq comp-deferred-compilation t)
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -42,9 +41,7 @@
 (use-package f)
 (use-package explain-pause-mode
   :straight (explain-pause-mode :type git :host github :repo "lastquestion/explain-pause-mode")
-  :config
-  ;; (explain-pause-mode)
-  )
+  :commands explain-pause-mode)
 #+END_SRC
 ** my/org-init
 #+BEGIN_SRC emacs-lisp
@@ -115,8 +112,10 @@
 (tooltip-mode -1)
 (column-number-mode 1)
 (fset 'yes-or-no-p 'y-or-n-p)
+(setq vc-handled-backends nil)
 (delete-selection-mode 1)
 (global-so-long-mode 1)
+(setq initial-scratch-message nil)
 (setq ring-bell-function 'ignore
       vc-follow-symlinks t)
 (put 'upcase-region 'disabled nil)
@@ -581,7 +580,6 @@ https://github.com/bbatsov/crux
 TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 **** Config
 #+BEGIN_SRC emacs-lisp
-(setq diff-command "ediff")
 (setq ediff-keep-variants nil)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain
       ediff-split-window-function 'split-window-horizontally)
