@@ -896,21 +896,20 @@ https://github.com/tonini/alchemist.el
 *** Python
 #+BEGIN_SRC emacs-lisp
 (use-package python
-  :mode ("\\.py\\'" . python-mode)
-  :hook (python-mode . lsp-deferred)
-  :init (require 'dap-python)
-  ;; TODO: https://github.com/emacs-lsp/lsp-pyright
-  :config (setq lsp-pyls-plugins-pylint-enabled nil
-                lsp-pyls-plugins-pycodestyle-enabled nil
-                lsp-pyls-plugins-autopep8-enabled nil
-                lsp-pyls-configuration-sources ["flake8"])
-  (with-eval-after-load 'lsp-mode  ; try this or similar
-    (lsp-register-custom-settings
-     '(
-       ("pyls.plugins.pyls_mypy.enabled" t t)
-       ("pyls.plugins.pyls_black.enabled" t t))
-     ))
-  )
+  :mode ("\\.py\\'" . python-mode))
+
+(use-package lsp-pyright
+    :init
+  (cl-pushnew "[/\\\\]venv$" lsp-file-watch-ignored)
+  (cl-pushnew "[/\\\\]\\.mypy_cache$" lsp-file-watch-ignored)
+  (cl-pushnew "[/\\\\]\\.pytest_cache$" lsp-file-watch-ignored)
+  (cl-pushnew "[/\\\\]dot_git$" lsp-file-watch-ignored)
+  :config
+  (require 'dap-python)
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp-deferred)
+                          (my/lsp-format-buf))))
 #+END_SRC
 *** Web
 **** HTML/CSS
@@ -970,8 +969,14 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (use-package typescript-mode
     :mode "\\.ts\\'"
-    :hook (typescript-mode . lsp-deferred))
-#+END_SRC
+    :hook (typescript-mode . (lambda ()
+                                (lsp-deferred)
+                                (my/lsp-format-buf)))
+    :config (setq lsp-eslint-server-command
+                  '("node"
+                    (expand-file-name"~/.local/vscode-eslint/extension/server/out/eslintServer.js")
+                    "--stdio")))
+    #+END_SRC
 *** Elisp
 #+BEGIN_SRC emacs-lisp
 (setq lisp-indent-function 'common-lisp-indent-function)
@@ -1206,7 +1211,6 @@ https://www.reddit.com/r/emacs/comments/1mbn0s/the_emacs_calculator/
 - org-bullets
 ** packages maybe Futur
 *** Focus [[https://github.com/larstvei/Focus/blob/master/README.md][@github.com]]
-*** finance https://github.com/ledger/ledger-mode
 ** todo
 - magit diff args -> git global config
 ** elisp tips
