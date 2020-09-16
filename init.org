@@ -39,6 +39,8 @@
 (use-package delight)
 (use-package cl-lib)
 (use-package f)
+(use-package gcmh
+  :init (gcmh-mode 1))
 (use-package explain-pause-mode
   :straight (explain-pause-mode :type git :host github :repo "lastquestion/explain-pause-mode")
   :commands explain-pause-mode)
@@ -75,7 +77,6 @@
       browse-url-generic-program (executable-find (getenv "BROWSER"))
       browse-url-browser-function 'browse-url-generic
       require-final-newline t
-      gc-cons-threshold 100000000
       read-process-output-max (* 1024 1024)
       enable-local-eval t
       mouse-wheel-scroll-amount '(2 ((shift) . 2))
