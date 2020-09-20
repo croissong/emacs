@@ -172,13 +172,13 @@
  ;; disable overwrite
  ("<insert>" . nil)
 
+ ("C-x b" . nil)
+
 ;; disable mouse-wheel zoom
 ("<C-mouse-4>" . nil)
 ("<C-mouse-5>" . nil)
 ("<f5>" . profiler-start)
 ("<f6>" . profiler-stop))
-
-(unbind-key "C-x b")
 #+END_SRC
 ** Functions
 *** Line manouevor functions
@@ -1193,7 +1193,7 @@ Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
     :init
    (defun my/load-theme ()
       (load-theme 'modus-operandi t)
-      (set-frame-font "Monospace 13" nil t)
+      (set-frame-font "Monospace 12" nil t)
       (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
       (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil))
 
