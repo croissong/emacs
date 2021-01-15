@@ -1049,6 +1049,14 @@ https://github.com/tonini/alchemist.el
     :mode "\\.tex\\'"
     :hook (LaTeX-mode . turn-on-reftex))
  #+END_SRC
+*** Plantuml
+ #+BEGIN_SRC emacs-lisp
+(use-package plantuml-mode
+    :mode "\\.puml\\'"
+    :config
+    (setq plantuml-executable-path "/usr/bin/plantuml"
+          plantuml-default-exec-mode 'executable))
+ #+END_SRC
 *** adoc
  #+BEGIN_SRC emacs-lisp
 (use-package adoc-mode
