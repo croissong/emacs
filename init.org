@@ -40,7 +40,8 @@
 (use-package cl-lib)
 (use-package f)
 (use-package gcmh
-  :init (gcmh-mode 1))
+  :init (gcmh-mode 1)
+  :delight)
 (use-package explain-pause-mode
   :straight (explain-pause-mode :type git :host github :repo "lastquestion/explain-pause-mode")
   :commands explain-pause-mode)
@@ -115,6 +116,7 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq vc-handled-backends nil)
 (delete-selection-mode 1)
+(normal-erase-is-backspace-mode 1)
 (global-so-long-mode 1)
 (setq initial-scratch-message nil)
 (setq ring-bell-function 'ignore
