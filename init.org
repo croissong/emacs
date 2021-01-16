@@ -35,6 +35,8 @@
   (unless (eq system-type 'windows-nt)
     (set-selection-coding-system 'utf-8-unix)))
 
+(setq warning-suppress-log-types '((comp)))
+
 (require 'bind-key)
 (use-package delight)
 (use-package cl-lib)
