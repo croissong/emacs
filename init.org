@@ -69,7 +69,7 @@
 (use-package exec-path-from-shell
     :init
     (setq exec-path-from-shell-arguments '("-i")
-          exec-path-from-shell-variables '("DISPLAY" "XAUTHORITY"))
+          exec-path-from-shell-variables '("DISPLAY"))
     (my-util-with-eval-after-frame
      (exec-path-from-shell-initialize)))
  #+END_SRC
