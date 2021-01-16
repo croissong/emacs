@@ -607,8 +607,21 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package wgrep :defer t)
 (use-package rg :defer t)
 #+END_SRC
-*** ivy
+*** selectrum
 #+BEGIN_SRC emacs-lisp
+(use-package selectrum
+    :after (orderless)
+    :init (selectrum-mode +1)
+    :custom
+    (selectrum-refine-candidates-function #'orderless-filter)
+    (selectrum-highlight-candidates-function #'orderless-highlight-matches)
+    :bind (:map selectrum-minibuffer-map
+                ("M-#" . selectrum-insert-current-candidate)
+                ("M-ö" . backward-kill-sexp)))
+
+(use-package orderless)
+*** ivy
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package flx)
 (use-package avy)
 (use-package smex)
@@ -731,8 +744,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package dumb-jump
     :config
-    (setq dumb-jump-prefer-searcher 'rg
-          dumb-jump-selector 'ivy)
+    (setq dumb-jump-prefer-searcher 'rg)
     :bind ("C-M-." . dumb-jump-go))
 #+END_SRC
 ** Editorconfig
@@ -775,7 +787,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
               ("M-." . lsp-goto-implementation)
               ("M--" . lsp-execute-code-action)))
 
-(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 (use-package dap-mode
     :commands dap-debug
     :config
