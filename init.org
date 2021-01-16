@@ -620,6 +620,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
                 ("M-ö" . backward-kill-sexp)))
 
 (use-package orderless)
+(use-package consult)
 *** ivy
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package flx)
