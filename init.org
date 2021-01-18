@@ -621,90 +621,20 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
                 ("M-#" . selectrum-insert-current-candidate)
                 ("M-ö" . backward-kill-sexp)))
 
-(use-package orderless)
+(use-package orderless
+    :custom
+  (orderless-matching-styles '(orderless-prefixes)))
+
+(use-package ctrlf
+    :init (ctrlf-mode))
+
 (use-package consult)
-*** ivy
-#+BEGIN_SRC emacs-lisp :tangle no
-(use-package flx)
-(use-package avy)
-(use-package smex)
 
-(use-package ivy
-    :after (flx avy smex)
-    :init (ivy-mode 1)
-    :config
-    (setq ivy-use-virtual-buffers t
-          ivy-count-format "(%d/%d) "
-
-          ;; fuzzy matching for counsel-M-x
-          ivy-re-builders-alist
-          '((counsel-M-x . ivy--regex-fuzzy)
-            (counsel-describe-function . ivy--regex-fuzzy)
-            (counsel-describe-variable . ivy--regex-fuzzy)
-            (t . ivy--regex-plus))
-
-          ;; no ^ for the fuzzy matching cmds
-          ivy-initial-inputs-alist
-          '((counsel-package . "^+ ")
-            (org-refile . "^")
-            (org-agenda-refile . "^")
-            (org-capture-refile . "^")
-            (counsel-M-x . "")
-            (counsel-describe-function . "")
-            (counsel-describe-variable . "")
-            (counsel-org-capture . "^")
-            (Man-completion-table . "^")
-            (woman . "^"))
-
-          ivy-extra-directories '("./")
-          magit-completing-read-function 'ivy-completing-read)
+(use-package embark-consult
+  :ensure t
+  :after (embark consult))
 
 
-    :bind (:map ivy-minibuffer-map
-                ("M-ö" . counsel-up-directory)
-                ("M-#" . ivy-alt-done)
-                ("C-r" . ivy-previous-line-or-history)
-                ("M-ä" . ivy-next-line)
-                ("C-x C-s" . ivy-occur)
-                ("M-ü" . ivy-previous-line)
-                :map ivy-switch-buffer-map
-                ("C-k" . ivy-switch-buffer-kill))
-    :delight ivy-mode)
-
-(use-package ivy-hydra
-    :after (ivy hydra))
-
-
-(use-package swiper
-    :after ivy
-    :bind (("C-s" . swiper)
-           ("C-r" . swiper)))
-
-(use-package counsel
-    :after swiper
-    :init (counsel-mode 1)
-    :bind (("M-x" . counsel-M-x)
-           ("C-x C-f" . counsel-find-file)
-           ("C-s" . counsel-grep-or-swiper))
-    :delight counsel-mode)
-
-(use-package ivy-rich
-    :after ivy
-    :config
-    (ivy-rich-mode 1))
-
-(use-package counsel-projectile
-    :commands (counsel-projectile-mode)
-    :after (counsel projectile)
-    :init (counsel-projectile-mode 1)
-    :config
-    (setq projectile-completion-system 'ivy
-          counsel-projectile-switch-project-action 'counsel-projectile-switch-project-by-name
-          )
-    :bind* (("C-M-f" . counsel-projectile-find-file)
-            ("C-M-d" . counsel-projectile-find-dir)
-            ("C-M-c" . counsel-projectile-switch-project)
-            ("C-M-s" . counsel-projectile-rg)))
 #+END_SRC
 *** Projectile
 #+BEGIN_SRC emacs-lisp
