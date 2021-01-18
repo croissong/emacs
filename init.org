@@ -651,27 +651,21 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :init (projectile-mode 1)
     :config
     (setq projectile-file-exists-remote-cache-expire nil
-          projectile-switch-project-action
-          (lambda ()
-            (let ((project-buffer (car (projectile-project-buffers))))
-              (if project-buffer
-                  (progn
-                    (bufler-workspace-focus-buffer project-buffer)
-                    (bufler-switch-buffer))
-                (progn
-                  (projectile-vc)
-                  (bufler-workspace-focus-buffer (current-buffer)))
-                )))
+          projectile-completion-system 'default
+          projectile-switch-project-action 'projectile-vc
           projectile-enable-caching t
           projectile-ignored-project-function
           (function (lambda (path)
             (let ((straight-dir (format "%s/%s" (f-filename user-emacs-directory) "straight")))
-              (message "%s" path)
               (string-match-p (regexp-quote straight-dir) path)))))
 
     :bind* (("C-M-r" . projectile-replace-regexp)
-            ("C-c p" . projectile-command-map))
-    :delight projectile-mode)
+            ("C-c p" . projectile-command-map)
+            ("C-M-f" . projectile-find-file)
+            ("C-M-d" . projectile-find-dir)
+            ("C-M-c" . projectile-switch-project)
+            ("C-M-s" . projectile-ripgrep))
+    :delight)
 #+END_SRC
 *** which-key
 [[https://github.com/justbur/emacs-which-key?utm_medium=referral&utm_campaign=ZEEF&utm_source=https%3A%2F%2Femacs.zeef.com%2Fehartc][@github.com]]
