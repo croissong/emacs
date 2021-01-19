@@ -144,26 +144,16 @@
 #+BEGIN_SRC emacs-lisp
 (delight 'eldoc-mode nil "eldoc")
 #+END_SRC
-** keyboard-migration
-#+BEGIN_SRC emacs-lisp
-
-(defun my/map-keys (key)
-  (let ((replacements '(("<up>" . "ü")
-                      ("<down>" . "ä")
-                      ("<left>" . "ö")
-                      ("<right>" . "#"))))
-    (s-replace-all replacements key)))
-#+END_SRC
 ** Navigation
 #+BEGIN_SRC emacs-lisp
 (bind-keys*
  ("C-q" . universal-argument)
 
- ((my/map-keys "C-<left>") . windmove-left)
- ((my/map-keys "C-<right>") . windmove-right)
- ((my/map-keys "C-<up>") . windmove-up)
- ((my/map-keys "C-<down>") . windmove-down)
- ((my/map-keys "C-S-<up>") . clone-indirect-buffer)
+ ("C-ö" . windmove-left)
+ ("C-#" . windmove-right)
+ ("C-ü" . windmove-up)
+ ("C-ä" . windmove-down)
+ ("C-Ü" . clone-indirect-buffer)
 
  ("M-r" . revert-buffer)
 
@@ -180,10 +170,10 @@
  ("C-x q" . (lambda () (interactive) (delete-window (other-window 1)))))
 
 (bind-keys
- ((my/map-keys "M-<left>")  . left-char)
- ((my/map-keys "M-<right>") . right-char)
- ((my/map-keys "M-<up>") . previous-line)
- ((my/map-keys "M-<down>") . next-line)
+ ("M-ö"  . left-char)
+ ("M-#" . right-char)
+ ("M-ü" . previous-line)
+ ("M-ä" . next-line)
 
  ;; disable overwrite
  ("<insert>" . nil)
@@ -434,10 +424,10 @@ https://github.com/lukhas/buffer-move
 #+BEGIN_SRC emacs-lisp
 (use-package buffer-move
     :bind*
-    ((my/map-keys "C-M-<right>") . buf-move-right)
-    ((my/map-keys "C-M-<left>") . buf-move-left)
-    ((my/map-keys "C-M-<up>") . buf-move-up)
-    ((my/map-keys "C-M-<down>") . buf-move-down))
+     ("C-M-#" . buf-move-right)
+     ("C-M-ö" . buf-move-left)
+     ("C-M-ü" . buf-move-up)
+     ("C-M-ä" . buf-move-down))
 #+END_SRC
 *** crux
 https://github.com/bbatsov/crux
@@ -577,8 +567,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (selectrum-refine-candidates-function #'orderless-filter)
     (selectrum-highlight-candidates-function #'orderless-highlight-matches)
     :bind (:map selectrum-minibuffer-map
-                ((my/map-keys "M-<right>") . selectrum-insert-current-candidate)
-                ((my/map-keys "M-<left>") . backward-kill-sexp)))
+                ("M-#" . selectrum-insert-current-candidate)
+                ("M-ö" . backward-kill-sexp)))
 
 (use-package orderless
     :custom
