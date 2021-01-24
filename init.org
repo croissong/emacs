@@ -188,25 +188,6 @@
 #+END_SRC
 ** Functions
 *** Line manouevor functions
-**** Copy-line-or-Region
-#+BEGIN_SRC emacs-lisp
-(defun xah-copy-line-or-region ()
-  "Copy current line, or text selection.
-When `universal-argument' is called first, copy whole buffer (but respect `narrow-to-region')."
-  (interactive)
-  (let (p1 p2)
-    (if (null current-prefix-arg)
-        (progn (if (use-region-p)
-                   (progn (setq p1 (region-beginning))
-                          (setq p2 (region-end)))
-                 (progn (setq p1 (line-beginning-position))
-                        (setq p2 (line-end-position)))))
-      (progn (setq p1 (point-min))
-             (setq p2 (point-max))))
-    (kill-ring-save p1 p2)))
-
-(bind-key "M-w" 'xah-copy-line-or-region)
-#+END_SRC
 **** Smart delete
 #+BEGIN_SRC emacs-lisp
 (defun my/delete-whitespace-or-word ()
@@ -402,6 +383,13 @@ When `universal-argument' is called first, copy whole buffer (but respect `narro
                 ("M-<down>" . drag-stuff-down))
     :delight drag-stuff-mode)
 #+END_SRC
+*** whole-line-or-region
+#+BEGIN_SRC emacs-lisp
+(use-package whole-line-or-region
+    :init
+    (whole-line-or-region-global-mode 1)
+    :delight whole-line-or-region-local-mode)
+#+END_SRC
 *** whitespace-cleanup-mode
 [[https://github.com/purcell/whitespace-cleanup-mode][@github.com]]
 #+BEGIN_SRC emacs-lisp
@@ -433,16 +421,8 @@ https://github.com/lukhas/buffer-move
 https://github.com/bbatsov/crux
 #+BEGIN_SRC emacs-lisp
 (use-package crux
-    :config
-    (defun my/kill-line-or-region ()
-      (interactive)
-      (if (use-region-p)
-          (kill-region (region-beginning) (region-end))
-        (crux-smart-kill-line)))
-
     :bind* (("C-f r" . crux-rename-file-and-buffer)
-            ("C-f d" . crux-delete-file-and-buffer)
-            ("C-w" . my/kill-line-or-region))
+            ("C-f d" . crux-delete-file-and-buffer))
     :bind (
            ;; not global because conflict with org-mode new heading
            ("C-<return>" . crux-smart-open-line)
