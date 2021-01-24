@@ -666,24 +666,20 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (add-hook 'before-save-hook
               (lambda () (lsp-format-buffer) (lsp-organize-imports)) 0 t))
   :config
-  (setq lsp-enable-snippet t
-        lsp-signature-doc-lines 1
-        lsp-signature-auto-activate t)
-  (cl-pushnew "[/\\\\]venv$" lsp-file-watch-ignored)
   (cl-pushnew "[/\\\\]\\.mypy_cache$" lsp-file-watch-ignored)
   (cl-pushnew "[/\\\\]\\.pytest_cache$" lsp-file-watch-ignored)
   (cl-pushnew "[/\\\\]dot_git$" lsp-file-watch-ignored)
+  :custom
+  (lsp-enable-snippet t)
+  (lsp-signature-doc-lines 1)
+  (lsp-signature-auto-activate t)
+  (lsp-progress-via-spinner nil)
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-modeline-code-actions-enable nil)
   :bind (:map lsp-mode-map
               ("M-." . lsp-goto-implementation)
               ("M--" . lsp-execute-code-action)))
 
-(use-package dap-mode
-    :commands dap-debug
-    :config
-    (setq dap-auto-configure-features '(sessions locals))
-    (dap-auto-configure-mode)
-    (add-hook 'dap-stopped-hook
-              (lambda (arg) (call-interactively #'dap-hydra))))
 
 (use-package lsp-ui
     :commands lsp-ui-mode
@@ -809,7 +805,6 @@ https://github.com/tonini/alchemist.el
 (use-package lsp-pyright
     :init
   :config
-  (require 'dap-python)
   :hook (python-mode . (lambda ()
                           (require 'lsp-pyright)
                           (lsp-deferred)
@@ -918,8 +913,7 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (use-package go-mode
     :mode "\\.go\\'"
-    :hook (go-mode . lsp-deferred)
-    :init (require 'dap-go))
+    :hook (go-mode . lsp-deferred))
 #+END_SRC
 *** nim
 #+BEGIN_SRC emacs-lisp
