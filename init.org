@@ -582,12 +582,19 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
     :custom
     (consult-project-root-function #'projectile-project-root)
-    :bind
+    :bind*
     ("C-x x" . consult-buffer)
     ("C-M-s" . consult-ripgrep))
 
+(use-package marginalia
+  :config
+  (marginalia-mode))
+
+(use-package embark
+    :bind*
+  ("M-+" . embark-act))
+
 (use-package embark-consult
-  :ensure t
   :after (embark consult))
 
 
