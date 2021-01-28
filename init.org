@@ -41,6 +41,8 @@
 (use-package delight)
 (use-package cl-lib)
 (use-package f)
+(use-package dash)
+(use-package a)
 (use-package gcmh
   :init (gcmh-mode 1)
   :delight)
@@ -554,7 +556,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (orderless-matching-styles '(orderless-prefixes)))
 
 (use-package ctrlf
-    :init (ctrlf-mode))
+    :init (ctrlf-mode)
+    :custom
+    (setq ctrlf-minibuffer-bindings
+          (a-assoc ctrlf-minibuffer-bindings "M-ä" 'ctrlf-last-match "M-ü" 'ctrlf-first-match)))
 
 (use-package consult
     :after (projectile)
