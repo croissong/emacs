@@ -192,20 +192,12 @@
 *** Line manouevor functions
 **** Smart delete
 #+BEGIN_SRC emacs-lisp
-(defun my/delete-whitespace-or-word ()
-  (interactive)
-  (if (looking-at "\\(\t\\|  \\)")
-      (delete-horizontal-space)
-    (kill-word 1)))
-
 (defun my/backward-delete-whitespace-or-word ()
   (interactive)
   (if (looking-back "\\(\t\\|  \\)")
       (delete-horizontal-space)
     (backward-kill-word 1)))
-
 (bind-key "C-<backspace>" 'my/backward-delete-whitespace-or-word)
-(bind-key "C-M-<backspace>" 'my/delete-whitespace-or-word)
 
 (bind-key "C-a" 'back-to-indentation)
 #+END_SRC
@@ -539,7 +531,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package wgrep :defer t)
 #+END_SRC
-*** selectrum
+*** Minibuffer & completion
 #+BEGIN_SRC emacs-lisp
 (use-package selectrum
     :after (orderless)
@@ -549,7 +541,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (selectrum-highlight-candidates-function #'orderless-highlight-matches)
     :bind (:map selectrum-minibuffer-map
                 ("M-#" . selectrum-insert-current-candidate)
-                ("M-ö" . backward-kill-sexp)))
+                ("M-ö" . my/backward-delete-sexp)))
 
 (use-package orderless
     :custom
@@ -582,6 +574,19 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :after (embark consult))
 
 
+;; https://stackoverflow.com/questions/46017956/emacs-how-to-change-kill-to-delete
+(defmacro my/delete-instead-of-kill (&rest body)
+  "Replaces `kill-region' with `delete-region' in BODY."
+  `(cl-letf (((symbol-function 'kill-region)
+              (lambda (beg end &optional yank-handler)
+                (delete-region beg end))))
+     ,@body))
+
+;; Otherwise backward-kill-sexp used by selectrum bloats the kill ring
+(defun my/backward-delete-sexp (arg)
+  "Like `kill-word', but does not save to the `kill-ring'."
+  (interactive "*p")
+  (my/delete-instead-of-kill (backward-kill-sexp arg)))
 #+END_SRC
 *** Projectile
 #+BEGIN_SRC emacs-lisp
