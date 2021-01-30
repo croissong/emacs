@@ -863,9 +863,14 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (use-package json-mode
     :mode "\\.json\\'"
-    :config
-    (setq json-reformat:indent-width 2
-          js-indent-level 2))
+    :custom
+    (json-reformat:indent-width 2)
+    (js-indent-level 2))
+#+END_SRC
+***** jsonnet-mode
+#+BEGIN_SRC emacs-lisp
+(use-package jsonnet-mode
+    :mode  ("\\.jsonnet\\'" "\\.libsonnet\\'"))
 #+END_SRC
 ***** typescript
 #+BEGIN_SRC emacs-lisp
