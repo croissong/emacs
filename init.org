@@ -384,6 +384,25 @@
     (whole-line-or-region-global-mode 1)
     :delight whole-line-or-region-local-mode)
 #+END_SRC
+*** Window management
+#+BEGIN_SRC emacs-lisp
+(use-package eyebrowse
+    :init
+    (eyebrowse-mode t)
+    :bind*
+    ("M-1" . eyebrowse-switch-to-window-config-1)
+    ("M-2" . eyebrowse-switch-to-window-config-2)
+    ("M-3" . eyebrowse-switch-to-window-config-3)
+    ("M-4" . eyebrowse-switch-to-window-config-4)
+    ("M-5" . eyebrowse-switch-to-window-config-5)
+    ("M-6" . eyebrowse-switch-to-window-config-6))
+
+(winner-mode 1)
+(bind-keys*
+ ("C-M-1" . delete-other-windows)
+ ("C-M-2" . winner-undo)
+ ("C-M-3" . winner-redo))
+#+END_SRC
 *** whitespace-cleanup-mode
 [[https://github.com/purcell/whitespace-cleanup-mode][@github.com]]
 #+BEGIN_SRC emacs-lisp
