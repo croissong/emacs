@@ -707,6 +707,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :commands magit-status
     :init
     (setq magit-auto-revert-mode nil)
+    :bind
+    ("C-x b" . magit-blame)
+    ("C-x l" . magit-log-buffer-file)
     :config
     (setq magit-diff-section-arguments (quote ("--no-ext-diff" "-U2"))
           magit-diff-refine-ignore-whitespace nil
