@@ -123,6 +123,7 @@
 (normal-erase-is-backspace-mode 1)
 (global-so-long-mode 1)
 (setq initial-scratch-message nil)
+(setq initial-major-mode 'text-mode)
 (setq ring-bell-function 'ignore
       vc-follow-symlinks t)
 (put 'upcase-region 'disabled nil)
@@ -146,15 +147,16 @@
 #+BEGIN_SRC emacs-lisp
 (delight 'eldoc-mode nil "eldoc")
 #+END_SRC
-** Navigation
+** Global kebyindings
 #+BEGIN_SRC emacs-lisp
 (bind-keys*
- ("C-q" . universal-argument)
-
+ ("C-q" . keyboard-quit)
+ ("M-q" . universal-argument)
  ("C-ö" . windmove-left)
  ("C-#" . windmove-right)
  ("C-ü" . windmove-up)
  ("C-ä" . windmove-down)
+
  ("C-Ü" . clone-indirect-buffer)
 
  ("M-r" . revert-buffer)
@@ -164,7 +166,7 @@
  ("C-M-k" . kill-this-buffer)
  ("C-l" . goto-line)
  ("M-_" . shell-command)
- ("M-," . pop-global-mark)
+ ("M-," . consult-global-mark)
  ("C-h C-f" . find-function-at-point)
  ("C-h C-v" . find-variable-at-point)
 
@@ -365,6 +367,12 @@
     (require 'vlf-setup))
 #+END_SRC
 ** Minor Modes
+*** Iedit
+#+BEGIN_SRC emacs-lisp
+(use-package iedit
+    :bind*
+      ("C-r" . iedit-mode))
+#+END_SRC
 *** Drag-stuff
 #+BEGIN_SRC emacs-lisp
 (use-package drag-stuff
@@ -546,6 +554,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package flycheck
     :commands flycheck-mode)
 #+END_SRC
+*** Flyspell
+#+BEGIN_SRC emacs-lisp
+(use-package flyspell-correct
+    :hook (text-mode . flyspell-mode)
+    :bind (:map flyspell-mode-wmap
+              ("C-;" . flyspell-correct-wrapper)))
+#+END_SRC
 *** Ripgrep
 #+BEGIN_SRC emacs-lisp
 (use-package wgrep :defer t)
@@ -583,10 +598,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package ctrlf
     :init (ctrlf-mode)
-    :bind*
-    ("C-r" . query-replace-regexp)
-    :custom
-    (ctrlf-minibuffer-bindings (a-assoc ctrlf-minibuffer-bindings "M-ä" 'ctrlf-next-match "M-ü" 'ctrlf-previous-match))
+    :config
+    (setq ctrlf-minibuffer-bindings (a-assoc ctrlf-minibuffer-bindings "M-ä" 'ctrlf-next-match "M-ü" 'ctrlf-previous-match))
     )
 
 (use-package consult
@@ -594,12 +607,16 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :custom
     (consult-project-root-function #'projectile-project-root)
     :bind*
-    ("C-x x" . consult-buffer)
+    ("M-c" . consult-buffer)
     ("C-M-s" . consult-ripgrep))
 
 (use-package marginalia
+  :init
+  (marginalia-mode)
   :config
-  (marginalia-mode))
+  (advice-add #'marginalia-cycle :after
+              (lambda () (when (bound-and-true-p
+                                selectrum-mode) (selectrum-exhibit)))))
 
 (use-package embark
     :config
@@ -830,8 +847,6 @@ https://github.com/tonini/alchemist.el
   :mode ("\\.py\\'" . python-mode))
 
 (use-package lsp-pyright
-    :init
-  :config
   :hook (python-mode . (lambda ()
                           (require 'lsp-pyright)
                           (lsp-deferred)
