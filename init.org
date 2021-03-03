@@ -367,6 +367,15 @@
     (require 'vlf-setup))
 #+END_SRC
 ** Minor Modes
+#+BEGIN_SRC emacs-lisp
+(use-package tree-sitter
+    :init (require 'tree-sitter)
+    :config
+    (global-tree-sitter-mode)
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+(use-package tree-sitter-langs
+    :init (require 'tree-sitter-langs))
+#+END_SRC
 *** Iedit
 #+BEGIN_SRC emacs-lisp
 (use-package iedit
@@ -708,7 +717,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-mode
   :commands lsp-deferred
+  :hook (lsp-mode . lsp-enable-which-key-integration)
   :init
+  (setq lsp-keymap-prefix "M-l")
   (cl-defun my/lsp-format-buf ((&optional (format t)) (&optional (organize-imports t)))
     (add-hook 'before-save-hook
               (lambda () (lsp-format-buffer) (lsp-organize-imports)) 0 t))
