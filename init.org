@@ -583,8 +583,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package ctrlf
     :init (ctrlf-mode)
+    :bind*
+    ("C-r" . query-replace-regexp)
     :custom
-    (ctrlf-minibuffer-bindings (a-assoc ctrlf-minibuffer-bindings "M-ä" 'ctrlf-last-match "M-ü" 'ctrlf-first-match))
+    (ctrlf-minibuffer-bindings (a-assoc ctrlf-minibuffer-bindings "M-ä" 'ctrlf-next-match "M-ü" 'ctrlf-previous-match))
     )
 
 (use-package consult
