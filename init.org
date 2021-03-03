@@ -555,9 +555,20 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package selectrum
     :after (orderless)
     :init (selectrum-mode +1)
+    :config
+    (prescient-persist-mode +1)
+    (setq selectrum-preprocess-candidates-function
+      #'selectrum-prescient--preprocess)
+(add-hook 'selectrum-candidate-selected-hook
+          #'selectrum-prescient--remember)
+(add-hook 'selectrum-candidate-inserted-hook
+          #'selectrum-prescient--remember)
+
     :custom
     (selectrum-refine-candidates-function #'orderless-filter)
+    (orderless-skip-highlighting (lambda () selectrum-is-active))
     (selectrum-highlight-candidates-function #'orderless-highlight-matches)
+    (magit-completing-read-function #'selectrum-completing-read)
     :bind (:map selectrum-minibuffer-map
                 ("M-#" . selectrum-insert-current-candidate)
                 ("M-ö" . my/backward-delete-sexp)))
@@ -566,15 +577,18 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :custom
   (orderless-matching-styles '(orderless-prefixes)))
 
+(use-package prescient)
+(use-package selectrum-prescient
+    :after prescient)
+
 (use-package ctrlf
     :init (ctrlf-mode)
     :custom
-    (setq ctrlf-minibuffer-bindings
-          (a-assoc ctrlf-minibuffer-bindings "M-ä" 'ctrlf-last-match "M-ü" 'ctrlf-first-match)))
+    (ctrlf-minibuffer-bindings (a-assoc ctrlf-minibuffer-bindings "M-ä" 'ctrlf-last-match "M-ü" 'ctrlf-first-match))
+    )
 
 (use-package consult
     :after (projectile)
-
     :custom
     (consult-project-root-function #'projectile-project-root)
     :bind*
@@ -586,6 +600,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (marginalia-mode))
 
 (use-package embark
+    :config
+  (setq embark-action-indicator
+      (lambda (map _target)
+        (which-key--show-keymap "Embark" map nil nil 'no-paging)
+        #'which-key--hide-popup-ignore-command)
+      embark-become-indicator embark-action-indicator)
     :bind*
   ("M-+" . embark-act))
 
@@ -687,7 +707,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :bind (:map lsp-mode-map
               ("M-." . lsp-goto-implementation)
               ("M--" . lsp-execute-code-action)))
-
 
 (use-package lsp-ui
     :commands lsp-ui-mode
@@ -1077,6 +1096,7 @@ https://github.com/tonini/alchemist.el
 ** restclient
 #+BEGIN_SRC emacs-lisp
 (use-package restclient
+    :mode ("\\.http\\'" . restclient-mode)
     :commands restclient-mode)
 #+END_SRC
 ** x509-mode
