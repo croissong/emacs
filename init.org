@@ -37,7 +37,7 @@
 
 (setq comp-async-report-warnings-errors nil)
 
-(require 'bind-key)
+(use-package bind-key)
 (use-package delight)
 (use-package cl-lib)
 (use-package f)
@@ -309,13 +309,13 @@
 #+END_SRC
 ** Minor Modes
 #+BEGIN_SRC emacs-lisp
-(use-package tree-sitter
-    :init (require 'tree-sitter)
-    :config
-    (global-tree-sitter-mode)
-    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-(use-package tree-sitter-langs
-    :init (require 'tree-sitter-langs))
+(use-package
+  tree-sitter
+  :init (global-tree-sitter-mode)
+  :hook (tree-sitter-after-on-hook . tree-sitter-hl-mode))
+(use-package
+  tree-sitter-langs
+  :after tree-sitter)
 #+END_SRC
 *** Iedit
 #+BEGIN_SRC emacs-lisp
