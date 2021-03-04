@@ -1,10 +1,10 @@
 ;;; my-util.el --- Utility functions - my moi, for moi -*- lexical-binding: t; -*-
 
-(defun my-util-ensure-emacs-subdir (path)
-  (let ((expanded-path (expand-file-name path user-emacs-directory )))
-    (unless (file-directory-p expanded-path)
-      (mkdir expanded-path t))
-    expanded-path))
+(defun my-util-ensure-dir (&rest dirs)
+  "Join args to single path and create directory if it does not exist."
+  (let ((path (apply 'f-join dirs)))
+    (f-mkdir path)
+    path))
 
 (defmacro my-util-with-eval-after-frame (&rest body)
   `(if (daemonp)

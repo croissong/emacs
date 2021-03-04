@@ -115,10 +115,13 @@
       create-lockfiles nil
       kept-old-versions 2
       version-control t
-      emacs-tmp-dir (my-util-ensure-emacs-subdir "tmp/")
-      backup-directory-alist `(("." . ,emacs-tmp-dir))
-      auto-save-file-name-transforms `((".*" ,emacs-tmp-dir t))
-      auto-save-list-file-prefix emacs-tmp-dir)
+      backup-by-copying t
+      emacs-tmp-dir (my-util-ensure-dir user-emacs-directory "tmp/")
+      emacs-backup-dir (my-util-ensure-dir emacs-tmp-dir "backups/")
+      emacs-autosave-dir (my-util-ensure-dir emacs-tmp-dir "autosaves/")
+      backup-directory-alist `(("." . ,emacs-backup-dir))
+      auto-save-file-name-transforms `((".*" ,emacs-autosave-dir t))
+      auto-save-list-file-prefix emacs-autosave-dir)
 #+END_SRC
 ** littlest things
 #+BEGIN_SRC emacs-lisp
