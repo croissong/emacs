@@ -370,15 +370,19 @@
     :init (global-whitespace-cleanup-mode 1)
     :delight whitespace-cleanup-mode)
 #+END_SRC
-*** format-all
-[[https://github.com/purcell/whitespace-cleanup-mode][@github.com]]
+*** formatting
 #+BEGIN_SRC emacs-lisp
-(use-package format-all
-    :bind* ("C-f f" . format-all-buffer)
-    :hook
-    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode terraform-mode emacs-lisp-mode)
-     . format-all-mode)
-    :delight format-all-mode)
+;; Unified approach inc: https://github.com/purcell/reformatter.el/pull/24
+(use-package apheleia
+  :straight (:host github :repo "raxod502/apheleia")
+  :init
+  (apheleia-global-mode +1))
+;; (use-package format-all
+;;     :bind* ("C-f f" . format-all-buffer)
+;;     :hook
+;;     ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode terraform-mode emacs-lisp-mode)
+;;      . format-all-mode)
+;;     :delight format-all-mode)
 #+END_SRC
 *** Buffer-move
 https://github.com/lukhas/buffer-move
