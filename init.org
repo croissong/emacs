@@ -867,23 +867,17 @@ https://github.com/tonini/alchemist.el
     #+END_SRC
 *** Elisp
 #+BEGIN_SRC emacs-lisp
-(setq lisp-indent-function 'common-lisp-indent-function)
-#+END_SRC
-**** Dev
-***** Namespaces elisp
-[[https://github.com/Malabarba/Nameless][@github.com]]
-#+BEGIN_SRC emacs-lisp
-(use-package nameless
-  :hook (emacs-lisp-mode . nameless-mode)
-  :config
-  (setq nameless-private-prefix t)
-)
-#+END_SRC
-***** Testing
-[[https://github.com/promethial/xtest#simple-buffer-testing][@github.com]]
-#+BEGIN_SRC emacs-lisp
-(use-package xtest
-    :defer t)
+;; (setq lisp-indent-function 'common-lisp-indent-function)
+(use-package
+    nameless
+    :hook (emacs-lisp-mode . nameless-mode)
+    :custom (nameless-private-prefix t))
+
+(use-package
+    lispy
+    :hook (emacs-lisp-mode . lispy-mode))
+
+(use-package xtest :defer t)
 #+END_SRC
 *** Php
 #+BEGIN_SRC emacs-lisp
