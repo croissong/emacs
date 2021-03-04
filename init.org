@@ -86,12 +86,20 @@
       browse-url-generic-args '("--enable-features=UseOzonePlatform" "--ozone-platform=wayland")
       browse-url-browser-function 'browse-url-generic
       require-final-newline t
-      read-process-output-max (* 1024 1024)
+      read-process-output-max (* 1024 1024) ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
       enable-local-eval t
       mouse-wheel-scroll-amount '(2 ((shift) . 2))
       mouse-wheel-progressive-speed nil
       same-window-buffer-names '("*Help*")
       Man-notify-method 'pushy
+
+      inhibit-startup-screen t
+      initial-scratch-message nil
+      initial-major-mode 'text-mode
+
+      ring-bell-function 'ignore
+      vc-follow-symlinks t
+
       display-buffer-alist
       '(("*Async Shell Command*" . (display-buffer-no-window))))
 
@@ -112,25 +120,15 @@
       auto-save-file-name-transforms `((".*" ,emacs-tmp-dir t))
       auto-save-list-file-prefix emacs-tmp-dir)
 #+END_SRC
-** Start-Up
-#+BEGIN_SRC emacs-lisp
-(setq inhibit-startup-screen t)
-(setq-default major-mode 'indented-text-mode)
-#+END_SRC
 ** littlest things
 #+BEGIN_SRC emacs-lisp
-(tooltip-mode -1)
+
 (column-number-mode 1)
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq vc-handled-backends nil)
 (delete-selection-mode 1)
-(normal-erase-is-backspace-mode 1)
 (global-so-long-mode 1)
-(setq initial-scratch-message nil)
-(setq initial-major-mode 'text-mode)
-(setq ring-bell-function 'ignore
-      vc-follow-symlinks t)
-(mouse-avoidance-mode)
+
 #+END_SRC
 *** Kill active process buffer no prompt
 #+BEGIN_SRC emacs-lisp
@@ -1068,13 +1066,16 @@ Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
 (use-package esup
     :commands esup)
 #+END_SRC
-* Theme
+* UI
 #+BEGIN_SRC emacs-lisp
 (menu-bar-mode -1)
 (tool-bar-mode -1)
+(tooltip-mode -1)
+(mouse-avoidance-mode)
 (scroll-bar-mode -1)
 (set-face-attribute 'default nil :family "Monospace" :height 110)
 (setq-default cursor-type 'bar)
+
 (use-package modus-themes
     :demand t
     :custom
@@ -1097,10 +1098,7 @@ https://www.reddit.com/r/emacs/comments/1mbn0s/the_emacs_calculator/
 * meta
 ** other
 *** [[http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3][@wisomandwonder]]
-*** [[https://github.com/emacs-tw/awesome-emacs][awesome-emacs]]
-*** [[https://github.com/jwiegley/dot-emacs][jwiegley dot-emacs]]
-*** [[https://www.reddit.com/r/emacs/comments/3obmoh/emacs_for_writers_presentation_by_jay_dixit/][Emacs for writers]]
-- org-bullets
+*** [[https://github.com/emacs-tw/awesome-emacs][awesome-emac2s]]
 ** elisp tips
 - [[https://www.reddit.com/r/emacs/comments/3nu2xr/emacs_lisp_programming_thoughts/][@reddit.com]]
 *** regexp
