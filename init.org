@@ -434,7 +434,7 @@
 (use-package format-all
     :bind* ("C-f f" . format-all-buffer)
     :hook
-    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode terraform-mode emacs-lisp-mode)
+    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode terraform-mode emacs-lisp-mode)
      . format-all-mode)
     :delight format-all-mode)
 #+END_SRC
@@ -964,11 +964,7 @@ https://github.com/tonini/alchemist.el
 #+END_SRC
 *** Rust
 #+BEGIN_SRC emacs-lisp
-(use-package rust-mode
-    :mode "\\.rs\\'"
-    :config (setq lsp-rust-server 'rust-analyzer
-                  rust-match-angle-brackets nil)
-    :hook (rust-mode . lsp-deferred))
+(use-package rustic)
 #+END_SRC
 *** golang
 #+BEGIN_SRC emacs-lisp
