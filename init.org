@@ -35,7 +35,7 @@
   (unless (eq system-type 'windows-nt)
     (set-selection-coding-system 'utf-8-unix)))
 
-(setq warning-suppress-log-types '((comp)))
+(setq comp-async-report-warnings-errors nil)
 
 (require 'bind-key)
 (use-package delight)
@@ -80,6 +80,7 @@
 (setq default-directory "~/"
       custom-file (expand-file-name "custom.el" user-emacs-directory)
       browse-url-generic-program (executable-find (getenv "BROWSER"))
+      browse-url-generic-args '("--enable-features=UseOzonePlatform" "--ozone-platform=wayland")
       browse-url-browser-function 'browse-url-generic
       require-final-newline t
       read-process-output-max (* 1024 1024)
