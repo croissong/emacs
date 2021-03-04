@@ -350,8 +350,8 @@
 ("C-c l" . my/insert-link))
 #+END_SRC
 ** Style
-*** Adaptive-Wrap
-#+BEGIN_SRC emacs-lisp
+*** Adaptive-Wrap [disabled]
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package adaptive-wrap
     :init
     (define-globalized-minor-mode adaptive-wrap-global-mode
