@@ -639,12 +639,17 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
           ("C-h C" . helpful-command)))
 #+END_SRC
 *** dumb-jump
-[[https://github.com/jacktasia/dumb-jump][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package
   dumb-jump
   :init (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   :custom (dumb-jump-prefer-searcher 'rg))
+#+END_SRC
+*** ix.io
+#+BEGIN_SRC emacs-lisp
+(use-package
+  ix
+  :commands ix)
 #+END_SRC
 ** Editorconfig
 #+BEGIN_SRC emacs-lisp
