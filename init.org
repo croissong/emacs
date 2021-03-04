@@ -54,19 +54,17 @@
 #+BEGIN_SRC emacs-lisp
 (use-package org-init
     :after org
-    :straight nil
-    :commands (org-init-mode org-init-open)
-    :load-path "my/org-init")
+    :straight (:local-repo "~/.config/emacs/my/org-init/")
+    :commands (org-init-mode org-init-open))
 #+END_SRC
 ** My/Util
 #+BEGIN_SRC emacs-lisp
 (use-package my-util
-    :straight nil
+    :straight (:local-repo "~/.config/emacs/my/util/")
     :demand t
     :bind
     ("C-<backspace>" . my-util-backward-delete-whitespace-or-word)
-    ("C-x <tab>"  . my-util-indent-rigidly)
-    :load-path "my/util")
+    ("C-x <tab>"  . my-util-indent-rigidly))
 #+END_SRC
 * Core
 ** Read env vars
@@ -233,10 +231,9 @@
 
 (use-package my-org
     :after org
-    :straight nil
+    :straight (:local-repo "~/.config/emacs/my/org/")
     :bind (:map org-mode-map
-                ("C-c C-M-e" . my-org-export-all))
-    :load-path "my/my-org")
+                ("C-c C-M-e" . my-org-export-all)))
 #+END_SRC
 *** Config
 **** Export
@@ -670,8 +667,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package hydra)
 (use-package my-hydra
     :after hydra
-    :straight nil
-    :load-path "my/my-hydra"
+    :straight (:local-repo "~/.config/emacs/my/hydra/")
     :bind* ("C-M-m" . hydra-my/init/body))
 #+END_SRC
 ** lsp-mode
