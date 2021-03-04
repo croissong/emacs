@@ -58,12 +58,15 @@
     :commands (org-init-mode org-init-open)
     :load-path "my/org-init")
 #+END_SRC
-** My/Utils
+** My/Util
 #+BEGIN_SRC emacs-lisp
 (use-package my-util
     :straight nil
-    :functions my-util-ensure-emacs-dir my-util-win?
-    :load-path "my/my-utils")
+    :demand t
+    :bind
+    ("C-<backspace>" . my-util-backward-delete-whitespace-or-word)
+    ("C-x <tab>"  . my-util-indent-rigidly)
+    :load-path "my/util")  
 #+END_SRC
 * Core
 ** Read env vars
@@ -104,7 +107,7 @@
       create-lockfiles nil
       kept-old-versions 2
       version-control t
-      emacs-tmp-dir (my-util-ensure-emacs-dir "tmp/")
+      emacs-tmp-dir (my-util-ensure-emacs-subdir "tmp/")
       backup-directory-alist `(("." . ,emacs-tmp-dir))
       auto-save-file-name-transforms `((".*" ,emacs-tmp-dir t))
       auto-save-list-file-prefix emacs-tmp-dir)
@@ -176,6 +179,7 @@
  ("M-#" . right-char)
  ("M-ü" . previous-line)
  ("M-ä" . next-line)
+ ("C-a" . back-to-indentation)
 
  ;; disable overwrite
  ("<insert>" . nil)
@@ -193,61 +197,8 @@
  ("<f6>" . profiler-stop))
 #+END_SRC
 ** Functions
-*** Line manouevor functions
-**** Smart delete
-#+BEGIN_SRC emacs-lisp
-(defun my/backward-delete-whitespace-or-word ()
-  (interactive)
-  (if (looking-back "\\(\t\\|  \\)")
-      (delete-horizontal-space)
-    (backward-kill-word 1)))
-(bind-key "C-<backspace>" 'my/backward-delete-whitespace-or-word)
-
-(bind-key "C-a" 'back-to-indentation)
-#+END_SRC
-*** Misc
-**** Capitalize Word
-#+BEGIN_SRC emacs-lisp
-(defun my/capitalize-previous-word()
-  (interactive)
-  (capitalize-word -1))
-#+END_SRC
-**** sort lines caseinsensitive
-#+BEGIN_SRC emacs-lisp
-(defun my/sort-lines-nocase ()
-  (interactive)
-  (let ((sort-fold-case t))
-    (call-interactively 'sort-lines)))
-#+END_SRC
-*** b64encode-no-break
-#+BEGIN_SRC emacs-lisp
-(defun my/base64-encode-region-no-break ()
-  (interactive)
-  (base64-encode-region (mark) (point) t))
-#+END_SRC
-*** rm newlines
-#+BEGIN_SRC emacs-lisp
-(defun my/remove-newlines-in-region ()
-  "Removes all newlines in the region."
-  (interactive)
-  (save-restriction
-    (narrow-to-region (point) (mark))
-    (goto-char (point-min))
-    (while (search-forward "\n" nil t) (replace-match "" nil t))))
-#+END_SRC
 *** indent-rigidly
 #+BEGIN_SRC emacs-lisp
-;; do not skip first line when indenting
-(defun my/indent-rigidly(start end arg &optional interactive)
-  (interactive "r\nP\np")
-  (when (use-region-p)
-    (goto-char start)
-    (beginning-of-line)
-    (deactivate-mark)
-    (set-mark (point))
-    (goto-char end))
-  (call-interactively 'indent-rigidly))
-(bind-key* "C-x <tab>"  'my/indent-rigidly)
 #+END_SRC
 * Packages
 ** Org-Mode
