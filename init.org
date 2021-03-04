@@ -127,8 +127,6 @@
 (setq initial-major-mode 'text-mode)
 (setq ring-bell-function 'ignore
       vc-follow-symlinks t)
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
 (mouse-avoidance-mode)
 #+END_SRC
 *** Kill active process buffer no prompt
@@ -148,11 +146,10 @@
 #+BEGIN_SRC emacs-lisp
 (delight 'eldoc-mode nil "eldoc")
 #+END_SRC
-** Global kebyindings
+** Global keybindings
 #+BEGIN_SRC emacs-lisp
+(setq help-char 9) ;; tab
 (bind-keys*
- ("C-q" . keyboard-quit)
- ("M-q" . universal-argument)
  ("C-ö" . windmove-left)
  ("C-#" . windmove-right)
  ("C-ü" . windmove-up)
@@ -183,13 +180,17 @@
  ;; disable overwrite
  ("<insert>" . nil)
 
+ ("C-q" . keyboard-quit)
+ ("M-q" . universal-argument)
+ ("C-x C-q" . nil)
+
  ("C-x b" . nil)
 
-;; disable mouse-wheel zoom
-("<C-mouse-4>" . nil)
-("<C-mouse-5>" . nil)
-("<f5>" . profiler-start)
-("<f6>" . profiler-stop))
+ ;; disable mouse-wheel zoom
+ ("<C-mouse-4>" . nil)
+ ("<C-mouse-5>" . nil)
+ ("<f5>" . profiler-start)
+ ("<f6>" . profiler-stop))
 #+END_SRC
 ** Functions
 *** Line manouevor functions
@@ -525,10 +526,13 @@ https://github.com/bbatsov/crux
                 ("C-M-<down>" . sp-select-next-thing))
     :init
     (smartparens-global-mode 1)
+    (show-smartparens-global-mode 1)
     :config
     (require 'smartparens-config)
-    (show-smartparens-global-mode 1)
-    (setq blink-matching-paren nil)
+    :custom
+    (blink-matching-paren nil)
+    (sp-show-pair-delay 0.5)
+    (sp-message-width nil)
     :delight smartparens-mode)
 #+END_SRC
 *** Undo-Tree
@@ -567,7 +571,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** Flyspell
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
-    :hook ((text-mode markdown-mode) . flyspell-mode))
+    :hook ((text-mode markdown-mode) . flyspell-mode)
+    :delight flyspell-mode)
 (use-package flyspell-correct
     :after flyspell
     :bind (:map flyspell-mode-map
@@ -685,7 +690,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 [[https://github.com/justbur/emacs-which-key?utm_medium=referral&utm_campaign=ZEEF&utm_source=https%3A%2F%2Femacs.zeef.com%2Fehartc][@github.com]]
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
-    :init (which-key-mode 1)
+    :init (which-key-mode)
+    :config
+    (which-key-setup-minibuffer)
+    :custom
+    (which-key-show-early-on-C-h t)
+    (which-key-idle-delay 10000)
+    (which-key-idle-secondary-delay 0.05)
     :delight which-key-mode)
 #+END_SRC
 *** dumb-jump
@@ -1157,8 +1168,9 @@ Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
    (defun my/load-theme ()
       (load-theme 'modus-operandi t)
       (set-frame-font "Monospace 12" nil t)
-      (set-face-attribute 'sp-show-pair-match-face nil :foreground "green" :background nil)
-      (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil))
+      (set-face-attribute 'sp-show-pair-match-face nil :foreground "#00B00B" :background nil :weight 'bold)
+      (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil :inherit nil :weight 'bold)
+      )
 
     (my-util-with-eval-after-frame
      (my/load-theme))
