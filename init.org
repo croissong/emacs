@@ -481,7 +481,7 @@ https://github.com/bbatsov/crux
     (require 'smartparens-config)
     :custom
     (blink-matching-paren nil)
-    (sp-show-pair-delay 0.5)
+    (sp-show-pair-delay 0.2)
     (sp-message-width nil)
     :delight smartparens-mode)
 #+END_SRC
@@ -1077,26 +1077,29 @@ Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
 (use-package esup
     :commands esup)
 #+END_SRC
-* Style
-** Theme
+* Theme
 #+BEGIN_SRC emacs-lisp
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
+(set-face-attribute 'default nil :family "Monospace" :height 110)
 (setq-default cursor-type 'bar)
-(use-package modus-operandi-theme
-    :ensure t
+(use-package modus-themes
+    :demand t
+    :custom
+    (modus-themes-completions 'moderate)
+    (modus-themes-region 'bg-only-no-extend)
     :init
-   (defun my/load-theme ()
-      (load-theme 'modus-operandi t)
-      (set-frame-font "Monospace 12" nil t)
-      (set-face-attribute 'sp-show-pair-match-face nil :foreground "#00B00B" :background nil :weight 'bold)
-      (set-face-attribute 'sp-show-pair-mismatch-face nil :foreground "red" :background nil :inherit nil :weight 'bold)
-      )
-
-    (my-util-with-eval-after-frame
-     (my/load-theme))
-  )
+    (modus-themes-load-themes)
+    (defun my-modus-themes-custom-faces ()
+      (modus-themes-with-colors
+        (custom-set-faces
+         `(sp-show-pair-match-face ((,class :foreground ,green-nuanced-fg
+                                            :background nil
+                                            :weight ,'bold))))))
+    (add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
+    :config
+    (modus-themes-load-operandi))
 #+END_SRC
 * Calc
 https://www.reddit.com/r/emacs/comments/1mbn0s/the_emacs_calculator/
