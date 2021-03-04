@@ -139,10 +139,11 @@
 #+END_SRC
 ** secrets
 #+BEGIN_SRC emacs-lisp
-(require 'auth-source-pass)
-(require 'secrets)
-(auth-source-pass-enable)
-(setq auth-sources '(password-store))
+(use-package auth-source-pass
+  :init (auth-source-pass-enable)
+  :custom (auth-sources '(password-store)))
+
+(use-package secrets)
 #+END_SRC
 ** eldoc
 #+BEGIN_SRC emacs-lisp
@@ -183,9 +184,7 @@
  ;; disable overwrite
  ("<insert>" . nil)
 
- ("C-q" . keyboard-quit)
  ("M-q" . universal-argument)
- ("C-x C-q" . nil)
 
  ("C-M-y" . consult-yank)
  ("C-x b" . nil)
@@ -272,8 +271,10 @@
 #+END_SRC
 **** Encryption
 #+BEGIN_SRC  emacs-lisp
-(require 'epa-file)
-(setq epa-file-select-keys nil)
+(use-package
+  epa-file
+  :straight nil
+  :custom (epa-file-select-keys nil))
 #+END_SRC
 **** Latex
 #+BEGIN_SRC emacs-lisp
@@ -702,7 +703,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 ** realgud
 #+BEGIN_SRC emacs-lisp
-;; M-x load-library realgud
 (use-package realgud
     :straight (:host github :repo "realgud/realgud" :no-autoloads t)
     :defer t)
