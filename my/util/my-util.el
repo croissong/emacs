@@ -1,4 +1,4 @@
-;;; my-util.el --- Utility functions  -*- lexical-binding: t; -*-
+;;; my-util.el --- Utility functions - my moi, for moi -*- lexical-binding: t; -*-
 
 (defun my-util-ensure-emacs-subdir (path)
   (let ((expanded-path (expand-file-name path user-emacs-directory )))
@@ -49,6 +49,21 @@
     (beginning-of-line)
     (set-mark (point))
     (call-interactively 'indent-rigidly)))
+
+
+;; https://stackoverflow.com/questions/46017956/emacs-how-to-change-kill-to-delete
+(defmacro my-util--delete-instead-of-kill (&rest body)
+  "Replaces `kill-region' with `delete-region' in BODY."
+  `(cl-letf (((symbol-function 'kill-region)
+              (lambda (beg end &optional yank-handler)
+                (delete-region beg end))))
+     ,@body))
+
+;; Otherwise backward-kill-sexp used by selectrum bloats the kill ring
+(defun my-util-backward-delete-sexp (arg)
+  "Like `kill-word', but does not save to the `kill-ring'."
+  (interactive "*p")
+  (my-util--delete-instead-of-kill (backward-kill-sexp arg)))
 
 (provide 'my-util)
 ;;; my-util.el ends here

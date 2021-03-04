@@ -233,8 +233,7 @@
     :after org
     :straight nil
     :bind (:map org-mode-map
-                ("C-c C-M-e" . my-org-export-all)
-                ("M-c" . my/capitalize-previous-word))
+                ("C-c C-M-e" . my-org-export-all))
     :load-path "my/my-org")
 #+END_SRC
 *** Config
@@ -554,7 +553,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (magit-completing-read-function #'selectrum-completing-read)
     :bind (:map selectrum-minibuffer-map
                 ("M-#" . selectrum-insert-current-candidate)
-                ("M-ö" . my/backward-delete-sexp)))
+                ("M-ö" . my-util-backward-delete-sexp)))
 
 (use-package orderless
     :custom
@@ -598,21 +597,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package embark-consult
   :after (embark consult))
-
-
-;; https://stackoverflow.com/questions/46017956/emacs-how-to-change-kill-to-delete
-(defmacro my/delete-instead-of-kill (&rest body)
-  "Replaces `kill-region' with `delete-region' in BODY."
-  `(cl-letf (((symbol-function 'kill-region)
-              (lambda (beg end &optional yank-handler)
-                (delete-region beg end))))
-     ,@body))
-
-;; Otherwise backward-kill-sexp used by selectrum bloats the kill ring
-(defun my/backward-delete-sexp (arg)
-  "Like `kill-word', but does not save to the `kill-ring'."
-  (interactive "*p")
-  (my/delete-instead-of-kill (backward-kill-sexp arg)))
 #+END_SRC
 *** Projectile
 #+BEGIN_SRC emacs-lisp
@@ -748,7 +732,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
         dired-auto-revert-buffer t)
   :bind (("C-x d" . nil)
          :map dired-mode-map
-         ("?" . my/dired-get-size)
          ("M-ö" . dired-up-directory)
          ("M-#" . dired-find-file)))
 
@@ -756,18 +739,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :hook (dired-mode . dired-filter-mode)
     :config (setq dired-filter-verbose nil)
     :delight dired-filter-mode)
-#+END_SRC
-*** Functions
-#+BEGIN_SRC emacs-lisp
-(defun my/dired-get-size ()
-  (interactive)
-  (let ((files (dired-get-marked-files)))
-    (with-temp-buffer
-      (apply 'call-process "/usr/bin/du" nil t nil "-sch" files)
-      (message "Size of all marked files: %s"
-               (progn
-                 (re-search-backward "\\(^[0-9.,]+[A-Za-z]+\\).*total$")
-     (match-string 1))))))
 #+END_SRC
 ** Languages
 *** Elixir
