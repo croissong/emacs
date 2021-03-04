@@ -47,7 +47,7 @@
   :init (gcmh-mode 1)
   :delight)
 (use-package explain-pause-mode
-  :straight (explain-pause-mode :type git :host github :repo "lastquestion/explain-pause-mode")
+  :straight (:host github :repo "lastquestion/explain-pause-mode")
   :commands explain-pause-mode)
 #+END_SRC
 ** my/org-init
@@ -66,7 +66,7 @@
     :bind
     ("C-<backspace>" . my-util-backward-delete-whitespace-or-word)
     ("C-x <tab>"  . my-util-indent-rigidly)
-    :load-path "my/util")  
+    :load-path "my/util")
 #+END_SRC
 * Core
 ** Read env vars
@@ -188,6 +188,7 @@
  ("M-q" . universal-argument)
  ("C-x C-q" . nil)
 
+ ("C-M-y" . consult-yank)
  ("C-x b" . nil)
 
  ;; disable mouse-wheel zoom
@@ -300,16 +301,6 @@
 ("C-M-<right>" . org-forward-sentence)
 ("C-M-<end>" . org-sentence-newline)
 ("C-c l" . my/insert-link))
-#+END_SRC
-** Style
-*** Adaptive-Wrap [disabled]
-#+BEGIN_SRC emacs-lisp :tangle no
-(use-package adaptive-wrap
-    :init
-    (define-globalized-minor-mode adaptive-wrap-global-mode
-        adaptive-wrap-prefix-mode
-      adaptive-wrap-prefix-mode)
-    (adaptive-wrap-global-mode 1))
 #+END_SRC
 ** View large files
 #+BEGIN_SRC emacs-lisp
@@ -936,11 +927,13 @@ https://github.com/tonini/alchemist.el
  #+END_SRC
 *** Plantuml
  #+BEGIN_SRC emacs-lisp
-(use-package plantuml-mode
+(use-package
+    plantuml-mode
     :mode "\\.puml\\'"
-    :config
-    (setq plantuml-executable-path "/usr/bin/plantuml"
-          plantuml-default-exec-mode 'executable))
+    :custom (plantuml-executable-path
+             "/usr/bin/plantuml")
+    (plantuml-default-exec-mode
+     'executable))
  #+END_SRC
 *** adoc
  #+BEGIN_SRC emacs-lisp
