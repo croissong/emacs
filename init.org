@@ -433,7 +433,7 @@
 (use-package format-all
     :bind* ("C-f f" . format-all-buffer)
     :hook
-    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode terraform-mode)
+    ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode rust-mode terraform-mode emacs-lisp-mode)
      . format-all-mode)
     :delight format-all-mode)
 #+END_SRC
@@ -565,10 +565,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+END_SRC
 *** Flyspell
 #+BEGIN_SRC emacs-lisp
+(use-package flyspell
+    :hook ((text-mode markdown-mode) . flyspell-mode))
 (use-package flyspell-correct
-    :hook (text-mode . flyspell-mode)
-    :bind (:map flyspell-mode-wmap
-              ("C-;" . flyspell-correct-wrapper)))
+    :after flyspell
+    :bind (:map flyspell-mode-map
+                ("C-;" . flyspell-correct-wrapper)))
 #+END_SRC
 *** Ripgrep
 #+BEGIN_SRC emacs-lisp
