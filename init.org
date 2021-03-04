@@ -632,10 +632,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** dumb-jump
 [[https://github.com/jacktasia/dumb-jump][@github.com]]
 #+BEGIN_SRC emacs-lisp
-(use-package dumb-jump
-    :config
-    (setq dumb-jump-prefer-searcher 'rg)
-    :bind ("C-M-." . dumb-jump-go))
+(use-package
+  dumb-jump
+  :init (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  :custom (dumb-jump-prefer-searcher 'rg))
 #+END_SRC
 ** Editorconfig
 #+BEGIN_SRC emacs-lisp
@@ -1101,10 +1101,6 @@ https://www.reddit.com/r/emacs/comments/1mbn0s/the_emacs_calculator/
 *** [[https://github.com/jwiegley/dot-emacs][jwiegley dot-emacs]]
 *** [[https://www.reddit.com/r/emacs/comments/3obmoh/emacs_for_writers_presentation_by_jay_dixit/][Emacs for writers]]
 - org-bullets
-** packages maybe Futur
-*** Focus [[https://github.com/larstvei/Focus/blob/master/README.md][@github.com]]
-** todo
-- magit diff args -> git global config
 ** elisp tips
 - [[https://www.reddit.com/r/emacs/comments/3nu2xr/emacs_lisp_programming_thoughts/][@reddit.com]]
 *** regexp
