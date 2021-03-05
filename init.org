@@ -167,7 +167,6 @@
  ("C-M-k" . kill-this-buffer)
  ("C-l" . goto-line)
  ("M-_" . shell-command)
- ("M-," . consult-global-mark)
  ("C-h C-f" . find-function-at-point)
  ("C-h C-v" . find-variable-at-point)
 
@@ -358,9 +357,9 @@
 
 (winner-mode 1)
 (bind-keys*
- ("C-M-1" . delete-other-windows)
- ("C-M-2" . winner-undo)
- ("C-M-3" . winner-redo))
+ ("C-1" . delete-other-windows)
+ ("C-2" . winner-undo)
+ ("C-3" . winner-redo))
 #+END_SRC
 *** whitespace-cleanup-mode
 [[https://github.com/purcell/whitespace-cleanup-mode][@github.com]]
@@ -397,8 +396,8 @@ https://github.com/lukhas/buffer-move
 https://github.com/bbatsov/crux
 #+BEGIN_SRC emacs-lisp
 (use-package crux
-    :bind* (("C-f r" . crux-rename-file-and-buffer)
-            ("C-f d" . crux-delete-file-and-buffer))
+    :bind* (("C-c r" . crux-rename-file-and-buffer)
+            ("C-c d" . crux-delete-file-and-buffer))
     :bind (
            ;; not global because conflict with org-mode new heading
            ("C-<return>" . crux-smart-open-line)
@@ -419,8 +418,7 @@ https://github.com/bbatsov/crux
 #+BEGIN_SRC emacs-lisp
 (use-package evil-nerd-commenter
     :config
-    (evilnc-default-hotkeys)
-    )
+    (evilnc-default-hotkeys))
 #+END_SRC
 *** Outshine
 #+BEGIN_SRC emacs-lisp
@@ -448,17 +446,16 @@ https://github.com/bbatsov/crux
 #+END_SRC
 *** Centered-Window-Mode
 #+BEGIN_SRC emacs-lisp
-(use-package centered-window
-    :init
-    (centered-window-mode 1)
-    :config
-    (setq cwm-use-vertical-padding t
-                cwm-frame-internal-border 0
-                cwm-incremental-padding t
-                cwm-incremental-padding-% 2
-                cwm-left-fringe-ratio 0
-                cwm-centered-window-width 130)
-    :delight centered-window-mode)
+(use-package
+  centered-window
+  :init (centered-window-mode 1)
+  :custom (cwm-use-vertical-padding t)
+  (cwm-frame-internal-border 0)
+  (cwm-incremental-padding t)
+  (cwm-incremental-padding-% 2)
+  (cwm-left-fringe-ratio 0)
+  (cwm-centered-window-width 130)
+  :delight centered-window-mode)
 #+END_SRC
 *** Smartparens
 #+BEGIN_SRC emacs-lisp
@@ -568,13 +565,15 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :custom
     (consult-project-root-function #'projectile-project-root)
     :bind*
-    ("M-c" . consult-buffer)
-    ("C-M-s" . consult-ripgrep))
+    ("C-f" . consult-buffer)
+    ("C-M-s" . consult-ripgrep)
+    ("M-," . consult-global-mark))
 
 (use-package marginalia
   :init
   (marginalia-mode)
   :config
+  (cl-pushnew '(projectile-find-file . file) marginalia-command-categories)
   (advice-add #'marginalia-cycle :after
               (lambda () (when (bound-and-true-p
                                 selectrum-mode) (selectrum-exhibit)))))
@@ -587,7 +586,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
         #'which-key--hide-popup-ignore-command)
       embark-become-indicator embark-action-indicator)
     :bind*
-  ("M-+" . embark-act))
+  ("C-q" . embark-act))
 
 (use-package embark-consult
   :after (embark consult))
