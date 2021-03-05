@@ -141,7 +141,9 @@
   :commands explain-pause-mode)
 
 (use-package esup
-    :commands esup)
+  :custom
+  (esup-depth 0)
+  :commands esup)
 #+end_src
 
 *** backup & auto-save
