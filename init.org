@@ -905,80 +905,33 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src emacs-lisp
 (use-package mu4e
     :hook (mu4e-compose-pre . my-mu4e-set-account)
-    :straight nil
+    :straight (:local-repo "/usr/share/emacs/site-lisp/mu4e")
     :commands mu4e
-    :config
+    :custom
+    (starttls-use-gnutls t)
+    (starttls-gnutls-program "gnutls-cli")
+    (starttls-extra-arguments nil)
 
-    (setq starttls-use-gnutls t
-      starttls-gnutls-program "gnutls-cli"
-      starttls-extra-arguments nil)
+    (send-mail-function 'smtpmail-send-it)
+    (message-send-mail-function 'smtpmail-send-it)
+    (mu4e-get-mail-command "offlineimap")
+    (mu4e-maildir       "~/mail")
+    (mu4e-sent-folder   "/sent")
+    (mu4e-drafts-folder "/drafts")
+    (mu4e-trash-folder  "/trash")
+    (mu4e-refile-folder "/archive")
+    (mu4e-attachment-dir "~/downloads")
+    (mu4e-sent-messages-behavior 'delete))
 
-    (setq
-     send-mail-function 'smtpmail-send-it
-     message-send-mail-function 'smtpmail-send-it
-     mu4e-get-mail-command "offlineimap"
-     mu4e-maildir       "~/mail"   ;; top-level Maildir
-     mu4e-sent-folder   "/sent"       ;; folder for sent messages
-     mu4e-drafts-folder "/drafts"     ;; unfinished messages
-     mu4e-trash-folder  "/trash"      ;; trashed messages
-     mu4e-refile-folder "/archive"
-     mu4e-attachment-dir "~/downloads"
-     mu4e-sent-messages-behavior 'delete)   ;; saved messages
+(use-package mu4e-overview
+  :after mu4e)
 
-
-    ;; Now I set a list of
-    (defvar my-mu4e-account-alist
-      '(("iogroup"
-         (mu4e-sent-folder "/iogroup/sent")
-         (user-mail-address "jm@datawerk.de")
-         (smtpmail-smtp-user "jm@iogroup.org")
-         (smtpmail-local-domain "iogroup.org")
-         (smtpmail-default-smtp-server "smtp.office365.com")
-         (smtpmail-smtp-server "smtp.office365.com")
-         (smtpmail-stream-type starttls)
-         (smtpmail-smtp-service 587)
-         )
-        ("gmail"
-         (mu4e-drafts-folder "/[Google Mail].Drafts")
-         (mu4e-sent-folder   "/[Google Mail].Sent Mail")
-         (mu4e-trash-folder  "/[Google Mail].Trash")
-         (user-mail-address "jan.moeller0@gmail.com")
-         (smtpmail-smtp-user "jan.moeller0@gmail.com")
-         (smtpmail-local-domain "gmail.com")
-         (smtpmail-default-smtp-server "smtp.gmail.com")
-         (smtpmail-smtp-server "smtp.gmail.com")
-         (smtpmail-smtp-service 587)
-         )
-        ;; Include any other accounts here ...
-        ))
-
-    (defun my-mu4e-set-account ()
-      "Set the account for composing a message.
-   This function is taken from:
-     https://www.djcbsoftware.nl/code/mu/mu4e/Multiple-accounts.html"
-      (let* ((account
-              (if mu4e-compose-parent-message
-                  (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
-                    (string-match "/\\(.*?\\)/" maildir)
-                    (match-string 1 maildir))
-                (completing-read (format "Compose with account: (%s) "
-                                         (mapconcat #'(lambda (var) (car var))
-                                                    my-mu4e-account-alist "/"))
-                                 (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
-                                 nil t nil nil (caar my-mu4e-account-alist))))
-             (account-vars (cdr (assoc account my-mu4e-account-alist))))
-        (if account-vars
-            (mapc #'(lambda (var)
-                      (set (car var) (cadr var)))
-                  account-vars)
-          (error "No email account found"))))
-
-
-    :load-path "/usr/share/emacs/site-lisp/mu4e")
-
-(use-package mu4e-overview)
+(use-package my-mu4e
+  :after mu4e
+  :straight (:local-repo "~/.config/emacs/my/mu4e/"))
 
 (use-package mu4e-alert
+    :after mu4e
     :hook (message-send . mml-secure-message-sign-pgpmime)
     :init
     (mu4e-alert-enable-notifications)
