@@ -413,10 +413,11 @@
 (use-package flyspell
     :hook ((text-mode markdown-mode) . flyspell-mode)
     :config
-    (advice-add 'make-flyspell-overlay :filter-return (lambda (overlay)
-    (overlay-put overlay 'help-echo nil)
-    (overlay-put overlay 'keymap nil)
-    (overlay-put overlay 'mouse-face nil)))
+    (advice-add 'make-flyspell-overlay :filter-return
+                (lambda (overlay)
+                  (overlay-put overlay 'help-echo nil)
+                  (overlay-put overlay 'keymap nil)
+                  (overlay-put overlay 'mouse-face nil)))
     :delight flyspell-mode)
 (use-package flyspell-correct
     :after flyspell
@@ -623,8 +624,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :init (projectile-mode 1)
     :config
       (defun my--projectile-ignore-project (project-root)
-        (message project-root)
-        (message (f-descendant-of? project-root (f-expand "straight" user-emacs-directory)))
         (f-descendant-of? project-root (f-expand "straight" user-emacs-directory)))
     :custom
     (projectile-file-exists-remote-cache-expire nil)
@@ -766,9 +765,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package lsp-pyright
   :after python
-  :hook (python-mode . (lambda ()
-                          (lsp-deferred)
-                          (my/lsp-format-buf))))
+  :hook (python-mode . lsp-deferred))
 #+end_src
 
 ** webdev
