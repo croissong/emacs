@@ -379,11 +379,17 @@
 
 (use-package flyspell
     :hook ((text-mode markdown-mode) . flyspell-mode)
+    :config
+    (advice-add 'make-flyspell-overlay :filter-return (lambda (overlay)
+    (overlay-put overlay 'help-echo nil)
+    (overlay-put overlay 'keymap nil)
+    (overlay-put overlay 'mouse-face nil)))
     :delight flyspell-mode)
 (use-package flyspell-correct
     :after flyspell
     :bind (:map flyspell-mode-map
                 ("C-;" . flyspell-correct-wrapper)))
+#+END_SRC
 ** minibuffer & completion
 #+BEGIN_SRC emacs-lisp
 (use-package selectrum
@@ -1009,6 +1015,7 @@ https://github.com/tonini/alchemist.el
     :custom
     (modus-themes-completions 'moderate)
     (modus-themes-region 'bg-only-no-extend)
+    (modus-themes-org-blocks 'greyscale)
     :init
     (modus-themes-load-themes)
     (defun my-modus-themes-custom-faces ()
