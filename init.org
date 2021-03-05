@@ -1,7 +1,7 @@
 ; -*- eval: (org-init-mode 1); lexical-binding: t -*-
 * Core
 ** Package manager
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -19,7 +19,8 @@
 (setq straight-use-package-by-default t
       use-package-compute-statistics nil
       comp-async-report-warnings-errors nil)
-#+END_SRC
+#+end_src
+
 ** Common
 *** Utility
 #+begin_src emacs-lisp
@@ -41,6 +42,7 @@
     :straight (:local-repo "~/.config/emacs/my/org-init/")
     :commands (org-init-mode org-init-open))
 #+end_src
+
 *** Config
 #+begin_src emacs-lisp
 (use-package exec-path-from-shell
@@ -86,6 +88,7 @@
               tab-width 2
               sentence-end-double-space nil)
 #+end_src
+
 *** Editing
 #+begin_src emacs-lisp
 (setq help-char 9) ;; tab
@@ -95,6 +98,7 @@
  ("M-_" . shell-command))
 
 (bind-keys
+ ("C-^" . quoted-insert)
  ("M-ö"  . left-char)
  ("M-#" . right-char)
  ("M-ü" . previous-line)
@@ -114,16 +118,18 @@
 
 (delight 'eldoc-mode nil "eldoc")
 #+end_src
+
 *** Coding System
 [[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (setq-default buffer-file-coding-system 'utf-8)
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
-#+END_SRC
+#+end_src
+
 *** Debugging
 #+begin_src emacs-lisp
 (use-package gcmh
@@ -137,9 +143,10 @@
 (use-package esup
     :commands esup)
 #+end_src
+
 *** backup & auto-save
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq delete-old-versions t
       kept-new-versions 6
       create-lockfiles nil
@@ -152,9 +159,10 @@
       backup-directory-alist `(("." . ,emacs-backup-dir))
       auto-save-file-name-transforms `((".*" ,emacs-autosave-dir t))
       auto-save-list-file-prefix emacs-autosave-dir)
-#+END_SRC
+#+end_src
+
 *** buffer & window management
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (winner-mode 1)
 
 (bind-keys*
@@ -188,9 +196,10 @@
      ("C-M-ö" . buf-move-left)
      ("C-M-ü" . buf-move-up)
      ("C-M-ä" . buf-move-down))
-#+END_SRC
+#+end_src
+
 ** secrets
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package auth-source-pass
   :init (auth-source-pass-enable)
   :custom (auth-sources '(password-store)))
@@ -201,10 +210,11 @@
   :custom (epa-file-select-keys nil))
 
 (use-package secrets)
-#+END_SRC
+#+end_src
+
 * general
 ** org-mode
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package reveal
     :hook (org-mode . reveal-mode)
     :delight reveal-mode)
@@ -271,18 +281,20 @@
 (use-package my-org
     :after org
     :straight (:local-repo "~/.config/emacs/my/org/"))
-#+END_SRC
+#+end_src
+
 ** special modes
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package vlf
     :commands (vlf-mode vlf)
     :init (require 'vlf-setup))
 
 (use-package logview
     :commands logview-mode)
-#+END_SRC
+#+end_src
+
 ** passive modes
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package tree-sitter
   :init (global-tree-sitter-mode)
   :hook (tree-sitter-after-on-hook . tree-sitter-hl-mode))
@@ -300,7 +312,8 @@
 (use-package editorconfig
     :init (editorconfig-mode 1)
     :delight editorconfig-mode)
-#+END_SRC
+#+end_src
+
 ** editing
 #+begin_src emacs-lisp
 (use-package iedit
@@ -326,8 +339,9 @@
     :config
     (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions))
 #+end_src
+
 *** formatting
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 ;; Unified approach inc: https://github.com/purcell/reformatter.el/pull/24
 (use-package apheleia
   :straight (:host github :repo "raxod502/apheleia")
@@ -339,9 +353,10 @@
 ;;     ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode terraform-mode emacs-lisp-mode)
 ;;      . format-all-mode)
 ;;     :delight format-all-mode)
-#+END_SRC
+#+end_src
+
 *** lsp
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package lsp-mode
   :commands lsp-deferred
   :hook (lsp-mode . lsp-enable-which-key-integration)
@@ -371,7 +386,8 @@
     :custom
     (lsp-ui-doc-enable nil)
     (lsp-ui-sideline-enable t))
-#+END_SRC
+#+end_src
+
 *** linting
 #+begin_src emacs-lisp
 (use-package flycheck
@@ -389,9 +405,10 @@
     :after flyspell
     :bind (:map flyspell-mode-map
                 ("C-;" . flyspell-correct-wrapper)))
-#+END_SRC
+#+end_src
+
 ** minibuffer & completion
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package selectrum
     :after (orderless)
     :init (selectrum-mode +1)
@@ -459,10 +476,11 @@
 
 (use-package embark-consult
   :after (embark consult))
-#+END_SRC
+#+end_src
+
 *** crux
 https://github.com/bbatsov/crux
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package crux
     :bind* (("C-c r" . crux-rename-file-and-buffer)
             ("C-c d" . crux-delete-file-and-buffer))
@@ -471,33 +489,38 @@ https://github.com/bbatsov/crux
            ("C-<return>" . crux-smart-open-line)
            ("M-<return>" . crux-smart-open-line-above))
     )
-#+END_SRC
+#+end_src
+
 *** rainbow-mode
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package rainbow-mode
     :hook (css-mode org-mode help-mode)
     :delight rainbow-mode)
-#+END_SRC
+#+end_src
+
 *** kurecolor
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package kurecolor :defer t)
-#+END_SRC
+#+end_src
+
 *** Evil-Nerd-Commenter
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package evil-nerd-commenter
     :config
     (evilnc-default-hotkeys))
-#+END_SRC
+#+end_src
+
 *** Outshine
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package outshine
     :commands outshine-mode)
 
 (use-package navi-mode
     :commands navi-mode)
-#+END_SRC
+#+end_src
+
 *** Company-Mode
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package company
     :init
     (add-hook 'after-init-hook 'global-company-mode)
@@ -511,9 +534,10 @@ https://github.com/bbatsov/crux
                 ("C-ä" . company-select-next)
                 ("C-ü" . company-select-previous))
     :delight company-mode)
-#+END_SRC
+#+end_src
+
 *** Centered-Window-Mode
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package
   centered-window
   :init (centered-window-mode 1)
@@ -524,9 +548,10 @@ https://github.com/bbatsov/crux
   (cwm-left-fringe-ratio 0)
   (cwm-centered-window-width 130)
   :delight centered-window-mode)
-#+END_SRC
+#+end_src
+
 *** Smartparens
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package smartparens
     :bind (:map smartparens-mode-map
                 ("C-M-a" . sp-backward-sexp)
@@ -543,9 +568,10 @@ https://github.com/bbatsov/crux
     (sp-show-pair-delay 0.2)
     (sp-message-width nil)
     :delight smartparens-mode)
-#+END_SRC
+#+end_src
+
 *** Undo-Tree
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package undo-tree
     :init
     (global-undo-tree-mode 1)
@@ -553,22 +579,25 @@ https://github.com/bbatsov/crux
             ("M-p" . undo-tree-redo)
             ("C-M-p" . undo-tree-visualize))
     :delight undo-tree-mode)
-#+END_SRC
+#+end_src
+
 *** Ediff
 TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 **** Config
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq ediff-keep-variants nil)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain
       ediff-split-window-function 'split-window-horizontally)
 (add-hook 'ediff-prepare-buffer-hook 'show-all)
-#+END_SRC
+#+end_src
+
 *** Ripgrep
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package wgrep :defer t)
-#+END_SRC
+#+end_src
+
 *** Projectile
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package projectile
     :commands projectile-mode
     :init (projectile-mode 1)
@@ -589,10 +618,11 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
             ("C-M-c" . projectile-switch-project)
             ("C-M-x" . projectile-switch-to-buffer))
     :delight)
-#+END_SRC
+#+end_src
+
 *** which-key
 [[https://github.com/justbur/emacs-which-key?utm_medium=referral&utm_campaign=ZEEF&utm_source=https%3A%2F%2Femacs.zeef.com%2Fehartc][@github.com]]
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package which-key
     :init (which-key-mode)
     :config
@@ -602,9 +632,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (which-key-idle-delay 10000)
     (which-key-idle-secondary-delay 0.05)
     :delight which-key-mode)
-#+END_SRC
+#+end_src
+
 *** helpful
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package
   helpful
   :bind* (("C-h f" . helpful-callable)
@@ -613,30 +644,34 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
           ("C-h C-d" . helpful-at-point)
           ("C-h F" . helpful-function)
           ("C-h C" . helpful-command)))
-#+END_SRC
+#+end_src
+
 *** dumb-jump
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package
   dumb-jump
   :init (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   :custom (dumb-jump-prefer-searcher 'rg))
-#+END_SRC
+#+end_src
+
 *** ix.io
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package
   ix
   :commands ix)
-#+END_SRC
+#+end_src
+
 ** hydra
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package hydra)
 (use-package my-hydra
     :after hydra
     :straight (:local-repo "~/.config/emacs/my/hydra/")
     :bind* ("C-M-m" . hydra-my/init/body))
-#+END_SRC
+#+end_src
+
 ** Magit
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package magit
     :commands magit-status
     :custom
@@ -655,9 +690,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (magit-add-section-hook 'magit-status-sections-hook
                             'magit-insert-modules-unpushed-to-upstream
                             'magit-insert-unpulled-from-upstream))
-#+END_SRC
+#+end_src
+
 ** Dired
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (require 'dired-x)
 (use-package dired+
   :straight dired-plus
@@ -677,18 +713,20 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :custom
     (dired-filter-verbose nil)
     :delight dired-filter-mode)
-#+END_SRC
+#+end_src
+
 * Languages
 ** Elixir
 *** Elixir Mode
 https://github.com/elixir-lang/emacs-elixir
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package elixir-mode
     :mode "\\.ex\\'")
-#+END_SRC
+#+end_src
+
 *** Alchemist
 https://github.com/tonini/alchemist.el
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package alchemist
     :hook (elixir-mode . alchemist-mode)
     :bind (:map alchemist-mode-map
@@ -708,26 +746,29 @@ https://github.com/tonini/alchemist.el
                     (alchemist-iex-process))))
              ))))
     )
-#+END_SRC
+#+end_src
+
 *** flycheck-credo
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package flycheck-credo
     :after elixir-mode
     :hook (elixir-mode . flycheck-mode)
     :config
     (flycheck-credo-setup)
     (setq flycheck-elixir-credo-strict nil))
-#+END_SRC
+#+end_src
+
 ** Markdown
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package markdown-mode
     :mode "\\.md\\'"
     :hook (markdown-mode . (lambda ()
                              (whitespace-cleanup-mode 0)
                              (goto-address-mode))))
-#+END_SRC
+#+end_src
+
 ** Python
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package python
   :mode ("\\.py\\'" . python-mode))
 
@@ -736,9 +777,10 @@ https://github.com/tonini/alchemist.el
                           (require 'lsp-pyright)
                           (lsp-deferred)
                           (my/lsp-format-buf))))
-#+END_SRC
+#+end_src
+
 ** webdev
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package css-mode
     :mode ("\\.less\\'" "\\.css\\'" "\\.sass\\'" "\\.scss\\'")
     :custom
@@ -755,22 +797,25 @@ https://github.com/tonini/alchemist.el
     :custom
     (web-mode-enable-auto-closing t)
     (web-mode-enable-auto-indentation nil))
-#+END_SRC
+#+end_src
+
 ** json
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package json-mode
     :mode "\\.json\\'"
     :custom
     (json-reformat:indent-width 2)
     (js-indent-level 2))
-#+END_SRC
+#+end_src
+
 *** jsonnet
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package jsonnet-mode
     :mode  ("\\.jsonnet\\'" "\\.libsonnet\\'"))
-#+END_SRC
+#+end_src
+
 *** typescript
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package typescript-mode
     :mode "\\.ts\\'"
     :hook (typescript-mode . (lambda ()
@@ -780,9 +825,10 @@ https://github.com/tonini/alchemist.el
                   '("node"
                     (expand-file-name"~/.local/vscode-eslint/extension/server/out/eslintServer.js")
                     "--stdio")))
-    #+END_SRC
+    #+end_src
+
 ** Elisp
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package
     nameless
     :hook (emacs-lisp-mode . nameless-mode)
@@ -793,52 +839,61 @@ https://github.com/tonini/alchemist.el
     :hook (emacs-lisp-mode . lispy-mode))
 
 (use-package xtest :defer t)
-#+END_SRC
+#+end_src
+
 ** Php
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package php-mode
     :mode "\\.php\\'")
-#+END_SRC
+#+end_src
+
 ** Rust
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package rustic)
-#+END_SRC
+#+end_src
+
 ** golang
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package go-mode
     :mode "\\.go\\'"
     :hook (go-mode . lsp-deferred))
-#+END_SRC
+#+end_src
+
 ** nim
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package nim-mode
     :mode "\\.nim\\'"
     :hook ((nim-mode . nimsuggest-mode)))
-#+END_SRC
+#+end_src
+
 ** terraform
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package terraform-mode
     :mode "\\.tf\\'")
-#+END_SRC
+#+end_src
+
 ** graphql
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package graphql-mode
     :mode ("\\.gql\\'" "\\.graphql\\'"))
-#+END_SRC
+#+end_src
+
 ** lua
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package lua-mode
     :mode ("\\.lua\\'"))
-#+END_SRC
+#+end_src
+
 ** AUCTeX
- #+BEGIN_SRC emacs-lisp
+ #+begin_src emacs-lisp
 (use-package tex-mode
     :straight auctex
     :mode "\\.tex\\'"
     :hook (LaTeX-mode . turn-on-reftex))
- #+END_SRC
+ #+end_src
+
 ** Plantuml
- #+BEGIN_SRC emacs-lisp
+ #+begin_src emacs-lisp
 (use-package
     plantuml-mode
     :mode "\\.puml\\'"
@@ -846,35 +901,41 @@ https://github.com/tonini/alchemist.el
              "/usr/bin/plantuml")
     (plantuml-default-exec-mode
      'executable))
- #+END_SRC
+ #+end_src
+
 ** adoc
- #+BEGIN_SRC emacs-lisp
+ #+begin_src emacs-lisp
 (use-package adoc-mode
     :mode "\\.adoc\\'")
- #+END_SRC
+ #+end_src
+
 ** yaml
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package yaml-mode
     :mode ("\\.yml.*\\'" "\\.yaml.*\\'"))
-#+END_SRC
+#+end_src
+
 ** sql
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package sql-indent
     :mode "\\.sql\\'")
-#+END_SRC
+#+end_src
+
 ** Hungry-delete
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package hungry-delete
     :init (global-hungry-delete-mode)
     :delight hungry-delete-mode)
-#+END_SRC
+#+end_src
+
 ** ledger
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package ledger-mode
     :mode "\\.ledger\\'")
-#+END_SRC
+#+end_src
+
 ** mu4e
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package mu4e
     :hook (mu4e-compose-pre . my-mu4e-set-account)
     :straight nil
@@ -957,11 +1018,13 @@ https://github.com/tonini/alchemist.el
     (mu4e-alert-enable-mode-line-display)
     :config
     (mu4e-alert-set-default-style 'libnotify))
-#+END_SRC
+#+end_src
+
 ** Tramp
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq tramp-default-method "ssh")
-#+END_SRC
+#+end_src
+
 * Tools
 #+begin_src emacs-lisp
 (use-package x509-mode :defer t)
@@ -972,8 +1035,9 @@ https://github.com/tonini/alchemist.el
 
 (use-package realgud :defer t)
 #+end_src
+
 * UI
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (tooltip-mode -1)
@@ -1000,7 +1064,8 @@ https://github.com/tonini/alchemist.el
     (add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
     :config
     (modus-themes-load-operandi))
-#+END_SRC
+#+end_src
+
 * Calc
 https://www.reddit.com/r/emacs/comments/1mbn0s/the_emacs_calculator/
 * meta
