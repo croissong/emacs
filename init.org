@@ -297,7 +297,8 @@
 #+begin_src emacs-lisp
 (use-package tree-sitter
   :init (global-tree-sitter-mode)
-  :hook (tree-sitter-after-on-hook . tree-sitter-hl-mode))
+  :hook (tree-sitter-after-on-hook . tree-sitter-hl-mode)
+  :delight)
 (use-package tree-sitter-langs
   :after tree-sitter)
 
@@ -322,8 +323,8 @@
 (use-package drag-stuff
     :init
     (drag-stuff-global-mode 1)
-    :config
-    (cl-pushnew 'org-mode drag-stuff-except-modes)
+    :custom
+    (drag-stuff-except-modes '(org-mode))
     :bind (:map drag-stuff-mode-map
                 ("M-<up>" . drag-stuff-up)
                 ("M-<down>" . drag-stuff-down))
@@ -365,9 +366,11 @@
     (add-hook 'before-save-hook
               (lambda () (lsp-format-buffer) (lsp-organize-imports)) 0 t))
   :config
-  (cl-pushnew "[/\\\\]\\.mypy_cache$" lsp-file-watch-ignored)
-  (cl-pushnew "[/\\\\]\\.pytest_cache$" lsp-file-watch-ignored)
-  (cl-pushnew "[/\\\\]dot_git$" lsp-file-watch-ignored)
+  (setq lsp-file-watch-ignored-directories (-union
+                           lsp-file-watch-ignored-directories
+                           '("[/\\\\]\\.mypy_cache$"
+                             "[/\\\\]\\.pytest_cache$"
+                             "[/\\\\]dot_git$")))
   :custom
   (lsp-enable-snippet t)
   (lsp-signature-doc-lines 1)
@@ -459,7 +462,9 @@
   :init
   (marginalia-mode)
   :config
-  (cl-pushnew '(projectile-find-file . file) marginalia-command-categories)
+  (setq marginalia-command-categories
+        (a-merge marginalia-command-categories '((projectile-find-file . file)
+                                                 (projectile-find-dir . file))))
   (advice-add #'marginalia-cycle :after
               (lambda () (when (bound-and-true-p
                                 selectrum-mode) (selectrum-exhibit)))))
@@ -746,7 +751,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package lsp-pyright
   :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
                           (lsp-deferred)
                           (my/lsp-format-buf))))
 #+end_src
