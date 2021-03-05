@@ -737,53 +737,26 @@ https://github.com/tonini/alchemist.el
                           (lsp-deferred)
                           (my/lsp-format-buf))))
 #+END_SRC
-** Web
-*** HTML/CSS
-**** css
+** webdev
 #+BEGIN_SRC emacs-lisp
 (use-package css-mode
     :mode ("\\.less\\'" "\\.css\\'" "\\.sass\\'" "\\.scss\\'")
-    :config
-    (setq css-indent-offset 4))
-#+END_SRC
-*** JS
-**** js2-mode
-#+BEGIN_SRC emacs-lisp
+    :custom
+    (css-indent-offset 4))
+
 (use-package js2-mode
     :mode "\\.js\\'"
-    :config
-    (setq js2-basic-offset 2
-          js2-strict-inconsistent-return-warning nil)
-    )
-#+END_SRC
-**** Web-mode
-[[http://web-mode.org/][@web-mode.org]]
-#+BEGIN_SRC emacs-lisp
+    :custom
+    (js2-basic-offset 2)
+    (js2-strict-inconsistent-return-warning nil))
+
 (use-package web-mode
     :mode ("\\.html?\\'" "\\.jsx\\'" "\\.tsx\\'")
-    :config
-    ;; (require  'company-web-html)
-    (setq web-mode-code-indent-offset 2
-          web-mode-markup-indent-offset 2
-          web-mode-attr-indent-offset 2
-          web-mode-attr-value-indent-offset 2
-          web-mode-css-indent-offset 2
-          web-mode-style-padding 2
-          web-mode-script-padding 0
-          web-mode-block-padding 0
-          web-mode-enable-control-block-indentation nil
-          web-mode-enable-auto-closing t
-          web-mode-enable-auto-indentation nil
-          web-mode-content-types-alist
-          '(("css" . "\\.\\(s?css\\|css\\.erb\\)\\'")
-            ("jsx" . "\\.\\([jt]s\\|[jt]s\\.erb\\)\\'")
-            ("json" . "\\.\\(api\\|json\\|jsonld\\)\\'")
-            ("jsx" . "\\.[jt]sx\\'")
-            ("xml" . "\\.xml\\'")
-            ("html" . ".")))
-    )
+    :custom
+    (web-mode-enable-auto-closing t)
+    (web-mode-enable-auto-indentation nil))
 #+END_SRC
-**** json-mode
+** json
 #+BEGIN_SRC emacs-lisp
 (use-package json-mode
     :mode "\\.json\\'"
@@ -791,12 +764,12 @@ https://github.com/tonini/alchemist.el
     (json-reformat:indent-width 2)
     (js-indent-level 2))
 #+END_SRC
-**** jsonnet-mode
+*** jsonnet
 #+BEGIN_SRC emacs-lisp
 (use-package jsonnet-mode
     :mode  ("\\.jsonnet\\'" "\\.libsonnet\\'"))
 #+END_SRC
-**** typescript
+*** typescript
 #+BEGIN_SRC emacs-lisp
 (use-package typescript-mode
     :mode "\\.ts\\'"
