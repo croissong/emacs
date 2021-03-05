@@ -717,45 +717,17 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 * Languages
 ** Elixir
-*** Elixir Mode
-https://github.com/elixir-lang/emacs-elixir
 #+begin_src emacs-lisp
 (use-package elixir-mode
     :mode "\\.ex\\'")
-#+end_src
 
-*** Alchemist
-https://github.com/tonini/alchemist.el
-#+begin_src emacs-lisp
-(use-package alchemist
-    :hook (elixir-mode . alchemist-mode)
-    :bind (:map alchemist-mode-map
-                ("C-c C-c" . alchemist-iex-compile-this-buffer)
-                ("C-c a s" . my/phoenix-start))
-    :config
-    (defun my/phoenix-start ()
-      (interactive)
-      (if (alchemist-project-p)
-          (let ((default-directory (alchemist-project-root)))
-            (pop-to-buffer
-             (process-buffer
-              (or (if (buffer-live-p alchemist-iex-buffer)
-                      (get-buffer-process alchemist-iex-buffer))
-                  (progn
-                    (alchemist-iex-start-process '("iex" "-S" "mix" "phx.server"))
-                    (alchemist-iex-process))))
-             ))))
-    )
-#+end_src
-
-*** flycheck-credo
-#+begin_src emacs-lisp
 (use-package flycheck-credo
     :after elixir-mode
     :hook (elixir-mode . flycheck-mode)
     :config
     (flycheck-credo-setup)
-    (setq flycheck-elixir-credo-strict nil))
+    :custom
+    (flycheck-elixir-credo-strict nil))
 #+end_src
 
 ** Markdown
