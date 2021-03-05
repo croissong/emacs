@@ -89,6 +89,32 @@
               tab-width 2
               sentence-end-double-space nil)
 #+end_src
+*** Editing
+#+begin_src emacs-lisp
+(setq help-char 9) ;; tab
+(bind-keys*
+ ("C-M-b" . eval-defun)
+ ("C-l" . goto-line)
+ ("M-_" . shell-command))
+
+(bind-keys
+ ("M-ö"  . left-char)
+ ("M-#" . right-char)
+ ("M-ü" . previous-line)
+ ("M-ä" . next-line)
+ ("C-a" . back-to-indentation)
+
+ ;; disable overwrite
+ ("<insert>" . nil)
+
+ ("M-q" . universal-argument)
+
+ ;; disable mouse-wheel zoom
+ ("<C-mouse-4>" . nil)
+ ("<C-mouse-5>" . nil)
+ ("<f5>" . profiler-start)
+ ("<f6>" . profiler-stop))
+#+end_src
 *** Coding System
 [[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
 #+BEGIN_SRC emacs-lisp
@@ -109,7 +135,7 @@
   :straight (:host github :repo "lastquestion/explain-pause-mode")
   :commands explain-pause-mode)
 #+end_src
-*** Backup & autosave
+*** backup & auto-save
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
 #+BEGIN_SRC emacs-lisp
 (setq delete-old-versions t
@@ -125,6 +151,42 @@
       auto-save-file-name-transforms `((".*" ,emacs-autosave-dir t))
       auto-save-list-file-prefix emacs-autosave-dir)
 #+END_SRC
+*** buffer & window management
+#+BEGIN_SRC emacs-lisp
+(winner-mode 1)
+
+(bind-keys*
+ ("C-ö" . windmove-left)
+ ("C-#" . windmove-right)
+ ("C-ü" . windmove-up)
+ ("C-ä" . windmove-down)
+ ("C-1" . delete-other-windows)
+ ("C-2" . split-window-below)
+ ("C-3" . split-window-right)
+ ("C-M-1" . winner-undo)
+ ("C-M-2" . winner-redo)
+
+ ("C-M-k" . kill-this-buffer)
+ ("M-r" . revert-buffer))
+
+(use-package eyebrowse
+    :init
+    (eyebrowse-mode t)
+    :bind*
+    ("M-1" . eyebrowse-switch-to-window-config-1)
+    ("M-2" . eyebrowse-switch-to-window-config-2)
+    ("M-3" . eyebrowse-switch-to-window-config-3)
+    ("M-4" . eyebrowse-switch-to-window-config-4)
+    ("M-5" . eyebrowse-switch-to-window-config-5)
+    ("M-6" . eyebrowse-switch-to-window-config-6))
+
+(use-package buffer-move
+    :bind*
+     ("C-M-#" . buf-move-right)
+     ("C-M-ö" . buf-move-left)
+     ("C-M-ü" . buf-move-up)
+     ("C-M-ä" . buf-move-down))
+#+END_SRC
 ** secrets
 #+BEGIN_SRC emacs-lisp
 (use-package auth-source-pass
@@ -136,48 +198,6 @@
 ** eldoc
 #+BEGIN_SRC emacs-lisp
 (delight 'eldoc-mode nil "eldoc")
-#+END_SRC
-** Global keybindings
-#+BEGIN_SRC emacs-lisp
-(setq help-char 9) ;; tab
-(bind-keys*
- ("C-ö" . windmove-left)
- ("C-#" . windmove-right)
- ("C-ü" . windmove-up)
- ("C-ä" . windmove-down)
-
- ("C-Ü" . clone-indirect-buffer)
-
- ("M-r" . revert-buffer)
-
- ("C-M-b" . eval-defun)
-
- ("C-M-k" . kill-this-buffer)
- ("C-l" . goto-line)
- ("M-_" . shell-command)
- ("C-h C-f" . find-function-at-point)
- ("C-h C-v" . find-variable-at-point)
-
-(bind-keys
- ("M-ö"  . left-char)
- ("M-#" . right-char)
- ("M-ü" . previous-line)
- ("M-ä" . next-line)
- ("C-a" . back-to-indentation)
-
- ;; disable overwrite
- ("<insert>" . nil)
-
- ("M-q" . universal-argument)
-
- ("C-M-y" . consult-yank)
- ("C-x b" . nil)
-
- ;; disable mouse-wheel zoom
- ("<C-mouse-4>" . nil)
- ("<C-mouse-5>" . nil)
- ("<f5>" . profiler-start)
- ("<f6>" . profiler-stop))
 #+END_SRC
 ** Functions
 *** indent-rigidly
@@ -329,25 +349,6 @@
     (whole-line-or-region-global-mode 1)
     :delight whole-line-or-region-local-mode)
 #+END_SRC
-*** Window management
-#+BEGIN_SRC emacs-lisp
-(use-package eyebrowse
-    :init
-    (eyebrowse-mode t)
-    :bind*
-    ("M-1" . eyebrowse-switch-to-window-config-1)
-    ("M-2" . eyebrowse-switch-to-window-config-2)
-    ("M-3" . eyebrowse-switch-to-window-config-3)
-    ("M-4" . eyebrowse-switch-to-window-config-4)
-    ("M-5" . eyebrowse-switch-to-window-config-5)
-    ("M-6" . eyebrowse-switch-to-window-config-6))
-
-(winner-mode 1)
-(bind-keys*
- ("C-1" . delete-other-windows)
- ("C-2" . winner-undo)
- ("C-3" . winner-redo))
-#+END_SRC
 *** whitespace-cleanup-mode
 [[https://github.com/purcell/whitespace-cleanup-mode][@github.com]]
 #+BEGIN_SRC emacs-lisp
@@ -368,16 +369,6 @@
 ;;     ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode terraform-mode emacs-lisp-mode)
 ;;      . format-all-mode)
 ;;     :delight format-all-mode)
-#+END_SRC
-*** Buffer-move
-https://github.com/lukhas/buffer-move
-#+BEGIN_SRC emacs-lisp
-(use-package buffer-move
-    :bind*
-     ("C-M-#" . buf-move-right)
-     ("C-M-ö" . buf-move-left)
-     ("C-M-ü" . buf-move-up)
-     ("C-M-ä" . buf-move-down))
 #+END_SRC
 *** crux
 https://github.com/bbatsov/crux
@@ -552,6 +543,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :custom
     (consult-project-root-function #'projectile-project-root)
     :bind*
+    ("C-M-y" . consult-yank)
     ("C-f" . consult-buffer)
     ("C-M-s" . consult-ripgrep)
     ("M-," . consult-global-mark))
@@ -699,7 +691,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :commands magit-status
     :init
     (setq magit-auto-revert-mode nil)
-    :bind
+    :bind*
     ("C-x b" . magit-blame)
     ("C-x l" . magit-log-buffer-file)
     :config
