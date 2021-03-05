@@ -113,6 +113,8 @@
  ("<C-mouse-5>" . nil)
  ("<f5>" . profiler-start)
  ("<f6>" . profiler-stop))
+
+(delight 'eldoc-mode nil "eldoc")
 #+end_src
 *** Coding System
 [[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
@@ -133,6 +135,9 @@
 (use-package explain-pause-mode
   :straight (:host github :repo "lastquestion/explain-pause-mode")
   :commands explain-pause-mode)
+
+(use-package esup
+    :commands esup)
 #+end_src
 *** backup & auto-save
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
@@ -198,10 +203,6 @@
   :custom (epa-file-select-keys nil))
 
 (use-package secrets)
-#+END_SRC
-** eldoc
-#+BEGIN_SRC emacs-lisp
-(delight 'eldoc-mode nil "eldoc")
 #+END_SRC
 * Packages
 ** Org-Mode
@@ -692,15 +693,15 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :config (setq dired-filter-verbose nil)
     :delight dired-filter-mode)
 #+END_SRC
-** Languages
-*** Elixir
-**** Elixir Mode
+* Languages
+** Elixir
+*** Elixir Mode
 https://github.com/elixir-lang/emacs-elixir
 #+BEGIN_SRC emacs-lisp
 (use-package elixir-mode
     :mode "\\.ex\\'")
 #+END_SRC
-**** Alchemist
+*** Alchemist
 https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (use-package alchemist
@@ -723,7 +724,7 @@ https://github.com/tonini/alchemist.el
              ))))
     )
 #+END_SRC
-**** flycheck-credo
+*** flycheck-credo
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck-credo
     :after elixir-mode
@@ -732,7 +733,7 @@ https://github.com/tonini/alchemist.el
     (flycheck-credo-setup)
     (setq flycheck-elixir-credo-strict nil))
 #+END_SRC
-*** Markdown
+** Markdown
 #+BEGIN_SRC emacs-lisp
 (use-package markdown-mode
     :mode "\\.md\\'"
@@ -740,7 +741,7 @@ https://github.com/tonini/alchemist.el
                              (whitespace-cleanup-mode 0)
                              (goto-address-mode))))
 #+END_SRC
-*** Python
+** Python
 #+BEGIN_SRC emacs-lisp
 (use-package python
   :mode ("\\.py\\'" . python-mode))
@@ -751,17 +752,17 @@ https://github.com/tonini/alchemist.el
                           (lsp-deferred)
                           (my/lsp-format-buf))))
 #+END_SRC
-*** Web
-**** HTML/CSS
-***** css
+** Web
+*** HTML/CSS
+**** css
 #+BEGIN_SRC emacs-lisp
 (use-package css-mode
     :mode ("\\.less\\'" "\\.css\\'" "\\.sass\\'" "\\.scss\\'")
     :config
     (setq css-indent-offset 4))
 #+END_SRC
-**** JS
-***** js2-mode
+*** JS
+**** js2-mode
 #+BEGIN_SRC emacs-lisp
 (use-package js2-mode
     :mode "\\.js\\'"
@@ -770,7 +771,7 @@ https://github.com/tonini/alchemist.el
           js2-strict-inconsistent-return-warning nil)
     )
 #+END_SRC
-***** Web-mode
+**** Web-mode
 [[http://web-mode.org/][@web-mode.org]]
 #+BEGIN_SRC emacs-lisp
 (use-package web-mode
@@ -797,7 +798,7 @@ https://github.com/tonini/alchemist.el
             ("html" . ".")))
     )
 #+END_SRC
-***** json-mode
+**** json-mode
 #+BEGIN_SRC emacs-lisp
 (use-package json-mode
     :mode "\\.json\\'"
@@ -805,12 +806,12 @@ https://github.com/tonini/alchemist.el
     (json-reformat:indent-width 2)
     (js-indent-level 2))
 #+END_SRC
-***** jsonnet-mode
+**** jsonnet-mode
 #+BEGIN_SRC emacs-lisp
 (use-package jsonnet-mode
     :mode  ("\\.jsonnet\\'" "\\.libsonnet\\'"))
 #+END_SRC
-***** typescript
+**** typescript
 #+BEGIN_SRC emacs-lisp
 (use-package typescript-mode
     :mode "\\.ts\\'"
@@ -822,7 +823,7 @@ https://github.com/tonini/alchemist.el
                     (expand-file-name"~/.local/vscode-eslint/extension/server/out/eslintServer.js")
                     "--stdio")))
     #+END_SRC
-*** Elisp
+** Elisp
 #+BEGIN_SRC emacs-lisp
 ;; (setq lisp-indent-function 'common-lisp-indent-function)
 (use-package
@@ -836,51 +837,51 @@ https://github.com/tonini/alchemist.el
 
 (use-package xtest :defer t)
 #+END_SRC
-*** Php
+** Php
 #+BEGIN_SRC emacs-lisp
 (use-package php-mode
     :mode "\\.php\\'")
 #+END_SRC
-*** Rust
+** Rust
 #+BEGIN_SRC emacs-lisp
 (use-package rustic)
 #+END_SRC
-*** golang
+** golang
 #+BEGIN_SRC emacs-lisp
 (use-package go-mode
     :mode "\\.go\\'"
     :hook (go-mode . lsp-deferred))
 #+END_SRC
-*** nim
+** nim
 #+BEGIN_SRC emacs-lisp
 (use-package nim-mode
     :mode "\\.nim\\'"
     :hook ((nim-mode . nimsuggest-mode)
            (nimsuggest-mode . company-mode)))
 #+END_SRC
-*** terraform
+** terraform
 #+BEGIN_SRC emacs-lisp
 (use-package terraform-mode
     :mode "\\.tf\\'")
 #+END_SRC
-*** graphql
+** graphql
 #+BEGIN_SRC emacs-lisp
 (use-package graphql-mode
     :mode ("\\.gql\\'" "\\.graphql\\'"))
 #+END_SRC
-*** lua
+** lua
 #+BEGIN_SRC emacs-lisp
 (use-package lua-mode
     :mode ("\\.lua\\'"))
 #+END_SRC
-*** AUCTeX
+** AUCTeX
  #+BEGIN_SRC emacs-lisp
 (use-package tex-mode
     :straight auctex
     :mode "\\.tex\\'"
     :hook (LaTeX-mode . turn-on-reftex))
  #+END_SRC
-*** Plantuml
+** Plantuml
  #+BEGIN_SRC emacs-lisp
 (use-package
     plantuml-mode
@@ -890,17 +891,17 @@ https://github.com/tonini/alchemist.el
     (plantuml-default-exec-mode
      'executable))
  #+END_SRC
-*** adoc
+** adoc
  #+BEGIN_SRC emacs-lisp
 (use-package adoc-mode
     :mode "\\.adoc\\'")
  #+END_SRC
-*** yaml
+** yaml
 #+BEGIN_SRC emacs-lisp
 (use-package yaml-mode
     :mode ("\\.yml.*\\'" "\\.yaml.*\\'"))
 #+END_SRC
-*** sql
+** sql
 #+BEGIN_SRC emacs-lisp
 (use-package sql-indent
     :mode "\\.sql\\'")
@@ -1018,12 +1019,6 @@ https://github.com/tonini/alchemist.el
 ** quickrun
 #+BEGIN_SRC emacs-lisp
 (use-package quickrun :commands quickrun)
-#+END_SRC
-** esup
-Emacs Start Up Profiler [[https://github.com/jschaf/esup][@github.com]]
-#+BEGIN_SRC emacs-lisp
-(use-package esup
-    :commands esup)
 #+END_SRC
 * UI
 #+BEGIN_SRC emacs-lisp
