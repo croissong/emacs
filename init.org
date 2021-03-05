@@ -119,7 +119,7 @@
 (delight 'eldoc-mode nil "eldoc")
 #+end_src
 
-*** Coding System
+*** coding system
 [[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
 #+begin_src emacs-lisp
 (prefer-coding-system 'utf-8)
@@ -130,7 +130,7 @@
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 #+end_src
 
-*** Debugging
+*** debugging
 #+begin_src emacs-lisp
 (use-package gcmh
   :init (gcmh-mode 1)
@@ -313,6 +313,10 @@
 (use-package editorconfig
     :init (editorconfig-mode 1)
     :delight editorconfig-mode)
+
+(use-package hungry-delete
+    :init (global-hungry-delete-mode)
+    :delight hungry-delete-mode)
 #+end_src
 
 ** editing
@@ -773,6 +777,16 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :custom
     (web-mode-enable-auto-closing t)
     (web-mode-enable-auto-indentation nil))
+
+(use-package typescript-mode
+    :mode "\\.ts\\'"
+    :hook (typescript-mode . (lambda ()
+                                (lsp-deferred)
+                                (my/lsp-format-buf)))
+    :config (setq lsp-eslint-server-command
+                  '("node"
+                    (expand-file-name"~/.local/vscode-eslint/extension/server/out/eslintServer.js")
+                    "--stdio")))
 #+end_src
 
 ** json
@@ -784,26 +798,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (js-indent-level 2))
 #+end_src
 
-*** jsonnet
+** jsonnet
 #+begin_src emacs-lisp
 (use-package jsonnet-mode
     :mode  ("\\.jsonnet\\'" "\\.libsonnet\\'"))
 #+end_src
 
-*** typescript
-#+begin_src emacs-lisp
-(use-package typescript-mode
-    :mode "\\.ts\\'"
-    :hook (typescript-mode . (lambda ()
-                                (lsp-deferred)
-                                (my/lsp-format-buf)))
-    :config (setq lsp-eslint-server-command
-                  '("node"
-                    (expand-file-name"~/.local/vscode-eslint/extension/server/out/eslintServer.js")
-                    "--stdio")))
-    #+end_src
-
-** Elisp
+** elisp
 #+begin_src emacs-lisp
 (use-package
     nameless
@@ -817,15 +818,17 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package xtest :defer t)
 #+end_src
 
-** Php
+** php
 #+begin_src emacs-lisp
 (use-package php-mode
     :mode "\\.php\\'")
 #+end_src
 
-** Rust
+** rust
 #+begin_src emacs-lisp
-(use-package rustic)
+(use-package rustic
+  :after smartparens-rust
+  :mode "\\.rs\\'")
 #+end_src
 
 ** golang
@@ -860,7 +863,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :mode ("\\.lua\\'"))
 #+end_src
 
-** AUCTeX
+** latex
  #+begin_src emacs-lisp
 (use-package tex-mode
     :straight auctex
@@ -868,15 +871,14 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :hook (LaTeX-mode . turn-on-reftex))
  #+end_src
 
-** Plantuml
+** plantuml
  #+begin_src emacs-lisp
 (use-package
     plantuml-mode
     :mode "\\.puml\\'"
-    :custom (plantuml-executable-path
-             "/usr/bin/plantuml")
-    (plantuml-default-exec-mode
-     'executable))
+    :custom
+    (plantuml-executable-path "/usr/bin/plantuml")
+    (plantuml-default-exec-mode 'executable))
  #+end_src
 
 ** adoc
@@ -895,19 +897,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src emacs-lisp
 (use-package sql-indent
     :mode "\\.sql\\'")
-#+end_src
-
-** Hungry-delete
-#+begin_src emacs-lisp
-(use-package hungry-delete
-    :init (global-hungry-delete-mode)
-    :delight hungry-delete-mode)
-#+end_src
-
-** ledger
-#+begin_src emacs-lisp
-(use-package ledger-mode
-    :mode "\\.ledger\\'")
 #+end_src
 
 ** mu4e
@@ -1010,6 +999,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :commands restclient-mode)
 
 (use-package realgud :defer t)
+
+(use-package ledger-mode
+    :mode "\\.ledger\\'")
 #+end_src
 
 * UI
