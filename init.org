@@ -199,10 +199,6 @@
 #+BEGIN_SRC emacs-lisp
 (delight 'eldoc-mode nil "eldoc")
 #+END_SRC
-** Functions
-*** indent-rigidly
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
 * Core
 ** My Values
 * Packages
