@@ -78,8 +78,6 @@
       display-buffer-alist
       '(("*Async Shell Command*" . (display-buffer-no-window))))
 
-
-(column-number-mode 1)
 (fset 'yes-or-no-p 'y-or-n-p)
 (delete-selection-mode 1)
 (global-so-long-mode 1)
@@ -204,8 +202,8 @@
 
 (use-package secrets)
 #+END_SRC
-* General
-** Org-Mode
+* general
+** org-mode
 #+BEGIN_SRC emacs-lisp
 (use-package reveal
     :hook (org-mode . reveal-mode)
@@ -254,7 +252,7 @@
     (org-pretty-entities t)
     (org-src-preserve-indentation t)
     (org-src-window-setup 'current-window)
-    (org-edit-src-auto-save-idle-delay 60))
+    (org-edit-src-auto-save-idle-delay 60)
 
     :bind (("C-c l" . org-store-link)
            ("C-c a" . org-agenda)
@@ -279,6 +277,9 @@
 (use-package vlf
     :commands (vlf-mode vlf)
     :init (require 'vlf-setup))
+
+(use-package logview
+    :commands logview-mode)
 #+END_SRC
 ** passive modes
 #+BEGIN_SRC emacs-lisp
@@ -295,6 +296,10 @@
 (use-package whitespace-cleanup-mode
     :init (global-whitespace-cleanup-mode 1)
     :delight whitespace-cleanup-mode)
+
+(use-package editorconfig
+    :init (editorconfig-mode 1)
+    :delight editorconfig-mode)
 #+END_SRC
 ** editing
 #+begin_src emacs-lisp
@@ -310,6 +315,16 @@
                 ("M-<up>" . drag-stuff-up)
                 ("M-<down>" . drag-stuff-down))
     :delight drag-stuff-mode)
+
+(use-package quickrun :commands quickrun)
+
+(use-package expand-region
+    :bind* (("C-M-w" . er/expand-region)
+            ("C-M-q" . er/contract-region))
+    :custom
+    (expand-region-fast-keys-enabled nil)
+    :config
+    (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions))
 #+end_src
 *** formatting
 #+BEGIN_SRC emacs-lisp
@@ -324,6 +339,120 @@
 ;;     ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode terraform-mode emacs-lisp-mode)
 ;;      . format-all-mode)
 ;;     :delight format-all-mode)
+#+END_SRC
+*** lsp
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode
+  :commands lsp-deferred
+  :hook (lsp-mode . lsp-enable-which-key-integration)
+  :init
+  (cl-defun my/lsp-format-buf ((&optional (format t)) (&optional (organize-imports t)))
+    (add-hook 'before-save-hook
+              (lambda () (lsp-format-buffer) (lsp-organize-imports)) 0 t))
+  :config
+  (cl-pushnew "[/\\\\]\\.mypy_cache$" lsp-file-watch-ignored)
+  (cl-pushnew "[/\\\\]\\.pytest_cache$" lsp-file-watch-ignored)
+  (cl-pushnew "[/\\\\]dot_git$" lsp-file-watch-ignored)
+  :custom
+  (lsp-enable-snippet t)
+  (lsp-signature-doc-lines 1)
+  (lsp-signature-auto-activate t)
+  (lsp-progress-via-spinner nil)
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-modeline-code-actions-enable nil)
+  (lsp-keymap-prefix "M-l")
+  (lsp-disabled-clients '(ts angular-ls))
+  :bind (:map lsp-mode-map
+              ("M-." . lsp-goto-implementation)
+              ("M--" . lsp-execute-code-action)))
+
+(use-package lsp-ui
+    :commands lsp-ui-mode
+    :custom
+    (lsp-ui-doc-enable nil)
+    (lsp-ui-sideline-enable t))
+#+END_SRC
+*** linting
+#+begin_src emacs-lisp
+(use-package flycheck
+    :commands flycheck-mode)
+
+(use-package flyspell
+    :hook ((text-mode markdown-mode) . flyspell-mode)
+    :delight flyspell-mode)
+(use-package flyspell-correct
+    :after flyspell
+    :bind (:map flyspell-mode-map
+                ("C-;" . flyspell-correct-wrapper)))
+** minibuffer & completion
+#+BEGIN_SRC emacs-lisp
+(use-package selectrum
+    :after (orderless)
+    :init (selectrum-mode +1)
+    :config
+    (prescient-persist-mode +1)
+    (setq selectrum-preprocess-candidates-function
+      #'selectrum-prescient--preprocess)
+(add-hook 'selectrum-candidate-selected-hook
+          #'selectrum-prescient--remember)
+(add-hook 'selectrum-candidate-inserted-hook
+          #'selectrum-prescient--remember)
+
+    :custom
+    (selectrum-refine-candidates-function #'orderless-filter)
+    (orderless-skip-highlighting (lambda () selectrum-is-active))
+    (selectrum-highlight-candidates-function #'orderless-highlight-matches)
+    (magit-completing-read-function #'selectrum-completing-read)
+    :bind (:map selectrum-minibuffer-map
+                ("M-#" . selectrum-insert-current-candidate)
+                ("M-ö" . my-util-backward-delete-sexp)))
+
+(use-package orderless
+    :custom
+  (orderless-matching-styles '(orderless-prefixes)))
+
+(use-package prescient)
+(use-package selectrum-prescient
+    :after prescient)
+
+(use-package ctrlf
+    :init (ctrlf-mode)
+    :config
+    (setq ctrlf-minibuffer-bindings (a-assoc ctrlf-minibuffer-bindings "M-ä" 'ctrlf-next-match "M-ü" 'ctrlf-previous-match))
+    )
+
+;; https ://www.reddit.com/r/emacs/comments/krptmz/emacs_completion_framework_embark_consult/
+(use-package consult
+    :after (projectile)
+    :custom
+    (consult-project-root-function #'projectile-project-root)
+    :bind*
+    ("C-M-y" . consult-yank)
+    ("C-f" . consult-buffer)
+    ("C-M-s" . consult-ripgrep)
+    ("M-," . consult-global-mark))
+
+(use-package marginalia
+  :init
+  (marginalia-mode)
+  :config
+  (cl-pushnew '(projectile-find-file . file) marginalia-command-categories)
+  (advice-add #'marginalia-cycle :after
+              (lambda () (when (bound-and-true-p
+                                selectrum-mode) (selectrum-exhibit)))))
+
+(use-package embark
+    :config
+  (setq embark-action-indicator
+      (lambda (map _target)
+        (which-key--show-keymap "Embark" map nil nil 'no-paging)
+        #'which-key--hide-popup-ignore-command)
+      embark-become-indicator embark-action-indicator)
+    :bind*
+  ("C-q" . embark-act))
+
+(use-package embark-consult
+  :after (embark consult))
 #+END_SRC
 *** crux
 https://github.com/bbatsov/crux
@@ -428,102 +557,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
       ediff-split-window-function 'split-window-horizontally)
 (add-hook 'ediff-prepare-buffer-hook 'show-all)
 #+END_SRC
-*** Expand-Region
-#+BEGIN_SRC emacs-lisp
-(use-package expand-region
-    :bind* (("C-M-w" . er/expand-region)
-            ("C-M-q" . er/contract-region))
-    :config
-    (setq expand-region-fast-keys-enabled nil)
-    (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions))
-#+END_SRC
-*** Flycheck
-#+BEGIN_SRC emacs-lisp
-(use-package flycheck
-    :commands flycheck-mode)
-#+END_SRC
-*** Flyspell
-#+BEGIN_SRC emacs-lisp
-(use-package flyspell
-    :hook ((text-mode markdown-mode) . flyspell-mode)
-    :delight flyspell-mode)
-(use-package flyspell-correct
-    :after flyspell
-    :bind (:map flyspell-mode-map
-                ("C-;" . flyspell-correct-wrapper)))
-#+END_SRC
 *** Ripgrep
 #+BEGIN_SRC emacs-lisp
 (use-package wgrep :defer t)
-#+END_SRC
-*** Minibuffer & completion
-#+BEGIN_SRC emacs-lisp
-(use-package selectrum
-    :after (orderless)
-    :init (selectrum-mode +1)
-    :config
-    (prescient-persist-mode +1)
-    (setq selectrum-preprocess-candidates-function
-      #'selectrum-prescient--preprocess)
-(add-hook 'selectrum-candidate-selected-hook
-          #'selectrum-prescient--remember)
-(add-hook 'selectrum-candidate-inserted-hook
-          #'selectrum-prescient--remember)
-
-    :custom
-    (selectrum-refine-candidates-function #'orderless-filter)
-    (orderless-skip-highlighting (lambda () selectrum-is-active))
-    (selectrum-highlight-candidates-function #'orderless-highlight-matches)
-    (magit-completing-read-function #'selectrum-completing-read)
-    :bind (:map selectrum-minibuffer-map
-                ("M-#" . selectrum-insert-current-candidate)
-                ("M-ö" . my-util-backward-delete-sexp)))
-
-(use-package orderless
-    :custom
-  (orderless-matching-styles '(orderless-prefixes)))
-
-(use-package prescient)
-(use-package selectrum-prescient
-    :after prescient)
-
-(use-package ctrlf
-    :init (ctrlf-mode)
-    :config
-    (setq ctrlf-minibuffer-bindings (a-assoc ctrlf-minibuffer-bindings "M-ä" 'ctrlf-next-match "M-ü" 'ctrlf-previous-match))
-    )
-
-(use-package consult
-    :after (projectile)
-    :custom
-    (consult-project-root-function #'projectile-project-root)
-    :bind*
-    ("C-M-y" . consult-yank)
-    ("C-f" . consult-buffer)
-    ("C-M-s" . consult-ripgrep)
-    ("M-," . consult-global-mark))
-
-(use-package marginalia
-  :init
-  (marginalia-mode)
-  :config
-  (cl-pushnew '(projectile-find-file . file) marginalia-command-categories)
-  (advice-add #'marginalia-cycle :after
-              (lambda () (when (bound-and-true-p
-                                selectrum-mode) (selectrum-exhibit)))))
-
-(use-package embark
-    :config
-  (setq embark-action-indicator
-      (lambda (map _target)
-        (which-key--show-keymap "Embark" map nil nil 'no-paging)
-        #'which-key--hide-popup-ignore-command)
-      embark-become-indicator embark-action-indicator)
-    :bind*
-  ("C-q" . embark-act))
-
-(use-package embark-consult
-  :after (embark consult))
 #+END_SRC
 *** Projectile
 #+BEGIN_SRC emacs-lisp
@@ -585,17 +621,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   ix
   :commands ix)
 #+END_SRC
-** Editorconfig
-#+BEGIN_SRC emacs-lisp
-(use-package editorconfig
-    :init (editorconfig-mode 1)
-    :delight editorconfig-mode)
-#+END_SRC
-** logview
-#+BEGIN_SRC emacs-lisp
-(use-package logview
-    :commands logview-mode)
-#+END_SRC
 ** hydra
 #+BEGIN_SRC emacs-lisp
 (use-package hydra)
@@ -604,56 +629,20 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :straight (:local-repo "~/.config/emacs/my/hydra/")
     :bind* ("C-M-m" . hydra-my/init/body))
 #+END_SRC
-** lsp-mode
-#+BEGIN_SRC emacs-lisp
-(use-package lsp-mode
-  :commands lsp-deferred
-  :hook (lsp-mode . lsp-enable-which-key-integration)
-  :init
-  (setq lsp-keymap-prefix "M-l")
-  (cl-defun my/lsp-format-buf ((&optional (format t)) (&optional (organize-imports t)))
-    (add-hook 'before-save-hook
-              (lambda () (lsp-format-buffer) (lsp-organize-imports)) 0 t))
-  :config
-  (cl-pushnew "[/\\\\]\\.mypy_cache$" lsp-file-watch-ignored)
-  (cl-pushnew "[/\\\\]\\.pytest_cache$" lsp-file-watch-ignored)
-  (cl-pushnew "[/\\\\]dot_git$" lsp-file-watch-ignored)
-  :custom
-  (lsp-enable-snippet t)
-  (lsp-signature-doc-lines 1)
-  (lsp-signature-auto-activate t)
-  (lsp-progress-via-spinner nil)
-  (lsp-headerline-breadcrumb-enable nil)
-  (lsp-modeline-code-actions-enable nil)
-  :bind (:map lsp-mode-map
-              ("M-." . lsp-goto-implementation)
-              ("M--" . lsp-execute-code-action)))
-
-(use-package lsp-ui
-    :commands lsp-ui-mode
-    :init (setq lsp-ui-doc-enable nil
-                lsp-ui-sideline-enable t))
-#+END_SRC
-** realgud
-#+BEGIN_SRC emacs-lisp
-(use-package realgud
-    :straight (:host github :repo "realgud/realgud" :no-autoloads t)
-    :defer t)
-#+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (use-package magit
     :commands magit-status
-    :init
-    (setq magit-auto-revert-mode nil)
+    :custom
+    (magit-auto-revert-mode nil)
+    (magit-diff-section-arguments (quote ("--no-ext-diff" "-U2")))
+    (magit-diff-refine-ignore-whitespace nil)
+    (magit-refs-margin '(t age magit-log-margin-width nil 18))
+    (magit-diff-refine-hunk t)
     :bind*
     ("C-x b" . magit-blame)
     ("C-x l" . magit-log-buffer-file)
     :config
-    (setq magit-diff-section-arguments (quote ("--no-ext-diff" "-U2"))
-          magit-diff-refine-ignore-whitespace nil
-          magit-refs-margin '(t age magit-log-margin-width nil 18)
-          magit-diff-refine-hunk t)
     (magit-add-section-hook 'magit-status-sections-hook
                             'magit-insert-modules-unpulled-from-upstream
                             'magit-insert-unpulled-from-upstream)
@@ -665,12 +654,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+BEGIN_SRC emacs-lisp
 (require 'dired-x)
 (use-package dired+
-  :straight (dired-plus)
+  :straight dired-plus
   :demand t
   :config
   (diredp-make-find-file-keys-reuse-dirs)
-  (setq dired-listing-switches "-aDhvl --group-directories-first"
-        dired-auto-revert-buffer t)
+  :custom
+  (dired-listing-switches "-aDhvl --group-directories-first")
+  (dired-auto-revert-buffer t)
   :bind (("C-x d" . nil)
          :map dired-mode-map
          ("M-ö" . dired-up-directory)
@@ -678,7 +668,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package dired-filter
     :hook (dired-mode . dired-filter-mode)
-    :config (setq dired-filter-verbose nil)
+    :custom
+    (dired-filter-verbose nil)
     :delight dired-filter-mode)
 #+END_SRC
 * Languages
@@ -988,24 +979,20 @@ https://github.com/tonini/alchemist.el
     :config
     (mu4e-alert-set-default-style 'libnotify))
 #+END_SRC
-** restclient
-#+BEGIN_SRC emacs-lisp
-(use-package restclient
-    :mode ("\\.http\\'" . restclient-mode)
-    :commands restclient-mode)
-#+END_SRC
-** x509-mode
-#+BEGIN_SRC emacs-lisp
-(use-package x509-mode :defer t)
-#+END_SRC
 ** Tramp
 #+BEGIN_SRC emacs-lisp
 (setq tramp-default-method "ssh")
 #+END_SRC
-** quickrun
-#+BEGIN_SRC emacs-lisp
-(use-package quickrun :commands quickrun)
-#+END_SRC
+* Tools
+#+begin_src emacs-lisp
+(use-package x509-mode :defer t)
+
+(use-package restclient
+    :mode ("\\.http\\'" . restclient-mode)
+    :commands restclient-mode)
+
+(use-package realgud :defer t)
+#+end_src
 * UI
 #+BEGIN_SRC emacs-lisp
 (menu-bar-mode -1)
@@ -1013,6 +1000,7 @@ https://github.com/tonini/alchemist.el
 (tooltip-mode -1)
 (mouse-avoidance-mode)
 (scroll-bar-mode -1)
+(column-number-mode 1)
 (set-face-attribute 'default nil :family "Monospace" :height 110)
 (setq-default cursor-type 'bar)
 
