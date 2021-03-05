@@ -82,11 +82,19 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 (delete-selection-mode 1)
-(global-so-long-mode 1)
 
 (setq-default indent-tabs-mode nil
               tab-width 2
               sentence-end-double-space nil)
+#+end_src
+
+**** Long lines fix
+#+begin_src emacs-lisp
+(require 'longlines)
+(global-so-long-mode 1)
+(setq so-long-target-modes (-union so-long-target-modes '(fundamental-mode))
+      so-long-action 'longlines-mode)
+
 #+end_src
 
 *** Editing
@@ -570,8 +578,10 @@ https://github.com/bbatsov/crux
                 ("C-S-<backspace>" . sp-backward-kill-sexp)
                 ("C-M-<down>" . sp-select-next-thing))
     :init
-    (smartparens-global-mode 1)
-    (show-smartparens-global-mode 1)
+    (defun my--enable-smartparents-modes ()
+      (smartparens-mode 1)
+      (show-smartparens-mode 1))
+    :hook (prog-mode . my--enable-smartparents-modes)
     :config
     (require 'smartparens-config)
     :custom
