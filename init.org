@@ -1,6 +1,6 @@
 ; -*- eval: (org-init-mode 1); lexical-binding: t -*-
-* Initialize
-** Initialize straight.el
+* Core
+** Package manager
 #+BEGIN_SRC emacs-lisp
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -17,67 +17,40 @@
 
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t
-      use-package-compute-statistics nil)
+      use-package-compute-statistics nil
+      comp-async-report-warnings-errors nil)
 #+END_SRC
-** Coding Environment
-[[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
-#+BEGIN_SRC emacs-lisp
-(eval-and-compile
-  (prefer-coding-system 'utf-8-unix)
-  (setq buffer-file-coding-system 'utf-8-unix
-        default-file-name-coding-system 'utf-8-unix
-        utf-translate-cjk-mode nil ; disable CJK coding/encoding (Chinese/Japanese/Korean characters)
-        locale-coding-system 'utf-8-unix)
-  (set-terminal-coding-system 'utf-8-unix)
-  (set-keyboard-coding-system 'utf-8-unix)
-  (set-language-environment 'utf-8)
-  (set-default-coding-systems 'utf-8-unix)
-  (unless (eq system-type 'windows-nt)
-    (set-selection-coding-system 'utf-8-unix)))
-
-(setq comp-async-report-warnings-errors nil)
-
+** Common
+*** Utility
+#+begin_src emacs-lisp
 (use-package bind-key)
 (use-package delight)
 (use-package cl-lib)
 (use-package f)
 (use-package dash)
 (use-package a)
-(use-package gcmh
-  :init (gcmh-mode 1)
-  :delight)
-(use-package explain-pause-mode
-  :straight (:host github :repo "lastquestion/explain-pause-mode")
-  :commands explain-pause-mode)
-#+END_SRC
-** my/org-init
-#+BEGIN_SRC emacs-lisp
-(use-package org-init
-    :after org
-    :straight (:local-repo "~/.config/emacs/my/org-init/")
-    :commands (org-init-mode org-init-open))
-#+END_SRC
-** My/Util
-#+BEGIN_SRC emacs-lisp
+
 (use-package my-util
     :straight (:local-repo "~/.config/emacs/my/util/")
     :demand t
     :bind
     ("C-<backspace>" . my-util-backward-delete-whitespace-or-word)
     ("C-x <tab>"  . my-util-indent-rigidly))
-#+END_SRC
-* Core
-** Read env vars
- #+BEGIN_SRC emacs-lisp
+
+(use-package org-init
+    :after org
+    :straight (:local-repo "~/.config/emacs/my/org-init/")
+    :commands (org-init-mode org-init-open))
+#+end_src
+*** Config
+#+begin_src emacs-lisp
 (use-package exec-path-from-shell
     :init
     (setq exec-path-from-shell-arguments '("-i")
           exec-path-from-shell-variables '("DISPLAY"))
     (my-util-with-eval-after-frame
      (exec-path-from-shell-initialize)))
- #+END_SRC
-** My Values
-#+BEGIN_SRC emacs-lisp
+
 (setq default-directory "~/"
       custom-file (expand-file-name "custom.el" user-emacs-directory)
       browse-url-generic-program (executable-find (getenv "BROWSER"))
@@ -91,6 +64,8 @@
       same-window-buffer-names '("*Help*")
       Man-notify-method 'pushy
 
+      vc-handled-backends nil
+
       inhibit-startup-screen t
       initial-scratch-message nil
       initial-major-mode 'text-mode
@@ -98,13 +73,42 @@
       ring-bell-function 'ignore
       vc-follow-symlinks t
 
+      ;; Kill active process buffer no prompt
+      kill-buffer-query-functions (remq 'process-kill-buffer-query-function kill-buffer-query-functions)
+
       display-buffer-alist
       '(("*Async Shell Command*" . (display-buffer-no-window))))
+
+
+(column-number-mode 1)
+(fset 'yes-or-no-p 'y-or-n-p)
+(delete-selection-mode 1)
+(global-so-long-mode 1)
 
 (setq-default indent-tabs-mode nil
               tab-width 2
               sentence-end-double-space nil)
+#+end_src
+*** Coding System
+[[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
+#+BEGIN_SRC emacs-lisp
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(setq-default buffer-file-coding-system 'utf-8)
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 #+END_SRC
+*** Debugging
+#+begin_src emacs-lisp
+(use-package gcmh
+  :init (gcmh-mode 1)
+  :delight)
+
+(use-package explain-pause-mode
+  :straight (:host github :repo "lastquestion/explain-pause-mode")
+  :commands explain-pause-mode)
+#+end_src
 *** Backup & autosave
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
 #+BEGIN_SRC emacs-lisp
@@ -120,22 +124,6 @@
       backup-directory-alist `(("." . ,emacs-backup-dir))
       auto-save-file-name-transforms `((".*" ,emacs-autosave-dir t))
       auto-save-list-file-prefix emacs-autosave-dir)
-#+END_SRC
-** littlest things
-#+BEGIN_SRC emacs-lisp
-
-(column-number-mode 1)
-(fset 'yes-or-no-p 'y-or-n-p)
-(setq vc-handled-backends nil)
-(delete-selection-mode 1)
-(global-so-long-mode 1)
-
-#+END_SRC
-*** Kill active process buffer no prompt
-#+BEGIN_SRC emacs-lisp
-(setq kill-buffer-query-functions
-  (remq 'process-kill-buffer-query-function
-         kill-buffer-query-functions))
 #+END_SRC
 ** secrets
 #+BEGIN_SRC emacs-lisp
@@ -170,9 +158,6 @@
  ("C-h C-f" . find-function-at-point)
  ("C-h C-v" . find-variable-at-point)
 
- ;; delete other window
- ("C-x q" . (lambda () (interactive) (delete-window (other-window 1)))))
-
 (bind-keys
  ("M-ö"  . left-char)
  ("M-#" . right-char)
@@ -198,6 +183,8 @@
 *** indent-rigidly
 #+BEGIN_SRC emacs-lisp
 #+END_SRC
+* Core
+** My Values
 * Packages
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
