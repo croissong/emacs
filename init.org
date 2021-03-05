@@ -38,7 +38,6 @@
     ("C-x <tab>"  . my-util-indent-rigidly))
 
 (use-package org-init
-    :after org
     :straight (:local-repo "~/.config/emacs/my/org-init/")
     :commands (org-init-mode org-init-open))
 #+end_src
@@ -193,14 +192,17 @@
   :init (auth-source-pass-enable)
   :custom (auth-sources '(password-store)))
 
+(use-package
+  epa-file
+  :straight nil
+  :custom (epa-file-select-keys nil))
+
 (use-package secrets)
 #+END_SRC
 ** eldoc
 #+BEGIN_SRC emacs-lisp
 (delight 'eldoc-mode nil "eldoc")
 #+END_SRC
-* Core
-** My Values
 * Packages
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
@@ -214,94 +216,62 @@
     :config
     (require 'org-checklist)
     (org-indent-mode 1)
-    (setq org-startup-indented t
-          org-blank-before-new-entry '((heading . nil)
-                                       (plain-list-item . nil))
-          org-return-follows-link nil
-          org-support-shift-select t
-          org-image-actual-width '(500)
-          org-list-allow-alphabetical t
-          org-use-property-inheritance t
-          org-use-sub-superscripts nil
-          org-checkbox-hierarchical-statistics t)
+
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (latex . t)
+       (python . t)
+       (gnuplot . t)
+       (shell . t)
+       (sql . t)))
+
+    :custom
+    (org-startup-indented t)
+    (org-blank-before-new-entry '((heading . nil)
+                                 (plain-list-item . nil)))
+    (org-return-follows-link nil)
+    (org-support-shift-select t)
+    (org-image-actual-width '(500))
+    (org-list-allow-alphabetical t)
+    (org-use-property-inheritance t)
+    (org-use-sub-superscripts nil)
+    (org-checkbox-hierarchical-statistics t)
+
+    (org-export-with-toc nil)
+    (org-export-with-section-numbers nil)
+    (org-refile-use-outline-path t)
+    (org-datetree-add-timestamp 1)
+    (org-extend-today-until 6)
+    (org-duration-format (quote h:mm))
+    (org-outline-path-complete-in-steps nil)
+    (org-hide-emphasis-markers t)
+    (org-refile-targets '((nil :level . 2)))
+
+    (org-src-fontify-natively t)
+    (org-src-tab-acts-natively t)
+    (org-pretty-entities t)
+    (org-src-preserve-indentation t)
+    (org-src-window-setup 'current-window)
+    (org-edit-src-auto-save-idle-delay 60))
 
     :bind (("C-c l" . org-store-link)
            ("C-c a" . org-agenda)
-           ("C-c b" . org-iswitchb))
+           ("C-c b" . org-iswitchb)
+           ("C-c c" . org-capture)
+           (:map org-mode-map
+                ("C-c C-M-e" . my-org-export-all)
+                ("<return>" . org-return-indent)
+                ("M-S-<delete>" . my/org-delete-heading-or-line)
+                ("C-M-<left>" . org-backward-sentence)
+                ("C-M-<right>" . org-forward-sentence)
+                ("C-M-<end>" . org-sentence-newline)
+                ("C-c l" . my/insert-link)))
     :delight org-indent-mode)
 
 (use-package my-org
     :after org
-    :straight (:local-repo "~/.config/emacs/my/org/")
-    :bind (:map org-mode-map
-                ("C-c C-M-e" . my-org-export-all)))
-#+END_SRC
-*** Config
-**** Export
-#+BEGIN_SRC emacs-lisp
-(setq org-export-with-toc nil
-      org-export-with-section-numbers nil)
-#+END_SRC
-**** Capture
-#+BEGIN_SRC emacs-lisp
-(setq org-refile-use-outline-path t
-      org-datetree-add-timestamp 1
-      org-extend-today-until 6
-      org-duration-format (quote h:mm)
-      org-outline-path-complete-in-steps nil
-      org-hide-emphasis-markers t
-      org-refile-targets '((nil :level . 2)))
-(bind-key "C-c c" 'org-capture)
-#+END_SRC
-**** Babel
-#+BEGIN_SRC emacs-lisp
-(setq org-src-fontify-natively t
-      org-src-tab-acts-natively t
-      org-pretty-entities t
-      org-src-preserve-indentation t
-      org-src-window-setup 'current-window
-      org-edit-src-auto-save-idle-delay 60)
-
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (latex . t)
-   (python . t)
-   (gnuplot . t)
-   (shell . t)
-   (sql . t)))
-#+END_SRC
-**** Encryption
-#+BEGIN_SRC  emacs-lisp
-(use-package
-  epa-file
-  :straight nil
-  :custom (epa-file-select-keys nil))
-#+END_SRC
-**** Latex
-#+BEGIN_SRC emacs-lisp
-;;(require 'ox-latex)
-(unless (boundp 'org-latex-classes)
-  (setq org-latex-classes nil))
-(cl-pushnew '("article"
-               "\\documentclass{article}"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-               ("\\paragraph{%s}" . "\\paragraph*{%s}")
-               ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-            org-latex-classes :test 'equal)
-(setq org-latex-preview-ltxpng-directory (concat temporary-file-directory "ltxpng/"))
-#+END_SRC
-*** Keybindings
-#+BEGIN_SRC emacs-lisp
-(bind-keys :map org-mode-map
-("<return>" . org-return-indent)
-("M-S-<delete>" . my/org-delete-heading-or-line)
-("C-M-<left>" . org-backward-sentence)
-("C-M-<right>" . org-forward-sentence)
-("C-M-<end>" . org-sentence-newline)
-("C-c l" . my/insert-link))
+    :straight (:local-repo "~/.config/emacs/my/org/"))
 #+END_SRC
 ** View large files
 #+BEGIN_SRC emacs-lisp

@@ -31,3 +31,4 @@ forge-database.sqlite
 /transient/
 /var/
 /eln-cache/
+/.lsp-session-*
