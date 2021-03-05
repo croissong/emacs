@@ -66,6 +66,8 @@
       Man-notify-method 'pushy
 
       vc-handled-backends nil
+      (put 'upcase-region 'disabled nil)
+      (put 'downcase-region 'disabled nil)
 
       inhibit-startup-screen t
       initial-scratch-message nil
@@ -952,7 +954,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (setq tramp-default-method "ssh")
 #+end_src
 
-* Tools
+* tools
 #+begin_src emacs-lisp
 (use-package x509-mode :defer t)
 
@@ -964,6 +966,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package ledger-mode
     :mode "\\.ledger\\'")
+
+(use-package google-translate
+  :config
+  ;; https://github.com/atykhonov/google-translate/issues/52#issuecomment-727920888
+  (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130))
+  :custom
+  (google-translate-translation-directions-alist '(("de" . "en"))))
 #+end_src
 
 * UI
