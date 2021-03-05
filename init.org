@@ -204,7 +204,7 @@
 
 (use-package secrets)
 #+END_SRC
-* Packages
+* General
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
 (use-package reveal
@@ -274,31 +274,33 @@
     :after org
     :straight (:local-repo "~/.config/emacs/my/org/"))
 #+END_SRC
-** View large files
+** special modes
 #+BEGIN_SRC emacs-lisp
 (use-package vlf
     :commands (vlf-mode vlf)
-    :init
-    (require 'vlf-setup))
+    :init (require 'vlf-setup))
 #+END_SRC
-** Minor Modes
+** passive modes
 #+BEGIN_SRC emacs-lisp
-(use-package
-  tree-sitter
+(use-package tree-sitter
   :init (global-tree-sitter-mode)
   :hook (tree-sitter-after-on-hook . tree-sitter-hl-mode))
-(use-package
-  tree-sitter-langs
+(use-package tree-sitter-langs
   :after tree-sitter)
+
+(use-package whole-line-or-region
+    :init (whole-line-or-region-global-mode 1)
+    :delight whole-line-or-region-local-mode)
+
+(use-package whitespace-cleanup-mode
+    :init (global-whitespace-cleanup-mode 1)
+    :delight whitespace-cleanup-mode)
 #+END_SRC
-*** Iedit
-#+BEGIN_SRC emacs-lisp
+** editing
+#+begin_src emacs-lisp
 (use-package iedit
-    :bind*
-      ("C-r" . iedit-mode))
-#+END_SRC
-*** Drag-stuff
-#+BEGIN_SRC emacs-lisp
+    :bind* ("C-r" . iedit-mode))
+
 (use-package drag-stuff
     :init
     (drag-stuff-global-mode 1)
@@ -308,21 +310,7 @@
                 ("M-<up>" . drag-stuff-up)
                 ("M-<down>" . drag-stuff-down))
     :delight drag-stuff-mode)
-#+END_SRC
-*** whole-line-or-region
-#+BEGIN_SRC emacs-lisp
-(use-package whole-line-or-region
-    :init
-    (whole-line-or-region-global-mode 1)
-    :delight whole-line-or-region-local-mode)
-#+END_SRC
-*** whitespace-cleanup-mode
-[[https://github.com/purcell/whitespace-cleanup-mode][@github.com]]
-#+BEGIN_SRC emacs-lisp
-(use-package whitespace-cleanup-mode
-    :init (global-whitespace-cleanup-mode 1)
-    :delight whitespace-cleanup-mode)
-#+END_SRC
+#+end_src
 *** formatting
 #+BEGIN_SRC emacs-lisp
 ;; Unified approach inc: https://github.com/purcell/reformatter.el/pull/24
@@ -825,7 +813,6 @@ https://github.com/tonini/alchemist.el
     #+END_SRC
 ** Elisp
 #+BEGIN_SRC emacs-lisp
-;; (setq lisp-indent-function 'common-lisp-indent-function)
 (use-package
     nameless
     :hook (emacs-lisp-mode . nameless-mode)
@@ -856,8 +843,7 @@ https://github.com/tonini/alchemist.el
 #+BEGIN_SRC emacs-lisp
 (use-package nim-mode
     :mode "\\.nim\\'"
-    :hook ((nim-mode . nimsuggest-mode)
-           (nimsuggest-mode . company-mode)))
+    :hook ((nim-mode . nimsuggest-mode)))
 #+END_SRC
 ** terraform
 #+BEGIN_SRC emacs-lisp
