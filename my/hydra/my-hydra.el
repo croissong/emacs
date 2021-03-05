@@ -1,3 +1,5 @@
+;;; my-hydras.el --- All my hydras  -*- lexical-binding: t; -*-
+
 (require 'hydra)
 
 (defvar hydra-stack nil)
@@ -54,3 +56,4 @@
 (provide 'my-hydra)
 
 ;; TODO C-x C-+ for zoom
+;;; my-hydras.el ends here
