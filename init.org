@@ -330,6 +330,10 @@
 (use-package hungry-delete
     :init (global-hungry-delete-mode)
     :delight hungry-delete-mode)
+
+;; https://github.com/lassik/emacs-format-all-the-code/issues/33
+(use-package envrc
+  :init (envrc-global-mode))
 #+end_src
 
 ** editing
@@ -365,8 +369,6 @@
   :hook
   ((sh-mode css-mode js-mode web-mode scss-mode terraform-mode)
    . format-all-mode)
-  :custom
-  (format-all-formatters '(("Python" black isort)))
   :config
   (define-format-all-formatter isort
     (:executable "isort")
@@ -374,6 +376,8 @@
     (:languages "Python")
     (:format (format-all--buffer-easy
               executable "-d" "-")))
+
+  (setq-default format-all-formatters '(("Python" black isort)))
   :delight format-all-mode)
 #+end_src
 
@@ -772,7 +776,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src emacs-lisp
 (use-package python
   :mode ("\\.py\\'" . python-mode)
-  :custom
+  :init
   (defun my--on-python-mode ()
     (lsp-deferred)
     (format-all-mode))
