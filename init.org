@@ -323,12 +323,14 @@
     :init (whole-line-or-region-global-mode 1)
     :delight whole-line-or-region-local-mode)
 
-(use-package whitespace-cleanup-mode
-    :hook prog-mode
-    :delight whitespace-cleanup-mode)
+(use-package ws-butler
+    :hook (prog-mode . ws-butler-mode)
+    :delight ws-butler-mode)
 
 (use-package editorconfig
-    :init (editorconfig-mode 1)
+    :config (editorconfig-mode 1)
+    :custom
+    (editorconfig-trim-whitespaces-mode 'ws-butler-mode)
     :delight editorconfig-mode)
 
 (use-package hungry-delete
@@ -337,7 +339,8 @@
 
 ;; https://github.com/lassik/emacs-format-all-the-code/issues/33
 (use-package envrc
-  :init (envrc-global-mode))
+  :init (envrc-global-mode)
+  :delight envrc-mode)
 #+end_src
 
 ** editing
