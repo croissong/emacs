@@ -52,6 +52,9 @@
     (my-util-with-eval-after-frame
      (exec-path-from-shell-initialize)))
 
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+
 (setq default-directory "~/"
       custom-file (expand-file-name "custom.el" user-emacs-directory)
       browse-url-generic-program (executable-find (getenv "BROWSER"))
@@ -66,8 +69,6 @@
       Man-notify-method 'pushy
 
       vc-handled-backends nil
-      (put 'upcase-region 'disabled nil)
-      (put 'downcase-region 'disabled nil)
 
       inhibit-startup-screen t
       initial-scratch-message nil
@@ -360,16 +361,20 @@
 *** formatting
 #+begin_src emacs-lisp
 ;; Unified approach inc: https://github.com/purcell/reformatter.el/pull/24
-(use-package apheleia
-  :straight (:host github :repo "raxod502/apheleia")
-  :init
-  (apheleia-global-mode +1))
-;; (use-package format-all
-;;     :bind* ("C-f f" . format-all-buffer)
-;;     :hook
-;;     ((elixir-mode sh-mode css-mode js-mode web-mode scss-mode go-mode terraform-mode emacs-lisp-mode)
-;;      . format-all-mode)
-;;     :delight format-all-mode)
+(use-package format-all
+  :hook
+  ((sh-mode css-mode js-mode web-mode scss-mode terraform-mode)
+   . format-all-mode)
+  :custom
+  (format-all-formatters '(("Python" black isort)))
+  :config
+  (define-format-all-formatter isort
+    (:executable "isort")
+    (:install "pip install isort")
+    (:languages "Python")
+    (:format (format-all--buffer-easy
+              executable "-d" "-")))
+  :delight format-all-mode)
 #+end_src
 
 *** lsp
@@ -544,14 +549,13 @@ https://github.com/bbatsov/crux
 *** Company-Mode
 #+begin_src emacs-lisp
 (use-package company
-    :init
-    (add-hook 'after-init-hook 'global-company-mode)
-    :config
-    (setq company-idle-delay 0.3
-          company-minimum-prefix-length 1
-          company-tooltip-align-annotations t
-          company-dabbrev-downcase nil
-          company-echo-delay 0)
+    :hook (prog-mode . company-mode)
+    :custom
+    (company-idle-delay 0.3)
+    (company-minimum-prefix-length 1)
+    (company-tooltip-align-annotations t)
+    (company-dabbrev-downcase nil)
+    (company-echo-delay 0)
     :bind (:map company-active-map
                 ("C-ä" . company-select-next)
                 ("C-ü" . company-select-previous))
@@ -742,11 +746,15 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** Elixir
 #+begin_src emacs-lisp
 (use-package elixir-mode
+    :init
+    (defun my--on-elixir-mode ()
+      (flycheck-mode)
+      (format-all-mode))
+    :hook (elixir-mode . my--on-elixir-mode)
     :mode "\\.ex\\'")
 
 (use-package flycheck-credo
     :after elixir-mode
-    :hook (elixir-mode . flycheck-mode)
     :config
     (flycheck-credo-setup)
     :custom
@@ -763,11 +771,15 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** Python
 #+begin_src emacs-lisp
 (use-package python
-  :mode ("\\.py\\'" . python-mode))
+  :mode ("\\.py\\'" . python-mode)
+  :custom
+  (defun my--on-python-mode ()
+    (lsp-deferred)
+    (format-all-mode))
+  :hook (python-mode . my--on-python-mode))
 
 (use-package lsp-pyright
-  :after python
-  :hook (python-mode . lsp-deferred))
+  :after python)
 #+end_src
 
 ** webdev
@@ -817,14 +829,16 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** elisp
 #+begin_src emacs-lisp
-(use-package
-    nameless
-    :hook (emacs-lisp-mode . nameless-mode)
-    :custom (nameless-private-prefix t))
+(use-package emacs-lisp
+  :init (defun my--on-elisp-mode ()
+          (nameless-mode)
+          (format-all-mode))
+  :hook (emacs-lisp-mode . my--on-elisp-mode)
+  :straight nil)
 
-(use-package
-    lispy
-    :hook (emacs-lisp-mode . lispy-mode))
+(use-package nameless
+  :commands nameless-mode
+  :custom (nameless-private-prefix t))
 
 (use-package xtest :defer t)
 #+end_src
@@ -846,7 +860,11 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src emacs-lisp
 (use-package go-mode
     :mode "\\.go\\'"
-    :hook (go-mode . lsp-deferred))
+    :init
+    (defun my--on-go-mode ()
+      (lsp-deferred)
+      (format-all-mode))
+    :hook (go-mode . my--on-go-mode))
 #+end_src
 
 ** nim
@@ -914,7 +932,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src emacs-lisp
 (use-package mu4e
     :hook (mu4e-compose-pre . my-mu4e-set-account)
-    :straight (:local-repo "/usr/share/emacs/site-lisp/mu4e")
+    :straight (:local-repo "/usr/share/emacs/site-lisp/mu4e" :type built-in)
     :commands mu4e
     :custom
     (starttls-use-gnutls t)
