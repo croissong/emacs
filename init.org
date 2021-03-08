@@ -22,7 +22,8 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t
       use-package-compute-statistics nil
-      comp-async-report-warnings-errors nil)
+      comp-async-report-warnings-errors nil
+      straight-check-for-modifications '(find-when-checking))
 #+end_src
 
 ** Common
@@ -775,8 +776,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** Markdown
 #+begin_src emacs-lisp
 (use-package markdown-mode
-    :mode "\\.md\\'"
-    :hook (markdown-mode . goto-address-mode))
+    :mode "\\.md\\'")
 #+end_src
 
 ** Python
@@ -940,7 +940,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 ** mu4e
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package mu4e
     :hook (mu4e-compose-pre . my-mu4e-set-account)
     :straight (:local-repo "/usr/share/emacs/site-lisp/mu4e" :type built-in)
@@ -997,11 +997,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :mode "\\.ledger\\'")
 
 (use-package google-translate
+  ;; :commands google-translate-smooth-translate
   :config
   ;; https://github.com/atykhonov/google-translate/issues/52#issuecomment-727920888
   (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130))
-  :custom
-  (google-translate-translation-directions-alist '(("de" . "en"))))
+  (require 'google-translate-smooth-ui)
+  (setq google-translate-translation-directions-alist '(("de" . "en"))))
 #+end_src
 
 * UI
