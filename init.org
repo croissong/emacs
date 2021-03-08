@@ -107,7 +107,14 @@
 
 *** Keybindings
 #+begin_src elisp
-(use-package general)
+
+(use-package my-hydra
+    :after hydra
+    :straight (:local-repo "~/.config/emacs/my/hydra/"))
+
+(use-package general
+  :config
+  (general-auto-unbind-keys))
 
 (general-unbind
   ;; disable overwrite
@@ -116,19 +123,61 @@
   "<C-mouse-4>"
   "<C-mouse-5>")
 
-
 (general-def
   "C-l" 'goto-line
-  "C-^" 'quoted-insert)
 
-(general-def
+  "C-M-^" 'quoted-insert
   "M-ö" 'left-char
   "M-#" 'right-char
   "M-ü" 'previous-line
   "M-ä" 'next-line
   "C-a" 'back-to-indentation
-    
+
+  "C-d" 'projectile-find-file
+  "C-M-d" 'projectile-switch-to-buffer
+  "M-d" 'consult-buffer
+  
+  "C-M-y" 'consult-yank
+  "C-M-s" 'consult-ripgrep
+  "M-," 'consult-global-mark
+
+  "C-M-r" 'projectile-replace-regexp
+  "C-c p" 'projectile-command-map
+  "C-M-c" 'projectile-switch-project
+
+  "C-M-w" 'er/expand-region
+  "C-M-q" 'er/contract-region
+
+  "C-x b" 'magit-blame
+  "C-x l" 'magit-log-buffer-file
+
+  "C-v" 'my-hydras-utils
+
+  "M-." 'xref-find-definitions
+  "C-M-." 'xref-find-references
+  
   "M-q" 'universal-argument)
+
+(general-def
+  :prefix "C-c"
+  "l" 'org-store-link
+  "a" 'org-agenda
+  "b" 'org-iswitchb
+  "c" 'org-capture)
+
+(general-def
+  :keymaps 'org-mode-map :package 'org
+  "<return>" 'org-return
+  "M-S-<delete>" 'my/org-delete-heading-or-line
+  "C-M-<left>" 'org-backward-sentence
+  "C-M-<right>" 'org-forward-sentence
+  "C-M-<end>" 'org-sentence-newline
+  "C-c TAB" nil)
+
+(general-def
+  :keymaps 'drag-stuff-mode-map :package 'drag-stuff
+  "M-<up>" 'drag-stuff-up
+  "M-<down>" 'drag-stuff-down)
 
 (general-def
   :keymaps 'general-override-mode-map
@@ -136,7 +185,8 @@
   "C-#" 'windmove-right
   "C-ü" 'windmove-up
   "C-ä" 'windmove-down
-  
+
+  "C-^" 'delete-window
   "C-1" 'delete-other-windows
   "C-2" 'split-window-right
   "C-3" 'split-window-below
@@ -149,7 +199,7 @@
   "M-4" 'eyebrowse-switch-to-window-config-4
   "M-5" 'eyebrowse-switch-to-window-config-5
   "M-6" 'eyebrowse-switch-to-window-config-6
-  
+
   "C-M-#" 'buf-move-right
   "C-M-ö" 'buf-move-left
   "C-M-ü" 'buf-move-up
@@ -158,7 +208,7 @@
 
   "C-M-k" 'kill-this-buffer
   "M-r" 'revert-buffer
- 
+
   "M-_" 'shell-command
   "<f5>" 'profiler-start
   "<f6>" 'profiler-stop)
@@ -167,6 +217,7 @@
 *** Editing
 #+begin_src elisp
 (delight 'eldoc-mode nil "eldoc")
+(setq xref-prompt-for-identifier nil)
 #+end_src
 
 *** coding system
@@ -289,19 +340,7 @@
     (org-src-preserve-indentation t)
     (org-src-window-setup 'current-window)
     (org-edit-src-auto-save-idle-delay 60)
-
-    :bind (("C-c l" . org-store-link)
-           ("C-c a" . org-agenda)
-           ("C-c b" . org-iswitchb)
-           ("C-c c" . org-capture)
-           (:map org-mode-map
-                ("C-c C-M-e" . my-org-export-all)
-                ("<return>" . org-return-indent)
-                ("M-S-<delete>" . my/org-delete-heading-or-line)
-                ("C-M-<left>" . org-backward-sentence)
-                ("C-M-<right>" . org-forward-sentence)
-                ("C-M-<end>" . org-sentence-newline)
-                ("C-c l" . my/insert-link)))
+    
     :delight org-indent-mode)
 
 (use-package my-org
@@ -365,16 +404,11 @@
     (drag-stuff-global-mode 1)
     :custom
     (drag-stuff-except-modes '(org-mode))
-    :bind (:map drag-stuff-mode-map
-                ("M-<up>" . drag-stuff-up)
-                ("M-<down>" . drag-stuff-down))
     :delight drag-stuff-mode)
 
 (use-package quickrun :commands quickrun)
 
 (use-package expand-region
-    :bind* (("C-M-w" . er/expand-region)
-            ("C-M-q" . er/contract-region))
     :custom
     (expand-region-fast-keys-enabled nil)
     :config
@@ -425,7 +459,7 @@
   (lsp-keymap-prefix "M-l")
   (lsp-disabled-clients '(ts angular-ls))
   :bind (:map lsp-mode-map
-              ("M-." . lsp-goto-implementation)
+              ;; ("M-." . lsp-goto-implementation)
               ("M--" . lsp-execute-code-action)))
 
 (use-package lsp-ui
@@ -462,18 +496,17 @@
     :init (selectrum-mode +1)
     :config
     (prescient-persist-mode +1)
-    (setq selectrum-preprocess-candidates-function
-      #'selectrum-prescient--preprocess)
-(add-hook 'selectrum-candidate-selected-hook
-          #'selectrum-prescient--remember)
-(add-hook 'selectrum-candidate-inserted-hook
-          #'selectrum-prescient--remember)
-
+    (add-hook 'selectrum-candidate-selected-hook
+              #'selectrum-prescient--remember)
+    (add-hook 'selectrum-candidate-inserted-hook
+              #'selectrum-prescient--remember)
+    
     :custom
     (selectrum-refine-candidates-function #'orderless-filter)
     (orderless-skip-highlighting (lambda () selectrum-is-active))
     (selectrum-highlight-candidates-function #'orderless-highlight-matches)
     (magit-completing-read-function #'selectrum-completing-read)
+    (selectrum-preprocess-candidates-function #'selectrum-prescient--preprocess)
     :bind (:map selectrum-minibuffer-map
                 ("M-#" . selectrum-insert-current-candidate)
                 ("M-ö" . my-util-backward-delete-sexp)))
@@ -487,21 +520,16 @@
     :after prescient)
 
 (use-package ctrlf
-    :init (ctrlf-mode)
+    :init (ctrlf-mode +1)
     :config
-    (setq ctrlf-minibuffer-bindings (a-assoc ctrlf-minibuffer-bindings "M-ä" 'ctrlf-next-match "M-ü" 'ctrlf-previous-match))
-    )
+    (setq ctrlf-minibuffer-bindings (a-assoc ctrlf-minibuffer-bindings
+                                        "M-ä" 'ctrlf-next-match
+                                        "M-ü" 'ctrlf-previous-match)))  
 
 ;; https ://www.reddit.com/r/emacs/comments/krptmz/emacs_completion_framework_embark_consult/
 (use-package consult
-    :after (projectile)
     :custom
-    (consult-project-root-function #'projectile-project-root)
-    :bind*
-    ("C-M-y" . consult-yank)
-    ("C-f" . consult-buffer)
-    ("C-M-s" . consult-ripgrep)
-    ("M-," . consult-global-mark))
+    (consult-project-root-function #'projectile-project-root))
 
 (use-package marginalia
   :init
@@ -658,13 +686,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (projectile-switch-project-action 'projectile-vc)
     (projectile-enable-caching t)
     (projectile-ignored-project-function #'my--projectile-ignore-project)
-
-    :bind* (("C-M-r" . projectile-replace-regexp)
-            ("C-c p" . projectile-command-map)
-            ("C-M-f" . projectile-find-file)
-            ("C-M-d" . projectile-find-dir)
-            ("C-M-c" . projectile-switch-project)
-            ("C-M-x" . projectile-switch-to-buffer))
     :delight)
 #+end_src
 
@@ -676,7 +697,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (which-key-setup-minibuffer)
     :custom
     (which-key-show-early-on-C-h t)
-    (which-key-idle-delay 10000)
+    (which-key-idle-delay 3)
     (which-key-idle-secondary-delay 0.05)
     (help-char 9) ;; tab
     :delight which-key-mode)
@@ -712,10 +733,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** hydra
 #+begin_src elisp
 (use-package hydra)
-(use-package my-hydra
-    :after hydra
-    :straight (:local-repo "~/.config/emacs/my/hydra/")
-    :bind* ("C-M-m" . hydra-my/init/body))
 #+end_src
 
 ** Magit
@@ -728,9 +745,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (magit-diff-refine-ignore-whitespace nil)
     (magit-refs-margin '(t age magit-log-margin-width nil 18))
     (magit-diff-refine-hunk t)
-    :bind*
-    ("C-x b" . magit-blame)
-    ("C-x l" . magit-log-buffer-file)
     :config
     (magit-add-section-hook 'magit-status-sections-hook
                             'magit-insert-modules-unpulled-from-upstream
