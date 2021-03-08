@@ -108,9 +108,9 @@
 *** Keybindings
 #+begin_src elisp
 
-(use-package my-hydra
+(use-package my-hydras
     :after hydra
-    :straight (:local-repo "~/.config/emacs/my/hydra/"))
+    :straight (:local-repo "~/.config/emacs/my/hydras/"))
 
 (use-package general
   :config
@@ -151,7 +151,7 @@
   "C-x b" 'magit-blame
   "C-x l" 'magit-log-buffer-file
 
-  "C-v" 'my-hydras-utils
+  "C-v" 'my-hydras-utils/body
 
   "M-." 'xref-find-definitions
   "C-M-." 'xref-find-references
