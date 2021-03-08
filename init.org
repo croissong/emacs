@@ -350,6 +350,9 @@
 (use-package envrc
   :init (envrc-global-mode)
   :delight envrc-mode)
+
+(use-package async
+  :init (dired-async-mode 1))
 #+end_src
 
 ** editing
