@@ -1,11 +1,11 @@
 # -*- eval: (org-init-mode 1) -*-
 * meta
-#+BEGIN_SRC emacs-lisp
+#+begin_src elisp
 ;;; -*- lexical-binding: t -*-
-#+END_SRC
+#+end_src
 * core
 ** Package manager
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -28,7 +28,7 @@
 
 ** Common
 *** Utility
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package bind-key)
 (use-package delight)
 (use-package cl-lib)
@@ -49,7 +49,7 @@
 #+end_src
 
 *** Config
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package exec-path-from-shell
     :init
     (setq exec-path-from-shell-arguments '("-i")
@@ -97,7 +97,7 @@
 #+end_src
 
 **** Long lines fix
-#+begin_src emacs-lisp
+#+begin_src elisp
 (require 'longlines)
 (global-so-long-mode 1)
 (setq so-long-target-modes (-union so-long-target-modes '(fundamental-mode))
@@ -106,7 +106,7 @@
 #+end_src
 
 *** Keybindings
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package general)
 
 (general-unbind
@@ -165,13 +165,13 @@
 #+end_src
 
 *** Editing
-#+begin_src emacs-lisp
+#+begin_src elisp
 (delight 'eldoc-mode nil "eldoc")
 #+end_src
 
 *** coding system
 [[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
-#+begin_src emacs-lisp
+#+begin_src elisp
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
@@ -181,7 +181,7 @@
 #+end_src
 
 *** debugging
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package gcmh
   :init (gcmh-mode 1)
   :delight)
@@ -198,7 +198,7 @@
 
 *** backup & auto-save
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
-#+begin_src emacs-lisp
+#+begin_src elisp
 (setq delete-old-versions t
       kept-new-versions 6
       create-lockfiles nil
@@ -214,7 +214,7 @@
 #+end_src
 
 *** buffer & window management
-#+begin_src emacs-lisp
+#+begin_src elisp
 (winner-mode 1)
 
 (use-package eyebrowse
@@ -225,7 +225,7 @@
 #+end_src
 
 ** secrets
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package auth-source-pass
   :init (auth-source-pass-enable)
   :custom (auth-sources '(password-store)))
@@ -240,7 +240,7 @@
 
 * general
 ** org-mode
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package reveal
     :hook (org-mode . reveal-mode)
     :delight reveal-mode)
@@ -310,7 +310,7 @@
 #+end_src
 
 ** special modes
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package vlf
     :commands (vlf-mode vlf)
     :init (require 'vlf-setup))
@@ -320,7 +320,7 @@
 #+end_src
 
 ** passive modes
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package tree-sitter
   :init (global-tree-sitter-mode)
   :hook (tree-sitter-after-on-hook . tree-sitter-hl-mode)
@@ -353,7 +353,7 @@
 #+end_src
 
 ** editing
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package iedit
     :bind* ("C-r" . iedit-mode))
 
@@ -379,7 +379,7 @@
 #+end_src
 
 *** formatting
-#+begin_src emacs-lisp
+#+begin_src elisp
 ;; Unified approach inc: https://github.com/purcell/reformatter.el/pull/24
 (use-package format-all
   :hook
@@ -398,7 +398,7 @@
 #+end_src
 
 *** lsp
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package lsp-mode
   :commands lsp-deferred
   :hook (lsp-mode . lsp-enable-which-key-integration)
@@ -433,7 +433,7 @@
 #+end_src
 
 *** linting
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package flycheck
     :commands flycheck-mode)
 
@@ -453,7 +453,7 @@
 #+end_src
 
 ** minibuffer & completion
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package selectrum
     :after (orderless)
     :init (selectrum-mode +1)
@@ -527,7 +527,7 @@
 
 *** crux
 https://github.com/bbatsov/crux
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package crux
     :bind* (("C-c r" . crux-rename-file-and-buffer)
             ("C-c d" . crux-delete-file-and-buffer))
@@ -539,26 +539,26 @@ https://github.com/bbatsov/crux
 #+end_src
 
 *** rainbow-mode
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package rainbow-mode
     :hook (css-mode org-mode help-mode)
     :delight rainbow-mode)
 #+end_src
 
 *** kurecolor
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package kurecolor :defer t)
 #+end_src
 
 *** Evil-Nerd-Commenter
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package evil-nerd-commenter
     :config
     (evilnc-default-hotkeys))
 #+end_src
 
 *** Outshine
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package outshine
     :commands outshine-mode)
 
@@ -567,7 +567,7 @@ https://github.com/bbatsov/crux
 #+end_src
 
 *** Company-Mode
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package company
     :hook (prog-mode . company-mode)
     :custom
@@ -583,7 +583,7 @@ https://github.com/bbatsov/crux
 #+end_src
 
 *** Centered-Window-Mode
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package
   centered-window
   :init (centered-window-mode 1)
@@ -597,7 +597,7 @@ https://github.com/bbatsov/crux
 #+end_src
 
 *** Smartparens
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package smartparens
     :bind (:map smartparens-mode-map
                 ("C-M-a" . sp-backward-sexp)
@@ -619,7 +619,7 @@ https://github.com/bbatsov/crux
 #+end_src
 
 *** Undo-Tree
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package undo-tree
     :init
     (global-undo-tree-mode 1)
@@ -632,7 +632,7 @@ https://github.com/bbatsov/crux
 *** Ediff
 TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 **** Config
-#+begin_src emacs-lisp
+#+begin_src elisp
 (setq ediff-keep-variants nil)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain
       ediff-split-window-function 'split-window-horizontally)
@@ -640,12 +640,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 *** Ripgrep
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package wgrep :defer t)
 #+end_src
 
 *** Projectile
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package projectile
     :init (projectile-mode 1)
     :config
@@ -668,7 +668,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 *** which-key
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package which-key
     :init (which-key-mode)
     :config
@@ -682,7 +682,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 *** helpful
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package
   helpful
   :bind* (("C-h f" . helpful-callable)
@@ -694,7 +694,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 *** dumb-jump
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package
   dumb-jump
   :init (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
@@ -702,14 +702,14 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 *** ix.io
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package
   ix
   :commands ix)
 #+end_src
 
 ** hydra
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package hydra)
 (use-package my-hydra
     :after hydra
@@ -718,7 +718,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 ** Magit
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package magit
     :commands magit-status
     :custom
@@ -740,7 +740,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 ** Dired
-#+begin_src emacs-lisp
+#+begin_src elisp
 (require 'dired-x)
 (use-package dired+
   :straight dired-plus
@@ -764,7 +764,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 * Languages
 ** Elixir
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package elixir-mode
     :init
     (defun my--on-elixir-mode ()
@@ -782,13 +782,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 ** Markdown
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package markdown-mode
     :mode "\\.md\\'")
 #+end_src
 
 ** Python
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :init
@@ -802,7 +802,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 ** webdev
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package css-mode
     :mode ("\\.less\\'" "\\.css\\'" "\\.sass\\'" "\\.scss\\'")
     :custom
@@ -832,7 +832,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 ** json
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package json-mode
     :mode "\\.json\\'"
     :custom
@@ -841,13 +841,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 ** jsonnet
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package jsonnet-mode
     :mode  ("\\.jsonnet\\'" "\\.libsonnet\\'"))
 #+end_src
 
 ** elisp
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package emacs-lisp
   :init (defun my--on-elisp-mode ()
           (nameless-mode)
@@ -863,20 +863,20 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 ** php
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package php-mode
     :mode "\\.php\\'")
 #+end_src
 
 ** rust
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package rustic
   :after smartparens-rust
   :mode "\\.rs\\'")
 #+end_src
 
 ** golang
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package go-mode
     :mode "\\.go\\'"
     :init
@@ -887,32 +887,32 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 ** nim
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package nim-mode
     :mode "\\.nim\\'"
     :hook ((nim-mode . nimsuggest-mode)))
 #+end_src
 
 ** terraform
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package terraform-mode
     :mode "\\.tf\\'")
 #+end_src
 
 ** graphql
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package graphql-mode
     :mode ("\\.gql\\'" "\\.graphql\\'"))
 #+end_src
 
 ** lua
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package lua-mode
     :mode ("\\.lua\\'"))
 #+end_src
 
 ** latex
- #+begin_src emacs-lisp
+ #+begin_src elisp
 (use-package tex-mode
     :straight auctex
     :mode "\\.tex\\'"
@@ -920,7 +920,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
  #+end_src
 
 ** plantuml
- #+begin_src emacs-lisp
+ #+begin_src elisp
 (use-package
     plantuml-mode
     :mode "\\.puml\\'"
@@ -930,25 +930,25 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
  #+end_src
 
 ** adoc
- #+begin_src emacs-lisp
+ #+begin_src elisp
 (use-package adoc-mode
     :mode "\\.adoc\\'")
  #+end_src
 
 ** yaml
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package yaml-mode
     :mode ("\\.yml.*\\'" "\\.yaml.*\\'"))
 #+end_src
 
 ** sql
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package sql-indent
     :mode "\\.sql\\'")
 #+end_src
 
 ** mu4e
-#+begin_src emacs-lisp :tangle no
+#+begin_src elisp :tangle no
 (use-package mu4e
     :hook (mu4e-compose-pre . my-mu4e-set-account)
     :straight (:local-repo "/usr/share/emacs/site-lisp/mu4e" :type built-in)
@@ -987,12 +987,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 ** Tramp
-#+begin_src emacs-lisp
+#+begin_src elisp
 (setq tramp-default-method "ssh")
 #+end_src
 
 * tools
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package x509-mode :defer t)
 
 (use-package restclient
@@ -1014,7 +1014,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 * UI
-#+begin_src emacs-lisp
+#+begin_src elisp
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (tooltip-mode -1)
