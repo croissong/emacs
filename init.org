@@ -105,33 +105,67 @@
 
 #+end_src
 
+*** Keybindings
+#+begin_src emacs-lisp
+(use-package general)
+
+(general-unbind
+  ;; disable overwrite
+  "<insert>"
+  ;; disable mouse-wheel zoom
+  "<C-mouse-4>"
+  "<C-mouse-5>")
+
+
+(general-def
+  "C-l" 'goto-line
+  "C-^" 'quoted-insert)
+
+(general-def
+  "M-ö" 'left-char
+  "M-#" 'right-char
+  "M-ü" 'previous-line
+  "M-ä" 'next-line
+  "C-a" 'back-to-indentation
+    
+  "M-q" 'universal-argument)
+
+(general-def
+  :keymaps 'general-override-mode-map
+  "C-ö" 'windmove-left
+  "C-#" 'windmove-right
+  "C-ü" 'windmove-up
+  "C-ä" 'windmove-down
+  
+  "C-1" 'delete-other-windows
+  "C-2" 'split-window-right
+  "C-3" 'split-window-below
+  "C-M-1" 'winner-undo
+  "C-M-2" 'winner-redo
+
+  "M-1" 'eyebrowse-switch-to-window-config-1
+  "M-2" 'eyebrowse-switch-to-window-config-2
+  "M-3" 'eyebrowse-switch-to-window-config-3
+  "M-4" 'eyebrowse-switch-to-window-config-4
+  "M-5" 'eyebrowse-switch-to-window-config-5
+  "M-6" 'eyebrowse-switch-to-window-config-6
+  
+  "C-M-#" 'buf-move-right
+  "C-M-ö" 'buf-move-left
+  "C-M-ü" 'buf-move-up
+  "C-M-ä" 'buf-move-down
+
+
+  "C-M-k" 'kill-this-buffer
+  "M-r" 'revert-buffer
+ 
+  "M-_" 'shell-command
+  "<f5>" 'profiler-start
+  "<f6>" 'profiler-stop)
+#+end_src
+
 *** Editing
 #+begin_src emacs-lisp
-(setq help-char 9) ;; tab
-(bind-keys*
- ("C-M-b" . eval-defun)
- ("C-l" . goto-line)
- ("M-_" . shell-command))
-
-(bind-keys
- ("C-^" . quoted-insert)
- ("M-ö"  . left-char)
- ("M-#" . right-char)
- ("M-ü" . previous-line)
- ("M-ä" . next-line)
- ("C-a" . back-to-indentation)
-
- ;; disable overwrite
- ("<insert>" . nil)
-
- ("M-q" . universal-argument)
-
- ;; disable mouse-wheel zoom
- ("<C-mouse-4>" . nil)
- ("<C-mouse-5>" . nil)
- ("<f5>" . profiler-start)
- ("<f6>" . profiler-stop))
-
 (delight 'eldoc-mode nil "eldoc")
 #+end_src
 
@@ -183,37 +217,11 @@
 #+begin_src emacs-lisp
 (winner-mode 1)
 
-(bind-keys*
- ("C-ö" . windmove-left)
- ("C-#" . windmove-right)
- ("C-ü" . windmove-up)
- ("C-ä" . windmove-down)
- ("C-1" . delete-other-windows)
- ("C-2" . split-window-right)
- ("C-3" . split-window-below)
- ("C-M-1" . winner-undo)
- ("C-M-2" . winner-redo)
-
- ("C-M-k" . kill-this-buffer)
- ("M-r" . revert-buffer))
-
 (use-package eyebrowse
-    :init
-    (eyebrowse-mode t)
-    :bind*
-    ("M-1" . eyebrowse-switch-to-window-config-1)
-    ("M-2" . eyebrowse-switch-to-window-config-2)
-    ("M-3" . eyebrowse-switch-to-window-config-3)
-    ("M-4" . eyebrowse-switch-to-window-config-4)
-    ("M-5" . eyebrowse-switch-to-window-config-5)
-    ("M-6" . eyebrowse-switch-to-window-config-6))
+  :init
+  (eyebrowse-mode t))
 
-(use-package buffer-move
-    :bind*
-     ("C-M-#" . buf-move-right)
-     ("C-M-ö" . buf-move-left)
-     ("C-M-ü" . buf-move-up)
-     ("C-M-ä" . buf-move-down))
+(use-package buffer-move)
 #+end_src
 
 ** secrets
@@ -660,7 +668,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 *** which-key
-[[https://github.com/justbur/emacs-which-key?utm_medium=referral&utm_campaign=ZEEF&utm_source=https%3A%2F%2Femacs.zeef.com%2Fehartc][@github.com]]
 #+begin_src emacs-lisp
 (use-package which-key
     :init (which-key-mode)
@@ -670,6 +677,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (which-key-show-early-on-C-h t)
     (which-key-idle-delay 10000)
     (which-key-idle-secondary-delay 0.05)
+    (help-char 9) ;; tab
     :delight which-key-mode)
 #+end_src
 
