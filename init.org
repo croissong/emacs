@@ -39,6 +39,10 @@
 (use-package my-util
     :straight (:local-repo "~/.config/emacs/my/util/")
     :demand t
+    :custom
+    (split-height-threshold 120)
+    (split-width-threshold 160)
+    (split-window-preferred-function #'my-split-window-sensibly)
     :bind
     ("C-<backspace>" . my-util-backward-delete-whitespace-or-word)
     ("C-x <tab>"  . my-util-indent-rigidly))
