@@ -145,6 +145,10 @@
   "C-c p" 'projectile-command-map
   "C-M-c" 'projectile-switch-project
 
+  ;; not global because conflict with org-mode new heading
+  "C-<return>" 'crux-smart-open-line
+  "M-<return>" 'crux-smart-open-line-above
+
   "C-M-w" 'er/expand-region
   "C-M-q" 'er/contract-region
 
@@ -212,6 +216,23 @@
   "M-_" 'shell-command
   "<f5>" 'profiler-start
   "<f6>" 'profiler-stop)
+
+(general-def
+  :keymaps 'embark-file-map :package 'embark
+  "!" nil
+  "&" nil
+  "f" nil
+  "r" nil
+  "d" nil)
+
+(general-def
+  :keymaps 'embark-region-map :package 'embark
+  "t" 'google-translate-smoth-translate)
+
+(general-def
+  :keymaps 'google-translate-minibuffer-keymap :package 'google-translate
+  "M-ä" 'google-translate-next-translation-direction
+  "M-ü" 'google-translate-previous-translation-direction)
 #+end_src
 
 *** Editing
@@ -559,14 +580,7 @@
 *** crux
 https://github.com/bbatsov/crux
 #+begin_src elisp
-(use-package crux
-    :bind* (("C-c r" . crux-rename-file-and-buffer)
-            ("C-c d" . crux-delete-file-and-buffer))
-    :bind (
-           ;; not global because conflict with org-mode new heading
-           ("C-<return>" . crux-smart-open-line)
-           ("M-<return>" . crux-smart-open-line-above))
-    )
+(use-package crux)
 #+end_src
 
 *** rainbow-mode
@@ -1025,7 +1039,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   ;; https://github.com/atykhonov/google-translate/issues/52#issuecomment-727920888
   (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130))
   (require 'google-translate-smooth-ui)
-  (setq google-translate-translation-directions-alist '(("de" . "en"))))
+  (setq google-translate-translation-directions-alist '(("de" . "en")("en" . "de"))))
 #+end_src
 
 * UI
