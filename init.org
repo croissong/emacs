@@ -227,12 +227,7 @@
 
 (general-def
   :keymaps 'embark-region-map :package 'embark
-  "t" 'google-translate-smoth-translate)
-
-(general-def
-  :keymaps 'google-translate-minibuffer-keymap :package 'google-translate
-  "M-ä" 'google-translate-next-translation-direction
-  "M-ü" 'google-translate-previous-translation-direction)
+  "t" 'google-translate-smooth-translate)
 #+end_src
 
 *** Editing
@@ -1033,13 +1028,19 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package ledger-mode
     :mode "\\.ledger\\'")
 
-(use-package google-translate
-  ;; :commands google-translate-smooth-translate
+(use-package google-translate)
+(use-package google-translate-smooth-ui
+  :after google-translate
+  :straight nil
+  :commands google-translate-smooth-translate
   :config
   ;; https://github.com/atykhonov/google-translate/issues/52#issuecomment-727920888
+  (setq google-translate-translation-directions-alist '(("de" . "en")("en" . "de")))
   (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130))
-  (require 'google-translate-smooth-ui)
-  (setq google-translate-translation-directions-alist '(("de" . "en")("en" . "de"))))
+  :bind (:map google-translate-minibuffer-keymap
+              ("M-ä" . google-translate-next-translation-direction)
+              ("M-ü" . google-translate-previous-translation-direction)
+  ))
 #+end_src
 
 * UI
