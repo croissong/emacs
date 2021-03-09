@@ -231,7 +231,10 @@
 
 (general-def
   :keymaps 'embark-region-map :package 'embark
-  "t" 'google-translate-smooth-translate)
+  "t" 'google-translate-smooth-translate
+  "s" 'flyspell-region
+  "c" 'flyspell-correct-word
+  "d" 'lexic-search)
 #+end_src
 
 *** Editing
@@ -1041,10 +1044,14 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   ;; https://github.com/atykhonov/google-translate/issues/52#issuecomment-727920888
   (setq google-translate-translation-directions-alist '(("de" . "en")("en" . "de")))
   (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130))
-  :bind (:map google-translate-minibuffer-keymap
-              ("M-ä" . google-translate-next-translation-direction)
-              ("M-ü" . google-translate-previous-translation-direction)
-  ))
+  (google-translate--setup-minibuffer-keymap)
+  (general-def
+  :keymaps 'google-translate-minibuffer-keymap
+  "M-ä" 'google-translate-next-translation-direction
+  "M-ü" 'google-translate-previous-translation-direction))
+
+(use-package lexic
+    :commands lexic-search lexic-list-dictionary)
 #+end_src
 
 * UI
