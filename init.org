@@ -124,7 +124,9 @@
   "<insert>"
   ;; disable mouse-wheel zoom
   "<C-mouse-4>"
-  "<C-mouse-5>")
+  "<C-mouse-5>"
+  "C-<wheel-down>"
+  "C-<wheel-up>")
 
 (general-def
   "C-l" 'goto-line
@@ -226,13 +228,17 @@
   "&" nil
   "f" nil
   "r" nil
-  "d" nil)
+  "d" nil
+  "R" nil
+  "b" nil
+  "l" nil
+  "m" 'magit-project-status)
 
 (general-def
   :keymaps 'embark-region-map :package 'embark
   "t" 'google-translate-smooth-translate
   "s" 'flyspell-region
-  "c" 'flyspell-correct-word
+  "c" 'flyspell-auto-correct-word
   "d" 'lexic-search)
 #+end_src
 
@@ -394,8 +400,8 @@
     :delight whole-line-or-region-local-mode)
 
 (use-package ws-butler
-    :hook (prog-mode . ws-butler-mode)
-    :delight ws-butler-mode)
+  :init (ws-butler-global-mode 1)
+  :delight ws-butler-mode)
 
 (use-package editorconfig
     :config (editorconfig-mode 1)
