@@ -78,18 +78,5 @@
   (my-util--delete-instead-of-kill
    (backward-kill-sexp arg)))
 
-;; https://emacs.stackexchange.com/questions/20492/how-can-i-get-a-sensible-split-window-policy
-(defun my-util-split-window-sensibly (&optional window)
-    "replacement `split-window-sensibly' function which prefers vertical splits"
-    (interactive)
-    (let ((window (or window (selected-window))))
-        (or (and (window-splittable-p window t)
-                 (with-selected-window window
-                     (split-window-right)))
-            (and (window-splittable-p window)
-                 (with-selected-window window
-                     (split-window-below))))))
-
-
 (provide 'my-util)
 ;;; my-util.el ends here
