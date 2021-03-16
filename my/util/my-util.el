@@ -79,11 +79,12 @@
    (backward-kill-sexp arg)))
 
 
-(defun my-util-revert-buffer-action (buf)
+(defun my-util-discard-buffer-action (buf)
   (with-current-buffer buf
-    (revert-buffer :ignore-auto :noconfirm))
-  ;; exit
-  (error (format "reverted buffer %s" (current-buffer))))
+    (if (file-exists-p buffer-file-name)
+        (revert-buffer :ignore-auto :noconfirm)
+      (set-buffer-modified-p nil)
+      (kill-buffer buf))))
 
 (provide 'my-util)
 ;;; my-util.el ends here

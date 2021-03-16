@@ -41,7 +41,7 @@
     :custom
     (save-some-buffers-action-alist
      (a-assoc save-some-buffers-action-alist
-              ?r '(my-utils-revert-buffer-action "revert this buffer and exit")))
+              ?r '(my-util-discard-buffer-action "discard this buffer")))
     :demand t)
 
 (use-package org-init
