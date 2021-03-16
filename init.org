@@ -38,6 +38,10 @@
 
 (use-package my-util
     :straight (:local-repo "~/.config/emacs/my/util/")
+    :custom
+    (save-some-buffers-action-alist
+     (a-assoc save-some-buffers-action-alist
+              ?r '(my-utils-revert-buffer-action "revert this buffer and exit")))
     :demand t)
 
 (use-package org-init

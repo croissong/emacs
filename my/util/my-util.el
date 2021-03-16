@@ -78,5 +78,12 @@
   (my-util--delete-instead-of-kill
    (backward-kill-sexp arg)))
 
+
+(defun my-util-revert-buffer-action (buf)
+  (with-current-buffer buf
+    (revert-buffer :ignore-auto :noconfirm))
+  ;; exit
+  (error (format "reverted buffer %s" (current-buffer))))
+
 (provide 'my-util)
 ;;; my-util.el ends here
