@@ -311,7 +311,9 @@
 #+begin_src elisp
 (use-package auth-source-pass
   :init (auth-source-pass-enable)
-  :custom (auth-sources '(password-store)))
+  :custom
+  (auth-source-pass-filename (getenv "PASSWORD_STORE_DIR"))
+  (auth-sources '(password-store)))
 
 (use-package
   epa-file
