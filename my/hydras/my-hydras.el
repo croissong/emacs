@@ -45,6 +45,18 @@
   ("0" (call-interactively 'text-scale-adjust))
   ("q" my-hydras--pop "exit"))
 
+(defhydra my-hydras-code (:color teal :hint nil)
+  "
+ ^----^--
+ _f_: format-all-buffer
+ _r_: replace-string
+ ^----^
+"
+  ("f" (call-interactively 'format-all-buffer))
+  ("r" (call-interactively 'replace-string))
+  ("q" my-hydras--pop "exit"))
+
+
 
 (provide 'my-hydras)
 
