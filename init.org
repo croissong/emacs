@@ -133,11 +133,12 @@
   "C-l" 'goto-line
 
   "C-M-^" 'quoted-insert
-  "M-ö" 'left-char
-  "M-#" 'right-char
   "M-ü" 'previous-line
   "M-ä" 'next-line
   "C-a" 'back-to-indentation
+
+  "M-ö" 'previous-buffer
+  "M-#" 'next-buffer
 
   "C-d" 'projectile-find-file
   "C-M-d" 'find-file
@@ -708,7 +709,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
       (defun my--projectile-ignore-project (project-root)
         (f-descendant-of? project-root (f-expand "straight" user-emacs-directory)))
       (defun my--projectile-mode-line-function ()
-        (projectile-project-name))
+        (format " %s" (projectile-project-name)))
     :custom
     (projectile-mode-line-function 'my--projectile-mode-line-function)
     (projectile-file-exists-remote-cache-expire nil)

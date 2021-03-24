@@ -10,7 +10,7 @@
 (define-minor-mode org-init-mode
   "Compile before save"
   :global nil
-  :lighter " init "
+  :lighter " init"
   (if org-init-mode
       (add-hook 'after-save-hook 'org-init--compile nil 'local)
     (remove-hook 'after-save-hook 'org-init--compile 'local)))
