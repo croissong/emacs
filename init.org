@@ -706,13 +706,15 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :config
       (defun my--projectile-ignore-project (project-root)
         (f-descendant-of? project-root (f-expand "straight" user-emacs-directory)))
+      (defun my--projectile-mode-line-function ()
+        (projectile-project-name))
     :custom
+    (projectile-mode-line-function 'my--projectile-mode-line-function)
     (projectile-file-exists-remote-cache-expire nil)
     (projectile-completion-system 'default)
     (projectile-switch-project-action 'projectile-vc)
     (projectile-enable-caching t)
-    (projectile-ignored-project-function #'my--projectile-ignore-project)
-    :delight)
+    (projectile-ignored-project-function #'my--projectile-ignore-project))
 #+end_src
 
 *** which-key
@@ -771,6 +773,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (magit-diff-refine-ignore-whitespace nil)
     (magit-refs-margin '(t age magit-log-margin-width nil 18))
     (magit-diff-refine-hunk t)
+    (magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
     :config
     (magit-add-section-hook 'magit-status-sections-hook
                             'magit-insert-modules-unpulled-from-upstream
