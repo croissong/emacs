@@ -456,8 +456,12 @@
 ;; Unified approach inc: https://github.com/purcell/reformatter.el/pull/24
 (use-package format-all
   :hook
-  ((sh-mode css-mode js-mode web-mode scss-mode terraform-mode)
+  ((sh-mode css-mode js-mode web-mode scss-mode)
    . format-all-mode)
+  :init
+  (defun format-all-default()
+    (format-all-ensure-formatter)
+    (format-all-mode))
   :config
   (define-format-all-formatter isort
     (:executable "isort")
@@ -942,7 +946,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** terraform
 #+begin_src elisp
 (use-package terraform-mode
-    :mode "\\.tf\\'")
+    :mode "\\.tf\\'"
+    :hook (terraform-mode . format-all-default))
 #+end_src
 
 ** graphql
