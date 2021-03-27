@@ -668,7 +668,7 @@ https://github.com/bbatsov/crux
                 ("C-M-<down>" . sp-select-next-thing))
     :init
     (smartparens-global-mode 1)
-    (show-smartparens-global-mode 1)
+    :hook (prog-mode . show-smartparens-mode)
     :config
     (require 'smartparens-config)
     :custom
@@ -1093,7 +1093,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (defun my-modus-themes-custom-faces ()
       (modus-themes-with-colors
         (custom-set-faces
-         `(sp-show-pair-match-face ((,class :foreground ,green-nuanced-fg
+         `(sp-show-pair-match-face ((,class :foreground ,fg-mark-sel
                                             :background nil
                                             :weight ,'bold))))))
     (add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
