@@ -14,24 +14,18 @@
       (funcall x))))
 
 
-(defhydra my-hydras-init (:color teal)
-  "file"
-  ("s" (switch-to-buffer "*scratch*") "scratch")
-  ("d" (magit-status-internal "~/dotfiles")
-   "dotfiles")
-  ("c" (progn
-         (hydra-my/code/body)
-         (my-hydras--push '(hydra-my/init/body)))
-   "code")
-  ("i" (org-init-open)
-   "org-init")
-  ("t" (progn
-         (hydra-my/tmux/body)
-         (my-hydras--push '(hydra-my/init/body)))
-   "tmux")
+(defhydra my-hydras-files (:color teal)
+  "
+^----^--
+ _e_: emacs
+ _n_: nyxt
+ ^----^
+"
+  ("e" (find-file (expand-file-name "init.org" user-emacs-directory)))
+  ("n" (find-file (substitute-in-file-name "$DOTFILES/dot_config/nyxt/init.org")))
   ("q" my-hydras--pop "exit"))
 
-(defhydra my-hydras-utils (:color teal :hint nil)
+(defhydra my-hydras-misc (:color teal :hint nil)
   "
  ^Zoom^
  ^----^--
@@ -49,19 +43,17 @@
   "
  ^----^--
  _f_: format-all-buffer
- _r_: replace-string
+ _r_: replace-regexp
+ _a_: copy-absolute-filename
+ _1_: rename-file
  ^----^
 "
   ("f" (call-interactively 'format-all-buffer))
-  ("r" (call-interactively 'replace-string))
+  ("r" (call-interactively 'replace-regexp))
+  ("a" (kill-new buffer-file-name))
+  ("1" (crux-rename-file-and-buffer))
   ("q" my-hydras--pop "exit"))
 
-
-
 (provide 'my-hydras)
-
-;; TODO C-x C-+ for zoom
-;; google translate
-;; :bind* ("C-f f" . format-all-buffer) (defalias?)
 
 ;;; my-hydras.el ends here
