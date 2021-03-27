@@ -62,7 +62,6 @@
 (setq default-directory "~/"
       custom-file (expand-file-name "custom.el" user-emacs-directory)
       browse-url-generic-program (executable-find (getenv "BROWSER"))
-      browse-url-generic-args '("--enable-features=UseOzonePlatform" "--ozone-platform=wayland")
       browse-url-browser-function 'browse-url-generic
       require-final-newline t
       read-process-output-max (* 1024 1024) ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
@@ -1103,7 +1102,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 * Calc
 https://www.reddit.com/r/emacs/comments/1mbn0s/the_emacs_calculator/
-* meta+
+* braindump
 ** other
 *** [[http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html#sec-10-2-3][@wisomandwonder]]
 *** [[https://github.com/emacs-tw/awesome-emacs][awesome-emac2s]]
@@ -1111,7 +1110,9 @@ https://www.reddit.com/r/emacs/comments/1mbn0s/the_emacs_calculator/
 - [[https://www.reddit.com/r/emacs/comments/3nu2xr/emacs_lisp_programming_thoughts/][@reddit.com]]
 *** regexp
 \(Buy: \)\([0-9]+\) -> \1\,(+ \#2 \#)
-** my-own-tips
-C-c C-o save search results
+
+*** C-c C-o save search results
 reset var: `(setq foo (eval (car (get 'foo 'standard-value))))`
 (setq require-final-newline nil)
+** plausiblly
+https://github.com/abo-abo/hydra/wiki/Emacs
