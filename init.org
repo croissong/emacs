@@ -1,4 +1,6 @@
-# -*- eval: (org-init-mode 1) -*-
+# -*- eval: (babel-tangle-mode 1) -*-
+#+PROPERTY: header-args :results silent :tangle "./init.el"
+
 * meta
 #+begin_src elisp
 ;;; -*- lexical-binding: t -*-
@@ -43,10 +45,6 @@
      (a-assoc save-some-buffers-action-alist
               ?r '(my-util-discard-buffer-action "discard this buffer")))
     :demand t)
-
-(use-package org-init
-    :straight (:local-repo "~/.config/emacs/my/org-init/")
-    :commands (org-init-mode org-init-open))
 #+end_src
 
 *** Config
