@@ -14,45 +14,41 @@
       (funcall x))))
 
 
-(defhydra my-hydras-files (:color teal)
-  "
-^----^--
- _e_: emacs
- _n_: nyxt
- ^----^
-"
-  ("e" (find-file (expand-file-name "init.org" user-emacs-directory)))
-  ("n" (find-file (substitute-in-file-name "$DOTFILES/dot_config/nyxt/init.org")))
-  ("q" my-hydras--pop "exit"))
+(defhydra my-hydras--ediff (:color blue)
+  ""
+  ("b" ediff-buffers :column "buffers")
+  ("B" ediff-buffers3 "3way" :column "buffers")
+  ("f" ediff-files :column "files")
+  ("F" ediff-files3 :column "3way":column "files")
+  ("c" ediff-current-file "current" :column "files")
+  ("r" ediff-revision "revision" :column "VC")
+  ("l" ediff-regions-linewise "linewise" :column "regions")
+  ("w" ediff-regions-wordwise "wordwise" :column "regions")
+  ("q" my-hydras--pop :column ""))
 
-(defhydra my-hydras-misc (:color teal :hint nil)
-  "
- ^Zoom^
- ^----^--
- _+_: zoom-in
- _-_: zoom-out
- _0_: zoom-reset
- ^----^
-"
-  ("+" (call-interactively 'text-scale-adjust))
-  ("-" (call-interactively 'text-scale-adjust))
-  ("0" (call-interactively 'text-scale-adjust))
-  ("q" my-hydras--pop "exit"))
 
-(defhydra my-hydras-code (:color teal :hint nil)
-  "
- ^----^--
- _f_: format-all-buffer
- _r_: replace-regexp
- _a_: copy-absolute-filename
- _1_: rename-file
- ^----^
-"
-  ("f" (call-interactively 'format-all-buffer))
-  ("r" (call-interactively 'replace-regexp))
-  ("a" (kill-new buffer-file-name))
-  ("1" (crux-rename-file-and-buffer))
-  ("q" my-hydras--pop "exit"))
+(defhydra my-hydras-files (:color blue)
+  ""
+  ("e" (find-file (expand-file-name "init.org" user-emacs-directory)) "emacs" :column "config")
+  ("n" (find-file (substitute-in-file-name "$DOTFILES/dot_config/nyxt/init.org")) "nyxt" :column "config"))
+
+(defhydra my-hydras-misc (:color blue)
+  ""
+  ("+" (call-interactively 'text-scale-adjust) :column "zoom")
+  ("-" (call-interactively 'text-scale-adjust) :column "zoom")
+  ("0" (call-interactively 'text-scale-adjust) :column "zoom"))
+
+(defhydra my-hydras-code (:color blue)
+  ""
+  ("f" (call-interactively 'format-all-buffer) "format" :column "edit")
+  ("r" (call-interactively 'replace-regexp) "replace" :column "edit")
+
+  ("1" (crux-rename-file-and-buffer) "rename" :column "file")
+  ("a" (kill-new buffer-file-name) "absolute path" :column "file")
+
+  ("e" (progn
+         (my-hydras--ediff/body)
+         (my-hydras--push '(my-hydras-code/body))) "ediff..." :column "more"))
 
 (provide 'my-hydras)
 
