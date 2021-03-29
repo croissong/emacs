@@ -165,6 +165,7 @@
 
   "M-." 'xref-find-definitions
   "C-M-." 'xref-find-references
+  "C-r" 'iedit-mode
 
   "C-<backspace>" 'my-util-backward-delete-whitespace-or-word
 
@@ -190,6 +191,10 @@
   :keymaps 'drag-stuff-mode-map :package 'drag-stuff
   "M-<up>" 'drag-stuff-up
   "M-<down>" 'drag-stuff-down)
+
+(general-def
+  :keymaps 'isearch-mode-map
+  "C-r" 'isearch-query-replace)
 
 (general-def
   :keymaps 'general-override-mode-map
@@ -430,8 +435,7 @@
 
 ** editing
 #+begin_src elisp
-(use-package iedit
-    :bind* ("C-r" . iedit-mode))
+(use-package iedit)
 
 (use-package drag-stuff
     :init
@@ -561,7 +565,8 @@
     :config
     (setq ctrlf-minibuffer-bindings (a-assoc ctrlf-minibuffer-bindings
                                         "M-ä" 'ctrlf-next-match
-                                        "M-ü" 'ctrlf-previous-match)))  
+                                        "M-ü" 'ctrlf-previous-match
+                                        "C-r" 'ctrlf-change-search-style)))
 
 ;; https ://www.reddit.com/r/emacs/comments/krptmz/emacs_completion_framework_embark_consult/
 (use-package consult

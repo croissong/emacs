@@ -36,7 +36,7 @@
 (defhydra my-hydras-code (:color blue)
   ""
   ("f" (call-interactively 'format-all-buffer) "format" :column "edit")
-  ("r" (call-interactively 'replace-regexp) "replace" :column "edit")
+  ("r" (call-interactively 'isearch-forward-regexp) "search-replace" :column "edit")
 
   ("1" (crux-rename-file-and-buffer) "rename" :column "file")
   ("a" (kill-new buffer-file-name) "absolute path" :column "file")

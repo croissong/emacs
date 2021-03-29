@@ -32,3 +32,4 @@ forge-database.sqlite
 /var/
 /eln-cache/
 /.lsp-session-*
+/logview-cache.extmap
