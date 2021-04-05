@@ -39,6 +39,7 @@
   ("r" (call-interactively 'isearch-forward-regexp) "search-replace" :column "edit")
 
   ("1" (crux-rename-file-and-buffer) "rename" :column "file")
+  ("2" (crux-delete-file-and-buffer) "delete" :column "file")
   ("a" (kill-new buffer-file-name) "absolute path" :column "file")
 
   ("l" (progn
