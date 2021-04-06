@@ -1001,45 +1001,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :mode "\\.sql\\'")
 #+end_src
 
-** mu4e
-#+begin_src elisp :tangle no
-(use-package mu4e
-    :hook (mu4e-compose-pre . my-mu4e-set-account)
-    :straight (:local-repo "/usr/share/emacs/site-lisp/mu4e" :type built-in)
-    :commands mu4e
-    :custom
-    (starttls-use-gnutls t)
-    (starttls-gnutls-program "gnutls-cli")
-    (starttls-extra-arguments nil)
-
-    (send-mail-function 'smtpmail-send-it)
-    (message-send-mail-function 'smtpmail-send-it)
-    (mu4e-get-mail-command "offlineimap")
-    (mu4e-maildir       "~/mail")
-    (mu4e-sent-folder   "/sent")
-    (mu4e-drafts-folder "/drafts")
-    (mu4e-trash-folder  "/trash")
-    (mu4e-refile-folder "/archive")
-    (mu4e-attachment-dir "~/downloads")
-    (mu4e-sent-messages-behavior 'delete))
-
-(use-package mu4e-overview
-  :after mu4e)
-
-(use-package my-mu4e
-  :after mu4e
-  :straight (:local-repo "~/.config/emacs/my/mu4e/"))
-
-(use-package mu4e-alert
-    :after mu4e
-    :hook (message-send . mml-secure-message-sign-pgpmime)
-    :init
-    (mu4e-alert-enable-notifications)
-    (mu4e-alert-enable-mode-line-display)
-    :config
-    (mu4e-alert-set-default-style 'libnotify))
-#+end_src
-
 ** Tramp
 #+begin_src elisp
 (setq tramp-default-method "ssh")
