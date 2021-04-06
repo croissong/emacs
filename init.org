@@ -1034,8 +1034,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   "M-ä" 'google-translate-next-translation-direction
   "M-ü" 'google-translate-previous-translation-direction))
 
-(use-package lexic
-    :commands lexic-search lexic-list-dictionary)
+(use-package mail-mode
+    :straight nil
+    :mode "\\/tmp\\/neomutt.*\\'")
 #+end_src
 
 * UI
