@@ -124,7 +124,14 @@
   "<C-mouse-4>"
   "<C-mouse-5>"
   "C-<wheel-down>"
-  "C-<wheel-up>")
+  "C-<wheel-up>"
+
+  ;; https://www.reddit.com/r/emacs/comments/3c61zl/abolish_the_secondary_selection_quick_and_easy/
+  "<M-drag-mouse-1>" ; mouse-set-secondary
+  "<M-down-mouse-1>"   ; mouse-drag-secondary
+  "<M-mouse-1>"	  ; mouse-start-secondary
+  "<M-mouse-2>"	  ; mouse-yank-secondary
+  "<M-mouse-3>")	  ; mouse-secondary-save-then-kill
 
 (general-def
   "C-l" 'goto-line
