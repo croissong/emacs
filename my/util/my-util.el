@@ -86,16 +86,13 @@
       (set-buffer-modified-p nil)
       (kill-buffer buf))))
 
-(defun my-util--prompt-tangle()
-  (if (y-or-n-p "Tangle?")(org-babel-tangle)))
-
 (define-minor-mode babel-tangle-mode
   "Tangle after save"
   :global nil
   :lighter " tangle"
   (if babel-tangle-mode
-      (add-hook 'after-save-hook 'my-util--prompt-tangle nil 'local)
-    (remove-hook 'after-save-hook 'my-util--prompt-tangle 'local)))
+      (add-hook 'after-save-hook 'org-babel-tangle nil 'local)
+    (remove-hook 'after-save-hook 'org-babel-tangle 'local)))
 
 (provide 'my-util)
 ;;; my-util.el ends here
