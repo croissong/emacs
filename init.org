@@ -494,6 +494,7 @@
                              "[/\\\\]\\.pytest_cache$"
                              "[/\\\\]dot_git$")))
   :custom
+  (lsp-enable-file-watchers nil)
   (lsp-enable-snippet t)
   (lsp-signature-doc-lines 1)
   (lsp-signature-auto-activate t)
