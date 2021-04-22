@@ -1045,6 +1045,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package mail-mode
     :straight nil
     :mode "\\/tmp\\/neomutt.*\\'")
+(use-package khardel
+  :general
+  (:keymaps 'mail-mode-map
+            "C-f" 'khardel-insert-email))
 #+end_src
 
 * UI
