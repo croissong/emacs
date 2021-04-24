@@ -1049,6 +1049,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :general
   (:keymaps 'mail-mode-map
             "C-f" 'khardel-insert-email))
+
+(use-package gif-screencast
+  :commands gif-screencast-start-or-stop
+  :custom
+  (gif-screencast-program "grim")
+  (gif-screencast-args ()))
 #+end_src
 
 * UI
