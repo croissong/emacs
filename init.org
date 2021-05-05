@@ -579,7 +579,8 @@
 ;; https ://www.reddit.com/r/emacs/comments/krptmz/emacs_completion_framework_embark_consult/
 (use-package consult
     :custom
-    (consult-project-root-function #'projectile-project-root))
+    (consult-project-root-function #'projectile-project-root)
+    (consult-preview-key nil))
 
 (use-package marginalia
   :init
