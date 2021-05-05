@@ -433,6 +433,10 @@
 
 (use-package async
   :init (dired-async-mode 1))
+
+(use-package midnight
+  :config (midnight-delay-set 'midnight-delay "4:30am")
+  :custom (midnight-period (* 4 60 60)))
 #+end_src
 
 ** editing
@@ -503,6 +507,7 @@
   (lsp-modeline-code-actions-enable nil)
   (lsp-keymap-prefix "M-l")
   (lsp-disabled-clients '(ts angular-ls))
+  (lsp-keep-workspace-alive nil)
   :bind (:map lsp-mode-map
               ;; ("M-." . lsp-goto-implementation)
               ("M--" . lsp-execute-code-action)))
