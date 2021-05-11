@@ -789,7 +789,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (magit-auto-revert-mode nil)
     (magit-diff-section-arguments (quote ("--no-ext-diff" "-U2")))
     (magit-diff-refine-ignore-whitespace nil)
-    (magit-refs-margin '(t age magit-log-margin-width nil 18))
+    (magit-refs-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width nil 18))
+    (magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 18))
     (magit-diff-refine-hunk t)
     (magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
     :config
