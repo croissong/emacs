@@ -41,6 +41,7 @@
   ("1" (crux-rename-file-and-buffer) "rename" :column "file")
   ("2" (crux-delete-file-and-buffer) "delete" :column "file")
   ("3" (call-interactively 'crux-copy-file-preserve-attributes) "copy" :column "file")
+  ("5" (call-interactively 'set-buffer-file-coding-system) "encoding" :column "file")
   ("a" (kill-new buffer-file-name) "absolute path" :column "file")
 
   ("l" (progn
