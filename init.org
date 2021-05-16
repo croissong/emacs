@@ -225,6 +225,9 @@
   "C-M-ä" 'buf-move-down
 
 
+  "C-<up>" 'golden-ratio-scroll-screen-down
+  "C-<down>" 'golden-ratio-scroll-screen-up
+
   "C-<tab>" 'my-util-indent-rigidly
   "M-q" 'universal-argument
 
@@ -451,6 +454,10 @@
     :custom
     (drag-stuff-except-modes '(org-mode))
     :delight drag-stuff-mode)
+
+(use-package golden-ratio-scroll-screen
+  :custom
+  (golden-ratio-scroll-highlight-flag nil))
 
 (use-package quickrun :commands quickrun)
 
