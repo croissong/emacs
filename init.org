@@ -10,6 +10,7 @@
 #+begin_src elisp
 
 (setq straight-use-package-by-default t
+      straight-repository-branch "develop"
       use-package-compute-statistics nil
       comp-async-report-warnings-errors nil
       warning-suppress-log-types '((comp))
@@ -339,7 +340,7 @@
     :delight reveal-mode)
 
 (use-package org
-    :straight org-plus-contrib
+    :straight org-contrib
     :mode ("\\.org\\'" . org-mode)
     :config
     (require 'org-checklist)
