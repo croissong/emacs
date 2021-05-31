@@ -174,6 +174,7 @@
   "C-<backspace>" 'my-util-backward-delete-whitespace-or-word)
 
 (general-def
+  :keymaps 'override
   :prefix "C-c"
   "l" 'org-store-link
   "a" 'org-agenda
@@ -199,7 +200,7 @@
   "C-r" 'isearch-query-replace)
 
 (general-def
-  :keymaps 'general-override-mode-map
+  :keymaps 'override
   "C-ö" 'windmove-left
   "C-#" 'windmove-right
   "C-ü" 'windmove-up
@@ -359,6 +360,9 @@
        (sql . t)))
 
     :custom
+    (org-directory "~/Docs/org")
+    (org-capture-templates '(("a" "Brain" plain (function org-brain-goto-end)
+          "* %i%?" :empty-lines 1)))
     (org-startup-indented t)
     (org-blank-before-new-entry '((heading . nil)
                                  (plain-list-item . nil)))
@@ -392,6 +396,22 @@
 (use-package my-org
     :after org
     :straight (:local-repo "~/.config/emacs/my/org/"))
+
+(use-package org-brain
+  :after (org polymode)
+  :custom
+  (org-id-track-globally t)
+  (org-id-locations-file (f-expand ".cache/.org-id-locations" user-emacs-directory))
+  (org-brain-visualize-default-choices 'all)
+  (org-brain-title-max-length 12)
+  (org-brain-include-file-entries nil)
+  (org-brain-file-entries-use-title nil)
+   :config
+  (bind-key "C-c b" 'org-brain-prefix-map org-mode-map)
+  (add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
+  (add-hook 'org-brain-visualize-mode-hook #'org-brain-polymode))
+
+(use-package polymode :defer t)
 #+end_src
 
 ** special modes
