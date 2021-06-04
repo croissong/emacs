@@ -1,9 +1,0 @@
-#!/bin/bash
-root=`git rev-parse --show-toplevel`
-
-if [[ $root/init.org -nt $root/init.elc ]]; then
-    emacsclient -e '(org-init-compile)'
-    git add init.elc
-    echo "Tangled init.elc"
-    exit 1
-fi
