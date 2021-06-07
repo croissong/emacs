@@ -188,7 +188,12 @@
   "C-M-<left>" 'org-backward-sentence
   "C-M-<right>" 'org-forward-sentence
   "C-M-<end>" 'org-sentence-newline
+  "C-c e" 'org-edit-special
   "C-c TAB" nil)
+
+(general-def
+  :keymaps 'org-src-mode-map :package 'org
+  "C-c e" 'org-edit-src-exit)
 
 (general-def
   :keymaps 'drag-stuff-mode-map :package 'drag-stuff
@@ -342,11 +347,19 @@
 (use-package reveal
     :hook (org-mode . reveal-mode)
     :delight reveal-mode)
+(use-package company-org-block
+  :commands company-org-block
+  :after company)
 
 (use-package org
-    :straight org-contrib
-    :mode ("\\.org\\'" . org-mode)
-    :config
+  :straight org-contrib
+  :mode ("\\.org\\'" . org-mode)
+  :init
+  (defun my--on-org-mode ()
+    (setq-local company-backends '(company-org-block))
+    (company-mode +1))
+  :hook (org-mode . my--on-org-mode)
+  :config
     (require 'org-checklist)
     (org-indent-mode 1)
 
@@ -390,7 +403,7 @@
     (org-src-preserve-indentation t)
     (org-src-window-setup 'current-window)
     (org-edit-src-auto-save-idle-delay 60)
-    
+
     :delight org-indent-mode)
 
 (use-package my-org
