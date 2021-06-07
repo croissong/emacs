@@ -33,3 +33,4 @@ forge-database.sqlite
 /eln-cache/
 /.lsp-session-*
 /logview-cache.extmap
+/bookmarks
