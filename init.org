@@ -1113,6 +1113,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (tool-bar-mode -1)
 (tooltip-mode -1)
 (mouse-avoidance-mode)
+(setq blink-cursor-blinks 3)
 (scroll-bar-mode -1)
 (column-number-mode 1)
 (set-face-attribute 'default nil :family "Monospace" :height 110)
