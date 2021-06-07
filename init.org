@@ -845,7 +845,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :bind (("C-x d" . nil)
          :map dired-mode-map
          ("M-ö" . dired-up-directory)
-         ("M-#" . dired-find-file)))
+         ("M-#" . dired-find-file)
+         ("C-M-w" . diredp-copy-abs-filenames-as-kill)))
 
 (use-package dired-filter
     :hook (dired-mode . dired-filter-mode)
