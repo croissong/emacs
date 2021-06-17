@@ -425,6 +425,20 @@
   (add-hook 'org-brain-visualize-mode-hook #'org-brain-polymode))
 
 (use-package polymode :defer t)
+
+
+(use-package org-roam
+      :init
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory (my-util-ensure-dir org-directory "roam/"))
+      :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))
+              (("C-c n I" . org-roam-insert-immediate))))
 #+end_src
 
 ** special modes
