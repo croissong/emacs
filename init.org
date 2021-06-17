@@ -142,7 +142,7 @@
   "M-#" 'next-buffer
 
   "C-d" 'projectile-find-file
-  "C-M-d" 'find-file
+  "C-f" 'find-file
   "M-d" 'consult-buffer
 
   "C-M-y" 'consult-yank
@@ -164,7 +164,7 @@
   "C-x l" 'magit-log-buffer-file
 
   "C-v" 'my-hydras-misc/body
-  "C-f" 'my-hydras-code/body
+  "C-M-f" 'my-hydras-code/body
   "C-x f" 'my-hydras-files/body
 
   "M-." 'xref-find-definitions
