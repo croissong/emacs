@@ -242,7 +242,9 @@
 
   "M-_" 'shell-command
   "<f5>" 'profiler-start
-  "<f6>" 'profiler-stop)
+  "<f6>" 'profiler-stop
+
+  "C-+" 'org-roam-find-file)
 
 (general-def
   :keymaps 'embark-file-map :package 'embark
