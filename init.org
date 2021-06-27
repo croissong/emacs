@@ -489,8 +489,9 @@
   :init (dired-async-mode 1))
 
 (use-package midnight
-  :config (midnight-delay-set 'midnight-delay "4:30am")
-  :custom (midnight-period (* 4 60 60)))
+  :config
+  (setq midnight-period (* 4 60 60)) # 4h
+  (midnight-delay-set 'midnight-delay "4:30am"))
 #+end_src
 
 ** editing
