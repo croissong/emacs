@@ -4,7 +4,10 @@
 (setq straight-use-package-by-default t
       use-package-compute-statistics nil
       comp-async-report-warnings-errors nil
-      straight-check-for-modifications '(find-when-checking))
+      straight-check-for-modifications '(find-when-checking)
+
+      initial-scratch-message nil
+      inhibit-startup-screen t)
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -36,3 +39,8 @@
                                         "M-ä" 'ctrlf-next-match
                                         "M-ü" 'ctrlf-previous-match
                                         "C-r" 'ctrlf-change-search-style)))
+
+
+
+
+(switch-to-buffer "*Messages*")
