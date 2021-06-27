@@ -553,9 +553,10 @@
   :config
   (setq lsp-file-watch-ignored-directories (-union
                            lsp-file-watch-ignored-directories
-                           '("[/\\\\]\\.mypy_cache$"
-                             "[/\\\\]\\.pytest_cache$"
-                             "[/\\\\]dot_git$")))
+                           '("[/\\\\]\\.direnv\\'"
+                             "[/\\\\]\\.mypy_cache\\'"
+                             "[/\\\\]\\.pytest_cache\\'"
+                             "[/\\\\]dot_git\\'")))
   :custom
   (lsp-enable-file-watchers nil)
   (lsp-enable-snippet t)
