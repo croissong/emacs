@@ -492,8 +492,10 @@
 
 (use-package midnight
   :config
-  (setq midnight-period (* 4 60 60)) # 4h
-  (midnight-delay-set 'midnight-delay "4:30am"))
+  (setq midnight-period (* 4 60 60)) ;; 4h
+  (midnight-delay-set 'midnight-delay "4:30am")
+  :custom
+  (clean-buffer-list-delay-general 2))
 #+end_src
 
 ** editing
