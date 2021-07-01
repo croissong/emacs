@@ -324,7 +324,9 @@
 
 (use-package eyebrowse
   :init
-  (eyebrowse-mode t))
+  (eyebrowse-mode t)
+  :custom
+  (eyebrowse-new-workspace t))
 
 (use-package buffer-move)
 #+end_src
@@ -432,7 +434,7 @@
 
 
 (use-package org-roam
-      :init
+      :hook
       (after-init . org-roam-mode)
       :custom
       (org-roam-directory (my-util-ensure-dir org-directory "roam/"))
