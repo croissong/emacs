@@ -6,7 +6,7 @@
 ;;; -*- lexical-binding: t -*-
 #+end_src
 * core
-** Straight
+** Init
 #+begin_src elisp
 
 (setq straight-use-package-by-default t
@@ -30,6 +30,10 @@
   (load bootstrap-file nil 'nomessage))
 
 (straight-use-package 'use-package)
+
+(use-package gcmh
+  :init (gcmh-mode 1)
+  :delight)
 #+end_src
 
 ** Common
@@ -287,10 +291,6 @@
 
 *** debugging
 #+begin_src elisp
-(use-package gcmh
-  :init (gcmh-mode 1)
-  :delight)
-
 (use-package explain-pause-mode
   :straight (:host github :repo "lastquestion/explain-pause-mode")
   :commands explain-pause-mode)
