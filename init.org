@@ -222,12 +222,9 @@
   "C-M-1" 'winner-undo
   "C-M-2" 'winner-redo
 
-  "M-1" 'eyebrowse-switch-to-window-config-1
-  "M-2" 'eyebrowse-switch-to-window-config-2
-  "M-3" 'eyebrowse-switch-to-window-config-3
-  "M-4" 'eyebrowse-switch-to-window-config-4
-  "M-5" 'eyebrowse-switch-to-window-config-5
-  "M-6" 'eyebrowse-switch-to-window-config-6
+  "M-^" 'tab-close
+  "M-1" 'tab-switch
+  "M-2" 'my/tab-new-and-rename
 
   "C-M-#" 'buf-move-right
   "C-M-ö" 'buf-move-left
@@ -322,11 +319,12 @@
 #+begin_src elisp
 (winner-mode 1)
 
-(use-package eyebrowse
-  :init
-  (eyebrowse-mode t)
-  :custom
-  (eyebrowse-new-workspace t))
+(setq tab-bar-show nil)
+(tab-bar-mode)
+(defun my/tab-new-and-rename ()
+  (interactive)
+  (tab-new)
+  (call-interactively 'tab-rename))
 
 (use-package buffer-move)
 #+end_src
