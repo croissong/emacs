@@ -327,6 +327,10 @@
   (call-interactively 'tab-rename))
 
 (use-package buffer-move)
+
+(use-package edit-indirect
+  :straight (:type git :host github :repo "Fanael/edit-indirect")
+  :commands edit-indirect-region)
 #+end_src
 
 ** secrets
