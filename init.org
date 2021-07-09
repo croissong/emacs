@@ -1010,6 +1010,22 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :mode "\\.rs\\'")
 #+end_src
 
+** java
+#+begin_src elisp
+(use-package lsp-java)
+
+(use-package java-mode
+  :straight nil
+  :hook (java-mode . lsp)
+  :mode "\\.java\\'")
+#+end_src
+
+** kotlin
+#+begin_src elisp
+(use-package kotlin-mode
+  :mode "\\.kt\\'")
+#+end_src
+
 ** golang
 #+begin_src elisp
 (use-package go-mode
