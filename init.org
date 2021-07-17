@@ -101,9 +101,9 @@
 **** Long lines fix
 #+begin_src elisp
 (require 'longlines)
-(global-so-long-mode 1)
 (setq so-long-target-modes (-union so-long-target-modes '(fundamental-mode))
       so-long-action 'longlines-mode)
+(global-so-long-mode 1)
 
 #+end_src
 
@@ -247,7 +247,7 @@
   "<f5>" 'profiler-start
   "<f6>" 'profiler-stop
 
-  "C-+" 'org-roam-find-file)
+  "C-+" 'org-roam-capture)
 
 (general-def
   :keymaps 'embark-file-map :package 'embark
@@ -545,7 +545,7 @@
     (:format (format-all--buffer-easy
               executable "-d" "-")))
 
-  (setq-default format-all-formatters '(("Python" black isort)))
+  (setq-default format-all-formatters '(("Python" black)))
   :delight format-all-mode)
 #+end_src
 
