@@ -665,12 +665,6 @@
                                 selectrum-mode) (selectrum-exhibit)))))
 
 (use-package embark
-    :config
-  (setq embark-action-indicator
-      (lambda (map _target)
-        (which-key--show-keymap "Embark" map nil nil 'no-paging)
-        #'which-key--hide-popup-ignore-command)
-      embark-become-indicator embark-action-indicator)
     :bind*
   ("C-q" . embark-act))
 
