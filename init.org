@@ -412,6 +412,8 @@
     (org-src-window-setup 'current-window)
     (org-edit-src-auto-save-idle-delay 60)
 
+    (org-startup-folded 'content)
+
     :delight org-indent-mode)
 
 (use-package my-org
