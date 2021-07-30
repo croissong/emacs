@@ -1142,6 +1142,11 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :custom
   (gif-screencast-program "grim")
   (gif-screencast-args ()))
+
+(use-package insert-shebang
+  :commands insert-shebang
+  :custom
+  (insert-shebang-track-ignored-filename nil))
 #+end_src
 
 * UI
