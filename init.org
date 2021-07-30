@@ -95,7 +95,9 @@
 
 (setq-default indent-tabs-mode nil
               tab-width 2
-              sentence-end-double-space nil)
+              sentence-end-double-space nil
+              ;; increase (magit-commit) line autowrap width (default=70)
+              fill-column 80)
 #+end_src
 
 **** Long lines fix
