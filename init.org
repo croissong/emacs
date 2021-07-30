@@ -1144,6 +1144,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (gif-screencast-args ()))
 
 (use-package insert-shebang
+  :init
+  ;; revert ;;;###autoload(add-hook 'find-file-hook 'insert-shebang)
+  (remove-hook 'find-file-hook 'insert-shebang)
   :commands insert-shebang
   :custom
   (insert-shebang-track-ignored-filename nil))
