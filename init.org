@@ -31,6 +31,13 @@
 
 (straight-use-package 'use-package)
 
+(use-package bind-key)
+(use-package delight)
+(use-package cl-lib)
+(use-package f)
+(use-package dash)
+(use-package a)
+
 (use-package gcmh
   :init (gcmh-mode 1)
   :delight)
@@ -39,13 +46,6 @@
 ** Common
 *** Utility
 #+begin_src elisp
-(use-package bind-key)
-(use-package delight)
-(use-package cl-lib)
-(use-package f)
-(use-package dash)
-(use-package a)
-
 (use-package my-util
     :straight (:local-repo "~/.config/emacs/my/util/")
     :custom
@@ -444,6 +444,7 @@
   (org-roam-setup)
   :custom
   (org-roam-directory (my-util-ensure-dir org-directory "roam/"))
+  (org-roam-v2-ack t)
 
   :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
