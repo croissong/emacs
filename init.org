@@ -1107,6 +1107,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (setq tramp-default-method "ssh")
 #+end_src
 
+** docker
+#+begin_src elisp
+(use-package dockerfile-mode
+    :mode ("\\Dockerfile\\'" "\\Dockerfile\\'"))
+#+end_src
+
 * tools
 #+begin_src elisp
 (use-package x509-mode :defer t)
