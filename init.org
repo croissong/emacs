@@ -441,10 +441,10 @@
 
 (use-package org-roam
   :init
+  (setq org-roam-v2-ack t)
   (org-roam-setup)
   :custom
   (org-roam-directory (my-util-ensure-dir org-directory "roam/"))
-  (org-roam-v2-ack t)
 
   :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
@@ -571,9 +571,12 @@
                              "[/\\\\]\\.mypy_cache\\'"
                              "[/\\\\]\\.pytest_cache\\'"
                              "[/\\\\]dot_git\\'")))
+
+  ;; https://emacs-lsp.github.io/lsp-mode/page/faq/#how-do-i-force-lsp-mode-to-forget-the-workspace-folders-for-multi-root
+  (advice-add 'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht)))))
   :custom
   (lsp-enable-file-watchers nil)
-  (lsp-enable-snippet t)
+  (lsp-enable-snippet nil)
   (lsp-signature-doc-lines 1)
   (lsp-signature-auto-activate t)
   (lsp-progress-via-spinner nil)
