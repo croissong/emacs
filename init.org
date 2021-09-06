@@ -1171,6 +1171,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :commands insert-shebang
   :custom
   (insert-shebang-track-ignored-filename nil))
+
+(use-package easy-convert
+  :straight (:host github :repo "Frozenlock/easy-convert")
+  :commands easy-convert-interactive)
 #+end_src
 
 * UI
