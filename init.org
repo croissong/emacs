@@ -1175,6 +1175,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package easy-convert
   :straight (:host github :repo "Frozenlock/easy-convert")
   :commands easy-convert-interactive)
+
+(use-package org-download)
 #+end_src
 
 * UI
