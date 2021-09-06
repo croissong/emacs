@@ -444,10 +444,12 @@
 (use-package org-roam
   :init
   (setq org-roam-v2-ack t)
-  (org-roam-setup)
   :custom
   (org-roam-directory (my-util-ensure-dir org-directory "roam/"))
-
+  :config
+  (org-roam-db-autosync-mode)
+  ;; If using org-roam-protocol
+  (require 'org-roam-protocol)
   :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-find-file)
