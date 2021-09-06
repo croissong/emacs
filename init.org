@@ -556,6 +556,7 @@
     (:executable "isort")
     (:install "pip install isort")
     (:languages "Python")
+    (:features)
     (:format (format-all--buffer-easy
               executable "-d" "-")))
 
