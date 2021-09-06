@@ -137,6 +137,9 @@
   "<M-mouse-3>")	  ; mouse-secondary-save-then-kill
 
 (general-def
+
+  "M-," 'dogears-go
+
   "C-l" 'goto-line
 
   "C-M-^" 'quoted-insert
@@ -153,7 +156,6 @@
 
   "C-M-y" 'consult-yank
   "C-M-s" 'consult-ripgrep
-  "M-," 'consult-global-mark
 
   "C-M-r" 'projectile-replace-regexp
   "C-c p" 'projectile-command-map
@@ -530,6 +532,10 @@
     (expand-region-fast-keys-enabled nil)
     :config
     (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions))
+
+(use-package dogears
+  :init (dogears-mode)
+  :straight (:host github :repo "alphapapa/dogears.el"))
 #+end_src
 
 *** formatting
