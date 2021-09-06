@@ -1028,7 +1028,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package java-mode
   :straight nil
-  :hook (java-mode . lsp)
+  ;; :hook (java-mode . lsp)
   :mode "\\.java\\'")
 #+end_src
 
