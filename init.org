@@ -506,6 +506,7 @@
 
 (use-package midnight
   :config
+  (advice-add 'clean-buffer-list :around #'make-silent)
   (setq midnight-period (* 4 60 60)) ;; 4h
   (midnight-delay-set 'midnight-delay "4:30am")
   :custom
