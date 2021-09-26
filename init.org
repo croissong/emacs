@@ -41,11 +41,7 @@
 (use-package gcmh
   :init (gcmh-mode 1)
   :delight)
-#+end_src
 
-** Common
-*** Utility
-#+begin_src elisp
 (use-package my-util
     :straight (:local-repo "~/.config/emacs/my/util/")
     :custom
@@ -53,8 +49,17 @@
      (a-assoc save-some-buffers-action-alist
               ?r '(my-util-discard-buffer-action "discard this buffer")))
     :demand t)
+
+;; (use-package exec-path-from-shell
+;;     :custom
+;;     (exec-path-from-shell-arguments '("-l"))
+;;     (exec-path-from-shell-variables '("DISPLAY" "WAYLAND_DISPLAY"))
+;;     :init
+;;     (my-util-with-eval-after-frame
+;;      (exec-path-from-shell-initialize)))
 #+end_src
 
+** Common
 *** Config
 #+begin_src elisp
 (put 'upcase-region 'disabled nil)
