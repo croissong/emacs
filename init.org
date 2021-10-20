@@ -528,7 +528,8 @@
 
 (use-package golden-ratio-scroll-screen
   :custom
-  (golden-ratio-scroll-highlight-flag nil))
+  (golden-ratio-scroll-highlight-flag nil)
+  (golden-ratio-scroll-screen-ratio 3.0))
 
 (use-package quickrun :commands quickrun)
 
