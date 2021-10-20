@@ -34,3 +34,4 @@ forge-database.sqlite
 /.lsp-session-*
 /logview-cache.extmap
 /bookmarks
+/.extension/
