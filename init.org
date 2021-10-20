@@ -48,6 +48,7 @@
     (save-some-buffers-action-alist
      (a-assoc save-some-buffers-action-alist
               ?r '(my-util-discard-buffer-action "discard this buffer")))
+    (org-make-link-description-function 'my-util-url-get-title)
     :demand t)
 
 ;; (use-package exec-path-from-shell

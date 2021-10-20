@@ -30,8 +30,7 @@
 (defun my-util-sort-lines-case-insensitive ()
   (interactive)
   (let ((sort-fold-case t))
-    (call-interactively
-     'sort-lines)))
+    (call-interactively 'sort-lines)))
 
 (defun my-util-base64-encode-region-no-break ()
   (interactive)
@@ -93,6 +92,27 @@
   (if babel-tangle-mode
       (add-hook 'after-save-hook 'org-babel-tangle nil 'local)
     (remove-hook 'after-save-hook 'org-babel-tangle 'local)))
+
+
+;; How to make org-mode org-insert-link (C-c C-l) automatically fill in the description from a webpage:
+(defun my-util-url-get-title (url &optional descr)
+  "Takes a URL and returns the value of the <title> HTML tag,
+   Thanks to https://frozenlock.org/tag/url-retrieve/ for documenting url-retrieve"
+  (let ((buffer (url-retrieve-synchronously url))
+        (title nil))
+    (save-excursion
+      (set-buffer buffer)
+      (goto-char (point-min))
+      (search-forward-regexp "<title>\\([^<]+?\\)</title>")
+      (setq title (match-string 1 ) )
+      (kill-buffer (current-buffer)))
+    title))
+
+
+(defun my-util-open-in-buffer (buffer txt)
+  "create a new buffer with name <buffer>, insert <txt>"
+  (pop-to-buffer (get-buffer-create (generate-new-buffer-name buffer)))
+  (insert txt))
 
 ;; Usage:
 ;; (advice-add 'clean-buffer-list :around #'make-silent)
