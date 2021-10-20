@@ -607,6 +607,8 @@
     :custom
     (lsp-ui-doc-enable nil)
     (lsp-ui-sideline-enable t))
+
+(use-package dap-mode)
 #+end_src
 
 *** linting
@@ -1053,6 +1055,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package go-mode
     :mode "\\.go\\'"
+    :config
+    (require 'dap-go)
     :init
     (defun my--on-go-mode ()
       (lsp-deferred)
@@ -1140,8 +1144,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package restclient
     :mode ("\\.http\\'" . restclient-mode)
     :commands restclient-mode)
-
-(use-package realgud :defer t)
 
 (use-package ledger-mode
     :mode "\\.ledger\\'")
