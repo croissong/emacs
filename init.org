@@ -257,7 +257,7 @@
   "<f5>" 'profiler-start
   "<f6>" 'profiler-stop
 
-  "C-+" 'org-roam-capture)
+  "C-+" 'org-roam-node-find)
 
 (general-def
   :keymaps 'embark-file-map :package 'embark
