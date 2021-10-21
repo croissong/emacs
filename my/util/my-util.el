@@ -121,6 +121,10 @@
       (((symbol-function 'message)(lambda (&rest args) nil)))
     (apply func args)))
 
+(defun my-util-disable-newlines-eof()
+  (interactive)
+  (setq-local require-final-newline nil))
+
 
 (provide 'my-util)
 ;;; my-util.el ends here
