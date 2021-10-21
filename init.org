@@ -608,7 +608,14 @@
     (lsp-ui-doc-enable nil)
     (lsp-ui-sideline-enable t))
 
-(use-package dap-mode)
+(use-package dap-mode
+  :commands dap-debug
+  :hook (dap-stopped .(lambda (arg) (call-interactively #'dap-hydra)))
+  :init
+  (require 'dap-hydra)
+  :custom
+  (dap-auto-configure-mode t)
+  (dap-auto-configure-features '(locals repl)))
 #+end_src
 
 *** linting

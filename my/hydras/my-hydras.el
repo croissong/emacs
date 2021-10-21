@@ -47,6 +47,9 @@
   ("l" (progn
          (my-hydras--lsp/body)
          (my-hydras--push '(my-hydras-code/body))) "lsp.." :column "more")
+  ("d" (progn
+         (dap-hydra/body)
+         (my-hydras--push '(my-hydras-code/body))) "dap.." :column "more")
   ("e" (progn
          (my-hydras--ediff/body)
          (my-hydras--push '(my-hydras-code/body))) "ediff.." :column "more"))
