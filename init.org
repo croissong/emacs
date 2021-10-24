@@ -114,6 +114,27 @@
       so-long-action 'longlines-mode)
 
 #+end_src
+**** Fix clipboard on wayland
+https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
+#+begin_src elisp
+(setq wl-copy-process nil)
+(defun wl-copy (text)
+  (setq wl-copy-process (let ((default-directory "~"))
+                          (make-process :name "wl-copy"
+                                      :buffer nil
+                                      :command '("wl-copy" "-f" "-n")
+                                      :noquery t
+                                      :connection-type 'pipe)))
+  (process-send-string wl-copy-process text)
+  (process-send-eof wl-copy-process))
+(defun wl-paste ()
+  (if (and wl-copy-process (process-live-p wl-copy-process))
+      nil
+      (let ((default-directory "~"))
+        (shell-command-to-string "wl-paste -n | tr -d '\r'"))))
+(setq interprogram-cut-function 'wl-copy)
+(setq interprogram-paste-function 'wl-paste)
+#+end_src
 
 *** Keybindings
 #+begin_src elisp
