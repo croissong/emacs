@@ -538,7 +538,9 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
 ** editing
 #+begin_src elisp
-(use-package iedit)
+(use-package iedit
+  :custom
+  (iedit-case-sensitive nil))
 
 (use-package drag-stuff
     :init
