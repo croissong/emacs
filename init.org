@@ -42,13 +42,13 @@
   :init (gcmh-mode 1)
   :delight)
 
-(use-package my-util
-    :straight (:local-repo "~/.config/emacs/my/util/")
+(use-package my
+    :straight (:local-repo "~/.config/emacs/my/" :files ("my.el"))
     :custom
     (save-some-buffers-action-alist
      (a-assoc save-some-buffers-action-alist
-              ?r '(my-util-discard-buffer-action "discard this buffer")))
-    (org-make-link-description-function 'my-util-url-get-title)
+              ?r '(my-discard-buffer-action "discard this buffer")))
+    (org-make-link-description-function 'my-url-get-title)
     :demand t)
 
 ;; (use-package exec-path-from-shell
@@ -56,7 +56,7 @@
 ;;     (exec-path-from-shell-arguments '("-l"))
 ;;     (exec-path-from-shell-variables '("DISPLAY" "WAYLAND_DISPLAY"))
 ;;     :init
-;;     (my-util-with-eval-after-frame
+;;     (my-with-eval-after-frame
 ;;      (exec-path-from-shell-initialize)))
 #+end_src
 
@@ -206,7 +206,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-M-." 'xref-find-references
   "C-r" 'iedit-mode
 
-  "C-<backspace>" 'my-util-backward-delete-whitespace-or-word)
+  "C-<backspace>" 'my-backward-delete-whitespace-or-word)
 
 (general-def
   :keymaps 'override
@@ -268,7 +268,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
   "C-x ^" nil
 
-  "C-<tab>" 'my-util-indent-rigidly
+  "C-<tab>" 'my-indent-rigidly
   "M-q" 'universal-argument
 
   "C-M-k" 'kill-this-buffer
@@ -338,9 +338,9 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
       kept-old-versions 2
       version-control t
       backup-by-copying t
-      emacs-tmp-dir (my-util-ensure-dir user-emacs-directory "tmp/")
-      emacs-backup-dir (my-util-ensure-dir emacs-tmp-dir "backups/")
-      emacs-autosave-dir (my-util-ensure-dir emacs-tmp-dir "autosaves/")
+      emacs-tmp-dir (my-ensure-dir user-emacs-directory "tmp/")
+      emacs-backup-dir (my-ensure-dir emacs-tmp-dir "backups/")
+      emacs-autosave-dir (my-ensure-dir emacs-tmp-dir "autosaves/")
       backup-directory-alist `(("." . ,emacs-backup-dir))
       auto-save-file-name-transforms `((".*" ,emacs-autosave-dir t))
       auto-save-list-file-prefix emacs-autosave-dir)
@@ -458,7 +458,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   :init
   (setq org-roam-v2-ack t)
   :custom
-  (org-roam-directory (my-util-ensure-dir org-directory "roam/"))
+  (org-roam-directory (my-ensure-dir org-directory "roam/"))
   :config
   (org-roam-db-autosync-mode)
   ;; If using org-roam-protocol
@@ -673,7 +673,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
     (magit-completing-read-function #'selectrum-completing-read)
     :bind (:map selectrum-minibuffer-map
                 ("M-#" . selectrum-insert-current-candidate)
-                ("M-ö" . my-util-backward-delete-sexp)))
+                ("M-ö" . my-backward-delete-sexp)))
 
 (use-package orderless
     :custom
