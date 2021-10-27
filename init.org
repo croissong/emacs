@@ -172,7 +172,6 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-M-^" 'quoted-insert
   "M-ü" 'previous-line
   "M-ä" 'next-line
-  "C-a" 'back-to-indentation
 
   "M-ö" 'previous-buffer
   "M-#" 'next-buffer
@@ -278,7 +277,11 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "<f5>" 'profiler-start
   "<f6>" 'profiler-stop
 
-  "C-+" 'org-roam-node-find)
+  "C-+" 'org-roam-node-find
+
+  "C-a" 'back-to-indentation
+  "C-M-q C-a" 'beginning-of-line
+)
 
 (general-def
   :keymaps 'embark-file-map :package 'embark
