@@ -51,13 +51,15 @@
     (org-make-link-description-function 'my-url-get-title)
     :demand t)
 
-;; (use-package exec-path-from-shell
-;;     :custom
-;;     (exec-path-from-shell-arguments '("-l"))
-;;     (exec-path-from-shell-variables '("DISPLAY" "WAYLAND_DISPLAY"))
-;;     :init
-;;     (my-with-eval-after-frame
-;;      (exec-path-from-shell-initialize)))
+;; Required to get e.g. wl-clipboard wayland connection working on system start (without having to restart the daemon)
+;; Used in conjunction with 'systemctl --user import-environment SWAYSOCK WAYLAND_DISPLAY DISPLAY' in the sway config
+(use-package exec-path-from-shell
+    :custom
+    (exec-path-from-shell-arguments '("-l"))
+    (exec-path-from-shell-variables '("DISPLAY" "WAYLAND_DISPLAY"))
+    :init
+    (my-with-eval-after-frame
+     (exec-path-from-shell-initialize)))
 #+end_src
 
 ** Common
