@@ -125,6 +125,15 @@
   (interactive)
   (setq-local require-final-newline nil))
 
+(defun my-tmp-from-clipboard ()
+  (interactive)
+  (let*
+      ((ext (read-string "" ".json"))
+       (clipboard (car kill-ring))
+       (tmpfile (make-temp-file "scratch" nil ext clipboard)))
+    (message clipboard)
+    (find-file tmpfile)))
+
 
 (provide 'my)
 ;;; my.el ends here
