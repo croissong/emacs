@@ -1127,28 +1127,28 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+end_src
 
 ** latex
- #+begin_src elisp
+#+begin_src elisp
 (use-package tex-mode
     :straight auctex
     :mode "\\.tex\\'"
     :hook (LaTeX-mode . turn-on-reftex))
- #+end_src
+#+end_src
 
 ** plantuml
- #+begin_src elisp
+#+begin_src elisp
 (use-package
     plantuml-mode
     :mode "\\.puml\\'"
     :custom
     (plantuml-executable-path "/usr/bin/plantuml")
     (plantuml-default-exec-mode 'executable))
- #+end_src
+#+end_src
 
 ** adoc
- #+begin_src elisp
+#+begin_src elisp
 (use-package adoc-mode
     :mode "\\.adoc\\'")
- #+end_src
+#+end_src
 
 ** yaml
 #+begin_src elisp

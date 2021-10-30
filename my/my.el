@@ -1,4 +1,4 @@
-;;; my.el --- Utility functions - my moi, for moi -*- lexical-binding: t; -*-
+;;; my.el --- Utility functions - by moi, for moi -*- lexical-binding: t; -*-
 
 (defun my-ensure-dir (&rest dirs)
   "Join args to single path and create directory if it does not exist."
