@@ -93,20 +93,18 @@
       (add-hook 'after-save-hook 'org-babel-tangle nil 'local)
     (remove-hook 'after-save-hook 'org-babel-tangle 'local)))
 
-
 ;; How to make org-mode org-insert-link (C-c C-l) automatically fill in the description from a webpage:
 (defun my-url-get-title (url &optional descr)
-  "Takes a URL and returns the value of the <title> HTML tag,
-   Thanks to https://frozenlock.org/tag/url-retrieve/ for documenting url-retrieve"
-  (let ((buffer (url-retrieve-synchronously url))
-        (title nil))
-    (save-excursion
-      (set-buffer buffer)
-      (goto-char (point-min))
-      (search-forward-regexp "<title>\\([^<]+?\\)</title>")
-      (setq title (match-string 1 ) )
-      (kill-buffer (current-buffer)))
-    title))
+  "Takes a URL and returns the value of the <title> HTML tag"
+  (let (result)
+    (request url
+      :parser (lambda () (libxml-parse-html-region (point) (point-max)))
+      :sync t
+      :success (cl-function
+                (lambda (&key data &allow-other-keys)
+                  (let ((title-elem (dom-by-tag data 'title)))
+                    (setq result (dom-text title-elem))))))
+    result))
 
 
 (defun my-open-in-buffer (buffer txt)
