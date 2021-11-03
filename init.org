@@ -977,10 +977,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package grip-mode
   :custom
-  (grip-preview-use-webkit nil)
-  (grip-url-browser "chromium")
-  (grip-github-user "")
-  (grip-github-password ""))
+  (grip-preview-use-webkit nil))
 #+end_src
 
 ** Python
