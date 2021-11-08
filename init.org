@@ -1249,6 +1249,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :commands easy-convert-interactive)
 
 (use-package org-download)
+
+(use-package string-inflection
+  :commands (string-inflection-all-cycle))
 #+end_src
 
 * UI
