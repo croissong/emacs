@@ -167,8 +167,6 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
 (general-def
 
-  "M-," 'dogears-go
-
   "C-l" 'goto-line
 
   "C-M-^" 'quoted-insert
@@ -204,6 +202,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-x f" 'my-hydras-files/body
 
   "M-." 'xref-find-definitions
+  "M-:" 'xref-find-definitions-other-window
   "C-M-." 'xref-find-references
   "C-r" 'iedit-mode
 
@@ -226,6 +225,10 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-M-<end>" 'org-sentence-newline
   "C-c e" 'org-edit-special
   "C-c TAB" nil)
+
+(general-def
+  :package 'gumshoe
+  "M-," 'gumshoe-backtrack-back)
 
 (general-def
   :keymaps 'org-src-mode-map :package 'org
@@ -477,8 +480,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
 (use-package deft
   :after org
-  :bind
-  ("C-c n d" . deft)
+  :commands deft
   :custom
   (deft-recursive t)
   (deft-use-filter-string-for-filename t)
@@ -575,6 +577,24 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 (use-package dogears
   :init (dogears-mode)
   :straight (:host github :repo "alphapapa/dogears.el"))
+
+(use-package gumshoe
+  :straight (gumshoe :type git
+                     :host github
+                     :repo "Overdr0ne/gumshoe"
+                     :branch "master")
+  :custom
+  (gumshoe-slot-schema '(time buffer position line))
+  (gumshoe-show-footprints-p nil)
+  :init
+  ;; Enabing global-gumshoe-mode will initiate tracking
+  (global-gumshoe-mode +1)
+  ;; customize peruse slot display if you like
+  ;; personally, I use perspectives, so I use the provided extension
+  ;; :after (perspective)
+  ;; (global-gumshoe-persp-mode +1)
+  ;; (setf gumshoe-slot-schema '(perspective time buffer position line))
+  )
 #+end_src
 
 *** formatting
