@@ -463,11 +463,12 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
 
 (use-package org-roam
+  :init
+  (setq org-roam-v2-ack t)
   :custom
   (org-roam-directory (my-ensure-dir org-directory "roam/"))
   :config
   (org-roam-db-autosync-mode)
-  (org-roam-v2-ack t)
   ;; If using org-roam-protocol
   (require 'org-roam-protocol)
   :bind (:map org-roam-mode-map
