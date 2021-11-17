@@ -42,7 +42,7 @@
   ("2" (crux-delete-file-and-buffer) "delete" :column "file")
   ("3" (call-interactively 'crux-copy-file-preserve-attributes) "copy" :column "file")
   ("5" (call-interactively 'set-buffer-file-coding-system) "encoding" :column "file")
-  ("a" (my-hydras--kill-absolute-buffer-path) "absolute path" :column "file")
+  ("a" (my-hydras--kill-absolute-buffer-path) "path" :column "file")
 
   ("l" (progn
          (my-hydras--lsp/body)
@@ -57,11 +57,14 @@
          (my-hydras--ediff/body)
          (my-hydras--push '(my-hydras-code/body))) "ediff.." :column "more"))
 
-(defun my-hydras--kill-absolute-buffer-path ()
-  "Copy the current buffer's absolute path"
-  (kill-new (if (equal major-mode 'dired-mode)
-                      default-directory
-                    buffer-file-name)))
+(defun my-hydras--kill-buffer-path ()
+  "Copy the current buffer's project-root-relative or absolute path"
+  (let ((project-root (projectile-project-root)))
+    (if project-root
+        (kill-new (file-relative-name buffer-file-name project-root))
+      (kill-new (if (equal major-mode 'dired-mode)
+                    default-directory
+                  buffer-file-name)))))
 
 
 ;; More at https://github.com/abo-abo/hydra/wiki/Emacs
