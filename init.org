@@ -202,7 +202,8 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-x f" 'my-hydras-files/body
 
   "M-." 'xref-find-definitions
-  "M-:" 'xref-find-definitions-other-window
+  ;; clashes with run-elisp-function
+  ;; "M-:" 'xref-find-definitions-other-window
   "C-M-." 'xref-find-references
   "C-r" 'iedit-mode
 
@@ -1248,10 +1249,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :straight (:host github :repo "Frozenlock/easy-convert")
   :commands easy-convert-interactive)
 
-(use-package org-download)
+(use-package org-download
+  :after org)
 
 (use-package string-inflection
   :commands (string-inflection-all-cycle))
+
+(use-package recover-buffers)
 #+end_src
 
 * UI
