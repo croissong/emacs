@@ -42,7 +42,7 @@
   ("2" (crux-delete-file-and-buffer) "delete" :column "file")
   ("3" (call-interactively 'crux-copy-file-preserve-attributes) "copy" :column "file")
   ("5" (call-interactively 'set-buffer-file-coding-system) "encoding" :column "file")
-  ("a" (my-hydras--kill-absolute-buffer-path) "path" :column "file")
+  ("a" (my-hydras--kill-buffer-path) "path" :column "file")
 
   ("l" (progn
          (my-hydras--lsp/body)
