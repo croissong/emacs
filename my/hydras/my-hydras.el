@@ -44,9 +44,6 @@
   ("5" (call-interactively 'set-buffer-file-coding-system) "encoding" :column "file")
   ("a" (my-hydras--kill-buffer-path) "path" :column "file")
 
-  ("l" (progn
-         (my-hydras--lsp/body)
-         (my-hydras--push '(my-hydras-code/body))) "lsp.." :column "more")
   ("d" (progn
          (dap-hydra/body)
          (my-hydras--push '(my-hydras-code/body))) "dap.." :column "more")
@@ -113,7 +110,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   ("e" straight-prune-build)
   ("q" my-hydras--pop))
 
-(defhydra my-hydras--lsp (:exit t :hint nil)
+(defhydra my-hydras-lsp (:exit t :hint nil)
   "
  Buffer^^               Server^^                   Symbol
 -------------------------------------------------------------------------------------

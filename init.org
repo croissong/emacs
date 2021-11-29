@@ -200,6 +200,8 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-v" 'my-hydras-misc/body
   "C-M-f" 'my-hydras-code/body
   "C-x f" 'my-hydras-files/body
+  "M-l" 'my-hydras-lsp/body
+
 
   "M-." 'xref-find-definitions
   ;; clashes with run-elisp-function
