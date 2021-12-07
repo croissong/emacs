@@ -306,9 +306,11 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 (general-def
   :keymaps 'embark-region-map :package 'embark
   "t" 'google-translate-smooth-translate
-  "s" 'flyspell-region
-  "c" 'flyspell-auto-correct-word
   "d" 'lexic-search)
+
+(general-def
+  :keymaps 'embark-identifier-map :package 'embark
+  "s" 'flyspell-correct-at-point)
 #+end_src
 
 *** Editing
@@ -683,16 +685,17 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 (use-package flyspell
     :hook ((text-mode markdown-mode) . flyspell-mode)
     :config
+
+    ;; Disable clickable overlay
+    ;; https://emacs.stackexchange.com/questions/36899/disable-clickable-links-for-misspelled-words-flyspell
     (advice-add 'make-flyspell-overlay :filter-return
                 (lambda (overlay)
                   (overlay-put overlay 'help-echo nil)
                   (overlay-put overlay 'keymap nil)
                   (overlay-put overlay 'mouse-face nil)))
     :delight flyspell-mode)
-(use-package flyspell-correct
-    :after flyspell
-    :bind (:map flyspell-mode-map
-                ("C-;" . flyspell-correct-wrapper)))
+
+(use-package flyspell-correct :after flyspell)
 #+end_src
 
 ** minibuffer & completion
@@ -751,7 +754,9 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
 (use-package embark
     :bind*
-  ("C-q" . embark-act))
+  ("C-q" . embark-act)
+  :config
+  (add-to-list 'embark-pre-action-hooks '(flyspell-correct-at-point embark--ignore-target)))
 
 (use-package embark-consult
   :after (embark consult))
