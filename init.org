@@ -1092,9 +1092,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** rust
 #+begin_src elisp
-(use-package rustic
-  :after smartparens-rust
-  :mode "\\.rs\\'")
+;; No conditional-on-mode necessary
+(use-package rustic)
 #+end_src
 
 ** java
