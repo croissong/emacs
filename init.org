@@ -1156,6 +1156,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :mode "\\.tf\\'"
     :hook (terraform-mode . format-all-default))
 #+end_src
+** shell
+#+begin_src elisp
+(use-package sh-mode
+  :straight nil
+  :hook (sh-mode . flycheck-mode))
+#+end_src
 
 ** tramp
 #+begin_src elisp
