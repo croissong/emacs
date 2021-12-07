@@ -197,11 +197,6 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-x b" 'magit-blame
   "C-x l" 'magit-log-buffer-file
 
-  "C-v" 'my-hydras-misc/body
-  "C-M-f" 'my-hydras-code/body
-  "C-x f" 'my-hydras-files/body
-  "M-l" 'my-hydras-lsp/body
-
 
   "M-." 'xref-find-definitions
   ;; clashes with run-elisp-function
@@ -289,6 +284,11 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
   "C-a" 'back-to-indentation
   "C-M-q C-a" 'beginning-of-line
+
+  "C-v" 'my-hydras-misc/body
+  "C-M-f" 'my-hydras-code/body
+  "C-x f" 'my-hydras-files/body
+  "M-l" 'my-hydras-lsp/body
 )
 
 (general-def
