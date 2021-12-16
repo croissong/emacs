@@ -623,7 +623,8 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
     (:format (format-all--buffer-easy
               executable "-d" "-")))
 
-  (setq-default format-all-formatters '(("Python" black)))
+  (setq-default format-all-formatters '(("Python" black)
+                                        ("Shell" shfmt)))
   :delight format-all-mode)
 #+end_src
 
