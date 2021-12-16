@@ -1141,7 +1141,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** rust
 #+begin_src elisp
 ;; No conditional-on-mode necessary
-(use-package rustic)
+(use-package rustic
+  :custom
+  (lsp-rust-analyzer-proc-macro-enable t))
 #+end_src
 
 ** sql
