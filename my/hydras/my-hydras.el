@@ -49,13 +49,18 @@
 
   ("d" (progn
          (dap-hydra/body)
-         (my-hydras--push '(my-hydras-code/body))) "dap.." :column "more")
+         (my-hydras--push '(my-hydras-code/body)))
+   "dap.." :column "more")
+
   ("p" (progn
          (hydra-projectile/body)
-         (my-hydras--push '(my-hydras-code/body))) "projectile.." :column "more")
+         (my-hydras--push '(my-hydras-code/body)))
+   "projectile.." :column "more")
+
   ("e" (progn
          (my-hydras--ediff/body)
-         (my-hydras--push '(my-hydras-code/body))) "ediff.." :column "more"))
+         (my-hydras--push '(my-hydras-code/body)))
+   "ediff.." :column "more"))
 
 (defun my-hydras--kill-buffer-path (absolute-p)
   "Copy the current buffer's project-root-relative.
