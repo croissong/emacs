@@ -971,6 +971,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (dired-listing-switches "-aDhvl --group-directories-first")
   (dired-auto-revert-buffer t)
   (dired-clean-up-buffers-too nil)
+  (dired-dwim-target t)
   :bind (("C-x d" . nil)
          :map dired-mode-map
          ("M-ö" . dired-up-directory)
