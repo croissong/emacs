@@ -42,7 +42,10 @@
   ("2" (crux-delete-file-and-buffer) "delete" :column "file")
   ("3" (call-interactively 'crux-copy-file-preserve-attributes) "copy" :column "file")
   ("5" (call-interactively 'set-buffer-file-coding-system) "encoding" :column "file")
-  ("a" (my-hydras--kill-buffer-path) "path" :column "file")
+  ("a" (lambda (absolute-p)
+         (interactive "P")
+         (my-hydras--kill-buffer-path absolute-p))
+   "path" :column "file")
 
   ("d" (progn
          (dap-hydra/body)
@@ -54,10 +57,12 @@
          (my-hydras--ediff/body)
          (my-hydras--push '(my-hydras-code/body))) "ediff.." :column "more"))
 
-(defun my-hydras--kill-buffer-path ()
-  "Copy the current buffer's project-root-relative or absolute path"
+(defun my-hydras--kill-buffer-path (absolute-p)
+  "Copy the current buffer's project-root-relative.
+If not within a project, or with prefix argument, copy the absolute path instead."
+  (interactive "P")
   (let ((project-root (projectile-project-root)))
-    (if project-root
+    (if (and project-root (not absolute-p))
         (kill-new (file-relative-name buffer-file-name project-root))
       (kill-new (if (equal major-mode 'dired-mode)
                     default-directory
