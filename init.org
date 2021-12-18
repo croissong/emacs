@@ -229,6 +229,10 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "M-," 'gumshoe-backtrack-back)
 
 (general-def
+  :keymaps 'key-translation-map
+  "M-q" "C-u")
+
+(general-def
   :keymaps 'org-src-mode-map :package 'org
   "C-c e" 'org-edit-src-exit)
 
@@ -271,7 +275,6 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-x ^" nil
 
   "C-<tab>" 'my-indent-rigidly
-  "M-q" 'universal-argument
 
   "C-M-k" 'kill-this-buffer
   "M-r" 'revert-buffer
