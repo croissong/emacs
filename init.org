@@ -82,6 +82,8 @@
 
       vc-handled-backends nil
 
+      enable-recursive-minibuffers nil
+
       inhibit-startup-screen t
       initial-scratch-message nil
       initial-major-mode 'text-mode
