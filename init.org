@@ -316,6 +316,10 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 (general-def
   :keymaps 'embark-identifier-map :package 'embark
   "s" 'flyspell-correct-at-point)
+
+(general-def
+  :keymaps 'embark-symbol-map :package 'embark
+  "s" 'flyspell-correct-at-point)
 #+end_src
 
 *** Editing
