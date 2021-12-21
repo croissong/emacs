@@ -627,7 +627,8 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
               executable "-d" "-")))
 
   (setq-default format-all-formatters '(("Python" black)
-                                        ("Shell" shfmt)))
+                                        ("Shell" shfmt)
+                                        ("Go" gofmt)))
   :delight format-all-mode)
 #+end_src
 
