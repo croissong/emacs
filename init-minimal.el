@@ -2,10 +2,6 @@
 
 
 (setq straight-use-package-by-default t
-      use-package-compute-statistics nil
-      comp-async-report-warnings-errors nil
-      straight-check-for-modifications '(find-when-checking)
-
       initial-scratch-message nil
       inhibit-startup-screen t)
 
@@ -30,17 +26,7 @@
   (gif-screencast-program "grim")
   (gif-screencast-args ()))
 
-(use-package a)
-(use-package ctrlf
-  :init (ctrlf-mode +1)
-  (message "hooo")
-    :config
-    (setq ctrlf-minibuffer-bindings (a-assoc ctrlf-minibuffer-bindings
-                                        "M-ä" 'ctrlf-next-match
-                                        "M-ü" 'ctrlf-previous-match
-                                        "C-r" 'ctrlf-change-search-style)))
-
-
-
+(global-set-key (kbd "C-f") 'find-file)
+(global-set-key (kbd "M-d") 'switch-to-buffer)
 
 (switch-to-buffer "*Messages*")
