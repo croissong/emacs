@@ -236,6 +236,11 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-r" 'isearch-query-replace)
 
 (general-def
+  :keymaps 'dired-mode-map
+  "M-ö" 'dired-up-directory
+  "M-#" 'dired-find-file)
+
+(general-def
   :keymaps 'override
 
 
@@ -278,6 +283,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-<down>" 'golden-ratio-scroll-screen-up
 
   "C-x ^" nil
+  "C-x d" nil
 
   "C-<tab>" 'my-indent-rigidly
 
@@ -554,8 +560,9 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   :init (envrc-global-mode)
   :delight envrc-mode)
 
-(use-package async
-  :init (dired-async-mode 1))
+;; currently no usage for it
+;; but keep an eye on future features
+;; (use-package async)
 
 (use-package midnight
   :config
@@ -987,30 +994,29 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (cl-pushnew 'my--git-commit-check-commitlint git-commit-finish-query-functions))
 #+end_src
 
-** Dired
+** dired & dirvish
 #+begin_src elisp
 (require 'dired-x)
-(use-package dired+
-  :straight dired-plus
-  :demand t
-  :config
-  (diredp-make-find-file-keys-reuse-dirs)
-  :custom
-  (dired-listing-switches "-aDhvl --group-directories-first")
-  (dired-auto-revert-buffer t)
-  (dired-clean-up-buffers-too nil)
-  (dired-dwim-target t)
-  :bind (("C-x d" . nil)
-         :map dired-mode-map
-         ("M-ö" . dired-up-directory)
-         ("M-#" . dired-find-file)
-         ("C-M-w" . diredp-copy-abs-filenames-as-kill)))
 
-(use-package dired-filter
-    :hook (dired-mode . dired-filter-mode)
-    :custom
-    (dired-filter-verbose nil)
-    :delight dired-filter-mode)
+(use-package dirvish
+  :demand t
+  :custom
+  (dired-listing-switches "-aDGhvl --group-directories-first --time-style=long-iso")
+  (dired-auto-revert-buffer t)
+  ;; todo: not respected
+  (dired-kill-when-opening-new-dired-buffer t)
+  (dired-clean-confirm-killing-deleted-buffers nil)
+  (dired-recursive-copies 'always)
+  (dired-dwim-target t)
+  (dirvish-enable-preview nil)
+  :init
+  (defun my--dired-overrider ()
+    (interactive)
+    (unless (dirvish-live-p)
+      (if current-prefix-arg
+          (dirvish)
+        (dirvish-dired))))
+  :hook (dired-after-readin-hook . my--dired-overrider))
 #+end_src
 
 * Languages
