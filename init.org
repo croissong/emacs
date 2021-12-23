@@ -168,19 +168,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "<M-mouse-3>")	  ; mouse-secondary-save-then-kill
 
 (general-def
-
-  "C-l" 'goto-line
-
   "C-M-^" 'quoted-insert
-  "M-ü" 'previous-line
-  "M-ä" 'next-line
-
-  "M-ö" 'previous-buffer
-  "M-#" 'next-buffer
-
-  "C-d" 'projectile-find-file
-  "C-f" 'find-file
-  "M-d" 'consult-buffer
 
   "C-M-y" 'consult-yank
   "C-M-s" 'consult-ripgrep
@@ -249,6 +237,16 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
 (general-def
   :keymaps 'override
+
+
+  "C-l" 'goto-line
+
+  "M-ü" 'previous-line
+  "M-ä" 'next-line
+
+  "˝" 'previous-buffer
+  "’" 'next-buffer
+
   "C-ö" 'windmove-left
   "C-#" 'windmove-right
   "C-ü" 'windmove-up
@@ -260,6 +258,11 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-3" 'split-window-below
   "C-M-1" 'winner-undo
   "C-M-2" 'winner-redo
+
+
+  "C-d" 'projectile-find-file
+  "C-f" 'find-file
+  "M-d" 'consult-buffer
 
   "M-^" 'tab-close
   "M-1" 'tab-switch
