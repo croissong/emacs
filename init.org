@@ -582,8 +582,8 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 (use-package drag-stuff
     :init
     (drag-stuff-global-mode 1)
-    :custom
-    (drag-stuff-except-modes '(org-mode))
+    :config
+    (setq drag-stuff-except-modes '(org-mode))
     :delight drag-stuff-mode)
 
 (use-package golden-ratio-scroll-screen
