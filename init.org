@@ -6,6 +6,34 @@
 ;;; -*- lexical-binding: t -*-
 #+end_src
 * core
+** core
+#+begin_src elisp
+;; https://github.com/hlissner/doom-emacs/blob/develop/core/core.el
+
+(setq auto-mode-case-fold nil
+      bidi-inhibit-bpa t
+      highlight-nonselected-windows nil
+      fast-but-imprecise-scrolling t
+      frame-inhibit-implied-resize t
+
+      idle-update-delay 1.0
+
+      pgtk-wait-for-event-timeout 0.001
+
+      redisplay-skip-fontification-on-input t
+      command-line-ns-option-alist nil
+      ad-redefinition-action 'accept
+      debug-on-error init-file-debug
+      jka-compr-verbose init-file-debug
+
+      inhibit-default-init t)
+
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right
+              cursor-in-non-selected-windows nil)
+
+#+end_src
+
 ** Init
 #+begin_src elisp
 
@@ -37,10 +65,6 @@
 (use-package f)
 (use-package dash)
 (use-package a)
-
-(use-package gcmh
-  :init (gcmh-mode 1)
-  :delight)
 
 (use-package my
     :straight (:local-repo "~/.config/emacs/my/" :files ("my.el"))
@@ -118,6 +142,7 @@
       so-long-action 'longlines-mode)
 
 #+end_src
+
 **** Fix clipboard on wayland
 https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 #+begin_src elisp
@@ -335,17 +360,6 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 #+begin_src elisp
 (delight 'eldoc-mode nil "eldoc")
 (setq xref-prompt-for-identifier nil)
-#+end_src
-
-*** coding system
-[[https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs][@masteringemacs]]
-#+begin_src elisp
-(prefer-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(setq-default buffer-file-coding-system 'utf-8)
-(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 #+end_src
 
 *** debugging
@@ -1345,6 +1359,19 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
     :config
     (modus-themes-load-operandi))
+#+end_src
+
+* finish
+#+begin_src elisp
+(use-package gcmh
+  :init
+  ;; https://github.com/hlissner/doom-emacs/blob/develop/core/core.el#L295
+  (setq gcmh-idle-delay 'auto  ; default is 15s
+        gcmh-auto-idle-delay-factor 10
+        ;; 16mb
+        gcmh-high-cons-threshold (* 16 1024 1024))
+  (gcmh-mode 1)
+  :delight)
 #+end_src
 
 * Calc
