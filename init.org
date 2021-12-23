@@ -5,8 +5,8 @@
 #+begin_src elisp
 ;;; -*- lexical-binding: t -*-
 #+end_src
+
 * core
-** core
 #+begin_src elisp
 ;; https://github.com/hlissner/doom-emacs/blob/develop/core/core.el
 
@@ -32,9 +32,76 @@
               bidi-paragraph-direction 'left-to-right
               cursor-in-non-selected-windows nil)
 
+
+;; custom
+
+(setq default-directory "~/"
+      custom-file (expand-file-name "custom.el" user-emacs-directory)
+      browse-url-generic-program (executable-find "handlr")
+      browse-url-generic-args '("open")
+      require-final-newline t
+      read-process-output-max (* 1024 1024) ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
+      enable-local-eval t
+      mouse-wheel-scroll-amount '(2 ((shift) . 2))
+      mouse-wheel-progressive-speed nil
+      same-window-buffer-names '("*Help*")
+      Man-notify-method 'pushy
+
+      vc-handled-backends nil
+
+      enable-recursive-minibuffers nil
+
+      inhibit-startup-screen t
+      initial-scratch-message nil
+      initial-major-mode 'text-mode
+
+      ring-bell-function 'ignore
+      vc-follow-symlinks t
+
+      split-height-threshold 120
+      split-width-threshold 160
+
+      ;; Kill active process buffer no prompt
+      kill-buffer-query-functions (remq 'process-kill-buffer-query-function kill-buffer-query-functions)
+
+      display-buffer-alist
+      '(("*Async Shell Command*" . (display-buffer-no-window))))
+
+(setq-default indent-tabs-mode nil
+              tab-width 2
+              sentence-end-double-space nil
+              ;; increase (magit-commit) line autowrap width (default=70)
+              fill-column 80)
+
+(fset 'yes-or-no-p 'y-or-n-p)
+(delete-selection-mode 1)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
 #+end_src
 
-** Init
+** Fix clipboard on wayland
+https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
+#+begin_src elisp
+(setq wl-copy-process nil)
+(defun wl-copy (text)
+  (setq wl-copy-process (let ((default-directory "~"))
+                          (make-process :name "wl-copy"
+                                      :buffer nil
+                                      :command '("wl-copy" "-f" "-n")
+                                      :noquery t
+                                      :connection-type 'pipe)))
+  (process-send-string wl-copy-process text)
+  (process-send-eof wl-copy-process))
+(defun wl-paste ()
+  (if (and wl-copy-process (process-live-p wl-copy-process))
+      nil
+      (let ((default-directory "~"))
+        (shell-command-to-string "wl-paste -n | tr -d '\r'"))))
+(setq interprogram-cut-function 'wl-copy)
+(setq interprogram-paste-function 'wl-paste)
+#+end_src
+
+* bootstrap
 #+begin_src elisp
 
 (setq straight-use-package-by-default t
@@ -86,86 +153,8 @@
      (exec-path-from-shell-initialize)))
 #+end_src
 
-** Common
-*** Config
-#+begin_src elisp
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-
-(setq default-directory "~/"
-      custom-file (expand-file-name "custom.el" user-emacs-directory)
-      browse-url-generic-program (executable-find "handlr")
-      browse-url-generic-args '("open")
-      require-final-newline t
-      read-process-output-max (* 1024 1024) ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
-      enable-local-eval t
-      mouse-wheel-scroll-amount '(2 ((shift) . 2))
-      mouse-wheel-progressive-speed nil
-      same-window-buffer-names '("*Help*")
-      Man-notify-method 'pushy
-
-      vc-handled-backends nil
-
-      enable-recursive-minibuffers nil
-
-      inhibit-startup-screen t
-      initial-scratch-message nil
-      initial-major-mode 'text-mode
-
-      ring-bell-function 'ignore
-      vc-follow-symlinks t
-
-      split-height-threshold 120
-      split-width-threshold 160
-
-      ;; Kill active process buffer no prompt
-      kill-buffer-query-functions (remq 'process-kill-buffer-query-function kill-buffer-query-functions)
-
-      display-buffer-alist
-      '(("*Async Shell Command*" . (display-buffer-no-window))))
-
-(fset 'yes-or-no-p 'y-or-n-p)
-(delete-selection-mode 1)
-
-(setq-default indent-tabs-mode nil
-              tab-width 2
-              sentence-end-double-space nil
-              ;; increase (magit-commit) line autowrap width (default=70)
-              fill-column 80)
-#+end_src
-
-**** Long lines fix
-#+begin_src elisp
-(require 'longlines)
-(global-so-long-mode 1)
-(setq so-long-target-modes (-union so-long-target-modes '(fundamental-mode))
-      so-long-action 'longlines-mode)
-
-#+end_src
-
-**** Fix clipboard on wayland
-https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
-#+begin_src elisp
-(setq wl-copy-process nil)
-(defun wl-copy (text)
-  (setq wl-copy-process (let ((default-directory "~"))
-                          (make-process :name "wl-copy"
-                                      :buffer nil
-                                      :command '("wl-copy" "-f" "-n")
-                                      :noquery t
-                                      :connection-type 'pipe)))
-  (process-send-string wl-copy-process text)
-  (process-send-eof wl-copy-process))
-(defun wl-paste ()
-  (if (and wl-copy-process (process-live-p wl-copy-process))
-      nil
-      (let ((default-directory "~"))
-        (shell-command-to-string "wl-paste -n | tr -d '\r'"))))
-(setq interprogram-cut-function 'wl-copy)
-(setq interprogram-paste-function 'wl-paste)
-#+end_src
-
-*** Keybindings
+* common
+** keybindings
 #+begin_src elisp
 
 (use-package my-hydras
@@ -356,13 +345,13 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "s" 'flyspell-correct-at-point)
 #+end_src
 
-*** Editing
+** editing
 #+begin_src elisp
 (delight 'eldoc-mode nil "eldoc")
 (setq xref-prompt-for-identifier nil)
 #+end_src
 
-*** debugging
+** debugging
 #+begin_src elisp
 (use-package explain-pause-mode
   :straight (:host github :repo "lastquestion/explain-pause-mode")
@@ -374,7 +363,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   :commands esup)
 #+end_src
 
-*** backup & auto-save
+** backup & auto-save
 [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][source]]
 #+begin_src elisp
 (setq delete-old-versions t
@@ -391,7 +380,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
       auto-save-list-file-prefix emacs-autosave-dir)
 #+end_src
 
-*** buffer & window management
+** buffer & window management
 #+begin_src elisp
 (winner-mode 1)
 
@@ -425,7 +414,16 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 (use-package secrets)
 #+end_src
 
-* general
+** long lines improvements
+#+begin_src elisp
+;; improve long line handling
+(require 'longlines)
+(global-so-long-mode 1)
+(setq so-long-target-modes (-union so-long-target-modes '(fundamental-mode))
+      so-long-action 'longlines-mode)
+#+end_src
+
+* general-purpose
 ** org-mode
 #+begin_src elisp
 (use-package reveal
@@ -969,7 +967,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package hydra)
 #+end_src
 
-** Magit
+** magit
 #+begin_src elisp
 (use-package magit
     :commands magit-status
@@ -1033,7 +1031,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :hook (dired-after-readin . my--dired-overrider))
 #+end_src
 
-* Languages
+* languages
 ** adoc
 #+begin_src elisp
 (use-package adoc-mode
@@ -1332,7 +1330,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package recover-buffers)
 #+end_src
 
-* UI
+* ui
 #+begin_src elisp
 (menu-bar-mode -1)
 (tool-bar-mode -1)
