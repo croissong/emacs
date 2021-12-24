@@ -343,6 +343,11 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 (general-def
   :keymaps 'embark-symbol-map :package 'embark
   "s" 'flyspell-correct-at-point)
+
+(general-def
+  :keymaps 'isearch-mb-minibuffer-map :package 'isearch-mb
+  "M-ä" 'isearch-repeat-forward
+  "M-ü" 'isearch-repeat-backward)
 #+end_src
 
 ** editing
@@ -760,13 +765,14 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
     :custom
     (selectrum-prescient-enable-filtering nil))
 
-(use-package ctrlf
-    :init (ctrlf-mode +1)
-    :config
-    (setq ctrlf-minibuffer-bindings (a-assoc ctrlf-minibuffer-bindings
-                                        "M-ä" 'ctrlf-next-match
-                                        "M-ü" 'ctrlf-previous-match
-                                        "C-r" 'ctrlf-change-search-style)))
+
+(use-package isearch-mb
+  :init (isearch-mb-mode)
+  :config
+  (setq-default
+   isearch-lazy-count t
+   search-ring-max 200
+   regexp-search-ring-max 200))
 
 ;; https ://www.reddit.com/r/emacs/comments/krptmz/emacs_completion_framework_embark_consult/
 (use-package consult
