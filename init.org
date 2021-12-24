@@ -739,31 +739,31 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 ** minibuffer & completion
 #+begin_src elisp
 (use-package selectrum
-    :after (orderless)
-    :init (selectrum-mode +1)
-    :custom
-    (selectrum-refine-candidates-function #'orderless-filter)
-    (orderless-skip-highlighting (lambda () selectrum-is-active))
-    (selectrum-highlight-candidates-function #'orderless-highlight-matches)
-    (magit-completing-read-function #'selectrum-completing-read)
-    :bind (:map selectrum-minibuffer-map
-                ("M-#" . selectrum-insert-current-candidate)
-                ("M-ö" . my-backward-delete-sexp)))
+  :after (orderless)
+  :init (selectrum-mode +1)
+  :custom
+  (selectrum-refine-candidates-function #'orderless-filter)
+  (orderless-skip-highlighting (lambda () selectrum-is-active))
+  (selectrum-highlight-candidates-function #'orderless-highlight-matches)
+  (magit-completing-read-function #'selectrum-completing-read)
+  :bind (:map selectrum-minibuffer-map
+              ("M-#" . selectrum-insert-current-candidate)
+              ("M-ö" . my-backward-delete-sexp)))
 
 (use-package orderless
-    :custom
-    (orderless-matching-styles '(orderless-prefixes)))
+  :custom
+  (orderless-matching-styles '(orderless-prefixes)))
 
 (use-package prescient
   :custom
   (prescient-history-length 50))
 (use-package selectrum-prescient
-    :after (prescient selectrum)
-    :config
-    (prescient-persist-mode +1)
-    (selectrum-prescient-mode +1)
-    :custom
-    (selectrum-prescient-enable-filtering nil))
+  :after (prescient selectrum)
+  :config
+  (prescient-persist-mode +1)
+  (selectrum-prescient-mode +1)
+  :custom
+  (selectrum-prescient-enable-filtering nil))
 
 
 (use-package isearch-mb
@@ -776,9 +776,9 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
 ;; https ://www.reddit.com/r/emacs/comments/krptmz/emacs_completion_framework_embark_consult/
 (use-package consult
-    :custom
-    (consult-project-root-function #'projectile-project-root)
-    (consult-preview-key nil))
+  :custom
+  (consult-project-root-function #'projectile-project-root)
+  (consult-preview-key nil))
 
 (use-package marginalia
   :init
@@ -792,7 +792,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
                                 selectrum-mode) (selectrum-exhibit)))))
 
 (use-package embark
-    :bind*
+  :bind*
   ("C-q" . embark-act)
   :config
   (add-to-list 'embark-pre-action-hooks '(flyspell-correct-at-point embark--ignore-target)))
