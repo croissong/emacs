@@ -431,9 +431,11 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 * general-purpose
 ** org-mode
 #+begin_src elisp
-(use-package reveal
-    :hook (org-mode . reveal-mode)
-    :delight reveal-mode)
+;; disabled in order to fix isearch reveal of collapsed org trees
+;; (use-package reveal
+;;   :hook (org-mode . reveal-mode)
+;;     :delight reveal-mode)
+
 (use-package company-org-block
   :commands company-org-block
   :after company)
