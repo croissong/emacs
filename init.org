@@ -781,6 +781,15 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
     (isearch-repeat (if isearch-forward 'forward))
     (ad-enable-advice 'isearch-search 'after 'isearch-no-fail)
     (ad-activate 'isearch-search)))
+
+
+;; instant isearch reverse
+;; https://emacs.stackexchange.com/a/58825
+(define-advice isearch-repeat (:before (direction &optional count) goto-other-end)
+  "If reversing, start the search from the other end of the current match."
+  (unless (eq isearch-forward (eq direction 'forward))
+    (when isearch-other-end
+      (goto-char isearch-other-end))))
 #+end_src
 
 ** minibuffer & completion
