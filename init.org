@@ -195,6 +195,10 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-<return>" 'crux-smart-open-line
   "M-<return>" 'crux-smart-open-line-above
 
+  ;; not global because of conflict in minibuffer (isearch)
+  "M-ü" 'previous-line
+  "M-ä" 'next-line
+
   "C-M-w" 'er/expand-region
   "C-M-q" 'er/contract-region
 
@@ -230,7 +234,8 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
 (general-def
   :package 'gumshoe
-  "M-," 'gumshoe-backtrack-back)
+  "M-ö" 'gumshoe-backtrack-back
+  "M-#" 'gumshoe-backtrack-forward)
 
 (general-def
   :keymaps 'key-translation-map
@@ -257,11 +262,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 (general-def
   :keymaps 'override
 
-
   "C-l" 'goto-line
-
-  "M-ü" 'previous-line
-  "M-ä" 'next-line
 
   "˝" 'previous-buffer
   "’" 'next-buffer
@@ -318,6 +319,11 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-x f" 'my-hydras-files/body
   "M-l" 'my-hydras-lsp/body
 )
+
+(general-def
+  :keymaps 'lsp-mode-map :package 'lsp-mode
+  "M--"  'lsp-execute-code-action
+  "C-r" 'lsp-rename)
 
 (general-def
   :keymaps 'embark-file-map :package 'embark
@@ -696,10 +702,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   (lsp-modeline-code-actions-enable nil)
   (lsp-keymap-prefix "M-l")
   (lsp-disabled-clients '(ts angular-ls))
-  (lsp-keep-workspace-alive nil)
-  :bind (:map lsp-mode-map
-              ;; ("M-." . lsp-goto-implementation)
-              ("M--" . lsp-execute-code-action)))
+  (lsp-keep-workspace-alive nil))
 
 (use-package lsp-ui
     :commands lsp-ui-mode
