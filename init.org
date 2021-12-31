@@ -755,6 +755,34 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 (use-package flyspell-correct :after flyspell)
 #+end_src
 
+** isearch
+#+begin_src elisp
+(use-package isearch-mb
+  :init (isearch-mb-mode)
+  :config
+  (setq-default
+   isearch-lazy-count t
+   search-ring-max 200
+   regexp-search-ring-max 200))
+
+
+;;;; isearch tweaks
+
+;;; auto-wrap isearch: https://stackoverflow.com/a/36707038
+
+;; Prevents issue where you have to press backspace twice when
+;; trying to remove the first character that fails a search
+(define-key isearch-mode-map [remap isearch-delete-char] 'isearch-del-char)
+
+(defadvice isearch-search (after isearch-no-fail activate)
+  (unless isearch-success
+    (ad-disable-advice 'isearch-search 'after 'isearch-no-fail)
+    (ad-activate 'isearch-search)
+    (isearch-repeat (if isearch-forward 'forward))
+    (ad-enable-advice 'isearch-search 'after 'isearch-no-fail)
+    (ad-activate 'isearch-search)))
+#+end_src
+
 ** minibuffer & completion
 #+begin_src elisp
 (use-package vertico
@@ -773,15 +801,6 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   (completion-styles '(orderless))
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles partial-completion substring)))))
-
-
-(use-package isearch-mb
-  :init (isearch-mb-mode)
-  :config
-  (setq-default
-   isearch-lazy-count t
-   search-ring-max 200
-   regexp-search-ring-max 200))
 
 ;; https ://www.reddit.com/r/emacs/comments/krptmz/emacs_completion_framework_embark_consult/
 (use-package consult
