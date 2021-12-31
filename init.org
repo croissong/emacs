@@ -1360,7 +1360,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (defun my-modus-themes-custom-faces ()
       (modus-themes-with-colors
         (custom-set-faces
-         `(show-paren-match ((,class :foreground ,green-intense
+         `(show-paren-match ((,class :foreground ,green-subtle-bg
                                             :background nil
                                             :weight ,'bold))))))
     (add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
