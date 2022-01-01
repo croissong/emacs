@@ -335,6 +335,11 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 )
 
 (general-def
+  :keymaps 'vertico-map :package 'vertico
+  "M-#" 'vertico-insert
+  "M-ö" 'my-backward-delete-sexp)
+
+(general-def
   :keymaps 'lsp-mode-map :package 'lsp-mode
   "M--"  'lsp-execute-code-action
   "C-r" 'lsp-rename)
