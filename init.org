@@ -296,11 +296,12 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
   "C-d" 'projectile-find-file
   "C-f" 'find-file
-  "M-d" 'consult-buffer
+  "M-d" 'persp-switch-to-buffer*
 
-  "M-^" 'tab-close
-  "M-1" 'tab-switch
-  "M-2" 'my/tab-new-and-rename
+
+  "M-1" 'persp-switch
+  "M-2" 'persp-set-buffer
+  "M-^" 'persp-kill
 
   "C-M-#" 'buf-move-right
   "C-M-ö" 'buf-move-left
@@ -414,18 +415,27 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 #+begin_src elisp
 (winner-mode 1)
 
-(setq tab-bar-show nil)
-(tab-bar-mode)
-(defun my/tab-new-and-rename ()
-  (interactive)
-  (tab-new)
-  (call-interactively 'tab-rename))
+(use-package perspective
+  :init (persp-mode)
+  :custom
+  (persp-sort 'access))
+
 
 (use-package buffer-move)
 
 (use-package edit-indirect
   :straight (:type git :host github :repo "Fanael/edit-indirect")
   :commands edit-indirect-region)
+
+
+
+;;; from https://github.com/nex3/perspective-el#some-musings-on-emacs-window-layouts
+
+(customize-set-variable 'display-buffer-base-action
+  '((display-buffer-reuse-window display-buffer-same-window)
+    (reusable-frames . t)))
+
+(customize-set-variable 'even-window-sizes nil)     ; avoid resizing
 #+end_src
 
 ** secrets
