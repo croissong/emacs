@@ -719,7 +719,8 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   (lsp-modeline-code-actions-enable nil)
   (lsp-keymap-prefix "M-l")
   (lsp-disabled-clients '(ts angular-ls))
-  (lsp-keep-workspace-alive nil))
+  (lsp-keep-workspace-alive nil)
+  :delight (lsp-lens-mode))
 
 (use-package lsp-ui
     :commands lsp-ui-mode
@@ -740,7 +741,8 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 *** linting
 #+begin_src elisp
 (use-package flycheck
-    :commands flycheck-mode)
+    :commands flycheck-mode
+    :delight flycheck-mode)
 
 (use-package flyspell
     :hook ((text-mode markdown-mode) . flyspell-mode)
@@ -966,7 +968,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (projectile-completion-system 'default)
     (projectile-switch-project-action 'projectile-vc)
     (projectile-enable-caching t)
-    (projectile-ignored-project-function #'my--projectile-ignore-project))
+    (projectile-ignored-project-function #'my--projectile-ignore-project)
+    :delight projectile-mode)
 #+end_src
 
 *** which-key
