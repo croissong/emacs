@@ -297,10 +297,12 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-d" 'projectile-find-file
   "C-f" 'find-file
   "M-d" 'persp-switch-to-buffer*
+  "C-M-d" 'persp-switch-to-buffer
 
 
   "M-1" 'persp-switch
   "M-2" 'persp-set-buffer
+  "M-3" 'persp-remove-buffer
   "M-^" 'persp-kill
 
   "C-M-#" 'buf-move-right
@@ -418,7 +420,9 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 (use-package perspective
   :init (persp-mode)
   :custom
-  (persp-sort 'access))
+  (persp-sort 'access)
+  (persp-modestring-short t)
+  (persp-initial-frame-name "m"))
 
 
 (use-package buffer-move)
