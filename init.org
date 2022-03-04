@@ -1387,8 +1387,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package modus-themes
     :init
-    (setq modus-themes-completions 'moderate
-          modus-themes-region 'bg-only-no-extend
+    (setq modus-themes-region '('bg-only 'no-extend)
           modus-themes-org-blocks 'greyscale)
     (modus-themes-load-themes)
     (defun my-modus-themes-custom-faces ()
