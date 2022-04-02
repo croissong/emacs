@@ -814,7 +814,9 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   ;; https://github.com/minad/vertico#configuration
   (completion-styles '(orderless))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion substring)))))
+  (completion-category-overrides nil)
+  ;; (completion-category-overrides '((file (styles partial-completion substring))))
+  )
 
 ;; https ://www.reddit.com/r/emacs/comments/krptmz/emacs_completion_framework_embark_consult/
 (use-package consult
