@@ -1059,21 +1059,41 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** dired & dirvish
 #+begin_src elisp
-(require 'dired-x)
+;; mostly based on https://github.com/alexluigit/dirvish/blob/main/Configuration.org#Example-config
+
+(use-package dired
+  :straight nil
+  :custom
+  (dired-recursive-deletes 'top)
+  (dired-recursive-copies 'always)
+  (delete-by-moving-to-trash t)
+  (dired-dwim-target t)
+  (dired-auto-revert-buffer t)
+  (dired-clean-confirm-killing-deleted-buffers nil)
+  ;; todo: not respected?
+  (dired-kill-when-opening-new-dired-buffer t)
+  (dired-listing-switches "-aDGhvl --group-directories-first --time-style=long-iso"))
 
 (use-package dirvish
   :demand t
   :custom
-  (dired-listing-switches "-aDGhvl --group-directories-first --time-style=long-iso")
-  (dired-auto-revert-buffer t)
-  ;; todo: not respected
-  (dired-kill-when-opening-new-dired-buffer t)
-  (dired-clean-confirm-killing-deleted-buffers nil)
-  (dired-recursive-copies 'always)
-  (dired-dwim-target t)
-  (dirvish-enable-preview t)
   :init
   (dirvish-override-dired-mode))
+
+(use-package dired-x
+  :straight nil
+  ;; Enable dired-omit-mode by default
+  ;; :hook
+  ;; (dired-mode . dired-omit-mode)
+  :config
+  ;; Make dired-omit-mode hide all "dotfiles"
+  ;; (setq dired-omit-files
+  ;;       (concat dired-omit-files "\\|^\\..*$"))
+  )
+
+(use-package diredfl
+  :hook
+  (dired-mode . diredfl-mode))
 #+end_src
 
 * languages
