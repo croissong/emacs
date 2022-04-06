@@ -937,6 +937,8 @@ https://github.com/bbatsov/crux
     :bind* (("C-p" . undo-tree-undo)
             ("M-p" . undo-tree-redo)
             ("C-M-p" . undo-tree-visualize))
+    :custom
+    (undo-tree-auto-save-history nil)
     :delight undo-tree-mode)
 #+end_src
 
