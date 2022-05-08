@@ -269,9 +269,10 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-r" 'isearch-query-replace)
 
 (general-def
-  :keymaps 'dired-mode-map
-  "M-ö" 'dired-up-directory
-  "M-#" 'dired-find-file)
+  :keymaps 'dired-mode-map :package 'dirvish
+  "M-<return>" 'dirvish-dispatch
+  "M-#" 'dired-find-file
+  [remap dired-do-copy] 'dirvish-yank-menu)
 
 (general-def
   :keymaps 'override
@@ -1078,7 +1079,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package dirvish
   :demand t
-  :custom
   :init
   (dirvish-override-dired-mode))
 
