@@ -282,11 +282,6 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "˝" 'previous-buffer
   "’" 'next-buffer
 
-  "C-ö" 'windmove-left
-  "C-#" 'windmove-right
-  "C-ü" 'windmove-up
-  "C-ä" 'windmove-down
-
   "C-^" 'delete-window
   "C-1" 'delete-other-windows
   "C-2" 'split-window-right
@@ -310,6 +305,11 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-M-ö" 'buf-move-left
   "C-M-ü" 'buf-move-up
   "C-M-ä" 'buf-move-down
+
+
+  "C-M-p" 'vundo
+  "C-p" 'undo-fu-only-undo
+  "M-p" 'undo-fu-only-redo
 
 
   "C-<up>" 'golden-ratio-scroll-screen-down
@@ -337,6 +337,20 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   "C-x f" 'my-hydras-files/body
   "M-l" 'my-hydras-lsp/body
 )
+
+(general-def
+ "C-ö" 'windmove-left
+  "C-#" 'windmove-right
+  "C-ü" 'windmove-up
+  "C-ä" 'windmove-down
+  )
+
+(general-def
+  :keymaps 'vundo-mode-map :package 'vundo
+  "C-ö" 'vundo-backward
+  "C-#" 'vundo-forward
+  "C-ä" 'vundo-next
+  "C-ü" 'vundo-previous)
 
 (general-def
   :keymaps 'vertico-map :package 'vertico
@@ -932,12 +946,9 @@ https://github.com/bbatsov/crux
 
 *** vundo & undo-fu
 #+begin_src elisp
-(use-package vundo
-  :bind* ("C-M-p" . vundo))
+(use-package vundo)
 
-(use-package undo-fu
-    :bind* (("C-p" . undo-fu-only-undo)
-            ("M-p" . undo-fu-only-redo)))
+(use-package undo-fu)
 #+end_src
 
 *** Ediff
