@@ -930,17 +930,14 @@ https://github.com/bbatsov/crux
     :delight smartparens-mode)
 #+end_src
 
-*** Undo-Tree
+*** vundo & undo-fu
 #+begin_src elisp
-(use-package undo-tree
-    :init
-    (global-undo-tree-mode 1)
-    :bind* (("C-p" . undo-tree-undo)
-            ("M-p" . undo-tree-redo)
-            ("C-M-p" . undo-tree-visualize))
-    :custom
-    (undo-tree-auto-save-history nil)
-    :delight undo-tree-mode)
+(use-package vundo
+  :bind* ("C-M-p" . vundo))
+
+(use-package undo-fu
+    :bind* (("C-p" . undo-fu-only-undo)
+            ("M-p" . undo-fu-only-redo)))
 #+end_src
 
 *** Ediff
