@@ -142,7 +142,6 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
 (use-package bind-key)
 (use-package delight)
-(use-package cl-lib)
 (use-package f)
 (use-package dash)
 (use-package a)
@@ -437,6 +436,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
   :custom
   (persp-sort 'access)
   (persp-modestring-short t)
+  (persp-suppress-no-prefix-key-warning t)
   (persp-initial-frame-name "m"))
 
 
