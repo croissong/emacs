@@ -1240,6 +1240,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :hook ((nim-mode . nimsuggest-mode)))
 #+end_src
 
+** nix
+#+begin_src elisp
+(use-package nix-mode
+    :mode "\\.nix\\'")
+#+end_src
+
 ** php
 #+begin_src elisp
 (use-package php-mode
