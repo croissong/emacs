@@ -1078,7 +1078,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (dired-recursive-deletes 'top)
   (dired-recursive-copies 'always)
   (delete-by-moving-to-trash t)
-  (dired-dwim-target t)
+  (dired-dwim-target nil)
   (dired-auto-revert-buffer t)
   (dired-clean-confirm-killing-deleted-buffers nil)
   ;; todo: not respected?
