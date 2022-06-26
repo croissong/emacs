@@ -682,27 +682,32 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 *** formatting
 #+begin_src elisp
 ;; Unified approach inc: https://github.com/purcell/reformatter.el/pull/24
-(use-package format-all
-  :hook
-  ((sh-mode css-mode web-mode scss-mode)
-   . format-all-mode)
-  :init
-  (defun format-all-default()
-    (format-all-ensure-formatter)
-    (format-all-mode))
-  :config
-  (define-format-all-formatter isort
-    (:executable "isort")
-    (:install "pip install isort")
-    (:languages "Python")
-    (:features)
-    (:format (format-all--buffer-easy
-              executable "-d" "-")))
+;; (use-package format-all
+;;   :hook
+;;   ((sh-mode css-mode web-mode scss-mode)
+;;    . format-all-mode)
+;;   :init
+;;   (defun format-all-default()
+;;     (format-all-ensure-formatter)
+;;     (format-all-mode))
+;;   :config
+;;   (define-format-all-formatter isort
+;;     (:executable "isort")
+;;     (:install "pip install isort")
+;;     (:languages "Python")
+;;     (:features)
+;;     (:format (format-all--buffer-easy
+;;               executable "-d" "-")))
 
-  (setq-default format-all-formatters '(("Python" black)
-                                        ("Shell" shfmt)
-                                        ("Go" gofmt)))
-  :delight format-all-mode)
+;;   (setq-default format-all-formatters '(("Python" black)
+;;                                         ("Shell" shfmt)
+;;                                         ("Go" gofmt)))
+;;   :delight format-all-mode)
+
+
+(use-package apheleia
+  :init (apheleia-global-mode +1)
+  :delight apheleia-mode)
 #+end_src
 
 *** lsp
@@ -1122,10 +1127,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** elisp
 #+begin_src elisp
 (use-package emacs-lisp
-  :init (defun my--on-elisp-mode ()
-          (nameless-mode)
-          (format-all-mode))
-  :hook (emacs-lisp-mode . my--on-elisp-mode)
+  :hook (emacs-lisp-mode . nameless-mode)
   :straight nil)
 
 (use-package nameless
@@ -1138,11 +1140,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** elixir
 #+begin_src elisp
 (use-package elixir-mode
-    :init
-    (defun my--on-elixir-mode ()
-      (flycheck-mode)
-      (format-all-mode))
-    :hook (elixir-mode . my--on-elixir-mode)
+    :hook (elixir-mode . flycheck-mode)
     :mode "\\.ex\\'")
 
 (use-package flycheck-credo
@@ -1159,11 +1157,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :mode "\\.go\\'"
     :config
     (require 'dap-go)
-    :init
-    (defun my--on-go-mode ()
-      (lsp-deferred)
-      (format-all-mode))
-    :hook (go-mode . my--on-go-mode))
+    :hook (go-mode . lsp-deferred))
 #+end_src
 
 ** graphql
@@ -1266,11 +1260,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package python
   :mode ("\\.py\\'" . python-mode)
-  :init
-  (defun my--on-python-mode ()
-    (lsp-deferred)
-    (format-all-mode))
-  :hook (python-mode . my--on-python-mode))
+  :hook (python-mode . lsp-deferred))
 
 (use-package lsp-pyright
   :after python)
@@ -1293,8 +1283,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** terraform
 #+begin_src elisp
 (use-package terraform-mode
-    :mode "\\.tf\\'"
-    :hook (terraform-mode . format-all-default))
+    :mode "\\.tf\\'")
+    ;; :hook (terraform-mode . lsp-deferred))
 #+end_src
 
 ** shell
@@ -1318,9 +1308,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package js2-mode
     :mode "\\.js\\'"
-    :hook (js2-mode . (lambda ()
-                  (lsp-deferred)
-                  (format-all-mode)))
+    :hook (js2-mode . lsp-deferred)
     :custom
     (js2-basic-offset 2)
     (js2-strict-inconsistent-return-warning nil)
