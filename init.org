@@ -1118,6 +1118,21 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :mode "\\.adoc\\'")
 #+end_src
 
+** c++
+#+begin_src elisp
+(use-package c++-mode
+    :mode "\\.h\\'")
+
+(use-package irony-mode
+  :init (defun my--on-c++-mode ()
+          (irony-mode)
+          (flycheck-mode))
+  :hook (c++-mode . my--on-c++-mode))
+
+(use-package flycheck-irony
+  :hook (flycheck-mode . flycheck-irony-setup))
+#+end_src
+
 ** docker
 #+begin_src elisp
 (use-package dockerfile-mode
