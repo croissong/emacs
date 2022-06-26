@@ -640,7 +640,7 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 (use-package midnight
   :config
   (advice-add 'clean-buffer-list :around #'make-silent)
-  (setq midnight-period (* 4 60 60)) ;; 4h
+  (setq midnight-period (* 2 60 60)) ;; 2h
   (midnight-delay-set 'midnight-delay "4:30am")
   :custom
   (clean-buffer-list-delay-general 2))
