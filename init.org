@@ -707,6 +707,9 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
 (use-package apheleia
   :init (apheleia-global-mode +1)
+  :config
+  (setf (alist-get 'shfmt apheleia-formatters)
+      '("shfmt"))
   :delight apheleia-mode)
 #+end_src
 
