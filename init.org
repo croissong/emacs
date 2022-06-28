@@ -707,9 +707,10 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
 (use-package apheleia
   :init (apheleia-global-mode +1)
-  :config
-  (setf (alist-get 'shfmt apheleia-formatters)
-      '("shfmt"))
+  :custom
+  (apheleia-mode-alist (a-assoc apheleia-mode-alist 'nix-mode 'alejandra))
+  (apheleia-formatters (a-assoc apheleia-formatters 'shfmt '("shfmt")))
+  (apheleia-formatters (a-assoc apheleia-formatters 'alejandra '("alejandra")))
   :delight apheleia-mode)
 #+end_src
 
