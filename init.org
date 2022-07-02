@@ -713,10 +713,11 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
 (use-package apheleia
   :init (apheleia-global-mode +1)
-  :custom
-  (apheleia-mode-alist (a-assoc apheleia-mode-alist 'nix-mode 'alejandra))
-  (apheleia-formatters (a-assoc apheleia-formatters 'shfmt '("shfmt")))
-  (apheleia-formatters (a-assoc apheleia-formatters 'alejandra '("alejandra")))
+  :config
+  (setq
+    apheleia-mode-alist (a-assoc apheleia-mode-alist 'nix-mode 'alejandra)
+    apheleia-formatters (a-assoc apheleia-formatters 'shfmt '("shfmt"))
+    apheleia-formatters (a-assoc apheleia-formatters 'alejandra '("alejandra")))
   :delight apheleia-mode)
 #+end_src
 
@@ -1131,7 +1132,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** c++
 #+begin_src elisp
 (use-package c++-mode
-    :mode "\\.h\\'")
+  :straight nil
+  :mode "\\.h\\'")
 
 (use-package irony-mode
   :init (defun my--on-c++-mode ()
