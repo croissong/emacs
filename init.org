@@ -433,12 +433,13 @@ https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
 
 (use-package perspective
   :init
-  (persp-mode)
-  (persp-new "dot")
-  (persp-new "ad1")
-  (persp-new "ad2")
-  (persp-new "ad3")
-  (persp-new "wrk")
+  (my-with-eval-after-frame
+   (persp-mode 1)
+   (persp-new "dot")
+   (persp-new "ad1")
+   (persp-new "ad2")
+   (persp-new "ad3")
+   (persp-new "wrk"))
   :custom
   (persp-sort 'access)
   (persp-modestring-short t)
