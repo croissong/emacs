@@ -1403,6 +1403,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :commands (string-inflection-all-cycle))
 
 (use-package recover-buffers)
+
+(use-package ebuku
+  :commands ebuku)
 #+end_src
 
 * ui
