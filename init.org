@@ -695,7 +695,10 @@
   :config
   (setq
     apheleia-mode-alist (a-assoc apheleia-mode-alist 'nix-mode 'alejandra)
+    apheleia-mode-alist (a-assoc apheleia-mode-alist 'nxml-mode 'xmlformat)
     apheleia-formatters (a-assoc apheleia-formatters 'shfmt '("shfmt"))
+    apheleia-formatters (a-assoc apheleia-formatters 'xmlformat
+                                 '("xmlformat" "--blanks" "--indent" "4" "--selfclose" "-"))
     apheleia-formatters (a-assoc apheleia-formatters 'alejandra '("alejandra")))
   :delight apheleia-mode)
 #+end_src
