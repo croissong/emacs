@@ -893,18 +893,22 @@ https://github.com/bbatsov/crux
 
 *** Company-Mode
 #+begin_src elisp
-(use-package company
-    :hook (prog-mode . company-mode)
+(use-package corfu
+    :init (global-corfu-mode)
     :custom
-    (company-idle-delay 0.3)
-    (company-minimum-prefix-length 1)
-    (company-tooltip-align-annotations t)
-    (company-dabbrev-downcase nil)
-    (company-echo-delay 0)
-    :bind (:map company-active-map
-                ("C-ä" . company-select-next)
-                ("C-ü" . company-select-previous))
-    :delight company-mode)
+    (corfu-auto t)
+    (corfu-auto-prefix 2)
+    :bind (:map corfu-map
+                ("C-ä" . corfu-next)
+                ("C-ü" . corfu-previous))
+    :delight corfu-mode
+    )
+
+(use-package cape
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  )
+
 #+end_src
 
 *** Centered-Window-Mode
