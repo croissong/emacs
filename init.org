@@ -255,6 +255,7 @@
   :keymaps 'override
 
   "C-l" 'goto-line
+  "C-q" 'embark-act
 
   "˝" 'previous-buffer
   "’" 'next-buffer
@@ -849,8 +850,6 @@
                                 selectrum-mode) (selectrum-exhibit)))))
 
 (use-package embark
-  :bind*
-  ("C-q" . embark-act)
   :config
   (add-to-list 'embark-pre-action-hooks '(flyspell-correct-at-point embark--ignore-target)))
 
