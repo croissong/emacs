@@ -1412,6 +1412,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package ebuku
   :commands ebuku)
+
+(use-package units-mode
+  :commands units-mode)
 #+end_src
 
 * ui
