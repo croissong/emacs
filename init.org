@@ -575,6 +575,10 @@
   (deft-default-extension "org")
   (deft-use-filename-as-title t)
   (deft-directory org-roam-directory))
+
+(use-package org-cliplink
+  :commands org-cliplink
+  )
 #+end_src
 
 ** special modes
