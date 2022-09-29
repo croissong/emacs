@@ -475,10 +475,9 @@
 ;; (use-package reveal
 ;;   :hook (org-mode . reveal-mode)
 ;;     :delight reveal-mode)
-
 (use-package company-org-block
   :commands company-org-block
-  :after company)
+  :after cape)
 
 (use-package org
   :straight org-contrib
@@ -911,6 +910,7 @@ https://github.com/bbatsov/crux
 (use-package cape
   :init
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-org-block))
   )
 
 #+end_src
