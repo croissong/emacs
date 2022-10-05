@@ -1299,7 +1299,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** sql
 #+begin_src elisp
 (use-package sql-indent
-    :mode "\\.sql\\'")
+  :hook (sql-mode . sqlind-minor-mode)
+  :delight sqlind-minor-mode)
 #+end_src
 
 ** terraform
