@@ -909,7 +909,8 @@ https://github.com/bbatsov/crux
 
 (use-package cape
   :init
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  ;; TODO: maybe use cape-dict with long delay
+  ;; (add-to-list 'completion-at-point-functions #'cape-ispell)
   (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-org-block))
   )
 
@@ -1474,7 +1475,7 @@ https://www.reddit.com/r/emacs/comments/1mbn0s/the_emacs_calculator/
 \(Buy: \)\([0-9]+\) -> \1\,(+ \#2 \#)
 
 *** C-c C-o save search results
-reset var: `(setq foo (eval (car (get 'foo 'standard-value))))`
+*** reset var: `(setq foo (eval (car (get 'foo 'standard-value))))`
 (setq require-final-newline nil)
 ** plausiblly
 https://github.com/abo-abo/hydra/wiki/Emacs
