@@ -333,7 +333,7 @@
 (general-def
   :keymaps 'vertico-map :package 'vertico
   "M-#" 'vertico-insert
-  "M-ö" 'my-backward-delete-sexp)
+  "M-ö" 'vertico-directory-delete-word)
 
 (general-def
   :keymaps 'lsp-mode-map :package 'lsp-mode
@@ -817,8 +817,13 @@
 ** minibuffer & completion
 #+begin_src elisp
 (use-package vertico
+  :straight '(:files (:defaults "extensions/*")
+               :includes (vertico-directory))
   :init
-  (vertico-mode))
+  (vertico-mode)
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
+  )
+
 
 (use-package savehist
   :init

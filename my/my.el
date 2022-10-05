@@ -61,23 +61,6 @@
      'indent-rigidly)))
 
 
-;; https://stackoverflow.com/questions/46017956/emacs-how-to-change-kill-to-delete
-(defmacro my--delete-instead-of-kill (&rest body)
-  "Replaces `kill-region' with `delete-region' in BODY."
-  `(cl-letf
-       (((symbol-function 'kill-region)
-         (lambda (beg end &optional yank-handler)
-           (delete-region beg end))))
-     ,@body))
-
-;; Otherwise backward-kill-sexp used by selectrum bloats the kill ring
-(defun my-backward-delete-sexp (arg)
-  "Like `kill-word', but does not save to the `kill-ring'."
-  (interactive "*p")
-  (my--delete-instead-of-kill
-   (backward-kill-sexp arg)))
-
-
 (defun my-discard-buffer-action (buf)
   (with-current-buffer buf
     (if (file-exists-p buffer-file-name)
