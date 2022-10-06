@@ -96,11 +96,11 @@
   (insert txt))
 
 ;; Usage:
-;; (advice-add 'clean-buffer-list :around #'make-silent)
-(defun make-silent (func &rest args)
-  (cl-letf
-      (((symbol-function 'message)(lambda (&rest args) nil)))
-    (apply func args)))
+;; (advice-add 'clean-buffer-list :around 'suppress-message-advice-around)
+(defun suppress-message-advice-around (fun &rest args)
+  (let (message-log-max)
+    (with-temp-message (or (current-message) "")
+      (apply fun args))))
 
 (defun my-disable-newlines-eof()
   (interactive)

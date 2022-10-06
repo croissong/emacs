@@ -144,6 +144,11 @@
      (exec-path-from-shell-initialize)))
 #+end_src
 
+* libs
+#+begin_src elisp
+(use-package ts)
+#+end_src
+
 * common
 ** keybindings
 #+begin_src elisp
@@ -628,11 +633,18 @@
 
 (use-package midnight
   :config
-  (advice-add 'clean-buffer-list :around #'make-silent)
-  (setq midnight-period (* 2 60 60)) ;; 2h
-  (midnight-delay-set 'midnight-delay "4:30am")
+  (setq midnight-period (* 60 60 3)) ;; 3h
+  (advice-add 'clean-buffer-list :around 'suppress-message-advice-around)
+  (midnight-delay-set 'midnight-delay (ts-format "%I:%M%p" (ts-adjust 'minute 5 (ts-now))))
   :custom
-  (clean-buffer-list-delay-general 2))
+  ;; https://www.emacswiki.org/emacs/CleanBufferList
+  (clean-buffer-list-delay-special (* 60 60 2)) ;; 2h
+  (clean-buffer-list-kill-regexps '(".*"))
+  (clean-buffer-list-kill-never-regexps
+   '("\\` \\*Minibuf-.*\\*\\'"
+     "\\`\\*scratch.*"
+     "\\`magit: .*"))
+  )
 #+end_src
 
 ** editing
