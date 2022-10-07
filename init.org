@@ -1078,16 +1078,16 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
           (let ((old-buffer (current-buffer)))
             (with-temp-buffer
               (insert-buffer-substring old-buffer)
-              (message "hi")
-              (message (buffer-string))
               (flush-lines "^#.*" (point-min) (point-max))
-              (message "ho")
-              (message (buffer-string))
               (let* ((commitlint-cmd "commitlint --config ~/.config/commitlint/commitlintrc.yml")
                      (exit-code (shell-command-on-region (point-min) (point-max) commitlint-cmd)))
                 (if (equal exit-code 0)
                     t
-                  (y-or-n-p "Commitlint error. Commit anyway?")))))))
+                  (save-window-excursion
+                    (pop-to-buffer-same-window "*Shell Command Output*" ())
+                    (y-or-n-p "Commitlint error. Commit anyway?")
+                    )
+                  ))))))
     (cl-pushnew 'my--git-commit-check-commitlint git-commit-finish-query-functions))
 #+end_src
 

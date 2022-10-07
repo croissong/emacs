@@ -97,6 +97,8 @@
 
 ;; Usage:
 ;; (advice-add 'clean-buffer-list :around 'suppress-message-advice-around)
+;; undo:
+;; (advice-remove 'clean-buffer-list 'suppress-message-advice-around)
 (defun suppress-message-advice-around (fun &rest args)
   (let (message-log-max)
     (with-temp-message (or (current-message) "")
