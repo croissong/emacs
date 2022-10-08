@@ -1076,15 +1076,16 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (defun my--git-commit-check-commitlint (force)
       (or force
           (let ((old-buffer (current-buffer)))
-            (with-temp-buffer
-              (insert-buffer-substring old-buffer)
-              (flush-lines "^#.*" (point-min) (point-max))
-              (let* ((commitlint-cmd "commitlint --config ~/.config/commitlint/commitlintrc.yml")
-                     (exit-code (shell-command-on-region (point-min) (point-max) commitlint-cmd)))
-                (if (equal exit-code 0)
-                    t
-                  (save-window-excursion
+            (save-window-excursion
+              (with-temp-buffer
+                (insert-buffer-substring old-buffer)
+                (flush-lines "^#.*" (point-min) (point-max))
+                (let* ((commitlint-cmd "go-commitlinter")
+                       (exit-code (shell-command-on-region (point-min) (point-max) commitlint-cmd)))
+                  (if (equal exit-code 0)
+                      t
                     (pop-to-buffer-same-window "*Shell Command Output*" ())
+                    (ansi-color-apply-on-region (point-min) (point-max))
                     (y-or-n-p "Commitlint error. Commit anyway?")
                     )
                   ))))))
