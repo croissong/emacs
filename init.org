@@ -1452,21 +1452,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (set-face-attribute 'default nil :family "Monospace" :height 110)
 (setq-default cursor-type 'bar)
 
-(use-package modus-themes
-    :init
-    (setq modus-themes-region '('bg-only 'no-extend)
-          modus-themes-org-blocks 'greyscale)
-    (modus-themes-load-themes)
-    (defun my-modus-themes-custom-faces ()
-      (modus-themes-with-colors
-        (custom-set-faces
-         `(show-paren-match ((,class :foreground ,green-subtle-bg
-                                            :background nil
-                                            :weight ,'bold))))))
-    (add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
-    :config
-    (modus-themes-load-operandi))
-
 (use-package olivetti
   :hook
   ;; alternatively try as global mode: https://github.com/rnkn/olivetti/pull/56
@@ -1485,6 +1470,23 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (setf (cdr (assq 'continuation fringe-indicator-alist))
       '(nil right-curly-arrow) ;; right indicator only
       )
+
+(use-package modus-themes
+  :custom
+  (modus-themes-fringes nil)
+  (modus-themes-region '('bg-only 'no-extend))
+  (modus-themes-org-blocks 'greyscale)
+    :init
+    (modus-themes-load-themes)
+    (defun my-modus-themes-custom-faces ()
+      (modus-themes-with-colors
+        (custom-set-faces
+         `(show-paren-match ((,class :foreground ,green-subtle-bg
+                                            :background nil
+                                            :weight ,'bold))))))
+    (add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
+    :config
+    (modus-themes-load-operandi))
 
 #+end_src
 
