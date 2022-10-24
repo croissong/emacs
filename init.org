@@ -1425,6 +1425,19 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package units-mode
   :commands units-mode)
+
+(use-package spookfox
+  :straight
+  (spookfox :type git
+            :host github
+            :repo "bitspook/spookfox"
+            :files ("lisp/*.el" "lisp/apps/*.el"))
+  :config
+  (require 'spookfox-org-tabs)
+  (setq spookfox-enabled-apps '(spookfox-org-tabs))
+  (spookfox-init)
+  )
+
 #+end_src
 
 * ui
