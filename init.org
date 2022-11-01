@@ -914,7 +914,7 @@ https://github.com/bbatsov/crux
     :commands navi-mode)
 #+end_src
 
-*** Company-Mode
+*** Corfu & Cape
 #+begin_src elisp
 (use-package corfu
     :init (global-corfu-mode)
