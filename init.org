@@ -876,7 +876,8 @@
   (add-to-list 'embark-pre-action-hooks '(flyspell-correct-at-point embark--ignore-target)))
 
 (use-package embark-consult
-  :after (embark consult))
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
 
 *** crux
