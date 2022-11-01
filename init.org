@@ -718,22 +718,29 @@
 #+begin_src elisp
 (use-package lsp-mode
   :commands lsp-deferred
-  :hook (lsp-mode . lsp-enable-which-key-integration)
+  :hook
+  (lsp-mode . lsp-enable-which-key-integration)
+  (lsp-completion-mode . my/lsp-mode-setup-completion)
   :init
   (cl-defun my/lsp-format-buf ((&optional (format t)) (&optional (organize-imports t)))
     (add-hook 'before-save-hook
               (lambda () (lsp-format-buffer) (lsp-organize-imports)) 0 t))
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless))) ;; Configure orderless
   :config
   (setq lsp-file-watch-ignored-directories (-union
-                           lsp-file-watch-ignored-directories
-                           '("[/\\\\]\\.direnv\\'"
-                             "[/\\\\]\\.mypy_cache\\'"
-                             "[/\\\\]\\.pytest_cache\\'"
-                             "[/\\\\]dot_git\\'")))
+                                            lsp-file-watch-ignored-directories
+                                            '("[/\\\\]\\.direnv\\'"
+                                              "[/\\\\]\\.mypy_cache\\'"
+                                              "[/\\\\]\\.pytest_cache\\'"
+                                              "[/\\\\]dot_git\\'")))
 
   ;; https://emacs-lsp.github.io/lsp-mode/page/faq/#how-do-i-force-lsp-mode-to-forget-the-workspace-folders-for-multi-root
   (advice-add 'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht)))))
   :custom
+  (lsp-auto-configure t)
+  (lsp-completion-provider :none)
   (lsp-enable-file-watchers nil)
   (lsp-enable-snippet nil)
   (lsp-signature-doc-lines 1)
@@ -747,10 +754,10 @@
   :delight (lsp-lens-mode))
 
 (use-package lsp-ui
-    :commands lsp-ui-mode
-    :custom
-    (lsp-ui-doc-enable nil)
-    (lsp-ui-sideline-enable t))
+  :commands lsp-ui-mode
+  :custom
+  (lsp-ui-doc-enable nil)
+  (lsp-ui-sideline-enable t))
 
 (use-package dap-mode
   :commands dap-debug
