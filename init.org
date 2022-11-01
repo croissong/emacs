@@ -487,11 +487,6 @@
 (use-package org
   :straight org-contrib
   :mode ("\\.org\\'" . org-mode)
-  :init
-  (defun my--on-org-mode ()
-    (setq-local company-backends '(company-org-block))
-    (company-mode +1))
-  :hook (org-mode . my--on-org-mode)
   :config
     (require 'org-checklist)
     (org-indent-mode 1)
