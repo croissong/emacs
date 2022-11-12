@@ -382,6 +382,30 @@
 (setq xref-prompt-for-identifier nil)
 #+end_src
 
+** modeline
+#+begin_src elisp
+;; https://www.emacswiki.org/emacs/ModeLineConfiguration
+
+(setq mode-line-mule-info (eval (car (get 'mode-line-mule-info 'standard-value))))
+
+(setq
+ ;; mode-line-front-space " "
+ ;; mode-line-mule-info " "
+ ;; mode-line-client " "
+ ;; mode-line-modified " "
+ ;; mode-line-remote " "
+ mode-line-format '("%e"
+                    mode-line-front-space
+                    mode-line-mule-info
+                    mode-line-client
+                    mode-line-modified
+                    mode-line-remote
+                    mode-line-frame-identification
+                    mode-line-buffer-identification "   " mode-line-position
+ (vc-mode vc-mode)
+ "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
+#+end_src
+
 ** debugging
 #+begin_src elisp
 (use-package explain-pause-mode
