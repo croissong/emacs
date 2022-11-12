@@ -275,14 +275,14 @@
 
   "C-d" 'projectile-find-file
   "C-f" 'find-file
-  "M-d" 'persp-switch-to-buffer*
-  "C-M-d" 'persp-switch-to-buffer
+  "M-d" 'bufler-switch-buffer
+  "C-M-d" 'bufler
 
 
-  "M-1" 'persp-switch
-  "M-2" 'persp-set-buffer
-  "M-3" 'persp-remove-buffer
-  "M-^" 'persp-kill
+  ;; "M-1" 'persp-switch
+  ;; "M-2" 'persp-set-buffer
+  ;; "M-3" 'persp-remove-buffer
+  ;; "M-^" 'persp-kill
 
   "C-M-#" 'buf-move-right
   "C-M-ö" 'buf-move-left
@@ -415,20 +415,90 @@
 #+begin_src elisp
 (winner-mode 1)
 
-(use-package perspective
-  :init
-  (my-with-eval-after-frame
-   (persp-mode 1)
-   (persp-new "dot")
-   (persp-new "ad1")
-   (persp-new "ad2")
-   (persp-new "ad3")
-   (persp-new "wrk"))
+(use-package bufler
+  :after projectile
+  :init (bufler-mode)
+  :config
+  (add-hook 'projectile-after-switch-project-hook
+          (defun asf--set-bufler-project-workspace ()
+            (bufler-workspace-frame-set
+             (butlast (bufler-group-tree-leaf-path (bufler-buffers) (current-buffer))))))
   :custom
-  (persp-sort 'access)
-  (persp-modestring-short t)
-  (persp-suppress-no-prefix-key-warning t)
-  (persp-initial-frame-name "m"))
+  (bufler-workspace-switch-buffer-sets-workspace t)
+  (bufler-groups (bufler-defgroups
+  (group
+   ;; Subgroup collecting all named workspaces.
+   (auto-workspace))
+  (group
+   ;; Subgroup collecting all `help-mode' and `info-mode' buffers.
+   (group-or "*Help/Info*"
+             (mode-match "*Help*" (rx bos "help-"))
+             (mode-match "*Info*" (rx bos "info-"))))
+  (group
+   ;; Subgroup collecting all special buffers (i.e. ones that are not
+   ;; file-backed), except `magit-status-mode' buffers (which are allowed to fall
+   ;; through to other groups, so they end up grouped with their project buffers).
+   (group-and "*Special*"
+              (lambda (buffer)
+                (unless (or (funcall (mode-match "Magit" (rx bos "magit-status"))
+                                     buffer)
+                            (funcall (mode-match "Dired" (rx bos "dired"))
+                                     buffer)
+                            (funcall (auto-file) buffer))
+                  "*Special*")))
+   (group
+    ;; Subgroup collecting these "special special" buffers
+    ;; separately for convenience.
+    (name-match "**Special**"
+                (rx bos "*" (or "Messages" "Warnings" "scratch" "Backtrace") "*")))
+   (group
+    ;; Subgroup collecting all other Magit buffers, grouped by directory.
+    (mode-match "*Magit* (non-status)" (rx bos (or "magit" "forge") "-"))
+    (auto-directory))
+   ;; Remaining special buffers are grouped automatically by mode.
+   (auto-mode))
+  ;; All buffers under "~/.emacs.d" (or wherever it is).
+  (dir user-emacs-directory)
+  (group
+   ;; Subgroup collecting buffers in `org-directory' (or "~/org" if
+   ;; `org-directory' is not yet defined).
+   (dir (if (bound-and-true-p org-directory)
+            org-directory
+          "~/org"))
+   (group
+    ;; Subgroup collecting indirect Org buffers, grouping them by file.
+    ;; This is very useful when used with `org-tree-to-indirect-buffer'.
+    (auto-indirect)
+    (auto-file))
+   ;; Group remaining buffers by whether they're file backed, then by mode.
+   (group-not "*special*" (auto-file))
+   (auto-mode))
+  (group
+   ;; Subgroup collecting buffers in a projectile project.
+   (auto-projectile))
+  (group
+   ;; Subgroup collecting buffers in a version-control project,
+   ;; grouping them by directory.
+   (auto-project))
+  ;; Group remaining buffers by directory, then major mode.
+  (auto-directory)
+  (auto-mode)))
+  )
+
+;; (use-package perspective
+;;   :init
+;;   (my-with-eval-after-frame
+;;    (persp-mode 1)
+;;    (persp-new "dot")
+;;    (persp-new "ad1")
+;;    (persp-new "ad2")
+;;    (persp-new "ad3")
+;;    (persp-new "wrk"))
+;;   :custom
+;;   (persp-sort 'access)
+;;   (persp-modestring-short t)
+;;   (persp-suppress-no-prefix-key-warning t)
+;;   (persp-initial-frame-name "m"))
 
 
 (use-package buffer-move)
