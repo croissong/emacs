@@ -801,6 +801,7 @@
   (setq
     apheleia-mode-alist (a-assoc apheleia-mode-alist 'nix-mode 'alejandra)
     apheleia-mode-alist (a-assoc apheleia-mode-alist 'nxml-mode 'xmlformat)
+    apheleia-mode-alist (a-assoc apheleia-mode-alist 'emacs-lisp-mode 'lisp-indent)
     apheleia-formatters (a-assoc apheleia-formatters 'shfmt '("shfmt"))
     apheleia-formatters (a-assoc apheleia-formatters 'xmlformat
                                  '("xmlformat" "--blanks" "--indent" "4" "--selfclose" "-"))
@@ -1239,6 +1240,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package flycheck-irony
   :hook (flycheck-mode . flycheck-irony-setup))
+#+end_src
+
+** docs
+#+begin_src elisp
+(use-package doc-tools
+  :straight (:host github :repo "dalanicolai/doc-tools")
+  :mode "\\.pdf\\'")
 #+end_src
 
 ** docker
