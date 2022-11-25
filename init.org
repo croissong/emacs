@@ -1227,7 +1227,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :straight nil
   :mode "\\.h\\'")
 
-(elpaca-use-package rtags
+(use-package rtags
   :defer t)
 
 (use-package irony-mode
