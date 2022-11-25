@@ -696,14 +696,16 @@
     :init (whole-line-or-region-global-mode 1)
     :delight whole-line-or-region-local-mode)
 
-(use-package ws-butler
-  :init (ws-butler-global-mode 1)
-  :delight ws-butler-mode)
+(use-package ethan-wspace
+  :init
+  (setq mode-require-final-newline nil)
+  :config
+  (global-ethan-wspace-mode 1))
 
 (use-package editorconfig
     :config (editorconfig-mode 1)
-    :custom
-    (editorconfig-trim-whitespaces-mode 'ws-butler-mode)
+    ;; :custom
+    ;; (editorconfig-trim-whitespaces-mode 'ws-butler-mode)
     :delight editorconfig-mode)
 
 (use-package hungry-delete
