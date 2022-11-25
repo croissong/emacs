@@ -448,7 +448,6 @@
             (bufler-workspace-frame-set
              (butlast (bufler-group-tree-leaf-path (bufler-buffers) (current-buffer))))))
   :custom
-  (bufler-workspace-switch-buffer-sets-workspace t)
   (bufler-groups (bufler-defgroups
   (group
    ;; Subgroup collecting all named workspaces.
