@@ -800,6 +800,7 @@
   :init (apheleia-global-mode +1)
   :config
   (setq
+    apheleia-mode-alist (a-dissoc apheleia-mode-alist 'yaml-mode)
     apheleia-mode-alist (a-assoc apheleia-mode-alist 'nix-mode 'alejandra)
     apheleia-mode-alist (a-assoc apheleia-mode-alist 'nxml-mode 'xmlformat)
     apheleia-mode-alist (a-assoc apheleia-mode-alist 'emacs-lisp-mode 'lisp-indent)
