@@ -228,6 +228,12 @@
   "C-c e" 'org-edit-special
   "C-c TAB" nil)
 
+
+(general-def :package 'mosey
+  "C-a" 'mosey-backward-bounce
+  "C-e" 'mosey-forward-bounce
+  )
+
 (general-def
   :package 'dogears
   "M-ö" 'dogears-back
@@ -311,9 +317,6 @@
   "<f6>" 'profiler-stop
 
   "C-+" 'org-roam-node-find
-
-  "C-a" 'back-to-indentation
-  "C-M-q C-a" 'beginning-of-line
 
   "C-v" 'my-hydras-misc/body
   "C-M-f" 'my-hydras-code/body
@@ -525,6 +528,8 @@
 
 
 (use-package buffer-move)
+
+(use-package mosey)
 
 (use-package edit-indirect
   :straight (:type git :host github :repo "Fanael/edit-indirect")
