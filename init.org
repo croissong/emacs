@@ -1038,24 +1038,15 @@ https://github.com/bbatsov/crux
 
 #+end_src
 
-*** Smartparens
+*** puni
 #+begin_src elisp
-(use-package smartparens
-    :bind (:map smartparens-mode-map
-                ("C-M-a" . sp-backward-sexp)
-                ("C-M-e" . sp-forward-sexp)
-                ("C-S-<backspace>" . sp-backward-kill-sexp)
-                ("C-M-<down>" . sp-select-next-thing))
-    :init
-    (smartparens-global-mode 1)
-    :hook (prog-mode . show-smartparens-mode)
-    :config
-    (require 'smartparens-config)
-    :custom
-    (blink-matching-paren nil)
-    (sp-show-pair-delay 0.2)
-    (sp-message-width nil)
-    :delight smartparens-mode)
+(use-package puni
+  :defer t
+  :init
+  ;; The autoloads of Puni are set up so you can enable `puni-mode` or
+  ;; `puni-global-mode` before `puni` is actually loaded. Only after you press
+  ;; any key that calls Puni commands, it's loaded.
+  (puni-global-mode))
 #+end_src
 
 *** vundo & undo-fu
