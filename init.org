@@ -1038,7 +1038,7 @@ https://github.com/bbatsov/crux
 
 #+end_src
 
-*** puni
+*** parentheses
 #+begin_src elisp
 (use-package puni
   :defer t
@@ -1047,6 +1047,8 @@ https://github.com/bbatsov/crux
   ;; `puni-global-mode` before `puni` is actually loaded. Only after you press
   ;; any key that calls Puni commands, it's loaded.
   (puni-global-mode))
+
+(electric-pair-mode 1)
 #+end_src
 
 *** vundo & undo-fu
