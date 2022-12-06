@@ -634,6 +634,8 @@
     (org-src-window-setup 'current-window)
     (org-edit-src-auto-save-idle-delay 60)
 
+    (org-insert-heading-respect-content t)
+
     (org-startup-folded 'content)
 
     :delight org-indent-mode)
@@ -644,6 +646,9 @@
 
 (use-package polymode :defer t)
 
+(use-package org-modern
+    :after org
+    :init (global-org-modern-mode))
 
 (use-package org-roam
   :init
