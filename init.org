@@ -178,6 +178,13 @@
   "<M-mouse-3>")	  ; mouse-secondary-save-then-kill
 
 (general-def
+  :keymaps 'prog-mode-map
+  ;; not global because conflict with org-mode new heading
+  "C-<return>" 'crux-smart-open-line
+  "M-<return>" 'crux-smart-open-line-above
+  )
+
+(general-def
   "C-M-^" 'quoted-insert
 
   "C-M-y" 'consult-yank
@@ -187,9 +194,6 @@
   "C-c p" 'projectile-command-map
   "C-M-c" 'projectile-switch-project
 
-  ;; not global because conflict with org-mode new heading
-  "C-<return>" 'crux-smart-open-line
-  "M-<return>" 'crux-smart-open-line-above
 
   ;; not global because of conflict in minibuffer (isearch)
   "M-ü" 'previous-line
