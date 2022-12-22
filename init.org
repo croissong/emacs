@@ -1207,6 +1207,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package dirvish
   :demand t
+  :custom
+  (dirvish-mode-line-height 15)
   :init
   (dirvish-override-dired-mode))
 
