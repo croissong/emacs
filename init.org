@@ -813,15 +813,22 @@
 (use-package apheleia
   :init (apheleia-global-mode +1)
   :config
-  (setq
-    apheleia-mode-alist (a-dissoc apheleia-mode-alist 'yaml-mode)
-    apheleia-mode-alist (a-assoc apheleia-mode-alist 'nix-mode 'alejandra)
-    apheleia-mode-alist (a-assoc apheleia-mode-alist 'nxml-mode 'xmlformat)
-    apheleia-mode-alist (a-assoc apheleia-mode-alist 'emacs-lisp-mode 'lisp-indent)
-    apheleia-formatters (a-assoc apheleia-formatters 'shfmt '("shfmt"))
-    apheleia-formatters (a-assoc apheleia-formatters 'xmlformat
-                                 '("xmlformat" "--blanks" "--indent" "4" "--selfclose" "-"))
-    apheleia-formatters (a-assoc apheleia-formatters 'alejandra '("alejandra")))
+  ;; remove shfmt indent flag (use config file option)
+  (setf (alist-get 'shfmt apheleia-formatters) '("shfmt"))
+
+  ;; add additional formatters
+  (push '(xmlformat . ("xmlformat" "--blanks" "--indent" "4" "--selfclose" "-")) apheleia-formatters)
+  (push '(alejandra . ("alejandra")) apheleia-formatters)
+
+  ;; overwrite mode formatters
+  (setf (alist-get 'nix-mode apheleia-mode-alist) 'alejandra)
+
+  ;; add mode formatters
+  (push '(nxml-mode . xmlformat) apheleia-mode-alist)
+  (push '(emacs-lisp-mode . lisp-indent) apheleia-mode-alist)
+
+  ;; disable mode formatting
+  (setf apheleia-mode-alist (assoc-delete-all 'yaml-mode apheleia-mode-alist))
   :delight apheleia-mode)
 #+end_src
 
