@@ -54,6 +54,8 @@
       initial-major-mode 'text-mode
 
       ring-bell-function 'ignore
+
+      use-dialog-box nil
       vc-follow-symlinks t
 
       split-height-threshold 120
