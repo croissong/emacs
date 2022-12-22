@@ -266,7 +266,7 @@
   :keymaps 'dired-mode-map :package 'dirvish
   "M-<return>" 'dirvish-dispatch
   "M-#" 'dired-find-file
-  [remap dired-do-copy] 'dirvish-yank-menu)
+  )
 
 (general-def
   :keymaps 'override
