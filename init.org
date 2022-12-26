@@ -987,13 +987,15 @@
               (lambda () (when (bound-and-true-p
                                 selectrum-mode) (selectrum-exhibit)))))
 
-(use-package embark
-  :config
-  (add-to-list 'embark-pre-action-hooks '(flyspell-correct-at-point embark--ignore-target)))
-
 (use-package embark-consult
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package embark
+  :after embark-consult
+  :config
+  (add-to-list 'embark-pre-action-hooks '(flyspell-correct-at-point embark--ignore-target))
+  )
 #+end_src
 
 *** crux
