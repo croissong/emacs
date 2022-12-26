@@ -301,6 +301,10 @@
   "C-M-ü" 'buf-move-up
   "C-M-ä" 'buf-move-down
 
+  "C-ö" 'windmove-left
+  "C-#" 'windmove-right
+  "C-ü" 'windmove-up
+  "C-ä" 'windmove-down
 
   "C-M-p" 'vundo
   "C-p" 'undo-fu-only-undo
@@ -329,13 +333,6 @@
   "C-x f" 'my-hydras-files/body
   "M-l" 'my-hydras-lsp/body
 )
-
-(general-def
- "C-ö" 'windmove-left
-  "C-#" 'windmove-right
-  "C-ü" 'windmove-up
-  "C-ä" 'windmove-down
-  )
 
 (general-def
   :keymaps 'vundo-mode-map :package 'vundo
