@@ -584,50 +584,50 @@
   :straight (:type built-in)
   :mode ("\\.org\\'" . org-mode)
   :config
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((emacs-lisp . t)
-       (latex . t)
-       (python . t)
-       (gnuplot . t)
-       (shell . t)
-       (sql . t)))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (latex . t)
+     (python . t)
+     (gnuplot . t)
+     (shell . t)
+     (sql . t)))
 
-    :custom
-    (org-directory "~/Docs/org")
-    (org-capture-templates '(("a" "Brain" plain (function org-brain-goto-end)
-          "* %i%?" :empty-lines 1)))
-    (org-blank-before-new-entry '((heading . nil)
-                                 (plain-list-item . nil)))
-    (org-return-follows-link nil)
-    (org-support-shift-select t)
-    (org-image-actual-width '(500))
-    (org-list-allow-alphabetical t)
-    (org-use-property-inheritance t)
-    (org-use-sub-superscripts nil)
-    (org-checkbox-hierarchical-statistics t)
+  :custom
+  (org-directory "~/Docs/org")
+  (org-capture-templates '(("a" "Brain" plain (function org-brain-goto-end)
+                            "* %i%?" :empty-lines 1)))
+  (org-blank-before-new-entry '((heading . nil)
+                                (plain-list-item . nil)))
+  (org-return-follows-link nil)
+  (org-support-shift-select t)
+  (org-image-actual-width '(500))
+  (org-list-allow-alphabetical t)
+  (org-use-property-inheritance t)
+  (org-use-sub-superscripts nil)
+  (org-checkbox-hierarchical-statistics t)
 
-    (org-export-with-toc nil)
-    (org-export-with-section-numbers nil)
-    (org-refile-use-outline-path t)
-    (org-datetree-add-timestamp 1)
-    (org-extend-today-until 6)
-    (org-duration-format (quote h:mm))
-    (org-outline-path-complete-in-steps nil)
-    (org-hide-emphasis-markers t)
-    (org-refile-targets '((nil :level . 2)))
+  (org-export-with-toc nil)
+  (org-export-with-section-numbers nil)
+  (org-refile-use-outline-path t)
+  (org-datetree-add-timestamp 1)
+  (org-extend-today-until 6)
+  (org-duration-format (quote h:mm))
+  (org-outline-path-complete-in-steps nil)
+  (org-hide-emphasis-markers t)
+  (org-refile-targets '((nil :level . 2)))
 
-    (org-src-fontify-natively t)
-    (org-src-tab-acts-natively t)
-    (org-pretty-entities t)
-    (org-src-preserve-indentation t)
-    (org-src-window-setup 'current-window)
-    (org-edit-src-auto-save-idle-delay 60)
+  (org-src-fontify-natively t)
+  (org-src-tab-acts-natively t)
+  (org-pretty-entities t)
+  (org-src-preserve-indentation t)
+  (org-src-window-setup 'current-window)
+  (org-edit-src-auto-save-idle-delay 60)
 
-    (org-insert-heading-respect-content t)
+  (org-insert-heading-respect-content t)
 
-    (org-startup-folded 'content)
-    )
+  (org-startup-folded 'content)
+  )
 
 (use-package org-contrib
   :after org
@@ -640,14 +640,14 @@
   :after (org cape))
 
 (use-package my-org
-    :after org
-    :straight (:local-repo "~/.config/emacs/my/org/"))
+  :after org
+  :straight (:local-repo "~/.config/emacs/my/org/"))
 
 (use-package polymode :defer t)
 
 (use-package org-modern
-    :after org
-    :init (global-org-modern-mode))
+  :after org
+  :init (global-org-modern-mode))
 
 (use-package org-roam
   :init
@@ -673,10 +673,10 @@
   (deft-recursive t)
   (deft-use-filter-string-for-filename t)
   (deft-strip-summary-regexp  (concat "\\("
-		  "[\n\t]" ;; blank
-		  "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
-		  "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n"
-		  "\\)"))
+		                                  "[\n\t]" ;; blank
+		                                  "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
+		                                  "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n"
+		                                  "\\)"))
   (deft-default-extension "org")
   (deft-use-filename-as-title t)
   (deft-directory org-roam-directory))
