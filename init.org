@@ -325,7 +325,8 @@
   "<f5>" 'profiler-start
   "<f6>" 'profiler-stop
 
-  "C-+" 'org-roam-node-find
+  "C-+" 'consult-notes
+  "M-+" 'consult-notes-search-in-all-notes
 
   "C-v" 'my-hydras-misc/body
   "C-M-f" 'my-hydras-code/body
@@ -649,6 +650,13 @@
   :after org
   :init (global-org-modern-mode))
 
+(use-package org-cliplink
+  :commands org-cliplink
+  )
+#+end_src
+
+** note-taking
+#+begin_src elisp :lexical no
 (use-package org-roam
   :init
   (setq org-roam-v2-ack t)
@@ -666,23 +674,10 @@
               (("C-c n i" . org-roam-insert))
               (("C-c n I" . org-roam-insert-immediate))))
 
-(use-package deft
-  :after org
-  :commands deft
+(use-package consult-notes
+  :init (consult-notes-org-roam-mode)
   :custom
-  (deft-recursive t)
-  (deft-use-filter-string-for-filename t)
-  (deft-strip-summary-regexp  (concat "\\("
-		                                  "[\n\t]" ;; blank
-		                                  "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
-		                                  "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n"
-		                                  "\\)"))
-  (deft-default-extension "org")
-  (deft-use-filename-as-title t)
-  (deft-directory org-roam-directory))
-
-(use-package org-cliplink
-  :commands org-cliplink
+  (consult-notes-org-headings-files '("")) ;; todo: rm when bug is fixed
   )
 #+end_src
 
