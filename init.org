@@ -581,17 +581,10 @@
 ;; (use-package reveal
 ;;   :hook (org-mode . reveal-mode)
 ;;     :delight reveal-mode)
-(use-package company-org-block
-  :commands company-org-block
-  :after cape)
-
 (use-package org
-  :straight org-contrib
+  :straight (:type built-in)
   :mode ("\\.org\\'" . org-mode)
   :config
-    (require 'org-checklist)
-    (org-indent-mode 1)
-
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((emacs-lisp . t)
@@ -605,7 +598,6 @@
     (org-directory "~/Docs/org")
     (org-capture-templates '(("a" "Brain" plain (function org-brain-goto-end)
           "* %i%?" :empty-lines 1)))
-    (org-startup-indented t)
     (org-blank-before-new-entry '((heading . nil)
                                  (plain-list-item . nil)))
     (org-return-follows-link nil)
@@ -636,8 +628,17 @@
     (org-insert-heading-respect-content t)
 
     (org-startup-folded 'content)
+    )
 
-    :delight org-indent-mode)
+(use-package org-contrib
+  :after org
+  :config
+  (require 'org-checklist)
+  )
+
+(use-package company-org-block
+  :commands company-org-block
+  :after (org cape))
 
 (use-package my-org
     :after org
