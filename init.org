@@ -745,8 +745,7 @@
   (clean-buffer-list-kill-regexps '(".*"))
   (clean-buffer-list-kill-never-regexps
    '("\\` \\*Minibuf-.*\\*\\'"
-     "\\`\\*scratch.*"
-     "\\`magit: .*"))
+     "\\`\\*scratch.*"))
   )
 #+end_src
 
