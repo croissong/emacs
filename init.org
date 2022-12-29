@@ -676,8 +676,6 @@
 
 (use-package consult-notes
   :init (consult-notes-org-roam-mode)
-  :custom
-  (consult-notes-org-headings-files '("")) ;; todo: rm when bug is fixed
   )
 #+end_src
 
@@ -1188,6 +1186,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
                     )
                   ))))))
     (cl-pushnew 'my--git-commit-check-commitlint git-commit-finish-query-functions))
+
+
+(use-package magit-annex)
 #+end_src
 
 ** dired & dirvish
