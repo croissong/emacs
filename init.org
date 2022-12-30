@@ -627,7 +627,7 @@
 
   (org-insert-heading-respect-content t)
 
-  (org-startup-folded 'content)
+  (org-startup-folded t)
   )
 
 (use-package org-contrib
