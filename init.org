@@ -1261,6 +1261,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package doc-tools
   :straight (:host github :repo "dalanicolai/doc-tools")
   :mode "\\.pdf\\'")
+
+
+(use-package csv-mode)
 #+end_src
 
 ** docker
