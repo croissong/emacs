@@ -804,18 +804,15 @@
 (use-package apheleia
   :init (apheleia-global-mode +1)
   :config
-  ;; remove shfmt indent flag (use config file option)
-  (setf (alist-get 'shfmt apheleia-formatters) '("shfmt"))
-
   ;; add additional formatters
-  (push '(xmlformat . ("xmlformat" "--blanks" "--indent" "4" "--selfclose" "-")) apheleia-formatters)
-  (push '(alejandra . ("alejandra")) apheleia-formatters)
+  (push '(treefmt . ("treefmt" "--stdin" filepath)) apheleia-formatters)
 
   ;; overwrite mode formatters
-  (setf (alist-get 'nix-mode apheleia-mode-alist) 'alejandra)
+  (setf (alist-get 'nix-mode apheleia-mode-alist) 'treefmt)
+  (setf (alist-get 'sh-mode apheleia-mode-alist) 'treefmt)
 
   ;; add mode formatters
-  (push '(nxml-mode . xmlformat) apheleia-mode-alist)
+  (push '(nxml-mode . treefmt) apheleia-mode-alist)
   (push '(emacs-lisp-mode . lisp-indent) apheleia-mode-alist)
 
   ;; disable mode formatting
