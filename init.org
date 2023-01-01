@@ -120,7 +120,7 @@
 (straight-use-package 'use-package)
 
 (use-package bind-key)
-(use-package delight)
+(use-package blackout)
 (use-package f)
 (use-package dash)
 (use-package a)
@@ -384,7 +384,7 @@
 
 ** editing
 #+begin_src elisp
-(delight 'eldoc-mode nil "eldoc")
+(blackout 'eldoc-mode)
 (setq xref-prompt-for-identifier nil)
 #+end_src
 
@@ -591,7 +591,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 ;; disabled in order to fix isearch reveal of collapsed org trees
 ;; (use-package reveal
 ;;   :hook (org-mode . reveal-mode)
-;;     :delight reveal-mode)
+;;     :blackout reveal-mode)
 (use-package org
   :straight (:type built-in)
   :mode ("\\.org\\'" . org-mode)
@@ -705,34 +705,35 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 (use-package tree-sitter
   :init (global-tree-sitter-mode)
   :hook (tree-sitter-after-on-hook . tree-sitter-hl-mode)
-  :delight)
+  :blackout)
 (use-package tree-sitter-langs
   :after tree-sitter)
 
 (use-package whole-line-or-region
     :init (whole-line-or-region-global-mode 1)
-    :delight whole-line-or-region-local-mode)
+    :blackout whole-line-or-region-local-mode)
 
 (use-package ethan-wspace
   :init
   (setq mode-require-final-newline nil)
   :config
-  (global-ethan-wspace-mode 1))
+  (global-ethan-wspace-mode 1)
+  :blackout)
 
 (use-package editorconfig
     :config (editorconfig-mode 1)
     ;; :custom
     ;; (editorconfig-trim-whitespaces-mode 'ws-butler-mode)
-    :delight editorconfig-mode)
+    :blackout editorconfig-mode)
 
 (use-package hungry-delete
     :init (global-hungry-delete-mode)
-    :delight hungry-delete-mode)
+    :blackout hungry-delete-mode)
 
 ;; https://github.com/lassik/emacs-format-all-the-code/issues/33
 (use-package envrc
   :init (envrc-global-mode)
-  :delight envrc-mode)
+  :blackout envrc-mode)
 
 ;; currently no usage for it
 ;; but keep an eye on future features
@@ -764,7 +765,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
     (drag-stuff-global-mode 1)
     :config
     (setq drag-stuff-except-modes '(org-mode))
-    :delight drag-stuff-mode)
+    :blackout drag-stuff-mode)
 
 (use-package golden-ratio-scroll-screen
   :custom
@@ -814,7 +815,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 ;;   (setq-default format-all-formatters '(("Python" black)
 ;;                                         ("Shell" shfmt)
 ;;                                         ("Go" gofmt)))
-;;   :delight format-all-mode)
+;;   :blackout format-all-mode)
 
 
 (use-package apheleia
@@ -833,7 +834,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 
   ;; disable mode formatting
   (setf apheleia-mode-alist (assoc-delete-all 'yaml-mode apheleia-mode-alist))
-  :delight apheleia-mode)
+  :blackout apheleia-mode)
 #+end_src
 
 *** lsp
@@ -873,7 +874,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
   (lsp-keymap-prefix "M-l")
   (lsp-disabled-clients '(ts angular-ls))
   (lsp-keep-workspace-alive nil)
-  :delight (lsp-lens-mode))
+  :blackout (lsp-lens-mode))
 
 (use-package lsp-ui
   :commands lsp-ui-mode
@@ -895,7 +896,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 #+begin_src elisp
 (use-package flycheck
     :commands flycheck-mode
-    :delight flycheck-mode)
+    :blackout flycheck-mode)
 
 (use-package flyspell
     :hook ((text-mode markdown-mode) . flyspell-mode)
@@ -908,7 +909,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
                   (overlay-put overlay 'help-echo nil)
                   (overlay-put overlay 'keymap nil)
                   (overlay-put overlay 'mouse-face nil)))
-    :delight flyspell-mode)
+    :blackout flyspell-mode)
 
 (use-package flyspell-correct :after flyspell)
 #+end_src
@@ -1014,7 +1015,7 @@ https://github.com/bbatsov/crux
 #+begin_src elisp
 (use-package rainbow-mode
     :hook (css-mode org-mode help-mode)
-    :delight rainbow-mode)
+    :blackout rainbow-mode)
 #+end_src
 
 *** kurecolor
@@ -1048,7 +1049,7 @@ https://github.com/bbatsov/crux
     :bind (:map corfu-map
                 ("C-ä" . corfu-next)
                 ("C-ü" . corfu-previous))
-    :delight corfu-mode
+    :blackout corfu-mode
     )
 
 (use-package cape
@@ -1114,7 +1115,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (projectile-switch-project-action 'projectile-vc)
     (projectile-enable-caching t)
     (projectile-ignored-project-function #'my--projectile-ignore-project)
-    :delight projectile-mode)
+    :blackout projectile-mode)
 #+end_src
 
 *** which-key
@@ -1126,7 +1127,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (which-key-idle-delay 3.0)
     (which-key-idle-secondary-delay 0.05)
     (help-char 94) ;; caret (ASCII)
-    :delight which-key-mode)
+    :blackout which-key-mode)
 #+end_src
 
 *** helpful
@@ -1447,7 +1448,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package sql-indent
   :hook (sql-mode . sqlind-minor-mode)
-  :delight sqlind-minor-mode)
+  :blackout sqlind-minor-mode)
 #+end_src
 
 ** terraform
@@ -1485,7 +1486,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (js2-basic-offset 2)
     (js2-strict-inconsistent-return-warning nil)
     (js2-strict-missing-semi-warning nil)
-    :delight)
+    :blackout)
 
 (use-package web-mode
     :mode ("\\.html?\\'" "\\.jsx\\'" "\\.tsx\\'")
@@ -1613,7 +1614,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :custom
   (olivetti-mode-on-hook '())
   (olivetti-body-width 125)
-  :delight olivetti-mode)
+  :blackout olivetti-mode)
 
 
 ;; https://stackoverflow.com/questions/27845980/how-do-i-remove-newline-symbols-inside-emacs-vertical-border
@@ -1650,7 +1651,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
         ;; 16mb
         gcmh-high-cons-threshold (* 16 1024 1024))
   (gcmh-mode 1)
-  :delight)
+  :blackout)
 #+end_src
 
 * Calc
