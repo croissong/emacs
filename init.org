@@ -36,7 +36,7 @@
 ;; custom
 
 (setq default-directory "~/"
-      custom-file (f-expand "custom.el" user-emacs-directory)
+      custom-file (expand-file-name "custom.el" user-emacs-directory)
       browse-url-generic-program (executable-find "handlr")
       browse-url-generic-args '("open")
       read-process-output-max (* 1024 1024) ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
@@ -106,7 +106,7 @@
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (f-expand "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
