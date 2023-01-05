@@ -702,13 +702,6 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 
 ** passive modes
 #+begin_src elisp
-(use-package tree-sitter
-  :init (global-tree-sitter-mode)
-  :hook (tree-sitter-after-on-hook . tree-sitter-hl-mode)
-  :blackout)
-(use-package tree-sitter-langs
-  :after tree-sitter)
-
 (use-package whole-line-or-region
     :init (whole-line-or-region-global-mode 1)
     :blackout whole-line-or-region-local-mode)
