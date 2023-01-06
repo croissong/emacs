@@ -706,17 +706,8 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
     :init (whole-line-or-region-global-mode 1)
     :blackout whole-line-or-region-local-mode)
 
-(use-package ethan-wspace
-  :init
-  (setq mode-require-final-newline nil)
-  :config
-  (global-ethan-wspace-mode 1)
-  :blackout)
-
 (use-package editorconfig
     :config (editorconfig-mode 1)
-    ;; :custom
-    ;; (editorconfig-trim-whitespaces-mode 'ws-butler-mode)
     :blackout editorconfig-mode)
 
 (use-package hungry-delete
