@@ -779,29 +779,6 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 *** formatting
 #+begin_src elisp
 ;; Unified approach inc: https://github.com/purcell/reformatter.el/pull/24
-;; (use-package format-all
-;;   :hook
-;;   ((sh-mode css-mode web-mode scss-mode)
-;;    . format-all-mode)
-;;   :init
-;;   (defun format-all-default()
-;;     (format-all-ensure-formatter)
-;;     (format-all-mode))
-;;   :config
-;;   (define-format-all-formatter isort
-;;     (:executable "isort")
-;;     (:install "pip install isort")
-;;     (:languages "Python")
-;;     (:features)
-;;     (:format (format-all--buffer-easy
-;;               executable "-d" "-")))
-
-;;   (setq-default format-all-formatters '(("Python" black)
-;;                                         ("Shell" shfmt)
-;;                                         ("Go" gofmt)))
-;;   :blackout format-all-mode)
-
-
 (use-package apheleia
   :init (apheleia-global-mode +1)
   :config
