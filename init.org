@@ -7,6 +7,7 @@
 #+end_src
 
 * core
+** env
 #+begin_src elisp
 ;; https://github.com/hlissner/doom-emacs/blob/develop/core/core.el
 
@@ -94,15 +95,17 @@
 (setq enable-recursive-minibuffers t)
 #+end_src
 
-* bootstrap
+** straight
 #+begin_src elisp
-
 (setq straight-use-package-by-default t
       straight-repository-branch "develop"
-      use-package-compute-statistics nil
+      straight-check-for-modifications '(find-when-checking)
+      )
+
+(setq use-package-compute-statistics nil
       comp-async-report-warnings-errors nil
       warning-suppress-log-types '((comp))
-      straight-check-for-modifications '(find-when-checking))
+      )
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -118,7 +121,10 @@
   (load bootstrap-file nil 'nomessage))
 
 (straight-use-package 'use-package)
+#+end_src
 
+** core packages
+#+begin_src elisp
 (use-package bind-key)
 (use-package blackout)
 (use-package f)
@@ -143,11 +149,6 @@
     :init
     (my-with-eval-after-frame
      (exec-path-from-shell-initialize)))
-#+end_src
-
-* libs
-#+begin_src elisp
-(use-package ts)
 #+end_src
 
 * common
@@ -577,7 +578,7 @@
 
 ** minibuffer abort
 http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
-#+begin_src elisp :lexical no
+#+begin_src elisp
 (defun stop-using-minibuffer ()
   "kill the minibuffer"
   (when (and (>= (recursion-depth) 1) (active-minibuffer-window))
@@ -670,7 +671,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 #+end_src
 
 ** note-taking
-#+begin_src elisp :lexical no
+#+begin_src elisp
 (use-package org-roam
   :init
   (setq org-roam-v2-ack t)
@@ -1498,6 +1499,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 * tools
 #+begin_src elisp
+(use-package ts)
+
 (use-package x509-mode :defer t)
 
 (use-package restclient
