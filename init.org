@@ -95,50 +95,75 @@
 (setq enable-recursive-minibuffers t)
 #+end_src
 
-** straight
+** elpaca
 #+begin_src elisp
-(setq straight-use-package-by-default t
-      straight-repository-branch "develop"
-      straight-check-for-modifications '(find-when-checking)
-      )
-
 (setq use-package-compute-statistics nil
       comp-async-report-warnings-errors nil
       warning-suppress-log-types '((comp))
       )
 
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                              :ref nil
+                              :files (:defaults (:exclude "extensions"))
+                              :build (:not elpaca--activate-package)))
+(when-let ((repo  (expand-file-name "repos/elpaca/" elpaca-directory))
+           (build (expand-file-name "elpaca/" elpaca-builds-directory))
+           (order (cdr elpaca-order))
+           ((add-to-list 'load-path (if (file-exists-p build) build repo)))
+           ((not (file-exists-p repo))))
+  (condition-case-unless-debug err
+      (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+               ((zerop (call-process "git" nil buffer t "clone"
+                                     (plist-get order :repo) repo)))
+               (default-directory repo)
+               ((zerop (call-process "git" nil buffer t "checkout"
+                                     (or (plist-get order :ref) "--")))))
+          (progn
+            (byte-recompile-directory repo 0 'force)
+            (require 'elpaca)
+            (and (fboundp 'elpaca-generate-autoloads)
+                 (elpaca-generate-autoloads "elpaca" repo))
+            (kill-buffer buffer))
+        (error "%s" (with-current-buffer buffer (buffer-string))))
+    ((error)
+     (warn "%s" err)
+     (delete-directory repo 'recursive))))
+(require 'elpaca-autoloads)
+(add-hook 'after-init-hook #'elpaca-process-queues)
+(elpaca `(,@elpaca-order))
 
-(straight-use-package 'use-package)
+;; load directly before elpaca-use-package to register :blackout use-package handler
+(elpaca blackout)
+
+(elpaca elpaca-use-package
+  ;; Enable :elpaca use-package keyword.
+  (elpaca-use-package-mode)
+  ;; Assume :elpaca t unless otherwise specified.
+  (setq elpaca-use-package-by-default t))
+
+(elpaca-wait)
 #+end_src
 
 ** core packages
 #+begin_src elisp
 (use-package bind-key)
-(use-package blackout)
 (use-package f)
 (use-package dash)
 (use-package a)
+(use-package ts)
 
 (use-package my
-    :straight (:local-repo "~/.config/emacs/my/" :files ("my.el"))
+    :elpaca `(my :repo ,user-emacs-directory :files ("my/my.el") )
     :custom
     (save-some-buffers-action-alist
      (a-assoc save-some-buffers-action-alist
               ?r '(my-discard-buffer-action "discard this buffer")))
     (org-make-link-description-function 'my-url-get-title)
     :demand t)
+
+(elpaca-wait)
 
 ;; Required to get e.g. wl-clipboard wayland connection working on system start (without having to restart the daemon)
 ;; Used in conjunction with 'systemctl --user import-environment SWAYSOCK WAYLAND_DISPLAY DISPLAY' in the sway config
@@ -156,12 +181,15 @@
 #+begin_src elisp
 
 (use-package my-hydras
-    :after hydra
-    :straight (:local-repo "~/.config/emacs/my/hydras/"))
+  :after hydra
+  :elpaca `(my-hydras :repo ,user-emacs-directory :files ("my/hydras/my-hydras.el") )
+  )
 
 (use-package general
   :config
   (general-auto-unbind-keys))
+
+(elpaca-wait)
 
 (general-unbind
   ;; disable overwrite
@@ -417,7 +445,7 @@
 ** debugging
 #+begin_src elisp
 (use-package explain-pause-mode
-  :straight (:host github :repo "lastquestion/explain-pause-mode")
+  :elpaca (:host github :repo "lastquestion/explain-pause-mode")
   :commands explain-pause-mode)
 
 (use-package esup
@@ -537,7 +565,7 @@
 (use-package mosey)
 
 (use-package edit-indirect
-  :straight (:type git :host github :repo "Fanael/edit-indirect")
+  :elpaca (:type git :host github :repo "Fanael/edit-indirect")
   :commands edit-indirect-region)
 
 
@@ -554,6 +582,7 @@
 ** secrets
 #+begin_src elisp
 (use-package auth-source-pass
+  :elpaca nil
   :init (auth-source-pass-enable)
   :custom
   (auth-source-pass-filename (getenv "PASSWORD_STORE_DIR"))
@@ -561,10 +590,11 @@
 
 (use-package
   epa-file
-  :straight nil
+  :elpaca nil
   :custom (epa-file-select-keys nil))
 
-(use-package secrets)
+(use-package secrets
+  :elpaca nil)
 #+end_src
 
 ** long lines improvements
@@ -595,7 +625,6 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 ;;   :hook (org-mode . reveal-mode)
 ;;     :blackout reveal-mode)
 (use-package org
-  :straight (:type built-in)
   :mode ("\\.org\\'" . org-mode)
   :config
   (org-babel-do-load-languages
@@ -657,7 +686,8 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 
 (use-package my-org
   :after org
-  :straight (:local-repo "~/.config/emacs/my/org/"))
+  :elpaca `(my-org :repo ,user-emacs-directory :files ("my/org/my-org.el") )
+  )
 
 (use-package polymode :defer t)
 
@@ -728,6 +758,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 ;; (use-package async)
 
 (use-package midnight
+  :elpaca nil
   :config
   (setq midnight-period (* 60 60 3)) ;; 3h
   (advice-add 'clean-buffer-list :around 'suppress-message-advice-around)
@@ -751,7 +782,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
   (global-treesit-auto-mode))
 
 (use-package substitute
-  :straight (:host github :repo "protesilaos/substitute" :build (:not autoloads))
+  :elpaca (:host github :repo "protesilaos/substitute" :build (:not autoloads))
   )
 
 (use-package drag-stuff
@@ -777,7 +808,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 (use-package combobulate
   :custom
   (combobulate-flash-node nil)
-  :straight (:host github :repo "mickeynp/combobulate" :build (:not autoloads))
+  :elpaca (:host github :repo "mickeynp/combobulate" :build (:not autoloads))
   )
 
 ;; (use-package dogears
@@ -876,6 +907,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
     :blackout flycheck-mode)
 
 (use-package flyspell
+    :elpaca nil
     :hook ((text-mode markdown-mode) . flyspell-mode)
     :config
 
@@ -931,15 +963,18 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 ** minibuffer & completion
 #+begin_src elisp
 (use-package vertico
-  :straight '(:files (:defaults "extensions/*")
-               :includes (vertico-directory))
+  :elpaca (vertico :files (:defaults "extensions/*"))
   :init
   (vertico-mode)
+  )
+(use-package vertico-directory
+  :elpaca nil
+  :after vertico
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
   )
 
-
 (use-package savehist
+  :elpaca nil
   :init
   (savehist-mode))
 
@@ -1082,7 +1117,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :init (projectile-mode 1)
     :config
       (defun my--projectile-ignore-project (project-root)
-        (f-descendant-of? project-root (f-expand "straight" user-emacs-directory)))
+        (f-descendant-of? project-root (f-expand "elpaca" user-emacs-directory)))
       (defun my--projectile-mode-line-function ()
         (format " %s" (projectile-project-name)))
     :custom
@@ -1187,7 +1222,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ;; mostly based on https://github.com/alexluigit/dirvish/blob/main/Configuration.org#Example-config
 
 (use-package dired
-  :straight nil
+  :elpaca nil
   :custom
   (dired-recursive-deletes 'top)
   (dired-recursive-copies 'always)
@@ -1207,7 +1242,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (dirvish-override-dired-mode))
 
 (use-package dired-x
-  :straight nil
+  :elpaca nil
   ;; Enable dired-omit-mode by default
   ;; :hook
   ;; (dired-mode . dired-omit-mode)
@@ -1232,7 +1267,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** c++
 #+begin_src elisp
 (use-package c++-mode
-  :straight nil
+  :elpaca nil
   :mode "\\.h\\'")
 
 (use-package rtags
@@ -1253,7 +1288,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** docs
 #+begin_src elisp
 (use-package doc-tools
-  :straight (:host github :repo "dalanicolai/doc-tools")
+  :elpaca (:host github :repo "dalanicolai/doc-tools")
   :mode "\\.pdf\\'")
 
 
@@ -1270,7 +1305,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package emacs-lisp
   :hook (emacs-lisp-mode . nameless-mode)
-  :straight nil)
+  )
 
 (use-package nameless
   :commands nameless-mode
@@ -1313,7 +1348,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package lsp-java)
 
 (use-package java-mode
-  :straight nil
   ;; :hook (java-mode . lsp)
   :mode "\\.java\\'")
 #+end_src
@@ -1348,7 +1382,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** latex
 #+begin_src elisp
 (use-package tex-mode
-    :straight auctex
+    :elpaca auctex
     :mode "\\.tex\\'"
     :hook (LaTeX-mode . turn-on-reftex))
 #+end_src
@@ -1444,7 +1478,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** shell
 #+begin_src elisp
 (use-package sh-mode
-  :straight nil
   :hook (sh-mode . lsp-deferred))
 #+end_src
 
@@ -1499,7 +1532,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 * tools
 #+begin_src elisp
-(use-package ts)
 
 (use-package x509-mode :defer t)
 
@@ -1513,7 +1545,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package google-translate)
 (use-package google-translate-smooth-ui
   :after google-translate
-  :straight nil
   :commands google-translate-smooth-translate
   :config
   ;; https://github.com/atykhonov/google-translate/issues/52#issuecomment-727920888
@@ -1526,7 +1557,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   "M-ü" 'google-translate-previous-translation-direction))
 
 (use-package mail-mode
-    :straight nil
     :mode "\\/tmp\\/neomutt.*\\'")
 (use-package khardel
   :general
@@ -1547,10 +1577,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :custom
   (insert-shebang-track-ignored-filename nil))
 
-(use-package easy-convert
-  :straight (:host github :repo "Frozenlock/easy-convert")
-  :commands easy-convert-interactive)
-
 (use-package org-download
   :after org)
 
@@ -1565,17 +1591,17 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package units-mode
   :commands units-mode)
 
-(use-package spookfox
-  :straight
-  (spookfox :type git
-            :host github
-            :repo "bitspook/spookfox"
-            :files ("lisp/*.el" "lisp/apps/*.el"))
-  :config
-  (require 'spookfox-org-tabs)
-  (setq spookfox-enabled-apps '(spookfox-org-tabs))
-  ;; (spookfox-init)
-  )
+;; (use-package spookfox
+;;   :straight
+;;   (spookfox :type git
+;;             :host github
+;;             :repo "bitspook/spookfox"
+;;             :files ("lisp/*.el" "lisp/apps/*.el"))
+;;   :config
+;;   (require 'spookfox-org-tabs)
+;;   (setq spookfox-enabled-apps '(spookfox-org-tabs))
+;;   ;; (spookfox-init)
+;;   )
 
 #+end_src
 
