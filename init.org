@@ -214,7 +214,7 @@
   "C-M-." 'xref-find-references
   "C-r" 'substitute-target-in-buffer
 
-  "C-<backspace>" 'my-backward-delete-whitespace-or-word)
+  "C-<backspace>" 'puni-backward-kill-word)
 
 (general-def
   :keymaps 'override

@@ -17,12 +17,6 @@
            ,@body)))
      ,@body))
 
-(defun my-backward-delete-whitespace-or-word ()
-  (interactive)
-  (if (looking-back "\\(\t\\|  \\)")
-      (delete-horizontal-space)
-    (backward-kill-word 1)))
-
 (defun my-capitalize-previous-word()
   (interactive)
   (capitalize-word -1))
@@ -49,7 +43,7 @@
     (while (search-forward "\n" nil t)
       (replace-match "" nil t))))
 
-(defun my-indent-rigidly (start end arg &optional interactive)
+(defun my-indent-rigidly (start _end _arg &optional _interactive)
   "Move pointer to start ofIndent rigidily do not skip first line when indenting"
   (interactive "r\nP\np")
   (save-excursion
@@ -77,7 +71,7 @@
     (remove-hook 'after-save-hook 'org-babel-tangle 'local)))
 
 ;; How to make org-mode org-insert-link (C-c C-l) automatically fill in the description from a webpage:
-(defun my-url-get-title (url &optional descr)
+(defun my-url-get-title (url &optional _descr)
   "Takes a URL and returns the value of the <title> HTML tag"
   (let (result)
     (request url
