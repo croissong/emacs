@@ -170,6 +170,7 @@
   "<C-mouse-5>"
   "C-<wheel-down>"
   "C-<wheel-up>"
+  "<pinch>"
 
   ;; https://www.reddit.com/r/emacs/comments/3c61zl/abolish_the_secondary_selection_quick_and_easy/
   "<M-drag-mouse-1>" ; mouse-set-secondary
