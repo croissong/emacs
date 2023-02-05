@@ -743,6 +743,12 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 
 ** editing
 #+begin_src elisp
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (global-treesit-auto-mode))
+
 (use-package substitute
   :straight (:host github :repo "protesilaos/substitute" :build (:not autoloads))
   )
@@ -766,6 +772,12 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
     (expand-region-fast-keys-enabled nil)
     :config
     (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions))
+
+(use-package combobulate
+  :custom
+  (combobulate-flash-node nil)
+  :straight (:host github :repo "mickeynp/combobulate" :build (:not autoloads))
+  )
 
 ;; (use-package dogears
 ;;   :init (dogears-mode)
@@ -797,7 +809,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
   (push '(emacs-lisp-mode . lisp-indent) apheleia-mode-alist)
 
   ;; disable mode formatting
-  (setf apheleia-mode-alist (assoc-delete-all 'yaml-mode apheleia-mode-alist))
+  (setf apheleia-mode-alist (assoc-delete-all 'yaml-ts-mode apheleia-mode-alist))
   :blackout apheleia-mode)
 #+end_src
 
@@ -978,7 +990,7 @@ https://github.com/bbatsov/crux
 *** rainbow-mode
 #+begin_src elisp
 (use-package rainbow-mode
-    :hook (css-mode org-mode help-mode)
+    :hook (css-ts-mode org-mode help-mode)
     :blackout rainbow-mode)
 #+end_src
 
@@ -1393,8 +1405,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** python
 #+begin_src elisp
 (use-package python
-  :mode ("\\.py\\'" . python-mode)
-  :hook (python-mode . lsp-deferred))
+  :mode ("\\.py\\'" . python-ts-mode)
+  :hook (python-ts-mode . (lambda ()
+                            (lsp-deferred)
+                            (combobulate-mode)
+                            ))
+  )
 
 (use-package lsp-pyright
   :after python)
@@ -1438,10 +1454,11 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** webdev
 #+begin_src elisp
-(use-package css-mode
-    :mode ("\\.less\\'" "\\.css\\'" "\\.sass\\'" "\\.scss\\'")
-    :custom
-    (css-indent-offset 4))
+(use-package css-ts-mode
+  :hook (typescript-ts-mode . combobulate-mode)
+  :mode ("\\.less\\'" "\\.css\\'" "\\.sass\\'" "\\.scss\\'")
+  :custom
+  (css-indent-offset 4))
 
 (use-package js2-mode
     :mode "\\.js\\'"
@@ -1458,11 +1475,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (web-mode-enable-auto-closing t)
     (web-mode-enable-auto-indentation nil))
 
-(use-package typescript-mode
+(use-package typescript-ts-mode
     :mode "\\.ts\\'"
-    :hook (typescript-mode . (lambda ()
-                                (lsp-deferred)
-                                (my/lsp-format-buf)))
+    :hook (typescript-ts-mode . (lambda ()
+                                  (lsp-deferred)
+                                  (my/lsp-format-buf)
+                                  (combobulate-mode)
+                                  ))
     :config (setq lsp-eslint-server-command
                   '("node"
                     (f-expand "~/.local/vscode-eslint/extension/server/out/eslintServer.js")
@@ -1471,8 +1490,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** yaml
 #+begin_src elisp
-(use-package yaml-mode
-    :mode ("\\.yml.*\\'" "\\.yaml.*\\'"))
+(use-package yaml-ts-mode
+  :hook (yaml-ts-mode . combobulate-mode)
+  :mode ("\\.yml.*\\'" "\\.yaml.*\\'")
+  )
 #+end_src
 
 * tools
