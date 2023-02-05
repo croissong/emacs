@@ -1285,7 +1285,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package go-mode
     :mode "\\.go\\'"
     :config
-    (require 'dap-go)
+    (require 'dap-dlv-go)
     :hook (go-mode . lsp-deferred))
 #+end_src
 
