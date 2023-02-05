@@ -212,7 +212,7 @@
   ;; clashes with run-elisp-function
   ;; "M-:" 'xref-find-definitions-other-window
   "C-M-." 'xref-find-references
-  "C-r" 'iedit-mode
+  "C-r" 'substitute-target-in-buffer
 
   "C-<backspace>" 'my-backward-delete-whitespace-or-word)
 
@@ -743,9 +743,9 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 
 ** editing
 #+begin_src elisp
-(use-package iedit
-  :custom
-  (iedit-case-sensitive-default nil))
+(use-package substitute
+  :straight (:host github :repo "protesilaos/substitute" :build (:not autoloads))
+  )
 
 (use-package drag-stuff
     :init
