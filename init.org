@@ -158,8 +158,10 @@
 (use-package dash)
 (use-package a)
 (use-package ts)
+(use-package request)
 
 (use-package my
+    :after request
     :elpaca `(my :repo ,user-emacs-directory :files ("my/my.el") )
     :config
     (add-to-list 'save-some-buffers-action-alist
