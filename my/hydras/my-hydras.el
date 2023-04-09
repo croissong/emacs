@@ -15,10 +15,26 @@
     (when x
       (funcall x))))
 
-(defhydra my-hydras-files (:color blue)
-  ""
-  ("e" (find-file (expand-file-name "init.org" user-emacs-directory)) "emacs" :column "config")
-  ("n" (find-file (substitute-in-file-name "$DOTFILES/dot_config/nyxt/init.org")) "nyxt" :column "config"))
+(transient-define-prefix my-menus-files ()
+  "Prefix that waves at the user"
+  [ "config"
+    ("e" "emacs"
+     (lambda ()
+       (interactive)
+       (find-file (expand-file-name "init.org" user-emacs-directory))
+       ))
+    ("p" "packages"
+     (lambda ()
+       (interactive)
+       (find-file (expand-file-name "dot_config/nixpkgs/packages.nix" (substitute-env-vars "$DOT")))
+       ))
+    ("n" "nyxt"
+     (lambda ()
+       (interactive)
+       (find-file (expand-file-name "init.org" user-emacs-directory))
+       ))
+    ]
+  )
 
 (defhydra my-hydras-misc (:color blue)
   ""
@@ -145,8 +161,8 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   ("S" lsp-shutdown-workspace))
 
 (defhydra my-hydras--macro (:hint nil :color pink :pre
-                         (when defining-kbd-macro
-                           (kmacro-end-macro 1)))
+                                  (when defining-kbd-macro
+                                    (kmacro-end-macro 1)))
   "
   ^Create-Cycle^   ^Basic^           ^Insert^        ^Save^         ^Edit^
 ╭─────────────────────────────────────────────────────────────────────────╯
@@ -189,7 +205,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |prun_e_
   ("q"  nil                                      "cancel" :color blue))
 
 (defhydra hydra-projectile (:color teal
-                            :hint nil)
+                                   :hint nil)
   "
      PROJECTILE: %(projectile-project-root)
 

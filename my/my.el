@@ -1,5 +1,7 @@
 ;;; my.el --- Utility functions - by moi, for moi -*- lexical-binding: t; -*-
 
+(require 'request)
+
 (defun my-ensure-dir (&rest dirs)
   "Join args to single path and create directory if it does not exist."
   (let ((path (apply 'f-join dirs)))
@@ -56,9 +58,10 @@
 
 
 (defun my-discard-buffer-action (buf)
+  (kill-buffer buf)
   (with-current-buffer buf
-    (if (file-exists-p buffer-file-name)
-        (revert-buffer :ignore-auto :noconfirm)
+    (when (file-exists-p buffer-file-name)
+      (revert-buffer :ignore-auto :noconfirm)
       (set-buffer-modified-p nil)
       (kill-buffer buf))))
 

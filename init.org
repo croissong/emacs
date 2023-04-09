@@ -381,8 +381,10 @@
 
 (general-def
   :keymaps 'vertico-map :package 'vertico
-  "M-#" 'vertico-insert
-  "M-ö" 'vertico-directory-delete-word)
+  "M-#" 'vertico-directory-enter
+  "M-ö" 'vertico-directory-delete-word
+  )
+
 
 (general-def
   :keymaps 'eglot-mode-map :package 'eglot
@@ -483,91 +485,6 @@
 #+begin_src elisp
 (winner-mode 1)
 
-(use-package bufler
-  :after projectile
-  :init (bufler-mode)
-  :config
-  (add-hook 'projectile-after-switch-project-hook
-          (defun asf--set-bufler-project-workspace ()
-            (bufler-workspace-frame-set
-             (butlast (bufler-group-tree-leaf-path (bufler-buffers) (current-buffer))))))
-  :custom
-  (bufler-groups (bufler-defgroups
-  (group
-   ;; Subgroup collecting all named workspaces.
-   (auto-workspace))
-  (group
-   ;; Subgroup collecting all `help-mode' and `info-mode' buffers.
-   (group-or "*Help/Info*"
-             (mode-match "*Help*" (rx bos "help-"))
-             (mode-match "*Info*" (rx bos "info-"))))
-  (group
-   ;; Subgroup collecting all special buffers (i.e. ones that are not
-   ;; file-backed), except `magit-status-mode' buffers (which are allowed to fall
-   ;; through to other groups, so they end up grouped with their project buffers).
-   (group-and "*Special*"
-              (lambda (buffer)
-                (unless (or (funcall (mode-match "Magit" (rx bos "magit-status"))
-                                     buffer)
-                            (funcall (mode-match "Dired" (rx bos "dired"))
-                                     buffer)
-                            (funcall (auto-file) buffer))
-                  "*Special*")))
-   (group
-    ;; Subgroup collecting these "special special" buffers
-    ;; separately for convenience.
-    (name-match "**Special**"
-                (rx bos "*" (or "Messages" "Warnings" "scratch" "Backtrace") "*")))
-   (group
-    ;; Subgroup collecting all other Magit buffers, grouped by directory.
-    (mode-match "*Magit* (non-status)" (rx bos (or "magit" "forge") "-"))
-    (auto-directory))
-   ;; Remaining special buffers are grouped automatically by mode.
-   (auto-mode))
-  ;; All buffers under "~/.emacs.d" (or wherever it is).
-  (dir user-emacs-directory)
-  (group
-   ;; Subgroup collecting buffers in `org-directory' (or "~/org" if
-   ;; `org-directory' is not yet defined).
-   (dir (if (bound-and-true-p org-directory)
-            org-directory
-          "~/org"))
-   (group
-    ;; Subgroup collecting indirect Org buffers, grouping them by file.
-    ;; This is very useful when used with `org-tree-to-indirect-buffer'.
-    (auto-indirect)
-    (auto-file))
-   ;; Group remaining buffers by whether they're file backed, then by mode.
-   (group-not "*special*" (auto-file))
-   (auto-mode))
-  (group
-   ;; Subgroup collecting buffers in a projectile project.
-   (auto-projectile))
-  (group
-   ;; Subgroup collecting buffers in a version-control project,
-   ;; grouping them by directory.
-   (auto-project))
-  ;; Group remaining buffers by directory, then major mode.
-  (auto-directory)
-  (auto-mode)))
-  )
-
-;; (use-package perspective
-;;   :init
-;;   (my-with-eval-after-frame
-;;    (persp-mode 1)
-;;    (persp-new "dot")
-;;    (persp-new "ad1")
-;;    (persp-new "ad2")
-;;    (persp-new "ad3")
-;;    (persp-new "wrk"))
-;;   :custom
-;;   (persp-sort 'access)
-;;   (persp-modestring-short t)
-;;   (persp-suppress-no-prefix-key-warning t)
-;;   (persp-initial-frame-name "m"))
-
-
 (use-package buffer-move)
 
 (use-package mosey)
@@ -603,15 +520,6 @@
 
 (use-package secrets
   :elpaca nil)
-#+end_src
-
-** long lines improvements
-#+begin_src elisp
-;; improve long line handling
-(require 'longlines)
-(global-so-long-mode 1)
-(setq so-long-target-modes (-union so-long-target-modes '(fundamental-mode))
-      so-long-action 'longlines-mode)
 #+end_src
 
 ** minibuffer abort
@@ -838,14 +746,19 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
   :init (apheleia-global-mode +1)
   :config
   ;; add additional formatters
-  (push '(treefmt . ("treefmt" "--stdin" filepath)) apheleia-formatters)
+  (push '(treefmt . ("treefmt" "--config-file" "~/.config/treefmt/treefmt.toml" "--tree-root" "." "--stdin" filepath)) apheleia-formatters)
 
   ;; overwrite mode formatters
   (setf (alist-get 'nix-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'sh-mode apheleia-mode-alist) 'treefmt)
+  (setf (alist-get 'bash-ts-mode apheleia-mode-alist) 'treefmt)
+  (setf (alist-get 'go-ts-mode apheleia-mode-alist) 'treefmt)
+  (setf (alist-get 'terraform-mode apheleia-mode-alist) 'treefmt)
 
   ;; add mode formatters
   (push '(nxml-mode . treefmt) apheleia-mode-alist)
+  (push '(jsonnet-mode . treefmt) apheleia-mode-alist)
+  (push '(d2-mode . treefmt) apheleia-mode-alist)
   (push '(emacs-lisp-mode . lisp-indent) apheleia-mode-alist)
 
   ;; disable mode formatting
@@ -1008,20 +921,46 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 
 ;; https ://www.reddit.com/r/emacs/comments/krptmz/emacs_completion_framework_embark_consult/
 (use-package consult
+  :after consult-projectile
   :custom
   (consult-project-function #'projectile-project-root)
-  (consult-preview-key nil))
+  (consult-preview-key nil)
+  (consult-narrow-key "^")
+
+  (consult-buffer-sources '(
+                            consult-projectile--source-projectile-file
+                            consult-projectile--source-projectile-project
+                            consult--source-buffer
+                            ))
+
+  :config
+  ;; see https://github.com/minad/consult/issues/536
+  (consult-customize consult-buffer :sort t :group nil)
+  (consult-customize consult--source-buffer :narrow ?d)
+  (consult-customize
+   consult-projectile--source-projectile-project
+   consult--source-buffer
+   :hidden t)
+  )
+
+
+(use-package consult-projectile
+  :config
+  ;; TODO: create MR to change this to defcustom (to be able to use :custom)
+  (setq consult-projectile-use-projectile-switch-project t)
+
+)
 
 (use-package marginalia
   :init
   (marginalia-mode)
   :config
-  (setq marginalia-command-categories
-        (a-merge marginalia-command-categories '((projectile-find-file . file)
-                                                 (projectile-find-dir . file))))
-  (advice-add #'marginalia-cycle :after
-              (lambda () (when (bound-and-true-p
-                                selectrum-mode) (selectrum-exhibit)))))
+  ;; disable all annotations
+  (mapc
+   (lambda (x)
+     (setcdr x (cons 'none (remq 'none (cdr x)))))
+   marginalia-annotator-registry)
+  )
 
 (use-package embark-consult
   :hook
@@ -1135,16 +1074,15 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :config
       (defun my--projectile-ignore-project (project-root)
         (f-descendant-of? project-root (f-expand "elpaca" user-emacs-directory)))
-      (defun my--projectile-mode-line-function ()
-        (format " %s" (projectile-project-name)))
+
     :custom
-    (projectile-mode-line-function 'my--projectile-mode-line-function)
     (projectile-file-exists-remote-cache-expire nil)
     (projectile-completion-system 'default)
     (projectile-switch-project-action 'projectile-vc)
     (projectile-enable-caching t)
     (projectile-ignored-project-function #'my--projectile-ignore-project)
-    :blackout projectile-mode)
+    :blackout projectile-mode
+    )
 #+end_src
 
 *** which-key
@@ -1155,7 +1093,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (which-key-show-early-on-C-h t)
     (which-key-idle-delay 3.0)
     (which-key-idle-secondary-delay 0.05)
-    (help-char 94) ;; caret (ASCII)
     :blackout which-key-mode)
 #+end_src
 
@@ -1452,7 +1389,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** d2
 #+begin_src elisp
-(use-package d2-mode)
+(use-package d2-mode
+  :mode "\\.d2\\'"
+  )
 #+end_src
 ** python
 #+begin_src elisp
@@ -1542,7 +1481,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** yaml
 #+begin_src elisp
 (use-package yaml-ts-mode
-  :hook (yaml-ts-mode . combobulate-mode)
   :mode ("\\.yml.*\\'" "\\.yaml.*\\'")
   )
 #+end_src
@@ -1607,6 +1545,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package units-mode
   :commands units-mode)
+
+(use-package lorem-ipsum
+  :commands (lorem-ipsum-insert-sentences lorem-ipsum-insert-paragraphs))
 
 ;; (use-package spookfox
 ;;   :straight
