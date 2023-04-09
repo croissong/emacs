@@ -231,7 +231,6 @@
 
   "C-M-r" 'projectile-replace-regexp
   "C-c p" 'projectile-command-map
-  "C-M-c" 'projectile-switch-project
 
 
   ;; not global because of conflict in minibuffer (isearch)
@@ -243,6 +242,16 @@
 
   "C-x b" 'magit-blame
   "C-x l" 'magit-log-buffer-file
+
+  "C-ö" 'windmove-left
+  "C-#" 'windmove-right
+  "C-ü" 'windmove-up
+  "C-ä" 'windmove-down
+
+  "C-M-#" 'buf-move-right
+  "C-M-ö" 'buf-move-left
+  "C-M-ü" 'buf-move-up
+  "C-M-ä" 'buf-move-down
 
 
   "M-." 'xref-find-definitions
@@ -322,10 +331,10 @@
   "C-M-2" 'winner-redo
 
 
-  "C-d" 'projectile-find-file
-  "C-f" 'find-file
-  "M-d" 'bufler-switch-buffer
-  "C-M-d" 'bufler
+  "C-d" 'consult-buffer
+  "C-M-d" 'find-file
+  ;; "C-f" 'find-file
+  ;; "C-M-d" 'bufler
 
 
   ;; "M-1" 'persp-switch
@@ -333,15 +342,6 @@
   ;; "M-3" 'persp-remove-buffer
   ;; "M-^" 'persp-kill
 
-  "C-M-#" 'buf-move-right
-  "C-M-ö" 'buf-move-left
-  "C-M-ü" 'buf-move-up
-  "C-M-ä" 'buf-move-down
-
-  "C-ö" 'windmove-left
-  "C-#" 'windmove-right
-  "C-ü" 'windmove-up
-  "C-ä" 'windmove-down
 
   "C-M-p" 'vundo
   "C-p" 'undo-fu-only-undo
@@ -368,7 +368,7 @@
 
   "C-v" 'my-hydras-misc/body
   "C-M-f" 'my-hydras-code/body
-  "C-x f" 'my-hydras-files/body
+  "C-x f" 'my-menus-files
   "M-l" 'my-hydras-lsp/body
 )
 
@@ -385,9 +385,9 @@
   "M-ö" 'vertico-directory-delete-word)
 
 (general-def
-  :keymaps 'lsp-mode-map :package 'lsp-mode
-  "M--"  'lsp-execute-code-action
-  "C-r" 'lsp-rename)
+  :keymaps 'eglot-mode-map :package 'eglot
+  "M--"  'eglot-code-actions
+  "C-r" 'eglot-rename)
 
 (general-def
   :keymaps 'embark-file-map :package 'embark
@@ -855,64 +855,73 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 
 *** lsp
 #+begin_src elisp
-(use-package lsp-mode
-  :commands lsp-deferred
-  :hook
-  (lsp-mode . lsp-enable-which-key-integration)
-  (lsp-completion-mode . my/lsp-mode-setup-completion)
-  :init
-  (cl-defun my/lsp-format-buf ((&optional (format t)) (&optional (organize-imports t)))
-    (add-hook 'before-save-hook
-              (lambda () (lsp-format-buffer) (lsp-organize-imports)) 0 t))
-  (defun my/lsp-mode-setup-completion ()
-    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(orderless))) ;; Configure orderless
-  :config
-  (setq lsp-file-watch-ignored-directories (-union
-                                            lsp-file-watch-ignored-directories
-                                            '("[/\\\\]\\.direnv\\'"
-                                              "[/\\\\]\\.mypy_cache\\'"
-                                              "[/\\\\]\\.pytest_cache\\'"
-                                              "[/\\\\]dot_git\\'")))
 
-  ;; https://emacs-lsp.github.io/lsp-mode/page/faq/#how-do-i-force-lsp-mode-to-forget-the-workspace-folders-for-multi-root
-  (advice-add 'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht)))))
+(use-package eglot
+  :elpaca nil
   :custom
-  (lsp-auto-configure t)
-  (lsp-completion-provider :none)
-  (lsp-enable-file-watchers nil)
-  (lsp-enable-snippet nil)
-  (lsp-signature-doc-lines 1)
-  (lsp-signature-auto-activate t)
-  (lsp-progress-via-spinner nil)
-  (lsp-headerline-breadcrumb-enable nil)
-  (lsp-modeline-code-actions-enable nil)
-  (lsp-keymap-prefix "M-l")
-  (lsp-disabled-clients '(ts angular-ls))
-  (lsp-keep-workspace-alive nil)
-  :blackout (lsp-lens-mode))
+  (eglot-autoshutdown t)
+  )
+;; (use-package lsp-mode
+;;   :commands lsp-deferred
+;;   :hook
+;;   (lsp-mode . lsp-enable-which-key-integration)
+;;   (lsp-completion-mode . my/lsp-mode-setup-completion)
+;;   :init
+;;   (cl-defun my/lsp-format-buf ((&optional (format t)) (&optional (organize-imports t)))
+;;     (add-hook 'before-save-hook
+;;               (lambda () (lsp-format-buffer) (lsp-organize-imports)) 0 t))
+;;   (defun my/lsp-mode-setup-completion ()
+;;     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+;;           '(orderless))) ;; Configure orderless
+;;   :config
+;;   (setq lsp-file-watch-ignored-directories (-union
+;;                                             lsp-file-watch-ignored-directories
+;;                                             '("[/\\\\]\\.direnv\\'"
+;;                                               "[/\\\\]\\.mypy_cache\\'"
+;;                                               "[/\\\\]\\.pytest_cache\\'"
+;;                                               "[/\\\\]dot_git\\'")))
 
-(use-package lsp-ui
-  :commands lsp-ui-mode
-  :custom
-  (lsp-ui-doc-enable nil)
-  (lsp-ui-sideline-enable t))
+;;   ;; https://emacs-lsp.github.io/lsp-mode/page/faq/#how-do-i-force-lsp-mode-to-forget-the-workspace-folders-for-multi-root
+;;   (advice-add 'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht)))))
+;;   :custom
+;;   (lsp-auto-configure t)
+;;   (lsp-completion-provider :none)
+;;   (lsp-enable-file-watchers nil)
+;;   (lsp-enable-snippet nil)
+;;   (lsp-signature-doc-lines 1)
+;;   (lsp-signature-auto-activate t)
+;;   (lsp-progress-via-spinner nil)
+;;   (lsp-headerline-breadcrumb-enable nil)
+;;   (lsp-modeline-code-actions-enable nil)
+;;   (lsp-keymap-prefix "M-l")
+;;   (lsp-disabled-clients '(ts angular-ls))
+;;   (lsp-keep-workspace-alive nil)
+;;   (lsp-enable-indentation nil)
+;;   (lsp-enable-on-type-formatting nil)
+;;   (lsp-lens-enable nil)
+;;   :blackout)
 
-(use-package dap-mode
-  :commands dap-debug
-  :hook (dap-stopped .(lambda (arg) (call-interactively #'dap-hydra)))
-  :init
-  (require 'dap-hydra)
-  :custom
-  (dap-auto-configure-mode t)
-  (dap-auto-configure-features '(locals repl)))
+;; (use-package lsp-ui
+;;   :commands lsp-ui-mode
+;;   :custom
+;;   (lsp-ui-doc-enable nil)
+;;   (lsp-ui-sideline-enable t))
+
+;; (use-package dap-mode
+;;   :commands dap-debug
+;;   :hook (dap-stopped .(lambda (arg) (call-interactively #'dap-hydra)))
+;;   :init
+;;   (require 'dap-hydra)
+;;   :custom
+;;   (dap-auto-configure-mode t)
+;;   (dap-auto-configure-features '(locals repl)))
 #+end_src
 
 *** linting
 #+begin_src elisp
-(use-package flycheck
-    :commands flycheck-mode
-    :blackout flycheck-mode)
+;; (use-package flycheck
+;;     :commands flycheck-mode
+;;     :blackout flycheck-mode)
 
 (use-package flyspell
     :elpaca nil
@@ -1340,9 +1349,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package go-mode
     :mode "\\.go\\'"
-    :config
-    (require 'dap-dlv-go)
-    :hook (go-mode . lsp-deferred))
+    ;; :config
+    ;; (require 'dap-dlv-go)
+    :hook (go-ts-mode . eglot-ensure))
 #+end_src
 
 ** graphql
@@ -1353,7 +1362,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** java
 #+begin_src elisp
-(use-package lsp-java)
+;; (use-package lsp-java)
 
 (use-package java-mode
   ;; :hook (java-mode . lsp)
