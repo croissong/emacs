@@ -161,10 +161,11 @@
 
 (use-package my
     :elpaca `(my :repo ,user-emacs-directory :files ("my/my.el") )
+    :config
+    (add-to-list 'save-some-buffers-action-alist
+             `(?r my-discard-buffer-action
+                  "discard this buffer"))
     :custom
-    (save-some-buffers-action-alist
-     (a-assoc save-some-buffers-action-alist
-              ?r '(my-discard-buffer-action "discard this buffer")))
     (org-make-link-description-function 'my-url-get-title)
     :demand t)
 
