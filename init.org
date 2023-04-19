@@ -410,11 +410,11 @@
 
 (general-def
   :keymaps 'embark-identifier-map :package 'embark
-  "s" 'flyspell-correct-at-point)
+  "s" 'jinx-correct)
 
 (general-def
   :keymaps 'embark-symbol-map :package 'embark
-  "s" 'flyspell-correct-at-point)
+  "s" 'jinx-correct)
 
 (general-def
   :keymaps 'isearch-mb-minibuffer-map :package 'isearch-mb
@@ -836,21 +836,10 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 ;;     :commands flycheck-mode
 ;;     :blackout flycheck-mode)
 
-(use-package flyspell
-    :elpaca nil
-    :hook ((text-mode markdown-mode) . flyspell-mode)
-    :config
 
-    ;; Disable clickable overlay
-    ;; https://emacs.stackexchange.com/questions/36899/disable-clickable-links-for-misspelled-words-flyspell
-    (advice-add 'make-flyspell-overlay :filter-return
-                (lambda (overlay)
-                  (overlay-put overlay 'help-echo nil)
-                  (overlay-put overlay 'keymap nil)
-                  (overlay-put overlay 'mouse-face nil)))
-    :blackout flyspell-mode)
-
-(use-package flyspell-correct :after flyspell)
+(use-package jinx
+  :hook (text-mode prog-mode conf-mode)
+  :custom (jinx-languages "en_US"))
 #+end_src
 
 ** isearch
@@ -969,7 +958,8 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 (use-package embark
   :after embark-consult
   :config
-  (add-to-list 'embark-pre-action-hooks '(flyspell-correct-at-point embark--ignore-target))
+  (push 'embark--ignore-target
+      (alist-get 'jinx-correct embark-target-injection-hooks))
   )
 #+end_src
 
