@@ -369,7 +369,6 @@
   "C-v" 'my-hydras-misc/body
   "C-M-f" 'my-hydras-code/body
   "C-x f" 'my-menus-files
-  "M-l" 'my-hydras-lsp/body
 )
 
 (general-def
@@ -774,72 +773,14 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
   :custom
   (eglot-autoshutdown t)
   )
-;; (use-package lsp-mode
-;;   :commands lsp-deferred
-;;   :hook
-;;   (lsp-mode . lsp-enable-which-key-integration)
-;;   (lsp-completion-mode . my/lsp-mode-setup-completion)
-;;   :init
-;;   (cl-defun my/lsp-format-buf ((&optional (format t)) (&optional (organize-imports t)))
-;;     (add-hook 'before-save-hook
-;;               (lambda () (lsp-format-buffer) (lsp-organize-imports)) 0 t))
-;;   (defun my/lsp-mode-setup-completion ()
-;;     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-;;           '(orderless))) ;; Configure orderless
-;;   :config
-;;   (setq lsp-file-watch-ignored-directories (-union
-;;                                             lsp-file-watch-ignored-directories
-;;                                             '("[/\\\\]\\.direnv\\'"
-;;                                               "[/\\\\]\\.mypy_cache\\'"
-;;                                               "[/\\\\]\\.pytest_cache\\'"
-;;                                               "[/\\\\]dot_git\\'")))
-
-;;   ;; https://emacs-lsp.github.io/lsp-mode/page/faq/#how-do-i-force-lsp-mode-to-forget-the-workspace-folders-for-multi-root
-;;   (advice-add 'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht)))))
-;;   :custom
-;;   (lsp-auto-configure t)
-;;   (lsp-completion-provider :none)
-;;   (lsp-enable-file-watchers nil)
-;;   (lsp-enable-snippet nil)
-;;   (lsp-signature-doc-lines 1)
-;;   (lsp-signature-auto-activate t)
-;;   (lsp-progress-via-spinner nil)
-;;   (lsp-headerline-breadcrumb-enable nil)
-;;   (lsp-modeline-code-actions-enable nil)
-;;   (lsp-keymap-prefix "M-l")
-;;   (lsp-disabled-clients '(ts angular-ls))
-;;   (lsp-keep-workspace-alive nil)
-;;   (lsp-enable-indentation nil)
-;;   (lsp-enable-on-type-formatting nil)
-;;   (lsp-lens-enable nil)
-;;   :blackout)
-
-;; (use-package lsp-ui
-;;   :commands lsp-ui-mode
-;;   :custom
-;;   (lsp-ui-doc-enable nil)
-;;   (lsp-ui-sideline-enable t))
-
-;; (use-package dap-mode
-;;   :commands dap-debug
-;;   :hook (dap-stopped .(lambda (arg) (call-interactively #'dap-hydra)))
-;;   :init
-;;   (require 'dap-hydra)
-;;   :custom
-;;   (dap-auto-configure-mode t)
-;;   (dap-auto-configure-features '(locals repl)))
 #+end_src
 
 *** linting
 #+begin_src elisp
-;; (use-package flycheck
-;;     :commands flycheck-mode
-;;     :blackout flycheck-mode)
-
-
 (use-package jinx
-  :hook (text-mode prog-mode conf-mode)
-  :custom (jinx-languages "en_US"))
+  :hook (text-mode conf-mode)
+  :custom (jinx-languages "en_US")
+  :blackout)
 #+end_src
 
 ** isearch
@@ -973,7 +914,7 @@ https://github.com/bbatsov/crux
 #+begin_src elisp
 (use-package rainbow-mode
     :hook (css-ts-mode org-mode help-mode)
-    :blackout rainbow-mode)
+    :blackout)
 #+end_src
 
 *** kurecolor
@@ -1289,10 +1230,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** java
 #+begin_src elisp
-;; (use-package lsp-java)
-
 (use-package java-mode
-  ;; :hook (java-mode . lsp)
+  ;; :hook (java-mode . eglot-ensure)
   :mode "\\.java\\'")
 #+end_src
 
@@ -1358,7 +1297,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package nix-mode
     :mode "\\.nix\\'"
-    :hook (nix-mode . lsp-deferred))
+    :hook (nix-mode . eglot-ensure))
 #+end_src
 
 ** php
@@ -1388,13 +1327,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package python
   :mode ("\\.py\\'" . python-ts-mode)
   :hook (python-ts-mode . (lambda ()
-                            (lsp-deferred)
+                            (eglot-ensure)
                             (combobulate-mode)
                             ))
   )
-
-(use-package lsp-pyright
-  :after python)
 #+end_src
 
 ** rust
@@ -1402,7 +1338,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ;; No conditional-on-mode necessary
 (use-package rustic
   :custom
-  (lsp-rust-analyzer-proc-macro-enable t))
+  (rustic-lsp-client 'eglot))
 #+end_src
 
 ** sql
@@ -1417,14 +1353,14 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package terraform-mode
     :mode "\\.tf\\'"
     ;; too expensive to auto-enable when just viewing files (enable on demand when developing)
-    ;; :hook (terraform-mode . lsp-deferred)
+    ;; :hook (terraform-mode . eglot-ensure)
     )
 #+end_src
 
 ** shell
 #+begin_src elisp
 (use-package sh-mode
-  :hook (sh-mode . lsp-deferred))
+  :hook (sh-mode . eglot-ensure))
 #+end_src
 
 ** tramp
@@ -1442,7 +1378,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package js2-mode
     :mode "\\.js\\'"
-    :hook (js2-mode . lsp-deferred)
+    :hook (js2-mode . eglot-ensure)
     :custom
     (js2-basic-offset 2)
     (js2-strict-inconsistent-return-warning nil)
@@ -1458,14 +1394,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package typescript-ts-mode
     :mode "\\.ts\\'"
     :hook (typescript-ts-mode . (lambda ()
-                                  (lsp-deferred)
-                                  (my/lsp-format-buf)
+                                  (eglot-ensure)
                                   (combobulate-mode)
                                   ))
-    :config (setq lsp-eslint-server-command
-                  '("node"
-                    (f-expand "~/.local/vscode-eslint/extension/server/out/eslintServer.js")
-                    "--stdio")))
+    )
 #+end_src
 
 ** yaml
