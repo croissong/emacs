@@ -47,7 +47,6 @@
       same-window-buffer-names '("*Help*")
       Man-notify-method 'pushy
 
-      vc-handled-backends nil
 
       inhibit-startup-screen t
       initial-scratch-message nil
@@ -229,8 +228,7 @@
   "M-y" 'consult-yank-pop
   "C-M-s" 'consult-ripgrep
 
-  "C-M-r" 'projectile-replace-regexp
-  "C-c p" 'projectile-command-map
+  "C-M-r" 'project-query-replace-regexp
 
 
   ;; not global because of conflict in minibuffer (isearch)
