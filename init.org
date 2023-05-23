@@ -1307,6 +1307,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package rustic
   :custom
   (rustic-lsp-client 'eglot))
+
+(use-package ron-mode
+  :mode "\\.ron\\'"
+  )
 #+end_src
 
 ** sql
