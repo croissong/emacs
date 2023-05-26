@@ -744,6 +744,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
   (setf (alist-get 'go-ts-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'terraform-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'rustic-mode apheleia-mode-alist) 'treefmt)
+  (setf (alist-get "\\.slint\\'" apheleia-mode-alist) 'treefmt)
 
   ;; add mode formatters
   (push '(nxml-mode . treefmt) apheleia-mode-alist)
