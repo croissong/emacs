@@ -165,7 +165,8 @@
 
 (use-package my
     :after request
-    :elpaca `(my :repo ,user-emacs-directory :files ("my/my.el") )
+    :load-path "my"
+    :elpaca nil
     :config
     (add-to-list 'save-some-buffers-action-alist
              `(?r my-discard-buffer-action
@@ -193,7 +194,8 @@
 
 (use-package my-hydras
   :after hydra
-  :elpaca `(my-hydras :repo ,user-emacs-directory :files ("my/hydras/my-hydras.el") )
+  :load-path "my/hydras"
+  :elpaca nil
   )
 
 (use-package general
@@ -591,7 +593,8 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 
 (use-package my-org
   :after org
-  :elpaca `(my-org :repo ,user-emacs-directory :files ("my/org/my-org.el") )
+  :load-path "my/org"
+  :elpaca nil
   )
 
 (use-package polymode :defer t)
