@@ -16,7 +16,6 @@
       (funcall x))))
 
 (transient-define-prefix my-menus-files ()
-  "Prefix that waves at the user"
   [ "config"
     ("e" "emacs"
      (lambda ()
@@ -32,6 +31,22 @@
      (lambda ()
        (interactive)
        (find-file (expand-file-name "init.org" user-emacs-directory))
+       ))
+    ("h" "hieroglyph"
+     (lambda ()
+       (interactive)
+       (find-file (substitute-env-vars "$XDG_CONFIG_HOME/hieroglyph/rashid.yaml"))
+       ))
+    ]
+  )
+
+
+(transient-define-prefix lsp ()
+  [ "lsp"
+    ("r" "references"
+     (lambda ()
+       (interactive)
+       (xref-find-references)
        ))
     ]
   )
