@@ -1130,7 +1130,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package rtags
   :defer t)
 
-(use-package irony-mode
+(use-package irony
   :init (defun my--on-c++-mode ()
           (irony-mode)
           (flycheck-mode)
@@ -1161,6 +1161,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** elisp
 #+begin_src elisp
 (use-package emacs-lisp
+  :elpaca nil
   :hook (emacs-lisp-mode . nameless-mode)
   )
 
@@ -1203,6 +1204,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** java
 #+begin_src elisp
 (use-package java-mode
+  :elpaca nil
   ;; :hook (java-mode . eglot-ensure)
   :mode "\\.java\\'")
 #+end_src
@@ -1336,6 +1338,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** shell
 #+begin_src elisp
 (use-package sh-mode
+  :elpaca nil
   :hook (sh-mode . eglot-ensure))
 #+end_src
 
@@ -1347,6 +1350,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** webdev
 #+begin_src elisp
 (use-package css-ts-mode
+  :elpaca nil
   :hook (typescript-ts-mode . combobulate-mode)
   :mode ("\\.less\\'" "\\.css\\'" "\\.sass\\'" "\\.scss\\'")
   :custom
@@ -1368,6 +1372,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (web-mode-enable-auto-indentation nil))
 
 (use-package typescript-ts-mode
+  :elpaca nil
     :mode "\\.ts\\'"
     :hook (typescript-ts-mode . (lambda ()
                                   (eglot-ensure)
@@ -1379,6 +1384,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** yaml
 #+begin_src elisp
 (use-package yaml-ts-mode
+  :elpaca nil
   :mode ("\\.yml.*\\'" "\\.yaml.*\\'")
   )
 #+end_src
@@ -1398,6 +1404,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package google-translate)
 (use-package google-translate-smooth-ui
   :after google-translate
+  :elpaca nil
   :commands google-translate-smooth-translate
   :config
   ;; https://github.com/atykhonov/google-translate/issues/52#issuecomment-727920888
@@ -1410,6 +1417,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   "M-ü" 'google-translate-previous-translation-direction))
 
 (use-package mail-mode
+  :elpaca nil
     :mode "\\/tmp\\/neomutt.*\\'")
 (use-package khardel
   :general
