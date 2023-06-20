@@ -1340,6 +1340,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package sh-mode
   :elpaca nil
   :hook (sh-mode . eglot-ensure))
+
+(use-package nushell-mode
+  :mode "\\.nu\\'")
 #+end_src
 
 ** tramp
