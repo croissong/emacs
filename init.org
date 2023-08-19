@@ -1435,6 +1435,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (:keymaps 'mail-mode-map
             "C-f" 'khardel-insert-email))
 
+(use-package himalaya)
+(use-package notmuch)
+
 (use-package gif-screencast
   :commands gif-screencast-start-or-stop
   :custom
