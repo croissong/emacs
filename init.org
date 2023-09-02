@@ -628,7 +628,6 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
               (("C-c n I" . org-roam-insert-immediate))))
 
 (use-package denote
-  :elpaca '(denote :host github :repo "protesilaos/denote")
   :after org
   :custom
   (denote-directory (my-ensure-dir org-directory "denote/")))
@@ -636,6 +635,8 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 (use-package consult-notes
   :after denote
   :init (consult-notes-denote-mode)
+  :custom
+  (consult-notes-denote-display-id nil)
   )
 #+end_src
 
