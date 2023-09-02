@@ -608,6 +608,19 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
   )
 #+end_src
 
+*** org-crypt
+https://orgmode.org/manual/Org-Crypt.html
+#+begin_src elisp
+(require 'org-crypt)
+(org-crypt-use-before-save-magic)
+(setq org-tags-exclude-from-inheritance '("crypt")
+      org-crypt-key "jan.moeller0@gmail.com"
+      )
+
+(add-to-list 'safe-local-variable-values
+             '(buffer-auto-save-file-name nil))
+#+end_src
+
 ** notes
 #+begin_src elisp
 (use-package org-roam
