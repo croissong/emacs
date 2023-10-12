@@ -767,7 +767,7 @@ https://orgmode.org/manual/Org-Crypt.html
   :init (apheleia-global-mode +1)
   :config
   ;; add additional formatters
-  (push '(treefmt . ("treefmt" "--config-file" "~/.config/treefmt/treefmt.toml" "--tree-root" "." "--stdin" filepath)) apheleia-formatters)
+  (push '(treefmt . ("treefmt" "-v" "--config-file" (expand-file-name "~/.config/treefmt/treefmt.toml") "--tree-root" "." "--stdin" filepath)) apheleia-formatters)
 
   ;; overwrite mode formatters
   (setf (alist-get 'nix-mode apheleia-mode-alist) 'treefmt)
