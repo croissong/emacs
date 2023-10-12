@@ -485,6 +485,11 @@
   :commands edit-indirect-region)
 
 
+(use-package burly
+  :bind (("M-1" . burly-bookmark-windows)
+         ("M-2" . burly-open-bookmark))
+  )
+
 
 ;;; from https://github.com/nex3/perspective-el#some-musings-on-emacs-window-layouts
 
