@@ -72,7 +72,7 @@
               ;; increase (magit-commit) line autowrap width (default=70)
               fill-column 80)
 
-(fset 'yes-or-no-p 'y-or-n-p)
+(setopt use-short-answers t)
 (delete-selection-mode 1)
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
