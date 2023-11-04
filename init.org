@@ -624,7 +624,6 @@ https://orgmode.org/manual/Org-Crypt.html
   (add-to-list 'safe-local-variable-values
                '(buffer-auto-save-file-name nil))
   :custom
-  (org-tags-exclude-from-inheritance '("crypt"))
   (org-crypt-key "jan.moeller0@gmail.com")
   )
 #+end_src
