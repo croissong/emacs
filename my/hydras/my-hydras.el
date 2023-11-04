@@ -16,7 +16,9 @@
       (funcall x))))
 
 (transient-define-prefix my-menus-files ()
-  [ "config"
+  [
+   [
+    "config"
     ("e" "emacs"
      (lambda ()
        (interactive)
@@ -32,12 +34,22 @@
        (interactive)
        (find-file (expand-file-name "init.org" user-emacs-directory))
        ))
+    ]
+   [
+    "moi"
     ("h" "hieroglyph"
      (lambda ()
        (interactive)
-       (find-file (substitute-env-vars "$XDG_CONFIG_HOME/hieroglyph/rashid.yaml"))
+       (find-file "~/hieroglyph/rashid.yaml")
+       ))
+
+    ("t" "timelog"
+     (lambda ()
+       (interactive)
+       (find-file "~/Docs/wrk/timelog")
        ))
     ]
+   ]
   )
 
 
