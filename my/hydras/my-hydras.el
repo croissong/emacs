@@ -81,7 +81,7 @@
   ("f" (call-interactively 'format-all-buffer) "format" :column "edit")
   ("r" (call-interactively 'isearch-forward-regexp) "search-replace" :column "edit")
 
-  ("1" (crux-rename-file-and-buffer) "rename" :column "file")
+  ("1" (call-interactively 'rename-visited-file) "rename" :column "file")
   ("2" (crux-delete-file-and-buffer) "delete" :column "file")
   ("3" (call-interactively 'crux-copy-file-preserve-attributes) "copy" :column "file")
   ("5" (call-interactively 'set-buffer-file-coding-system) "encoding" :column "file")
