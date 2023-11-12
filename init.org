@@ -486,8 +486,8 @@
 
 
 (use-package burly
-  :bind (("M-1" . burly-bookmark-windows)
-         ("M-2" . burly-open-bookmark))
+  :bind* (("M-1" . burly-bookmark-windows)
+          ("M-2" . burly-open-bookmark))
   )
 
 
