@@ -668,6 +668,9 @@ https://orgmode.org/manual/Org-Crypt.html
 
 (use-package logview
     :commands logview-mode)
+
+(use-package journalctl-mode
+  :commands journalctl)
 #+end_src
 
 ** passive modes
