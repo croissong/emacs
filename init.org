@@ -1089,8 +1089,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
             (save-window-excursion
               (with-temp-buffer
                 (insert-buffer-substring old-buffer)
-                (flush-lines "^#.*" (point-min) (point-max))
-                (let* ((commitlint-cmd "go-commitlinter")
+                (let* ((commitlint-cmd "commitlint -g ~/.config/commitlint-rs/config.yaml")
                        (exit-code (shell-command-on-region (point-min) (point-max) commitlint-cmd)))
                   (if (equal exit-code 0)
                       t
