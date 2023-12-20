@@ -1530,6 +1530,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :custom
   (olivetti-mode-on-hook '())
   (olivetti-body-width 125)
+  (olivetti-style 'fancy)
   :blackout olivetti-mode)
 
 
