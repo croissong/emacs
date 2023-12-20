@@ -1061,6 +1061,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** hydra
 #+begin_src elisp
 (use-package hydra)
+
+(use-package transient)
 #+end_src
 
 ** magit
@@ -1301,7 +1303,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** nix
 #+begin_src elisp
 (use-package nix-mode
-    :mode "\\.nix\\'"
+    :mode "\\.nix.*\\'"
     :hook (nix-mode . eglot-ensure))
 #+end_src
 
@@ -1336,6 +1338,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
                             (combobulate-mode)
                             ))
   )
+
+;; emacs-ipython-notebook
+(use-package ein
+  :mode ("\\.ipynb\\'" . ein:ipynb-mode))
 #+end_src
 
 ** rust
