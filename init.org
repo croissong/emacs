@@ -608,9 +608,12 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
   :after org
   :init (global-org-modern-mode))
 
-(use-package org-cliplink
-  :commands org-cliplink
+(use-package org-web-tools
+  :bind
+  (:map org-mode-map
+        (("M-l" . org-web-tools-insert-link-for-url)))
   )
+
 #+end_src
 
 *** org-crypt
