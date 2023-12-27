@@ -1558,7 +1558,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     ;; TODO: not working, must be called manually after load-theme
     (add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
     :config
-    (load-theme 'modus-operandi :no-confim)
+    (load-theme 'modus-operandi-tinted :no-confim)
     (my-modus-themes-custom-faces)
     )
 
