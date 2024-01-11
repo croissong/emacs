@@ -1544,7 +1544,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (defun my-modus-themes-custom-faces ()
       (modus-themes-with-colors
         (custom-set-faces
-         `(show-paren-match ((,c :foreground ,green-intense :background unspecified)))
+         `(show-paren-match ((,c :foreground ,green-intense :background unspecified :weight bold)))
          `(olivetti-fringe ((,c :background ,bg-main)))
          )))
     ;; TODO: not working, must be called manually after load-theme
