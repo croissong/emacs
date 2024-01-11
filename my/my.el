@@ -2,6 +2,9 @@
 
 (require 'request)
 
+(require 'my-snippets)
+(require 'my-menus)
+
 (defun my-ensure-dir (&rest dirs)
   "Join args to single path and create directory if it does not exist."
   (let ((path (apply 'f-join dirs)))

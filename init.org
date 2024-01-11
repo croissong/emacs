@@ -191,13 +191,6 @@
 * common
 ** keybindings
 #+begin_src elisp
-
-(use-package my-hydras
-  :after hydra
-  :load-path "my/hydras"
-  :elpaca nil
-  )
-
 (use-package general
   :config
   (general-auto-unbind-keys))
@@ -368,8 +361,7 @@
   "C-+" 'consult-notes
   "M-+" 'consult-notes-search-in-all-notes
 
-  "C-v" 'my-hydras-misc/body
-  "C-M-f" 'my-hydras-code/body
+  "C-M-f" 'my-menus-code
   "C-x f" 'my-menus-files
 )
 
