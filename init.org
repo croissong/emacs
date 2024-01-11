@@ -620,6 +620,10 @@ https://orgmode.org/manual/Org-Crypt.html
   :custom
   (org-crypt-key "jan.moeller0@gmail.com")
   )
+
+;; https://stackoverflow.com/questions/76388376/emacs-org-encrypt-entry-hangs-when-file-is-modified
+(fset 'epg-wait-for-status 'ignore)
+
 #+end_src
 
 ** notes
