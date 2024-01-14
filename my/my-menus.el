@@ -79,4 +79,6 @@
    ]
   )
 
+(provide 'my-menus)
+
 ;;; my-menus.el ends here
