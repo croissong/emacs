@@ -633,6 +633,14 @@ https://orgmode.org/manual/Org-Crypt.html
 ;; https://stackoverflow.com/questions/76388376/emacs-org-encrypt-entry-hangs-when-file-is-modified
 (fset 'epg-wait-for-status 'ignore)
 
+
+(use-package age
+  :config
+  (age-file-enable)
+  :custom
+  (age-default-identity  "~/.config/age/identity.age")
+  (age-default-recipient "~/.config/age/public-key.txt"))
+
 #+end_src
 
 ** notes
@@ -805,6 +813,7 @@ https://orgmode.org/manual/Org-Crypt.html
   :elpaca nil
   :custom
   (eglot-autoshutdown t)
+  (eglot-confirm-server-initiated-edits nil)
   )
 #+end_src
 
