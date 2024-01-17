@@ -359,7 +359,7 @@
 
   "C-<tab>" 'my-indent-rigidly
 
-  "C-M-k" 'kill-this-buffer
+  "C-M-k" 'kill-current-buffer
   "M-r" 'revert-buffer
 
   "M-_" 'shell-command
