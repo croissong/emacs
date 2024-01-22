@@ -1524,7 +1524,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ;;   ;; (spookfox-init)
 ;;   )
 
-(use-package org-ai)
+(use-package org-ai
+  :after org)
 
 #+end_src
 
