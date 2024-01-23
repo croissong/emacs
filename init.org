@@ -1443,6 +1443,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   )
 #+end_src
 
+** hurl
+#+begin_src elisp :lexical no
+(use-package hurl-mode
+  :elpaca (:host github :repo "jaszhe/hurl-mode")
+    :mode "\\.hurl\\'")
+#+end_src
+
 * tools
 #+begin_src elisp
 
