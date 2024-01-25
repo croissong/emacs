@@ -1069,9 +1069,11 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 *** ix.io
 #+begin_src elisp
-(use-package
-  ix
-  :commands ix)
+(use-package webpaste
+  :commands (webpaste-paste-buffer-or-region)
+  :custom
+  (webpaste-provider-priority '("paste.rs"))
+)
 #+end_src
 
 ** magit
