@@ -101,10 +101,6 @@
       warning-suppress-log-types '((comp))
       )
 
-
-;; https://github.com/progfolio/elpaca/issues/222#issuecomment-1872596777
-(setq elpaca-core-date '(20231211))
-
 ;; installer
 (defvar elpaca-installer-version 0.6)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
