@@ -735,8 +735,6 @@ https://orgmode.org/manual/Org-Crypt.html
 ** editing
 #+begin_src elisp
 (use-package treesit-auto
-  :custom
-  (treesit-auto-install 'prompt)
   :config
   (global-treesit-auto-mode))
 
