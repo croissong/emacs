@@ -820,6 +820,7 @@ https://orgmode.org/manual/Org-Crypt.html
 *** linting
 #+begin_src elisp
 (use-package jinx
+  :elpaca nil ;; built by nix
   :hook (text-mode conf-mode)
   :custom (jinx-languages "en_US")
   :blackout)
