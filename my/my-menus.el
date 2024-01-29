@@ -11,8 +11,9 @@
     ("p" "packages"
      (lambda ()
        (interactive)
-       (find-file (expand-file-name "dot_config/nixpkgs/packages.nix" (substitute-env-vars "$DOT")))
+       (find-file (expand-file-name "system/nix-config/hm/pkgs.nix" (substitute-env-vars "$DOT")))
        ))
+    ("g" "grm" my-menus--files-grm)
     ("n" "nyxt"
      (lambda ()
        (interactive)
@@ -35,6 +36,22 @@
     ]
    ]
   )
+
+(transient-define-prefix my-menus--files-grm ()
+  ["grm"
+   ("m" "moi"
+    (lambda ()
+      (interactive)
+      (find-file (expand-file-name "dotfiles/dot_config/git-repo-manager/moi.yaml.tmpl"
+                                   (substitute-env-vars "$DOT")))
+      ))
+   ("w" "wrk"
+    (lambda ()
+      (interactive)
+      (find-file (expand-file-name "priv/dot/git-repo-manager/wrk.yaml"
+                                   (substitute-env-vars "$DOT")))
+      ))
+   ])
 
 
 (transient-define-prefix lsp ()
