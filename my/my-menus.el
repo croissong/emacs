@@ -36,7 +36,7 @@
     ("t" "timelog"
      (lambda ()
        (interactive)
-       (find-file "~/Docs/wrk/timelog")
+       (find-file (expand-file-name "docs/wrk/timelog/" (substitute-env-vars "$DOT")))
        ))
     ]
    ]
