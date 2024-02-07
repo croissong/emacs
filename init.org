@@ -491,9 +491,20 @@
   :commands edit-indirect-region)
 
 
-(use-package burly
-  :bind* (("M-1" . burly-bookmark-windows)
-          ("M-2" . burly-open-bookmark))
+(use-package activities
+  :init
+  (activities-mode)
+  (activities-tabs-mode)
+
+  :bind (("M-1" . activities-new)
+         ("M-2" . activities-resume)
+         ("M-3" . activities-suspend)
+         ("M-4" . activities-discard))
+
+  :custom
+  (tab-bar-show 1)
+  (tab-bar-new-button-show nil)
+  (tab-bar-close-button-show nil)
   )
 
 
