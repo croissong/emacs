@@ -1104,6 +1104,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 18))
     (magit-diff-refine-hunk t)
     (magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
+    (git-commit-use-local-message-ring t)
 
     :config
     (magit-add-section-hook 'magit-status-sections-hook
