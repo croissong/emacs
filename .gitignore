@@ -38,3 +38,4 @@ forge-database.sqlite
 /tree-sitter/
 /elpaca/
 /projects
+/persist/
