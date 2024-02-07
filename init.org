@@ -1412,6 +1412,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package nushell-mode
   :mode "\\.nu\\'")
+
+(use-package fish-mode
+  :mode "\\.fish\\'")
+
 #+end_src
 
 ** tramp
@@ -1423,10 +1427,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package css-ts-mode
   :elpaca nil
-  :hook (typescript-ts-mode . combobulate-mode)
-  :mode ("\\.less\\'" "\\.css\\'" "\\.sass\\'" "\\.scss\\'")
+  :mode ("\\.less\\'" "\\.css\\'" "\\.sass\\'")
   :custom
   (css-indent-offset 4))
+
+(use-package scss-mode
+  :elpaca nil
+  :mode ("\\.scss\\'"))
 
 (use-package js2-mode
     :mode "\\.js\\'"
