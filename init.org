@@ -235,6 +235,8 @@
   )
 
 (general-def
+  "C-z" 'yank
+
   "C-M-^" 'quoted-insert
 
   "M-y" 'consult-yank-pop
@@ -330,6 +332,9 @@
   "C-l" 'goto-line
   "C-q" 'embark-act
 
+
+  "M-[" 'duplicate-line
+
   "˝" 'previous-buffer
   "’" 'next-buffer
 
@@ -345,10 +350,6 @@
   "M-d" 'consult-buffer
   "C-M-d" 'find-file
 
-  ;; "M-1" 'persp-switch
-  ;; "M-2" 'persp-set-buffer
-  ;; "M-3" 'persp-remove-buffer
-  ;; "M-^" 'persp-kill
 
 
   "C-M-p" 'vundo
@@ -394,7 +395,7 @@
 
 (general-def
   :keymaps 'eglot-mode-map :package 'eglot
-  "M--"  'eglot-code-actions
+  "M-/"  'eglot-code-actions
   "C-r" 'eglot-rename)
 
 (general-def
@@ -499,8 +500,8 @@
 ;;; from https://github.com/nex3/perspective-el#some-musings-on-emacs-window-layouts
 
 (customize-set-variable 'display-buffer-base-action
-  '((display-buffer-reuse-window display-buffer-same-window)
-    (reusable-frames . t)))
+                        '((display-buffer-reuse-window display-buffer-same-window)
+                          (reusable-frames . t)))
 
 (customize-set-variable 'even-window-sizes nil)     ; avoid resizing
 #+end_src
