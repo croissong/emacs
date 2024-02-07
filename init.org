@@ -1363,6 +1363,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** python
 #+begin_src elisp
 (use-package python
+  :elpaca nil
   :mode ("\\.py\\'" . python-ts-mode)
   :hook (python-ts-mode . (lambda ()
                             (eglot-ensure)
