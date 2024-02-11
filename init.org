@@ -97,6 +97,7 @@
 ** elpaca
 #+begin_src elisp
 (setq use-package-compute-statistics nil
+      use-package-always-ensure t
       comp-async-report-warnings-errors nil
       warning-suppress-log-types '((comp))
       )
@@ -153,10 +154,8 @@
 (elpaca blackout)
 
 (elpaca elpaca-use-package
-  ;; Enable :elpaca use-package keyword.
-  (elpaca-use-package-mode)
-  ;; Assume :elpaca t unless otherwise specified.
-  (setq elpaca-use-package-by-default t))
+  ;; Enable use-package :ensure support for Elpaca.
+  (elpaca-use-package-mode))
 
 (elpaca-wait)
 #+end_src
@@ -179,7 +178,7 @@
 (use-package my
     :after request
     :load-path "my"
-    :elpaca nil
+    :ensure nil
     :config
     (add-to-list 'save-some-buffers-action-alist
              `(?r my-discard-buffer-action
@@ -452,7 +451,7 @@
 ** debugging
 #+begin_src elisp
 (use-package explain-pause-mode
-  :elpaca (:host github :repo "lastquestion/explain-pause-mode")
+  :ensure (:host github :repo "lastquestion/explain-pause-mode")
   :commands explain-pause-mode)
 
 (use-package esup
@@ -487,7 +486,7 @@
 (use-package mosey)
 
 (use-package edit-indirect
-  :elpaca (:type git :host github :repo "Fanael/edit-indirect")
+  :ensure (:type git :host github :repo "Fanael/edit-indirect")
   :commands edit-indirect-region)
 
 
@@ -520,7 +519,7 @@
 ** secrets
 #+begin_src elisp
 (use-package auth-source-pass
-  :elpaca nil
+  :ensure nil
   :init (auth-source-pass-enable)
   :custom
   (auth-source-pass-filename (getenv "PASSWORD_STORE_DIR"))
@@ -528,11 +527,11 @@
 
 (use-package
   epa-file
-  :elpaca nil
+  :ensure nil
   :custom (epa-file-select-keys nil))
 
 (use-package secrets
-  :elpaca nil)
+  :ensure nil)
 #+end_src
 
 ** minibuffer abort
@@ -616,7 +615,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 (use-package my-org
   :after org
   :load-path "my/org"
-  :elpaca nil
+  :ensure nil
   )
 
 (use-package polymode :defer t)
@@ -638,7 +637,7 @@ https://orgmode.org/manual/Org-Crypt.html
 #+begin_src elisp
 (use-package org-crypt
   :after org
-  :elpaca nil
+  :ensure nil
   :config
   (org-crypt-use-before-save-magic)
   (add-to-list 'safe-local-variable-values
@@ -729,7 +728,7 @@ https://orgmode.org/manual/Org-Crypt.html
 ;; (use-package async)
 
 (use-package midnight
-  :elpaca nil
+  :ensure nil
   :config
   (setq midnight-period (* 60 60 3)) ;; 3h
   (advice-add 'clean-buffer-list :around 'suppress-message-advice-around)
@@ -750,9 +749,7 @@ https://orgmode.org/manual/Org-Crypt.html
   :config
   (global-treesit-auto-mode))
 
-(use-package substitute
-  :elpaca (:host github :repo "protesilaos/substitute" :build (:not autoloads))
-  )
+(use-package substitute)
 
 (use-package drag-stuff
     :init
@@ -777,7 +774,7 @@ https://orgmode.org/manual/Org-Crypt.html
 (use-package combobulate
   :custom
   (combobulate-flash-node nil)
-  :elpaca (:host github :repo "mickeynp/combobulate" :build (:not autoloads))
+  :ensure (:host github :repo "mickeynp/combobulate" :build (:not autoloads))
   )
 
 ;; (use-package dogears
@@ -825,7 +822,7 @@ https://orgmode.org/manual/Org-Crypt.html
 #+begin_src elisp
 
 (use-package eglot
-  :elpaca nil
+  :ensure nil
   :custom
   (eglot-autoshutdown t)
   (eglot-confirm-server-initiated-edits nil)
@@ -835,7 +832,7 @@ https://orgmode.org/manual/Org-Crypt.html
 *** linting
 #+begin_src elisp
 (use-package jinx
-  :elpaca nil ;; built by nix
+  :ensure nil ;; built by nix
   :hook (text-mode conf-mode)
   :custom (jinx-languages "en_US")
   :blackout)
@@ -881,18 +878,18 @@ https://orgmode.org/manual/Org-Crypt.html
 ** minibuffer & completion
 #+begin_src elisp
 (use-package vertico
-  :elpaca (vertico :files (:defaults "extensions/*"))
+  :ensure (vertico :files (:defaults "extensions/*"))
   :init
   (vertico-mode)
   )
 (use-package vertico-directory
-  :elpaca nil
+  :ensure nil
   :after vertico
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
   )
 
 (use-package savehist
-  :elpaca nil
+  :ensure nil
   :init
   (savehist-mode))
 
@@ -1140,7 +1137,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ;; mostly based on https://github.com/alexluigit/dirvish/blob/main/Configuration.org#Example-config
 
 (use-package dired
-  :elpaca nil
+  :ensure nil
   :custom
   (dired-recursive-deletes 'top)
   (dired-recursive-copies 'always)
@@ -1160,7 +1157,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (dirvish-override-dired-mode))
 
 (use-package dired-x
-  :elpaca nil
+  :ensure nil
   ;; Enable dired-omit-mode by default
   ;; :hook
   ;; (dired-mode . dired-omit-mode)
@@ -1185,7 +1182,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** c++
 #+begin_src elisp
 (use-package c++-mode
-  :elpaca nil
+  :ensure nil
   :mode "\\.h\\'")
 
 (use-package rtags
@@ -1207,7 +1204,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 ;; no idea which one is the main elisp file
 ;; (use-package doc-tools
-;;   :elpaca (:host github :repo "dalanicolai/doc-tools")
+;;   :ensure (:host github :repo "dalanicolai/doc-tools")
 ;;   :mode "\\.pdf\\'")
 
 
@@ -1223,7 +1220,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** elisp
 #+begin_src elisp
 (use-package emacs-lisp
-  :elpaca nil
+  :ensure nil
   :hook (emacs-lisp-mode . nameless-mode)
   )
 
@@ -1266,7 +1263,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** java
 #+begin_src elisp
 (use-package java-mode
-  :elpaca nil
+  :ensure nil
   ;; :hook (java-mode . eglot-ensure)
   :mode "\\.java\\'")
 #+end_src
@@ -1364,7 +1361,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** python
 #+begin_src elisp
 (use-package python
-  :elpaca nil
+  :ensure nil
   :mode ("\\.py\\'" . python-ts-mode)
   :hook (python-ts-mode . (lambda ()
                             (eglot-ensure)
@@ -1408,7 +1405,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** shell
 #+begin_src elisp
 (use-package sh-mode
-  :elpaca nil
+  :ensure nil
   :hook (sh-mode . eglot-ensure))
 
 (use-package nushell-mode
@@ -1427,13 +1424,13 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** webdev
 #+begin_src elisp
 (use-package css-ts-mode
-  :elpaca nil
+  :ensure nil
   :mode ("\\.less\\'" "\\.css\\'" "\\.sass\\'")
   :custom
   (css-indent-offset 4))
 
 (use-package scss-mode
-  :elpaca nil
+  :ensure nil
   :mode ("\\.scss\\'"))
 
 (use-package js2-mode
@@ -1452,20 +1449,20 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     (web-mode-enable-auto-indentation nil))
 
 (use-package typescript-ts-mode
-  :elpaca nil
-    :mode "\\.ts\\'"
-    :hook (typescript-ts-mode . (lambda ()
-                                  (eglot-ensure)
-                                  (combobulate-mode)
-                                  ))
-    )
+  :ensure nil
+  :mode "\\.ts\\'"
+  :hook (typescript-ts-mode . (lambda ()
+                                (eglot-ensure)
+                                (combobulate-mode)
+                                ))
+  )
 #+end_src
 
 ** yaml
 #+begin_src elisp
 ;; todo: https://github.com/zkry/yaml-pro
 (use-package yaml-ts-mode
-  :elpaca nil
+  :ensure nil
   :mode ("\\.yml.*\\'" "\\.yaml.*\\'")
   )
 #+end_src
@@ -1473,7 +1470,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** hurl
 #+begin_src elisp :lexical no
 (use-package hurl-mode
-  :elpaca (:host github :repo "jaszhe/hurl-mode")
+  :ensure (:host github :repo "jaszhe/hurl-mode")
     :mode "\\.hurl\\'")
 #+end_src
 
@@ -1492,7 +1489,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package google-translate)
 (use-package google-translate-smooth-ui
   :after google-translate
-  :elpaca nil
+  :ensure nil
   :commands google-translate-smooth-translate
   :config
   ;; https://github.com/atykhonov/google-translate/issues/52#issuecomment-727920888
@@ -1505,7 +1502,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   "M-ü" 'google-translate-previous-translation-direction))
 
 (use-package mail-mode
-  :elpaca nil
+  :ensure nil
     :mode "\\/tmp\\/neomutt.*\\'")
 (use-package khardel
   :general
