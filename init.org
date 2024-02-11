@@ -563,7 +563,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
      (sql . t)))
 
   :custom
-  (org-directory "~/Docs/org")
+  (org-directory "~/dot/notes/org")
   (org-capture-templates '(("a" "Brain" plain (function org-brain-goto-end)
                             "* %i%?" :empty-lines 1)))
   (org-blank-before-new-entry '((heading . nil)
@@ -659,23 +659,6 @@ https://orgmode.org/manual/Org-Crypt.html
 
 ** notes
 #+begin_src elisp
-(use-package org-roam
-  :init
-  (setq org-roam-v2-ack t)
-  :custom
-  (org-roam-directory (my-ensure-dir org-directory "roam/"))
-  :config
-  (org-roam-db-autosync-mode)
-  ;; If using org-roam-protocol
-  (require 'org-roam-protocol)
-  :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-graph))
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert))
-              (("C-c n I" . org-roam-insert-immediate))))
-
 (use-package denote
   :after org
   :custom
