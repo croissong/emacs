@@ -162,8 +162,6 @@
 
 ** core packages
 #+begin_src elisp
-(use-package bind-key
-  :preface (unload-feature 'bind-key t))
 (use-package f)
 (use-package dash)
 (use-package a)
