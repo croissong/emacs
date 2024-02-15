@@ -47,7 +47,7 @@
    ("m" "moi"
     (lambda ()
       (interactive)
-      (find-file (expand-file-name "dotfiles/dot_config/git-repo-manager/moi.yaml.tmpl"
+      (find-file (expand-file-name "dotfiles/dot_config/git-repo-manager/config.yaml.tmpl"
                                    (substitute-env-vars "$DOT")))
       ))
    ("w" "wrk"
