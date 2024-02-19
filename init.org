@@ -97,7 +97,6 @@
 ** elpaca
 #+begin_src elisp
 (setq use-package-compute-statistics nil
-      use-package-always-ensure t
       comp-async-report-warnings-errors nil
       warning-suppress-log-types '((comp))
       )
@@ -155,7 +154,8 @@
 
 (elpaca elpaca-use-package
   ;; Enable use-package :ensure support for Elpaca.
-  (elpaca-use-package-mode))
+  (elpaca-use-package-mode)
+  (setq use-package-always-ensure t))
 
 (elpaca-wait)
 #+end_src
