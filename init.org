@@ -877,13 +877,18 @@ https://orgmode.org/manual/Org-Crypt.html
 (use-package orderless
   :custom
   (orderless-matching-styles '(orderless-prefixes))
+  )
 
-  ;; https://github.com/minad/vertico#configuration
-  (completion-styles '(orderless))
+
+(use-package fussy
+  :custom
+  (completion-styles '(fussy basic))
   (completion-category-defaults nil)
   (completion-category-overrides nil)
-  ;; (completion-category-overrides '((file (styles partial-completion substring))))
+
+  (fussy-filter-fn 'fussy-filter-orderless)
   )
+
 
 ;; https ://www.reddit.com/r/emacs/comments/krptmz/emacs_completion_framework_embark_consult/
 (use-package consult
@@ -927,7 +932,7 @@ https://orgmode.org/manual/Org-Crypt.html
   :after embark-consult
   :config
   (push 'embark--ignore-target
-      (alist-get 'jinx-correct embark-target-injection-hooks))
+        (alist-get 'jinx-correct embark-target-injection-hooks))
   )
 #+end_src
 
