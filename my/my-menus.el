@@ -1,5 +1,7 @@
 ;;; my-menus.el --- custom transient menus -*- lexical-binding: t; -*-
 
+(require 'transient)
+
 (transient-define-prefix my-menus-files ()
   [
    [
