@@ -1284,10 +1284,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** latex
 #+begin_src elisp
 (use-package tex
-  :elpaca (auctex :pre-build (("./autogen.sh")
-                              ("./configure" "--without-texmf-dir" "--with-lispdir=.")
-                              ("make")))
-
+  :ensure nil ;; built by nix
   :mode "\\.tex\\'"
   :hook (LaTeX-mode . turn-on-reftex))
 #+end_src
