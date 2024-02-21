@@ -174,28 +174,28 @@
 
 
 (use-package my
-    :after request
-    :load-path "my"
-    :ensure nil
-    :config
-    (add-to-list 'save-some-buffers-action-alist
-             `(?r my-discard-buffer-action
-                  "discard this buffer"))
-    :custom
-    (org-make-link-description-function 'my-url-get-title)
-    :demand t)
+  :after (request transient)
+  :load-path "my"
+  :ensure nil
+  :config
+  (add-to-list 'save-some-buffers-action-alist
+               `(?r my-discard-buffer-action
+                    "discard this buffer"))
+  :custom
+  (org-make-link-description-function 'my-url-get-title)
+  :demand t)
 
 (elpaca-wait)
 
 ;; Required to get e.g. wl-clipboard wayland connection working on system start (without having to restart the daemon)
 ;; Used in conjunction with 'systemctl --user import-environment SWAYSOCK WAYLAND_DISPLAY DISPLAY' in the sway config
 (use-package exec-path-from-shell
-    :custom
-    (exec-path-from-shell-arguments '("-l"))
-    (exec-path-from-shell-variables '("DISPLAY" "WAYLAND_DISPLAY" "SSH_AUTH_SOCK"))
-    :init
-    (my-with-eval-after-frame
-     (exec-path-from-shell-initialize)))
+  :custom
+  (exec-path-from-shell-arguments '("-l"))
+  (exec-path-from-shell-variables '("DISPLAY" "WAYLAND_DISPLAY" "SSH_AUTH_SOCK"))
+  :init
+  (my-with-eval-after-frame
+   (exec-path-from-shell-initialize)))
 #+end_src
 
 * common
