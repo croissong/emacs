@@ -383,12 +383,6 @@
   "C-ä" 'vundo-next
   "C-ü" 'vundo-previous)
 
-(general-def
-  :keymaps 'vertico-map :package 'vertico
-  "M-#" 'vertico-directory-enter
-  "M-ö" 'vertico-directory-delete-word
-  )
-
 
 (general-def
   :keymaps 'eglot-mode-map :package 'eglot
@@ -862,11 +856,15 @@ https://orgmode.org/manual/Org-Crypt.html
   :ensure (vertico :files (:defaults "extensions/*"))
   :init
   (vertico-mode)
-  )
+)
+
 (use-package vertico-directory
   :ensure nil
   :after vertico
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
+  :bind (:map vertico-map
+              (("M-#" . vertico-directory-enter)
+               ("M-ö" . vertico-directory-delete-word)))
   )
 
 (use-package savehist
