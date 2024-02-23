@@ -795,12 +795,18 @@ https://orgmode.org/manual/Org-Crypt.html
 
 *** lsp
 #+begin_src elisp
-
 (use-package eglot
   :ensure nil
   :custom
   (eglot-autoshutdown t)
   (eglot-confirm-server-initiated-edits nil)
+  )
+
+(use-package eglot-booster
+  :ensure (:host github :repo "jdtsmith/eglot-booster")
+  :after eglot
+  :config
+  (eglot-booster-mode)
   )
 #+end_src
 
