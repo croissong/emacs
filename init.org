@@ -246,8 +246,6 @@
   "M-ü" 'previous-line
   "M-ä" 'next-line
 
-  "C-M-w" 'er/expand-region
-  "C-M-q" 'er/contract-region
 
   "C-x b" 'magit-blame
   "C-x l" 'magit-log-buffer-file
@@ -727,11 +725,11 @@ https://orgmode.org/manual/Org-Crypt.html
 (use-package substitute)
 
 (use-package drag-stuff
-    :init
-    (drag-stuff-global-mode 1)
-    :config
-    (setq drag-stuff-except-modes '(org-mode))
-    :blackout drag-stuff-mode)
+  :init
+  (drag-stuff-global-mode 1)
+  :config
+  (setq drag-stuff-except-modes '(org-mode))
+  :blackout drag-stuff-mode)
 
 (use-package golden-ratio-scroll-screen
   :custom
@@ -740,11 +738,21 @@ https://orgmode.org/manual/Org-Crypt.html
 
 (use-package quickrun :commands quickrun)
 
-(use-package expand-region
-    :custom
-    (expand-region-fast-keys-enabled nil)
-    :config
-    (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions))
+(use-package expreg
+  :bind
+  ("C-M-w" . expreg-expand)
+  ("C-M-q" . expreg-contract)
+  )
+
+;; (use-package expand-region
+;;   :custom
+;;   (expand-region-fast-keys-enabled nil)
+;;   :config
+;;   (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions)
+;;   :bind
+;;   ("C-M-w" . er/expand-region)
+;;   ("C-M-q" . er/contract-region)
+;;   )
 
 (use-package combobulate
   :custom
