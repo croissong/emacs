@@ -39,3 +39,5 @@ forge-database.sqlite
 /elpaca/
 /projects
 /persist/
+/request/
+/custom.el
