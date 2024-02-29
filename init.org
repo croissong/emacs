@@ -788,6 +788,9 @@ https://orgmode.org/manual/Org-Crypt.html
   (setf (alist-get 'go-ts-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'terraform-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'rustic-mode apheleia-mode-alist) 'treefmt)
+  (setf (alist-get 'web-mode apheleia-mode-alist) 'treefmt)
+  (setf (alist-get 'typescript-ts-mode apheleia-mode-alist) 'treefmt)
+  (setf (alist-get 'js-ts-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get "\\.slint\\'" apheleia-mode-alist) 'treefmt)
 
   ;; add mode formatters
