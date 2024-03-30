@@ -796,7 +796,7 @@ https://orgmode.org/manual/Org-Crypt.html
   (setf (alist-get 'js-ts-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'css-ts-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'scss-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get "\\.slint\\'" apheleia-mode-alist) 'treefmt)
+  (setf (alist-get 'slint-mode apheleia-mode-alist) 'treefmt)
 
   ;; add mode formatters
   (push '(nxml-mode . treefmt) apheleia-mode-alist)
@@ -1387,6 +1387,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package ron-mode
   :mode "\\.ron\\'"
   )
+
+(use-package slint-mode
+  :mode "\\.slint\\'")
 #+end_src
 
 ** sql
