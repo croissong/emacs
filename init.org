@@ -829,7 +829,7 @@ https://orgmode.org/manual/Org-Crypt.html
 
 *** linting
 #+begin_src elisp
-(use-package jinx
+(use-package jinx ;; spell checking
   :ensure nil ;; built by nix
   :hook (text-mode conf-mode)
   :custom (jinx-languages "en_US")
