@@ -965,7 +965,8 @@ https://github.com/bbatsov/crux
 
 *** rainbow-mode
 #+begin_src elisp
-(use-package rainbow-mode
+(use-package colorful-mode
+    :ensure (:type git :host github :repo "DevelopmentCool2449/colorful-mode")
     :hook (css-ts-mode org-mode help-mode)
     :blackout)
 #+end_src
