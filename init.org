@@ -656,7 +656,7 @@ https://orgmode.org/manual/Org-Crypt.html
 (use-package denote
   :after org
   :custom
-  (denote-directory (my-ensure-dir org-directory "denote/")))
+  (denote-directory (my-ensure-dir org-directory)))
 
 (use-package consult-notes
   :after denote
