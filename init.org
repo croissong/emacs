@@ -244,23 +244,21 @@
   "C-M-r" 'project-query-replace-regexp
 
 
-  ;; not global because of conflict in minibuffer (isearch)
-  "M-ü" 'previous-line
-  "M-ä" 'next-line
 
 
   "C-x b" 'magit-blame
   "C-x l" 'magit-log-buffer-file
 
-  "C-ö" 'windmove-left
-  "C-#" 'windmove-right
-  "C-ü" 'windmove-up
-  "C-ä" 'windmove-down
+  "C-<left>" 'windmove-left
+  "C-<right>" 'windmove-right
+  "C-<up>" 'windmove-up
+  "C-<down>" 'windmove-down
 
-  "C-M-#" 'buf-move-right
-  "C-M-ö" 'buf-move-left
-  "C-M-ü" 'buf-move-up
-  "C-M-ä" 'buf-move-down
+  "C-M-<left>" 'buf-move-left
+  "C-M-<right>" 'buf-move-right
+
+  "C-M-<up>" 'buf-move-up
+  "C-M-<down>" 'buf-move-down
 
 
   "M-." 'xref-find-definitions
@@ -283,8 +281,7 @@
   :keymaps 'org-mode-map :package 'org
   "<return>" 'org-return
   "M-S-<delete>" 'my/org-delete-heading-or-line
-  "C-M-<left>" 'org-backward-sentence
-  "C-M-<right>" 'org-forward-sentence
+
   "C-M-<end>" 'org-sentence-newline
   "C-c e" 'org-edit-special
   "C-c TAB" nil)
@@ -295,10 +292,6 @@
   "C-e" 'mosey-forward-bounce
   )
 
-(general-def
-  :package 'dogears
-  "M-ö" 'dogears-back
-  "M-#" 'dogears-forward)
 
 (general-def
   :keymaps 'key-translation-map
@@ -377,14 +370,6 @@
 )
 
 (general-def
-  :keymaps 'vundo-mode-map :package 'vundo
-  "C-ö" 'vundo-backward
-  "C-#" 'vundo-forward
-  "C-ä" 'vundo-next
-  "C-ü" 'vundo-previous)
-
-
-(general-def
   :keymaps 'eglot-mode-map :package 'eglot
   "M-/"  'eglot-code-actions
   "C-r" 'eglot-rename)
@@ -413,11 +398,6 @@
 (general-def
   :keymaps 'embark-symbol-map :package 'embark
   "s" 'jinx-correct)
-
-(general-def
-  :keymaps 'isearch-mb-minibuffer-map :package 'isearch-mb
-  "M-ä" 'isearch-repeat-forward
-  "M-ü" 'isearch-repeat-backward)
 #+end_src
 
 ** editing
@@ -876,8 +856,8 @@ https://orgmode.org/manual/Org-Crypt.html
   :after vertico
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
   :bind (:map vertico-map
-              (("M-#" . vertico-directory-enter)
-               ("M-ö" . vertico-directory-delete-word)))
+              (("M-<right>" . vertico-directory-enter)
+               ("M-<left>" . vertico-directory-delete-word)))
   )
 
 (use-package savehist
@@ -989,9 +969,6 @@ https://github.com/bbatsov/crux
     :custom
     (corfu-auto t)
     (corfu-auto-prefix 2)
-    :bind (:map corfu-map
-                ("C-ä" . corfu-next)
-                ("C-ü" . corfu-previous))
     :blackout corfu-mode
     )
 
@@ -1499,10 +1476,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (setq google-translate-translation-directions-alist '(("de" . "en")("en" . "de")))
   (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130))
   (google-translate--setup-minibuffer-keymap)
-  (general-def
-  :keymaps 'google-translate-minibuffer-keymap
-  "M-ä" 'google-translate-next-translation-direction
-  "M-ü" 'google-translate-previous-translation-direction))
+)
 
 (use-package mail-mode
   :ensure nil
