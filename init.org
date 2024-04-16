@@ -746,16 +746,6 @@ https://orgmode.org/manual/Org-Crypt.html
   ("C-M-q" . expreg-contract)
   )
 
-;; (use-package expand-region
-;;   :custom
-;;   (expand-region-fast-keys-enabled nil)
-;;   :config
-;;   (er/enable-mode-expansions 'web-mode 'er/add-js-mode-expansions)
-;;   :bind
-;;   ("C-M-w" . er/expand-region)
-;;   ("C-M-q" . er/contract-region)
-;;   )
-
 (use-package combobulate
   :custom
   (combobulate-flash-node nil)
