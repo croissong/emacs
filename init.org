@@ -249,16 +249,15 @@
   "C-x b" 'magit-blame
   "C-x l" 'magit-log-buffer-file
 
-  "C-<left>" 'windmove-left
-  "C-<right>" 'windmove-right
-  "C-<up>" 'windmove-up
-  "C-<down>" 'windmove-down
+  "M-p" 'windmove-left
+  "M-]" 'windmove-right
+  "M--" 'windmove-up
+  "M-[" 'windmove-down
 
-  "C-M-<left>" 'buf-move-left
-  "C-M-<right>" 'buf-move-right
-
-  "C-M-<up>" 'buf-move-up
-  "C-M-<down>" 'buf-move-down
+  "M-P" 'buf-move-left
+  "M-}" 'buf-move-right
+  "M-_" 'buf-move-up
+  "M-{" 'buf-move-down
 
 
   "M-." 'xref-find-definitions
@@ -323,7 +322,7 @@
   "C-q" 'embark-act
 
 
-  "M-[" 'duplicate-line
+  "M-'" 'duplicate-line
 
   "˝" 'previous-buffer
   "’" 'next-buffer
@@ -342,9 +341,9 @@
 
 
 
-  "C-M-p" 'vundo
-  "C-p" 'undo-fu-only-undo
-  "M-p" 'undo-fu-only-redo
+  "C-M-o" 'vundo
+  "C-o" 'undo-fu-only-undo
+  "M-o" 'undo-fu-only-redo
 
 
   "C-<up>" 'golden-ratio-scroll-screen-down
@@ -358,7 +357,6 @@
   "C-M-k" 'kill-current-buffer
   "M-r" 'revert-buffer
 
-  "M-_" 'shell-command
   "<f5>" 'profiler-start
   "<f6>" 'profiler-stop
 
