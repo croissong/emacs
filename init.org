@@ -243,22 +243,8 @@
 
   "C-M-r" 'project-query-replace-regexp
 
-
-
-
   "C-x b" 'magit-blame
   "C-x l" 'magit-log-buffer-file
-
-  "M-p" 'windmove-left
-  "M-]" 'windmove-right
-  "M--" 'windmove-up
-  "M-[" 'windmove-down
-
-  "M-P" 'buf-move-left
-  "M-}" 'buf-move-right
-  "M-_" 'buf-move-up
-  "M-{" 'buf-move-down
-
 
   "M-." 'xref-find-definitions
   ;; clashes with run-elisp-function
@@ -334,6 +320,15 @@
   "C-M-1" 'winner-undo
   "C-M-2" 'winner-redo
 
+  "M-[" 'windmove-left
+  "M-\\" 'windmove-right
+  "M-=" 'windmove-up
+  "M-]" 'windmove-down
+
+  "M-{" 'buf-move-left
+  "M-|" 'buf-move-right
+  "M-+" 'buf-move-up
+  "M-}" 'buf-move-down
 
   "C-d" 'consult-project-extra-find
   "M-d" 'consult-buffer
@@ -341,9 +336,9 @@
 
 
 
-  "C-M-o" 'vundo
-  "C-o" 'undo-fu-only-undo
-  "M-o" 'undo-fu-only-redo
+  "C-M-p" 'vundo
+  "C-p" 'undo-fu-only-undo
+  "M-p" 'undo-fu-only-redo
 
 
   "C-<up>" 'golden-ratio-scroll-screen-down
