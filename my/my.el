@@ -61,12 +61,11 @@
 
 
 (defun my-discard-buffer-action (buf)
-  (kill-buffer buf)
   (with-current-buffer buf
     (when (file-exists-p buffer-file-name)
       (revert-buffer :ignore-auto :noconfirm)
       (set-buffer-modified-p nil)
-      (kill-buffer buf))))
+      t)))
 
 (define-minor-mode babel-tangle-mode
   "Tangle after save"
