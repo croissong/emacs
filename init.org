@@ -372,7 +372,7 @@
   "<f5>" 'profiler-start
   "<f6>" 'profiler-stop
 
-  "C-+" 'consult-notes
+  "C-<home>" 'consult-notes
   "M-+" 'consult-notes-search-in-all-notes
 
   "C-M-f" 'my-menus-code
@@ -1113,8 +1113,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
                   ))))))
     (cl-pushnew 'my--git-commit-check-commitlint git-commit-finish-query-functions))
 
-
-(use-package magit-annex)
 #+end_src
 
 ** dired & dirvish
