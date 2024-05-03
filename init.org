@@ -164,6 +164,23 @@
 
 ** core packages
 #+begin_src elisp
+
+(use-package emacs
+  :ensure nil
+  :custom
+
+  ;; https://github.com/minad/corfu?tab=readme-ov-file#configuration
+  ;;
+  (tab-always-indent 'complete)
+  ;; Disable Ispell completion function (using manual jinx spell check instead)
+  (text-mode-ispell-word-completion nil)
+  ;; Hide commands in M-x which do not apply to the current mode
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  ;;
+
+)
+
+
 (use-package f)
 (use-package dash)
 (use-package a)
