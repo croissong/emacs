@@ -607,8 +607,8 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
   :init (global-org-modern-mode))
 
 (use-package org-web-tools
-  :bind
-  (:map org-mode-map
+  :after org
+  :bind (:map org-mode-map
         (("M-l" . org-web-tools-insert-link-for-url)))
   )
 
