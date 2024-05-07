@@ -372,9 +372,6 @@
   "<f5>" 'profiler-start
   "<f6>" 'profiler-stop
 
-  "C-<home>" 'consult-notes
-  "M-+" 'consult-notes-search-in-all-notes
-
   "C-M-f" 'my-menus-code
   "C-x f" 'my-menus-files
 )
@@ -645,11 +642,27 @@ https://orgmode.org/manual/Org-Crypt.html
 #+begin_src elisp
 (use-package denote
   :after org
+  :init
+  (setq my/denote-directory-moi "~/dot/notes/moi"
+        my/denote-directory-wrk "~/dot/notes/wrk")
   :custom
-  (denote-directory (my-ensure-dir org-directory)))
+  (denote-directory my/denote-directory-moi)
+  )
+
+(use-package denote-silo-extras
+  :after denote
+  :ensure nil
+  :custom
+  (denote-silo-extras-directories `(,my/denote-directory-wrk))
+  )
 
 (use-package consult-notes
   :after denote
+  :bind
+  ("C-<home>" . consult-notes)
+  ("C-S-<home>" . (lambda () (interactive) (let ((denote-directory my/denote-directory-wrk)) (consult-notes))))
+  ("M-<home>" . consult-notes-search-in-all-notes)
+  ("M-S-<home>" . (lambda () (interactive) (let ((denote-directory my/denote-directory-wrk)) (consult-notes-search-in-all-notes))))
   :init (consult-notes-denote-mode)
   :custom
   (consult-notes-denote-display-id nil)
