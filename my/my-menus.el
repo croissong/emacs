@@ -18,7 +18,9 @@
     ("d" "dotfiles"
      (lambda ()
        (interactive)
-       (magit-status (f-expand "dotfiles/" (substitute-env-vars "$DOT")))
+       (let ((default-directory (f-expand "dotfiles/" (substitute-env-vars "$DOT"))))
+         (consult-project-extra-find)
+         )
        ))
     ("j" "justfile"
      (lambda ()
