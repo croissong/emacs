@@ -15,6 +15,11 @@
        (interactive)
        (find-file (expand-file-name "system/nix-config/hm/pkgs.nix" (substitute-env-vars "$DOT")))
        ))
+    ("d" "dotfiles"
+     (lambda ()
+       (interactive)
+       (magit-status (f-expand "dotfiles/" (substitute-env-vars "$DOT")))
+       ))
     ("j" "justfile"
      (lambda ()
        (interactive)
