@@ -325,7 +325,7 @@
   "C-q" 'embark-act
 
 
-  "M-'" 'duplicate-line
+  "M-'" 'crux-duplicate-current-line-or-region
 
   "˝" 'previous-buffer
   "’" 'next-buffer
