@@ -176,8 +176,10 @@
   (text-mode-ispell-word-completion nil)
   ;; Hide commands in M-x which do not apply to the current mode
   (read-extended-command-predicate #'command-completion-default-include-p)
-  ;;
 
+  ;; permanently accept '-*- buffer-auto-save-file-name: nil; -*-' file variable as safe
+  ;; https://emacs.stackexchange.com/questions/73868/automatically-mark-risky-file-local-variable-safe
+  (safe-local-variable-values `((buffer-auto-save-file-name . nil)))
 )
 
 
