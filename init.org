@@ -714,11 +714,7 @@ https://orgmode.org/manual/Org-Crypt.html
   :custom
   ;; https://www.emacswiki.org/emacs/CleanBufferList
   (clean-buffer-list-delay-special (* 60 60 2)) ;; 2h
-  (clean-buffer-list-kill-regexps '(".*"))
-  (clean-buffer-list-kill-never-regexps
-   '("\\` \\*Minibuf-.*\\*\\'"
-     "\\`\\*scratch.*"))
-  )
+  (clean-buffer-list-kill-regexps '(".*")))
 #+end_src
 
 ** editing
