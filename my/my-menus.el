@@ -84,6 +84,8 @@
 
     ("r" "search-replace"
      isearch-forward-regexp)
+    ("i" "string-inflection-all-cycle"
+     string-inflection-all-cycle)
     ]
 
    ["file"
