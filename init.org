@@ -1105,6 +1105,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
                             'magit-insert-modules-unpushed-to-upstream
                             'magit-insert-unpulled-from-upstream)
 
+    ;; significantly improves performance in large repos (e.g. nixpkgs)
+    ;; see https://discourse.nixos.org/t/how-to-handle-nixpkgs-as-a-very-large-git-repo/24614/9
+    (remove-hook 'magit-status-headers-hook 'magit-insert-tags-header)
+
     (defun my--git-commit-check-commitlint (force)
       (or force
           (let ((old-buffer (current-buffer)))
