@@ -38,8 +38,6 @@
 
 (setq default-directory "~/"
       custom-file (expand-file-name "custom.el" user-emacs-directory)
-      browse-url-generic-program (executable-find "handlr")
-      browse-url-generic-args '("open")
       read-process-output-max (* 1024 1024) ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
       enable-local-eval t
       mouse-wheel-scroll-amount '(2 ((shift) . 2))
@@ -168,6 +166,10 @@
 (use-package emacs
   :ensure nil
   :custom
+
+  browse-url-browser-function 'browse-url-generic
+  browse-url-generic-program (executable-find "handlr")
+  browse-url-generic-args '("open")
 
   ;; https://github.com/minad/corfu?tab=readme-ov-file#configuration
   ;;
