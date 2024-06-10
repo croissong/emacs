@@ -1209,10 +1209,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** docs
 #+begin_src elisp
-;; no idea which one is the main elisp file
-;; (use-package doc-tools
-;;   :ensure (:host github :repo "dalanicolai/doc-tools")
-;;   :mode "\\.pdf\\'")
+(use-package pdf-tools
+  :ensure nil ;; built by nix
+  :mode "\\.pdf\\'")
 
 
 (use-package csv-mode)
