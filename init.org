@@ -734,10 +734,6 @@ https://orgmode.org/manual/Org-Crypt.html
 
 ** editing
 #+begin_src elisp
-(use-package treesit-auto
-  :config
-  (global-treesit-auto-mode))
-
 (use-package substitute)
 
 (use-package drag-stuff
@@ -788,7 +784,7 @@ https://orgmode.org/manual/Org-Crypt.html
   (push '(treefmt . ("treefmt" "-v" "--config-file" (expand-file-name "~/.config/treefmt/treefmt.toml") "--tree-root" "." "--stdin" filepath)) apheleia-formatters)
 
   ;; overwrite mode formatters
-  (setf (alist-get 'nix-mode apheleia-mode-alist) 'treefmt)
+  (setf (alist-get 'nix-ts-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'sh-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'bash-ts-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'go-ts-mode apheleia-mode-alist) 'treefmt)
@@ -1225,7 +1221,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** docker
 #+begin_src elisp
 (use-package dockerfile-mode
-    :mode ("\\Dockerfile\\'" "\\Dockerfile\\'"))
+    :mode ("\\Dockerfile\\'" . dockerfile-ts-mode))
 #+end_src
 
 ** elisp
@@ -1246,7 +1242,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package elixir-mode
     :hook (elixir-mode . flycheck-mode)
-    :mode "\\.ex\\'")
+    :mode ("\\.ex\\'" . elixir-ts-mode))
 
 (use-package flycheck-credo
     :after elixir-mode
@@ -1259,7 +1255,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** golang
 #+begin_src elisp
 (use-package go-mode
-    :mode "\\.go\\'"
+    :mode ("\\.go\\'" . go-ts-mode)
     ;; :config
     ;; (require 'dap-dlv-go)
     :hook (go-ts-mode . eglot-ensure))
@@ -1276,13 +1272,14 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package java-mode
   :ensure nil
   ;; :hook (java-mode . eglot-ensure)
-  :mode "\\.java\\'")
+  :mode ("\\.java\\'" . java-ts-mode)
+  )
 #+end_src
 
 ** json
 #+begin_src elisp
 (use-package json-mode
-    :mode "\\.json\\'"
+    :mode ("\\.json\\'" . json-ts-mode)
     :custom
     (json-reformat:indent-width 2)
     (js-indent-level 2))
@@ -1339,14 +1336,15 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** nix
 #+begin_src elisp
-(use-package nix-mode
+(use-package nix-ts-mode
     :mode "\\.nix.*\\'"
     :hook (nix-mode . eglot-ensure))
 #+end_src
 
 ** php
 #+begin_src elisp
-(use-package php-mode
+(use-package php-ts-mode
+    :ensure (:type git :host github :repo "emacs-php/php-ts-mode")
     :mode "\\.php\\'")
 #+end_src
 
@@ -1418,9 +1416,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** shell
 #+begin_src elisp
-(use-package sh-mode
+(use-package bash-ts-mode
   :ensure nil
-  :hook (sh-mode . eglot-ensure))
+  :mode "\\.sh\\'"
+  :hook (bash-ts-mode . eglot-ensure))
 
 (use-package nushell-mode
   :mode "\\.nu\\'")
@@ -1447,14 +1446,11 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :ensure nil
   :mode ("\\.scss\\'"))
 
-(use-package js2-mode
-    :mode "\\.js\\'"
-    :hook (js2-mode . eglot-ensure)
-    :custom
-    (js2-basic-offset 2)
-    (js2-strict-inconsistent-return-warning nil)
-    (js2-strict-missing-semi-warning nil)
-    :blackout)
+(use-package js-ts-mode
+  :ensure nil
+  :mode "\\.js\\'"
+  :hook (js-ts-mode . eglot-ensure)
+  :blackout)
 
 (use-package web-mode
     :mode ("\\.jsx\\'" "\\.tsx\\'")
