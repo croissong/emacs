@@ -167,9 +167,9 @@
   :ensure nil
   :custom
 
-  browse-url-browser-function 'browse-url-generic
-  browse-url-generic-program (executable-find "handlr")
-  browse-url-generic-args '("open")
+  (browse-url-browser-function 'browse-url-generic)
+  (browse-url-generic-program (executable-find "handlr"))
+  (browse-url-generic-args '("open"))
 
   ;; https://github.com/minad/corfu?tab=readme-ov-file#configuration
   ;;
