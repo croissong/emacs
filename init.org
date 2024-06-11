@@ -564,6 +564,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
   (org-directory "~/dot/notes/org")
   (org-capture-templates '(("a" "Brain" plain (function org-brain-goto-end)
                             "* %i%?" :empty-lines 1)))
+  (org-cycle-separator-lines 1)
   (org-return-follows-link nil)
   (org-support-shift-select t)
   (org-image-actual-width '(500))
