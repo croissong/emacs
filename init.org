@@ -152,12 +152,11 @@
 ;; load directly before elpaca-use-package to register :blackout use-package handler
 (elpaca blackout)
 
-(elpaca elpaca-use-package
+(elpaca (elpaca-use-package :wait t)
   ;; Enable use-package :ensure support for Elpaca.
   (elpaca-use-package-mode)
   (setq use-package-always-ensure t))
 
-(elpaca-wait)
 #+end_src
 
 ** core packages
@@ -208,8 +207,6 @@
   (org-make-link-description-function 'my-url-get-title)
   :demand t)
 
-(elpaca-wait)
-
 ;; Required to get e.g. wl-clipboard, browse-url wayland connection working on system start (without having to restart the daemon)
 ;; Used in conjunction with 'systemctl --user import-environment WAYLAND_DISPLAY DISPLAY' in the sway config
 (use-package exec-path-from-shell
@@ -225,10 +222,10 @@
 ** keybindings
 #+begin_src elisp
 (use-package general
+  :ensure (:wait t)
   :config
   (general-auto-unbind-keys))
 
-(elpaca-wait)
 
 (general-unbind
   ;; disable overwrite
