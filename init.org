@@ -681,7 +681,6 @@ https://orgmode.org/manual/Org-Crypt.html
 ** notes
 #+begin_src elisp
 (use-package denote
-  :after org
   :init
   (setq my/denote-directory-moi "~/dot/notes/moi"
         my/denote-directory-wrk "~/dot/notes/wrk")
