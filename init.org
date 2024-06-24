@@ -1498,10 +1498,22 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** yaml
 #+begin_src elisp
-;; todo: https://github.com/zkry/yaml-pro
+
+;; note: pulled in by khardel; overrides yaml-ts-mode due to auto-mode-alist autoload
+(use-package yaml-mode
+  :demand t
+  :config
+  (rassq-delete-all 'yaml-mode auto-mode-alist)
+  )
+
 (use-package yaml-ts-mode
   :ensure nil
-  :mode ("\\.yml.*\\'" "\\.yaml.*\\'")
+  :mode "\\.ya?ml\\'"
+  )
+
+(use-package yaml-pro
+  :demand t
+  :hook (yaml-ts-mode yaml-pro-ts-mode)
   )
 #+end_src
 
@@ -1538,11 +1550,14 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package mail-mode
   :ensure nil
-    :mode "\\/tmp\\/neomutt.*\\'")
+  :mode "\\/tmp\\/neomutt.*\\'")
+
 (use-package khardel
-  :general
-  (:keymaps 'mail-mode-map
-            "C-f" 'khardel-insert-email))
+  :after mail-mode
+  :commands (khardel-edit-mode khardel-insert-email)
+  :bind (:map mail-mode-map
+              (("C-f" . khardel-insert-email)))
+  )
 
 (use-package himalaya)
 (use-package notmuch)
