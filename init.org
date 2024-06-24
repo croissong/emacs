@@ -584,6 +584,25 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
      (shell . t)
      (sql . t)))
 
+
+  ;; https://emacs.stackexchange.com/a/75282
+  (defun org-attach-save-file-list-to-property (dir)
+    "Save list of attachments to ORG_ATTACH_FILES property."
+    (when-let* ((files (org-attach-file-list dir)))
+      (org-set-property "ORG_ATTACH_FILES" (mapconcat #'identity files ", "))))
+  (add-hook 'org-attach-after-change-hook #'org-attach-save-file-list-to-property)
+
+  ;; https://lists.sr.ht/~protesilaos/denote/%3C87ilfj3ns6.fsf%40marcfargas.com%3E
+  ;; works in conjunction w/ notes/.dir-locals.el
+  (add-to-list 'safe-local-variable-values
+               '(org-attach-preferred-new-method))
+  (setq org-attach-id-dir "files/"
+        org-attach-dir-relative t
+        org-attach-auto-tag nil
+        org-attach-use-inheritance t
+        org-attach-preferred-new-method 'dir
+        )
+
   :custom
   (org-directory "~/dot/notes/org")
   (org-capture-templates '(("a" "Brain" plain (function org-brain-goto-end)
@@ -646,7 +665,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 (use-package org-web-tools
   :after org
   :bind (:map org-mode-map
-        (("M-l" . org-web-tools-insert-link-for-url)))
+              (("M-l" . org-web-tools-insert-link-for-url)))
   )
 
 #+end_src
