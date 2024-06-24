@@ -1427,6 +1427,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ;; No conditional-on-mode necessary
 (use-package rustic
   :ensure (:host github :repo "emacs-rustic/rustic")
+  :mode ("\\.rs\\'" . rustic-mode)
   :custom
   (rustic-lsp-client 'eglot)
   (rust-mode-treesitter-derive t)
