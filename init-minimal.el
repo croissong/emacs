@@ -1,5 +1,6 @@
+;; -*- lexical-binding: t -*-
 ;; emacs -q --load ~/.config/emacs/init-minimal.el
-;;; -*- lexical-binding: t -*-
+
 
 
 (setq initial-scratch-message nil
