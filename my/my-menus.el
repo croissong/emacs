@@ -25,7 +25,7 @@
     ("j" "justfile"
      (lambda ()
        (interactive)
-       (find-file (expand-file-name "dotfiles/dot_user.justfile" (substitute-env-vars "$DOT")))
+       (find-file (expand-file-name "dotfiles/dot_config/just/justfile" (substitute-env-vars "$DOT")))
        ))
     ("g" "grm" my-menus--files-grm)
     ("n" "nyxt"
