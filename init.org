@@ -374,7 +374,9 @@
   "<f6>" 'profiler-stop
 
   "C-M-f" 'my-menus-code
+  "M-c" 'my-menus-consult
   "C-x f" 'my-menus-files
+  "M-e" 'eldoc-print-current-symbol-info
 )
 
 (general-def

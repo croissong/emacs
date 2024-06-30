@@ -78,10 +78,20 @@
     ]
   )
 
+(transient-define-prefix my-menus-consult ()
+  [ "consult"
+    ("f" "flymake"
+     consult-flymake)
+    ("m" "imenu"
+     consult-imenu)
+    ]
+  )
+
 (transient-define-prefix my-menus-code ()
   [
    ["edit"
-
+    ("e" "eldoc-info"
+     eldoc-print-current-symbol-info)
     ("r" "search-replace"
      isearch-forward-regexp)
     ("i" "string-inflection-all-cycle"
