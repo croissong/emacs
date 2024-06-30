@@ -1596,6 +1596,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (insert-shebang-track-ignored-filename nil))
 
 (use-package org-download
+  :custom
+  (org-download-method 'attach)
   :after org)
 
 (use-package string-inflection
