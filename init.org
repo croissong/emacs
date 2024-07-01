@@ -376,8 +376,9 @@
   "C-M-f" 'my-menus-code
   "M-c" 'my-menus-consult
   "C-x f" 'my-menus-files
+  "C-M-\\" 'my-tabs
   "M-e" 'eldoc-print-current-symbol-info
-)
+  )
 
 (general-def
   :keymaps 'eglot-mode-map :package 'eglot
