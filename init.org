@@ -845,6 +845,7 @@ https://orgmode.org/manual/Org-Crypt.html
   (setf (alist-get 'scss-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'slint-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'toml-ts-mode apheleia-mode-alist) 'treefmt)
+  (setf (alist-get 'nim-mode apheleia-mode-alist) 'treefmt)
 
   ;; add mode formatters
   (push '(nxml-mode . treefmt) apheleia-mode-alist)
