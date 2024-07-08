@@ -862,6 +862,9 @@ https://orgmode.org/manual/Org-Crypt.html
 #+begin_src elisp
 (use-package eglot
   :ensure nil
+  :config
+  (add-to-list 'eglot-server-programs
+               '(nix-ts-mode . ("nil")))
   :custom
   (eglot-autoshutdown t)
   (eglot-confirm-server-initiated-edits nil)
@@ -1385,7 +1388,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package nix-ts-mode
     :mode "\\.nix.*\\'"
-    :hook (nix-mode . eglot-ensure))
+    :hook (nix-ts-mode . eglot-ensure))
 #+end_src
 
 ** php
