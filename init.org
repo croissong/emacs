@@ -166,6 +166,10 @@
   :ensure nil
   :custom
 
+  (major-mode-remap-alist
+   '((sh-mode . bash-ts-mode)
+     (yaml-mode . yaml-ts-mode)))
+
   (browse-url-browser-function 'browse-url-generic)
   (browse-url-generic-program (executable-find "handlr"))
   (browse-url-generic-args '("open"))
@@ -1519,16 +1523,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** yaml
 #+begin_src elisp
 
-;; note: pulled in by khardel; overrides yaml-ts-mode due to auto-mode-alist autoload
-(use-package yaml-mode
-  :demand t
-  :config
-  (rassq-delete-all 'yaml-mode auto-mode-alist)
-  )
-
 (use-package yaml-ts-mode
   :ensure nil
-  :mode "\\.ya?ml\\'"
+  :mode "\\.ya?ml"
   )
 
 (use-package yaml-pro
