@@ -840,6 +840,7 @@ https://orgmode.org/manual/Org-Crypt.html
   (setf (alist-get 'web-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'html-ts-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'typescript-ts-mode apheleia-mode-alist) 'treefmt)
+  (setf (alist-get 'tsx-ts-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'js-ts-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'css-ts-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'scss-mode apheleia-mode-alist) 'treefmt)
@@ -1504,10 +1505,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :blackout)
 
 (use-package web-mode
-    :mode ("\\.jsx\\'" "\\.tsx\\'")
-    :custom
-    (web-mode-enable-auto-closing t)
-    (web-mode-enable-auto-indentation nil))
+  :mode ("\\.jsx\\'")
+  :custom
+  (web-mode-enable-auto-closing t)
+  (web-mode-enable-auto-indentation nil))
 
 (use-package html-ts-mode
   :ensure nil
@@ -1521,6 +1522,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
                                 (eglot-ensure)
                                 (combobulate-mode)
                                 ))
+  )
+
+(use-package tsx-ts-mode
+  :ensure nil
+  :mode "\\.tsx\\'"
+  :hook (tsx-ts-mode . eglot-ensure)
   )
 #+end_src
 
