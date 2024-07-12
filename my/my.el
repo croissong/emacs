@@ -4,6 +4,7 @@
 
 (require 'my-snippets)
 (require 'my-menus)
+(require 'my-tabs)
 
 (defun my-ensure-dir (&rest dirs)
   "Join args to single path and create directory if it does not exist."

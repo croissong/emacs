@@ -59,10 +59,7 @@
       split-width-threshold 160
 
       ;; Kill active process buffer no prompt
-      kill-buffer-query-functions (remq 'process-kill-buffer-query-function kill-buffer-query-functions)
-
-      display-buffer-alist
-      '(("*Async Shell Command*" . (display-buffer-no-window))))
+      kill-buffer-query-functions (remq 'process-kill-buffer-query-function kill-buffer-query-functions))
 
 (setq-default indent-tabs-mode nil
               sentence-end-double-space nil
@@ -185,6 +182,10 @@
   ;; permanently accept '-*- buffer-auto-save-file-name: nil; -*-' file variable as safe
   ;; https://emacs.stackexchange.com/questions/73868/automatically-mark-risky-file-local-variable-safe
   (safe-local-variable-values `((buffer-auto-save-file-name . nil)))
+
+  (async-shell-command-buffer 'new-buffer)
+  (display-buffer-alist
+  '(("*Async Shell Command*" . (display-buffer-no-window))))
 )
 
 

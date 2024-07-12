@@ -3,6 +3,7 @@
 
 (defvar-keymap my-tabs-mode-map
   "C-c x" #'my-tabs-cleanup-tabs
+  "M-<return>" #'my-tabs-activate-tab
   "M-l" #'my-tabs-move-tab-to-dump-moi
   "C-M-l" #'my-tabs-move-tab-to-dump-wrk)
 
@@ -50,6 +51,14 @@
                       (plist-get line :title)
                       (plist-get line :url)))))
   (goto-char (point-min))
+  )
+
+(defun my-tabs-activate-tab ()
+  (interactive)
+  (let* ((line (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+         (id (plist-get (my-tabs--parse-line line) :id)))
+    (my-tabs--brotab-command (format "activate %s" id))
+    )
   )
 
 (defun my-tabs-move-tab-to-dump-moi ()
@@ -101,6 +110,10 @@
     (list :id (nth 0 parts)
           :title (nth 1 parts)
           :url (nth 2 parts))))
+
+(defun my-tabs--brotab-command (command)
+  (async-shell-command (format "brotab %s" command))
+  )
 
 (provide 'my-tabs)
 
