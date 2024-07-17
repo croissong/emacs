@@ -1029,13 +1029,6 @@ https://github.com/bbatsov/crux
 (use-package kurecolor :defer t)
 #+end_src
 
-*** Evil-Nerd-Commenter
-#+begin_src elisp
-(use-package evil-nerd-commenter
-    :config
-    (evilnc-default-hotkeys))
-#+end_src
-
 *** Outshine
 #+begin_src elisp
 (use-package outshine
