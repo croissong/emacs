@@ -867,6 +867,8 @@ https://orgmode.org/manual/Org-Crypt.html
   :config
   (add-to-list 'eglot-server-programs
                '(nix-ts-mode . ("nil")))
+  ;; performance boost
+  (fset #'jsonrpc--log-event #'ignore)
   :custom
   (eglot-autoshutdown t)
   (eglot-confirm-server-initiated-edits nil)
