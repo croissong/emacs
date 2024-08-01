@@ -857,6 +857,7 @@ https://orgmode.org/manual/Org-Crypt.html
 
   ;; disable mode formatting
   (setf apheleia-mode-alist (assoc-delete-all 'yaml-ts-mode apheleia-mode-alist))
+  (setf apheleia-mode-alist (assoc-delete-all 'yaml-mode apheleia-mode-alist))
   :blackout)
 #+end_src
 
