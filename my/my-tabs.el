@@ -1,19 +1,42 @@
 ;;; my-tabs.el ---  -*- lexical-binding: t; -*-
 
+(require 'transient)
 
 (defvar-keymap my-tabs-mode-map
-  "C-c x" #'my-tabs-cleanup-tabs
-  "M-<return>" #'my-tabs-activate-tab
-  "M-l" #'my-tabs-move-tab-to-dump-moi
-  "C-M-l" #'my-tabs-move-tab-to-dump-wrk)
+  "C-M-e" #'my-tabs-menu
+  )
 
 (define-minor-mode my-tabs-mode
   "Toggle `my-tabs-mode`."
-  :keymap my-tabs-mode-map)
+  :keymap my-tabs-mode-map
+
+  (my-tabs-menu))
 
 (defcustom my-tabs-cleanup-list-file "~/dot/priv/tabs-cleanup-list.txt" "")
 (defcustom my-tabs-dump-file-moi "~/dot/tabs/dump.org" "")
 (defcustom my-tabs-dump-file-wrk "~/dot/tabs/dump-wrk.org" "")
+
+
+(transient-define-prefix my-tabs-menu ()
+  [
+   [
+    "all"
+    ("c" "cleanup" my-tabs-cleanup-tabs)
+    ]
+
+   [
+    "tab"
+    ("a" "activate" my-tabs-activate-tab :transient t)
+    ("d" "delete" my-tabs-delete-matching)
+    ]
+
+   [
+    "mv"
+    ("m" "moi" my-tabs-move-tab-to-dump-moi)
+    ("w" "wrk" my-tabs-move-tab-to-dump-wrk)
+    ]
+   ]
+  )
 
 (defun my-tabs ()
   (interactive)
@@ -29,8 +52,10 @@
 (defun my-tabs-cleanup-tabs ()
   (interactive)
   (let ((lines (split-string (buffer-string) "\n" t))
-        (cleanup-list-regex (my-tabs--read-cleanup-list-regex)))
+        (cleanup-list-regex (my-tabs--read-cleanup-list-regex))
+        line-count)
 
+    (setq line-count (length lines))
     (setq lines (mapcar #'my-tabs--parse-line lines))
 
     ;; remove lines matching `cleanup-list-regex` from parsed lines
@@ -44,12 +69,17 @@
     ;; (setq lines (sort lines (lambda (a b)
     ;;                           (string-lessp (plist-get a :url) (plist-get b :url)))))
 
+
     (erase-buffer)
     (dolist (line lines)
       (insert (format "%s\t%s\t%s\n"
                       (plist-get line :id)
                       (plist-get line :title)
-                      (plist-get line :url)))))
+                      (plist-get line :url))))
+
+    (setq new-line-count (length lines))
+    (message "Cleaned up %s tabs" (- line-count new-line-count))
+    )
   (goto-char (point-min))
   )
 
@@ -58,6 +88,16 @@
   (let* ((line (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
          (id (plist-get (my-tabs--parse-line line) :id)))
     (my-tabs--brotab-command (format "activate %s" id))
+    )
+  )
+
+(defun my-tabs-delete-matching ()
+  (interactive)
+  (let ((search-upper-case nil)
+        (search-term (current-kill 0 t))
+        deleted-line-count)
+    (setq deleted-line-count (delete-matching-lines search-term))
+    (message "Removed %s tabs matching %s" deleted-line-count search-term)
     )
   )
 
