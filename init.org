@@ -875,7 +875,7 @@ https://orgmode.org/manual/Org-Crypt.html
   :ensure nil
   :config
   (add-to-list 'eglot-server-programs
-               '(nix-ts-mode . ("nil")))
+               '(nix-ts-mode . ("nixd")))
   ;; performance boost
   (fset #'jsonrpc--log-event #'ignore)
   :custom
