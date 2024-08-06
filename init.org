@@ -829,7 +829,8 @@ https://orgmode.org/manual/Org-Crypt.html
   :init (apheleia-global-mode +1)
   :config
   ;; add additional formatters
-  (push '(treefmt . ("treefmt" "-v" "--allow-missing-formatter" "--config-file" (expand-file-name "~/.config/treefmt/treefmt.toml") "--tree-root-file" ".gitignore" "--stdin" filepath)) apheleia-formatters)
+  (push '(treefmt . ("treefmt" "-v" "--allow-missing-formatter" "--config-file" (expand-file-name "~/.config/treefmt/treefmt.toml") "--stdin" filepath)) apheleia-formatters)
+  (push '(elisp-autofmt . apheleia-elisp-autofmt-buffer) apheleia-formatters)
 
   ;; overwrite mode formatters
   (setf (alist-get 'nix-ts-mode apheleia-mode-alist) 'treefmt)
@@ -853,11 +854,18 @@ https://orgmode.org/manual/Org-Crypt.html
   (push '(nxml-mode . treefmt) apheleia-mode-alist)
   (push '(jsonnet-mode . treefmt) apheleia-mode-alist)
   (push '(d2-mode . treefmt) apheleia-mode-alist)
-  (push '(emacs-lisp-mode . lisp-indent) apheleia-mode-alist)
+  (push '(emacs-lisp-mode . elisp-autofmt) apheleia-mode-alist)
 
   ;; disable mode formatting
   (setf apheleia-mode-alist (assoc-delete-all 'yaml-ts-mode apheleia-mode-alist))
   (setf apheleia-mode-alist (assoc-delete-all 'yaml-mode apheleia-mode-alist))
+
+  (cl-defun apheleia-elisp-autofmt-buffer
+        (&key buffer scratch callback &allow-other-keys)
+      "Copy BUFFER to SCRATCH, then format scratch, then call CALLBACK."
+      (with-current-buffer scratch
+        (elisp-autofmt-buffer)
+        (funcall callback)))
   :blackout)
 #+end_src
 
@@ -1285,6 +1293,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :custom (nameless-private-prefix t))
 
 (use-package xtest :defer t)
+
+(use-package elisp-autofmt)
 #+end_src
 
 ** elixir
