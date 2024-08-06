@@ -112,7 +112,7 @@
     ("a" "path"
      (lambda (absolute-p)
        (interactive "P")
-       (my-snippets-kill-buffer-path absolute-p)))
+       (my-snippets-copy-buffer-path absolute-p)))
     ]
 
    ["misc"

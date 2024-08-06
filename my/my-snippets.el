@@ -16,16 +16,38 @@
 
 
 
-(defun my-snippets-kill-buffer-path (absolute-p)
+(defun my-snippets-copy-buffer-path (absolute-p)
   "Copy the current buffer's project-root-relative.
 If not within a project, or with prefix argument, copy the absolute path instead."
   (interactive "P")
-  (if-let ((relative (not absolute-p))
-           (project (project-current)))
-      (kill-new (file-relative-name buffer-file-name (project-root project)))
-    (kill-new (if (equal major-mode 'dired-mode)
-                  default-directory
-                buffer-file-name))))
+  (if-let ((buffer-path (my-snippets--get-buffer-path)))
+      (if (not absolute-p)
+          (if-let ((project (project-current))
+                   (root (project-root project)))
+              (kill-new (file-relative-name buffer-path root))
+            (message "Not in project")
+            )
+        (kill-new buffer-path))
+    )
+  )
+
+(defun my-snippets--get-buffer-path ()
+  (let ((buffer (current-buffer)))
+    (cond
+     (buffer-file-name
+      buffer-file-name
+      )
+
+     ;; If it's a dired buffer, return the directory
+     ((derived-mode-p 'dired-mode)
+      (dired-current-directory))
+
+     ;; If it's in a project, return the relative path to the project root
+     ((and (fboundp 'project-current)
+           (project-current))
+      (project-root (project-current)))
+     ;; Otherwise, return the buffer file name or buffer name
+     )))
 
 
 (provide 'my-snippets)
