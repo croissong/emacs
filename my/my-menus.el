@@ -21,6 +21,7 @@
       (find-file
        (expand-file-name "system/nix-config/hm/pkgs.nix"
                          (substitute-env-vars "$DOT")))))
+
    ("d" "dotfiles"
     (lambda ()
       (interactive)
@@ -47,7 +48,14 @@
     (lambda ()
       (interactive)
       (find-file
-       (expand-file-name "docs/wrk/timelog/" (substitute-env-vars "$DOT")))))]])
+       (expand-file-name "docs/wrk/timelog/" (substitute-env-vars "$DOT")))))
+
+   ("i" "priv"
+    (lambda ()
+      (interactive)
+      (let ((default-directory (f-expand "priv/" (substitute-env-vars "$DOT"))))
+        (consult-project-extra-find))))]])
+
 
 (transient-define-prefix
  my-menus--files-grm ()
