@@ -26,7 +26,7 @@
 
   ["tab"
    ("a" "activate" my-tabs-activate-tab :transient t)
-   ("d" "delete region match" my-tabs-delete-matching)]
+   ("d" "delete clipboard match" my-tabs-delete-matching)]
 
   ["mv"
    ("m" "moi" my-tabs-move-tab-to-dump-moi)
@@ -93,6 +93,7 @@
   (let ((search-upper-case nil)
         (search-term (current-kill 0 t))
         deleted-line-count)
+    (beginning-of-buffer)
     (setq deleted-line-count (delete-matching-lines search-term))
     (message "Removed %s tabs matching %s" deleted-line-count search-term)))
 
