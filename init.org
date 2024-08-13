@@ -961,19 +961,10 @@ https://orgmode.org/manual/Org-Crypt.html
 
 (use-package orderless
   :custom
-  (orderless-matching-styles '(orderless-prefixes))
-  )
-
-
-(use-package fussy
-  :custom
-  (completion-styles '(fussy basic))
+  ;; from https://github.com/minad/vertico?tab=readme-ov-file#configuration
+  (completion-styles '(orderless basic))
   (completion-category-defaults nil)
-  (completion-category-overrides nil)
-
-  (fussy-filter-fn 'fussy-filter-orderless)
-  )
-
+  (completion-category-overrides '((file (styles partial-completion)))))
 
 ;; https ://www.reddit.com/r/emacs/comments/krptmz/emacs_completion_framework_embark_consult/
 (use-package consult
