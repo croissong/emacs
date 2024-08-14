@@ -41,3 +41,4 @@ forge-database.sqlite
 /persist/
 /request/
 /custom.el
+/elisp-autofmt-cache/
