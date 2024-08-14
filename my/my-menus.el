@@ -48,7 +48,9 @@
     (lambda ()
       (interactive)
       (find-file
-       (expand-file-name "docs/wrk/timelog/" (substitute-env-vars "$DOT")))))
+       (my-menus--latest-file (expand-file-name "docs/wrk/timelog/"
+                                                (substitute-env-vars "$DOT"))
+                              "klg"))))
 
    ("i" "priv"
     (lambda ()
@@ -107,6 +109,11 @@
   ["misc"
 
    ("+" "zoom" text-scale-adjust)]])
+
+
+(defun my-menus--latest-file (path &optional match)
+  "Get latest file (including directory) in PATH."
+  (car (directory-files path 'full (or match nil) #'file-newer-than-file-p)))
 
 (provide 'my-menus)
 

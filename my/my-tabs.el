@@ -26,7 +26,7 @@
 
   ["tab"
    ("a" "activate" my-tabs-activate-tab :transient t)
-   ("d" "delete clipboard match" my-tabs-delete-matching)]
+   ("d" "delete matching" my-tabs-delete-matching)]
 
   ["mv"
    ("m" "moi" my-tabs-move-tab-to-dump-moi)
@@ -88,14 +88,19 @@
          (id (plist-get (my-tabs--parse-line line) :id)))
     (my-tabs--brotab-command (format "activate %s" id))))
 
-(defun my-tabs-delete-matching ()
-  (interactive)
+(defun my-tabs-delete-matching (start end)
+  (interactive "r")
   (let ((search-upper-case nil)
         (search-term (current-kill 0 t))
         deleted-line-count)
-    (beginning-of-buffer)
-    (setq deleted-line-count (delete-matching-lines search-term))
-    (message "Removed %s tabs matching %s" deleted-line-count search-term)))
+    (when-let* (((use-region-p))
+                (region (buffer-substring start end)))
+      ;; use region as search-term if active
+      (setq search-term region))
+    (save-excursion
+      (beginning-of-buffer)
+      (setq deleted-line-count (delete-matching-lines search-term))
+      (message "Removed %s tabs matching %s" deleted-line-count search-term))))
 
 (defun my-tabs-move-tab-to-dump-moi ()
   (interactive)
