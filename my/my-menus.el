@@ -15,12 +15,12 @@
     (lambda ()
       (interactive)
       (find-file (expand-file-name "init.org" user-emacs-directory))))
-   ("p" "packages"
+   ("s" "system"
     (lambda ()
       (interactive)
-      (find-file
-       (expand-file-name "system/nix-config/hm/pkgs.nix"
-                         (substitute-env-vars "$DOT")))))
+      (let ((default-directory
+             (f-expand "system/" (substitute-env-vars "$DOT"))))
+        (consult-project-extra-find))))
 
    ("d" "dotfiles"
     (lambda ()
