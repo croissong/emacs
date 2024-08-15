@@ -578,6 +578,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 ;;   :hook (org-mode . reveal-mode)
 ;;     :blackout reveal-mode)
 (use-package org
+  :demand t
   :mode ("\\.org\\'" . org-mode)
   :config
   (org-babel-do-load-languages
@@ -705,6 +706,7 @@ https://orgmode.org/manual/Org-Crypt.html
 ** notes
 #+begin_src elisp
 (use-package denote
+  :demand t
   :init
   (setq my/denote-directory-moi "~/dot/notes/moi"
         my/denote-directory-wrk "~/dot/notes/wrk")
