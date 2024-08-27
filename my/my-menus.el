@@ -18,14 +18,14 @@
    ("s" "system"
     (lambda ()
       (interactive)
-      (let ((default-directory
+      (let ((project-current-directory-override
              (f-expand "system/" (substitute-env-vars "$DOT"))))
         (consult-project-extra-find))))
 
    ("d" "dotfiles"
     (lambda ()
       (interactive)
-      (let ((default-directory
+      (let ((project-current-directory-override
              (f-expand "dotfiles/" (substitute-env-vars "$DOT"))))
         (consult-project-extra-find))))
    ("j" "justfile"
@@ -55,7 +55,8 @@
    ("i" "priv"
     (lambda ()
       (interactive)
-      (let ((default-directory (f-expand "priv/" (substitute-env-vars "$DOT"))))
+      (let ((project-current-directory-override
+             (f-expand "priv/" (substitute-env-vars "$DOT"))))
         (consult-project-extra-find))))]])
 
 
