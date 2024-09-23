@@ -14,10 +14,6 @@
 
 (defcustom my-tabs-cleanup-list-file "~/dot/priv/tabs-cleanup-list.txt"
   "")
-(defcustom my-tabs-dump-file-moi "~/dot/tabs/dump.org"
-  "")
-(defcustom my-tabs-dump-file-wrk "~/dot/tabs/dump-wrk.org"
-  "")
 
 
 (transient-define-prefix
@@ -29,6 +25,7 @@
    ("d" "delete matching" my-tabs-delete-matching)]
 
   ["mv"
+   ("i" "inbox" my-tabs--inbox-selected-tab)
    ("m" "moi" my-tabs-move-tab-to-dump-moi)
    ("w" "wrk" my-tabs-move-tab-to-dump-wrk)]])
 
@@ -80,12 +77,29 @@
     (message "Cleaned up %s tabs" (- line-count new-line-count)))
   (goto-char (point-min)))
 
+(defun my-tabs-inbox-active-tab ()
+  (interactive)
+  (let* ((active-tab (my-tabs--get-active-tab))
+         (active-tab-url (plist-get active-tab :url)))
+    (kill-new active-tab-url)
+    (message "Capturing url %s" active-tab-url)
+    (org-capture nil "i")
+    (my-tabs--close-tab active-tab)))
+
+
+(defun my-tabs--inbox-selected-tab ()
+  (interactive)
+  (let* ((tab (my-tabs--get-selected-tab))
+         (tab-url (plist-get tab :url)))
+    (kill-new tab-url)
+    (message "Capturing url %s" tab-url)
+    (kill-whole-line)
+    (org-capture nil "i")))
+
 (defun my-tabs-activate-tab ()
   (interactive)
-  (let* ((line
-          (buffer-substring-no-properties
-           (line-beginning-position) (line-end-position)))
-         (id (plist-get (my-tabs--parse-line line) :id)))
+  (let* ((tab (my-tabs--get-selected-tab))
+         (id (plist-get tab :id)))
     (my-tabs--brotab-command (format "activate %s" id))))
 
 (defun my-tabs-delete-matching (start end)
@@ -101,27 +115,6 @@
       (beginning-of-buffer)
       (setq deleted-line-count (delete-matching-lines search-term))
       (message "Removed %s tabs matching %s" deleted-line-count search-term))))
-
-(defun my-tabs-move-tab-to-dump-moi ()
-  (interactive)
-  (my-tabs--move-tab-to-dump my-tabs-dump-file-moi))
-
-(defun my-tabs-move-tab-to-dump-wrk ()
-  (interactive)
-  (my-tabs--move-tab-to-dump my-tabs-dump-file-wrk))
-
-(defun my-tabs--move-tab-to-dump (dump-file)
-  (let* ((line
-          (buffer-substring-no-properties
-           (line-beginning-position) (line-end-position)))
-         (parts (split-string line "\t" t))
-         (title (nth 1 parts))
-         (url (nth 2 parts)))
-    (with-current-buffer (find-file-noselect dump-file)
-      (my-tabs--insert-dump-line title url)
-      (display-buffer (current-buffer)
-                      '(display-buffer-in-direction . '(direction . right))))
-    (delete-line)))
 
 (defun my-tabs--insert-dump-line (title url)
   "Insert TITLE and URL into DUMP-FILE if URL does not already exist."
@@ -146,8 +139,26 @@
   (let ((parts (split-string line "\t" t)))
     (list :id (nth 0 parts) :title (nth 1 parts) :url (nth 2 parts))))
 
-(defun my-tabs--brotab-command (command)
-  (async-shell-command (format "brotab %s" command)))
+(defun my-tabs--get-active-tab ()
+  (let* ((active-tab-line (my-tabs--brotab-command "query +active" t))
+         (active-tab (my-tabs--parse-line active-tab-line)))
+    (message "%s" active-tab-line)
+    active-tab))
+
+(defun my-tabs--get-selected-tab ()
+  (let ((line
+         (buffer-substring-no-properties
+          (line-beginning-position) (line-end-position))))
+    (my-tabs--parse-line line)))
+
+(defun my-tabs--close-tab (tab)
+  (my-tabs--brotab-command (format "close %s" (plist-get tab :id)) t))
+
+(defun my-tabs--brotab-command (command &optional sync)
+  (let ((brotab-cmd (format "brotab %s" command)))
+    (if sync
+        (string-trim (shell-command-to-string brotab-cmd))
+      (async-shell-command brotab-cmd))))
 
 (provide 'my-tabs)
 
