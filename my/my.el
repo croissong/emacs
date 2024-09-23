@@ -13,8 +13,7 @@
     path))
 
 (defmacro my-with-eval-after-frame (&rest body)
-  `(if
-       (daemonp)
+  `(if (daemonp)
        (add-hook
         'after-make-frame-functions
         (function
@@ -23,7 +22,7 @@
            ,@body)))
      ,@body))
 
-(defun my-capitalize-previous-word()
+(defun my-capitalize-previous-word ()
   (interactive)
   (capitalize-word -1))
 
@@ -34,17 +33,12 @@
 
 (defun my-base64-encode-region-no-break ()
   (interactive)
-  (base64-encode-region
-   (mark)
-   (point)
-   t))
+  (base64-encode-region (mark) (point) t))
 
 (defun my-remove-newlines-in-region ()
   (interactive)
   (save-restriction
-    (narrow-to-region
-     (point)
-     (mark))
+    (narrow-to-region (point) (mark))
     (goto-char (point-min))
     (while (search-forward "\n" nil t)
       (replace-match "" nil t))))
@@ -57,8 +51,7 @@
       (goto-char start))
     (beginning-of-line)
     (set-mark (point))
-    (call-interactively
-     'indent-rigidly)))
+    (call-interactively 'indent-rigidly)))
 
 
 (defun my-discard-buffer-action (buf)
@@ -71,7 +64,8 @@
 (define-minor-mode babel-tangle-mode
   "Tangle after save"
   :global nil
-  :lighter " tangle"
+  :lighter
+  " tangle"
   (if babel-tangle-mode
       (add-hook 'after-save-hook 'org-babel-tangle nil 'local)
     (remove-hook 'after-save-hook 'org-babel-tangle 'local)))
@@ -80,13 +74,15 @@
 (defun my-url-get-title (url &optional _descr)
   "Takes a URL and returns the value of the <title> HTML tag"
   (let (result)
-    (request url
-      :parser (lambda () (libxml-parse-html-region (point) (point-max)))
-      :sync t
-      :success (cl-function
-                (lambda (&key data &allow-other-keys)
-                  (let ((title-elem (dom-by-tag data 'title)))
-                    (setq result (dom-text title-elem))))))
+    (request
+     url
+     :parser (lambda () (libxml-parse-html-region (point) (point-max)))
+     :sync t
+     :success
+     (cl-function
+      (lambda (&key data &allow-other-keys)
+        (let ((title-elem (dom-by-tag data 'title)))
+          (setq result (dom-text title-elem))))))
     result))
 
 
@@ -104,16 +100,15 @@
     (with-temp-message (or (current-message) "")
       (apply fun args))))
 
-(defun my-disable-newlines-eof()
+(defun my-disable-newlines-eof ()
   (interactive)
   (setq-local require-final-newline nil))
 
 (defun my-tmp-from-clipboard ()
   (interactive)
-  (let*
-      ((ext (read-string "" ".json"))
-       (clipboard (car kill-ring))
-       (tmpfile (make-temp-file "scratch" nil ext clipboard)))
+  (let* ((ext (read-string "" ".json"))
+         (clipboard (car kill-ring))
+         (tmpfile (make-temp-file "scratch" nil ext clipboard)))
     (message clipboard)
     (find-file tmpfile)))
 
