@@ -99,7 +99,12 @@
 
 ;; https://github.com/progfolio/elpaca/issues/222#issuecomment-1872596777
 ;; https://github.com/NixOS/nixpkgs/issues/267548
-(setq elpaca-core-date '(20231211))
+(defun my/get-emacs-build-date ()
+  "Return NixOS Emacs build date."
+  (string-match "--prefix.*emacs.*\\([[:digit:]]\\{8\\}\\)" system-configuration-options)
+  (string-to-number (match-string 1 system-configuration-options)))
+
+(setq elpaca-core-date (list (my/get-emacs-build-date)))
 
 ;; installer
 (defvar elpaca-installer-version 0.7)
