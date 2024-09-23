@@ -212,6 +212,13 @@
   (org-make-link-description-function 'my-url-get-title)
   :demand t)
 
+
+(use-package my-priv
+  :after (org-capture)
+  :load-path "/home/moi/dot/priv/emacs/"
+  :ensure nil
+  :demand t)
+
 ;; Required to get e.g. wl-clipboard, browse-url wayland connection working on system start (without having to restart the daemon)
 ;; Used in conjunction with 'systemctl --user import-environment WAYLAND_DISPLAY DISPLAY' in the sway config
 (use-package exec-path-from-shell
@@ -611,8 +618,6 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 
   :custom
   (org-directory "~/dot/notes/org")
-  (org-capture-templates '(("a" "Brain" plain (function org-brain-goto-end)
-                            "* %i%?" :empty-lines 1)))
   (org-cycle-separator-lines 1)
   (org-return-follows-link nil)
   (org-support-shift-select t)
