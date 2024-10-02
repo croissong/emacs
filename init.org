@@ -219,6 +219,16 @@
                     "discard this buffer"))
   :custom
   (org-make-link-description-function 'my-url-get-title)
+  :bind*
+  ("C-M-\\" . my-tabs)
+  ("C-\\" . my-tabs-inbox-active-tab)
+
+  ("C-M-f" . my-menus-code)
+  ("M-c" . my-menus-consult)
+  ("C-x f" . my-menus-files)
+
+  ("C-<tab>" . my-indent-rigidly)
+
   :demand t)
 
 
@@ -386,18 +396,12 @@
   "C-x ^" nil
   "C-x d" nil
 
-  "C-<tab>" 'my-indent-rigidly
-
   "C-M-k" 'kill-current-buffer
   "M-r" 'revert-buffer
 
   "<f5>" 'profiler-start
   "<f6>" 'profiler-stop
 
-  "C-M-f" 'my-menus-code
-  "M-c" 'my-menus-consult
-  "C-x f" 'my-menus-files
-  "C-M-\\" 'my-tabs
   "M-e" 'eldoc-print-current-symbol-info
   )
 

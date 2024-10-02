@@ -3,18 +3,24 @@
 (require 'transient)
 
 (defvar-keymap my-tabs-mode-map
-  "C-M-e"
-  #'my-tabs-menu)
+  "e"
+  #'my-tabs-menu
+  "a"
+  #'my-tabs-activate-tab
+  "d"
+  #'my-tabs-delete-matching)
 
 (define-minor-mode my-tabs-mode
   "Toggle `my-tabs-mode`."
-  :keymap my-tabs-mode-map
-
+  :keymap
+  my-tabs-mode-map
   (my-tabs-menu))
 
 (defcustom my-tabs-cleanup-list-file "~/dot/priv/tabs-cleanup-list.txt"
   "")
 
+(defcustom my-tabs-notes-dir "~/dot/notes/"
+  "")
 
 (transient-define-prefix
  my-tabs-menu ()
@@ -24,10 +30,7 @@
    ("a" "activate" my-tabs-activate-tab :transient t)
    ("d" "delete matching" my-tabs-delete-matching)]
 
-  ["mv"
-   ("i" "inbox" my-tabs--inbox-selected-tab)
-   ("m" "moi" my-tabs-move-tab-to-dump-moi)
-   ("w" "wrk" my-tabs-move-tab-to-dump-wrk)]])
+  ["mv" ("i" "inbox" my-tabs--inbox-selected-tab)]])
 
 (defun my-tabs ()
   (interactive)
@@ -84,7 +87,8 @@
     (kill-new active-tab-url)
     (message "Capturing url %s" active-tab-url)
     (org-capture nil "i")
-    (my-tabs--close-tab active-tab)))
+    (my-tabs--close-tab active-tab)
+    (magit-status my-tabs-notes-dir)))
 
 
 (defun my-tabs--inbox-selected-tab ()
