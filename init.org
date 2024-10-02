@@ -24,6 +24,10 @@
       redisplay-skip-fontification-on-input t
       command-line-ns-option-alist nil
       ad-redefinition-action 'accept
+
+      ;; https://stackoverflow.com/a/78990740/6548797
+      yank-excluded-properties t
+
       debug-on-error init-file-debug
       jka-compr-verbose init-file-debug
 
