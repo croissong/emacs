@@ -206,7 +206,8 @@
 
 
 ;; install latest transient before my-menus
-(use-package transient)
+(use-package transient
+  :config (transient-bind-q-to-quit))
 
 
 (use-package my
@@ -223,9 +224,9 @@
   ("C-M-\\" . my-tabs)
   ("C-\\" . my-tabs-inbox-active-tab)
 
-  ("C-M-f" . my-menus-code)
+  ("C-f" . my-menus-code)
+  ("C-M-f" . my-menus-files)
   ("M-c" . my-menus-consult)
-  ("C-x f" . my-menus-files)
 
   ("C-<tab>" . my-indent-rigidly)
 

@@ -102,15 +102,33 @@
 
    ("3" "copy" write-file)
 
-   ("a" "path"
-    (lambda (absolute-p)
-      (interactive "P")
-      (my-snippets-copy-buffer-path absolute-p)))]
+   ("p" "path" my-menus--code-path)]
 
   ["misc"
 
    ("+" "zoom" text-scale-adjust)]])
 
+(transient-define-prefix
+ my-menus--code-path ()
+ ["path"
+  ("f" "file" my-menus--copy-file-path)
+  ("d" "dir" my-menus--copy-file-dir)]
+ ["args" ("a" "absolute" "abs")])
+
+
+(defun my-menus--copy-file-path ()
+  (interactive)
+  (let ((absolute
+         (transient-arg-value
+          "abs" (transient-args transient-current-command))))
+    (my-snippets-copy-buffer-path absolute)))
+
+(defun my-menus--copy-file-dir ()
+  (interactive)
+  (let ((absolute
+         (transient-arg-value
+          "abs" (transient-args transient-current-command))))
+    (my-snippets-copy-buffer-dir absolute)))
 
 (defun my-menus--latest-file (path &optional match)
   "Get latest file (including directory) in PATH."
