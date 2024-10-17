@@ -855,7 +855,7 @@ https://orgmode.org/manual/Org-Crypt.html
   :init (apheleia-global-mode +1)
   :config
   ;; add additional formatters
-  (push '(treefmt . ("treefmt" "-v" "--allow-missing-formatter" "--config-file" (expand-file-name "~/.config/treefmt/treefmt.toml") "--stdin" filepath)) apheleia-formatters)
+  (push '(treefmt . ("treefmt" "-v" "--stdin" file)) apheleia-formatters)
   (push '(elisp-autofmt . apheleia-elisp-autofmt-buffer) apheleia-formatters)
 
   ;; overwrite mode formatters
