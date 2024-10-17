@@ -799,6 +799,7 @@ https://orgmode.org/manual/Org-Crypt.html
   (setq midnight-period (* 60 60 3)) ;; 3h
   (advice-add 'clean-buffer-list :around 'suppress-message-advice-around)
   (midnight-delay-set 'midnight-delay (ts-format "%I:%M%p" (ts-adjust 'minute 5 (ts-now))))
+  (midnight-mode)
   :custom
   ;; https://www.emacswiki.org/emacs/CleanBufferList
   (clean-buffer-list-delay-special (* 60 60 2)) ;; 2h
