@@ -590,6 +590,11 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 (add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 #+end_src
 
+* inbox
+#+begin_src elisp
+
+#+end_src
+
 * general-purpose
 ** org-mode
 #+begin_src elisp
