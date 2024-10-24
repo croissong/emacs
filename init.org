@@ -454,6 +454,10 @@
   (prog-mode . yas-minor-mode)
   :blackout yas-minor-mode
   )
+
+(use-package yank-indent
+  :ensure (:host github :repo "jimeh/yank-indent")
+  :config (global-yank-indent-mode t))
 #+end_src
 
 ** modeline
