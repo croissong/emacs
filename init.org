@@ -858,6 +858,9 @@ https://orgmode.org/manual/Org-Crypt.html
 ;; Unified approach inc: https://github.com/purcell/reformatter.el/pull/24
 (use-package apheleia
   :init (apheleia-global-mode +1)
+  :custom
+  ;; rm prettier tab width override (adhere to .prettierrc instead)
+  (apheleia-formatters-respect-indent-level nil)
   :config
   ;; add additional formatters
   (push '(treefmt . ("treefmt" "-v" "--stdin" file)) apheleia-formatters)
@@ -870,13 +873,7 @@ https://orgmode.org/manual/Org-Crypt.html
   (setf (alist-get 'go-ts-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'terraform-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'rustic-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'web-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'html-ts-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'typescript-ts-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'tsx-ts-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'js-ts-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'css-ts-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'scss-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'slint-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'toml-ts-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'nim-mode apheleia-mode-alist) 'treefmt)
