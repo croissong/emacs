@@ -8,7 +8,9 @@
   "a"
   #'my-tabs-activate-tab
   "d"
-  #'my-tabs-delete-matching)
+  #'my-tabs-delete-matching
+  "i"
+  #'my-tabs-inbox-selected-tab)
 
 (define-minor-mode my-tabs-mode
   "Toggle `my-tabs-mode`."
@@ -30,7 +32,7 @@
    ("a" "activate" my-tabs-activate-tab :transient t)
    ("d" "delete matching" my-tabs-delete-matching)]
 
-  ["mv" ("i" "inbox" my-tabs--inbox-selected-tab)]])
+  ["mv" ("i" "inbox" my-tabs-inbox-selected-tab)]])
 
 (defun my-tabs ()
   (interactive)
@@ -91,7 +93,7 @@
     (magit-status my-tabs-notes-dir)))
 
 
-(defun my-tabs--inbox-selected-tab ()
+(defun my-tabs-inbox-selected-tab ()
   (interactive)
   (let* ((tab (my-tabs--get-selected-tab))
          (tab-url (plist-get tab :url)))
