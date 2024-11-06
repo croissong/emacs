@@ -1587,8 +1587,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
     :mode ("\\.http\\'" . restclient-mode)
     :commands restclient-mode)
 
-(use-package ledger-mode
-    :mode "\\.ledger\\'")
+(use-package hledger-mode
+    :mode "\\.hledger\\'")
 
 (use-package google-translate)
 (use-package google-translate-smooth-ui
