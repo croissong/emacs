@@ -669,7 +669,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 
   (org-insert-heading-respect-content t)
 
-  (org-startup-folded t)
+  (org-startup-folded 'showlevel2)
 
   (org-priority-lowest 70)
   )
