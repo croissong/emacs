@@ -920,7 +920,7 @@ https://orgmode.org/manual/Org-Crypt.html
 (use-package jinx ;; spell checking
   :ensure nil ;; built by nix
   :hook (text-mode conf-mode)
-  :custom (jinx-languages "en_US")
+  :custom (jinx-languages "en_US de_DE" )
   :blackout)
 #+end_src
 
