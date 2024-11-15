@@ -1688,6 +1688,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (olivetti-body-width 125)
   :blackout olivetti-mode)
 
+(use-package writeroom-mode
+  :commands writeroom-mode)
 
 ;; https://stackoverflow.com/questions/27845980/how-do-i-remove-newline-symbols-inside-emacs-vertical-border
 (setf (cdr (assq 'continuation fringe-indicator-alist))
