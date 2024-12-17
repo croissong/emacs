@@ -52,7 +52,7 @@
                                                 (substitute-env-vars "$DOT"))
                               "klg"))))
 
-   ("i" "priv"
+   ("p" "priv"
     (lambda ()
       (interactive)
       (let ((project-current-directory-override
