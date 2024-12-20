@@ -610,6 +610,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
 (use-package org
   :demand t
   :mode ("\\.org\\'" . org-mode)
+  :hook (org-mode . visual-line-mode)
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages
