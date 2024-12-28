@@ -703,6 +703,12 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
               (("M-l" . org-web-tools-insert-link-for-url)))
   )
 
+(use-package org-menu
+  :ensure (:host github :repo "sheijk/org-menu")
+  :after org
+  :bind (:map org-mode-map
+              (("C-c m" . org-menu)))
+  )
 #+end_src
 
 *** org-crypt
@@ -1129,6 +1135,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 *** project
 #+begin_src elisp
 (setq project-vc-merge-submodules nil)
+
+(use-package disproject
+  :bind (:map ctl-x-map
+          ("p" . disproject-dispatch)))
 #+end_src
 
 *** which-key
