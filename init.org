@@ -874,17 +874,18 @@ https://orgmode.org/manual/Org-Crypt.html
   (push '(elisp-autofmt . apheleia-elisp-autofmt-buffer) apheleia-formatters)
 
   ;; overwrite mode formatters
-  (setf (alist-get 'nix-ts-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'sh-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'bash-ts-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'go-ts-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'terraform-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'rustic-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'lua-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'slint-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'toml-ts-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'nim-mode apheleia-mode-alist) 'treefmt)
-  (setf (alist-get 'cue-mode apheleia-mode-alist) 'treefmt)
+  (dolist (mode '( nix-ts-mode
+                   sh-mode
+                   bash-ts-mode
+                   go-ts-mode
+                   terraform-mode
+                   rustic-mode
+                   lua-mode
+                   slint-mode
+                   toml-ts-mode
+                   nim-mode
+                   cue-mode))
+    (setf (alist-get mode apheleia-mode-alist) 'treefmt))
 
   ;; add mode formatters
   (push '(nxml-mode . treefmt) apheleia-mode-alist)
@@ -897,11 +898,11 @@ https://orgmode.org/manual/Org-Crypt.html
   (setf apheleia-mode-alist (assoc-delete-all 'yaml-mode apheleia-mode-alist))
 
   (cl-defun apheleia-elisp-autofmt-buffer
-        (&key buffer scratch callback &allow-other-keys)
-      "Copy BUFFER to SCRATCH, then format scratch, then call CALLBACK."
-      (with-current-buffer scratch
-        (elisp-autofmt-buffer)
-        (funcall callback)))
+      (&key buffer scratch callback &allow-other-keys)
+    "Copy BUFFER to SCRATCH, then format scratch, then call CALLBACK."
+    (with-current-buffer scratch
+      (elisp-autofmt-buffer)
+      (funcall callback)))
   :blackout)
 #+end_src
 
