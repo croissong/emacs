@@ -884,6 +884,7 @@ https://orgmode.org/manual/Org-Crypt.html
   (setf (alist-get 'slint-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'toml-ts-mode apheleia-mode-alist) 'treefmt)
   (setf (alist-get 'nim-mode apheleia-mode-alist) 'treefmt)
+  (setf (alist-get 'cue-mode apheleia-mode-alist) 'treefmt)
 
   ;; add mode formatters
   (push '(nxml-mode . treefmt) apheleia-mode-alist)
@@ -1293,6 +1294,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 (use-package flycheck-irony
   :hook (flycheck-mode . flycheck-irony-setup))
+#+end_src
+
+** cue
+#+begin_src elisp
+(use-package cue-mode
+  :mode "\\.cue\\'")
 #+end_src
 
 ** docs
