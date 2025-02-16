@@ -28,6 +28,9 @@
       ;; https://stackoverflow.com/a/78990740/6548797
       yank-excluded-properties t
 
+      default-buffer-file-coding-system 'utf-8-unix
+
+      
       debug-on-error init-file-debug
       jka-compr-verbose init-file-debug
 
