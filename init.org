@@ -460,6 +460,9 @@
   (prog-mode . yas-minor-mode)
   :blackout yas-minor-mode
   )
+
+(use-package speedrect
+  :config (speedrect-mode))
 #+end_src
 
 ** modeline
