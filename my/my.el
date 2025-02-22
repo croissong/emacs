@@ -112,6 +112,19 @@
     (message clipboard)
     (find-file tmpfile)))
 
+(defun my-magit-apply-patch-from-clipboard ()
+  "Apply a patch from the system clipboard using magit.
+The patch should be in the clipboard/kill-ring."
+  (interactive)
+  (let ((patch-content (current-kill 0 t)))
+    (with-temp-buffer
+      (insert patch-content)
+      (let ((temp-file (make-temp-file "magit-patch-")))
+        (unwind-protect
+            (progn
+              (write-region (point-min) (point-max) temp-file)
+              (magit-patch-apply temp-file))
+          (delete-file temp-file))))))
 
 (provide 'my)
 ;;; my.el ends here
