@@ -999,12 +999,16 @@ https://orgmode.org/manual/Org-Crypt.html
   :init
   (savehist-mode))
 
-(use-package orderless
+(use-package orderless)
+
+(use-package fussy
+  :config
+  (fussy-setup)
+  (fussy-eglot-setup)
+
   :custom
-  ;; from https://github.com/minad/vertico?tab=readme-ov-file#configuration
-  (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion)))))
+    (fussy-filter-fn 'fussy-filter-orderless-flex)
+  )
 
 ;; https ://www.reddit.com/r/emacs/comments/krptmz/emacs_completion_framework_embark_consult/
 (use-package consult
