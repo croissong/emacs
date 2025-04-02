@@ -1569,9 +1569,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 (use-package html-ts-mode
   :ensure nil
   :mode ("\\.html?\\'")
-  :custom
+  :config
   ;; https://emacs.stackexchange.com/questions/33240/html-mode-that-closes-tags
-  (sgml-quick-keys 'close)
+  (setq sgml-quick-keys 'close)
   )
 
 (use-package typescript-ts-mode
