@@ -545,21 +545,21 @@
   :commands edit-indirect-region)
 
 
-(use-package activities
+(use-package eyebrowse
   :init
-  (activities-mode)
-  (activities-tabs-mode)
-
-  :bind (("M-1" . activities-new)
-         ("M-2" . activities-resume)
-         ("M-3" . activities-suspend)
-         ("M-4" . activities-discard))
-
+  (eyebrowse-mode t)
   :custom
-  (tab-bar-show 1)
-  (tab-bar-new-button-show nil)
-  (tab-bar-close-button-show nil)
-  )
+  (eyebrowse-new-workspace t)
+    :bind (("M-1" . eyebrowse-switch-to-window-config-1)
+         ("M-2" . eyebrowse-switch-to-window-config-2)
+         ("M-3" . eyebrowse-switch-to-window-config-3)
+         ("M-4" . eyebrowse-switch-to-window-config-4))
+)
+
+(use-package zoom
+  :init
+  (zoom-mode t)
+  :custom (zoom-size '(0.618 . 0.618)))
 #+end_src
 
 ** secrets
