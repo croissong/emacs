@@ -1313,6 +1313,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :mode "\\.cue\\'")
 #+end_src
 
+** dart
+#+begin_src elisp
+(use-package dart-mode
+    :mode ("\\.dart\\'"))
+#+end_src
+
 ** docs
 #+begin_src elisp
 (use-package pdf-tools
