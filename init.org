@@ -989,22 +989,20 @@ https://orgmode.org/manual/Org-Crypt.html
                ("M-<left>" . vertico-directory-delete-word)))
   )
 
-(use-package savehist
-  :ensure nil
-  :init
-  (savehist-mode))
 
-(use-package orderless)
-
-(use-package fussy
-  :config
-  (fussy-setup)
-  (fussy-eglot-setup)
+(use-package vertico-prescient
+  :init 
+  (vertico-prescient-mode 1)
+  (prescient-persist-mode 1)
 
   :custom
-    (fussy-filter-fn 'fussy-filter-orderless-flex)
+  (prescient-filter-method '(literal initialism prefix regexp))
+  (prescient-use-char-folding t)
+  (prescient-use-case-folding 'smart)
+  (prescient-sort-full-matches-first t)
+  (prescient-sort-length-enable t)
   )
-
+ 
 ;; https ://www.reddit.com/r/emacs/comments/krptmz/emacs_completion_framework_embark_consult/
 (use-package consult
   :after consult-project-extra
