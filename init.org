@@ -540,16 +540,18 @@
   (eyebrowse-mode t)
   :custom
   (eyebrowse-new-workspace t)
-    :bind (("M-1" . eyebrowse-switch-to-window-config-1)
-         ("M-2" . eyebrowse-switch-to-window-config-2)
-         ("M-3" . eyebrowse-switch-to-window-config-3)
-         ("M-4" . eyebrowse-switch-to-window-config-4))
-)
+  :bind* (("M-1" . eyebrowse-switch-to-window-config-1)
+          ("M-2" . eyebrowse-switch-to-window-config-2)
+          ("M-3" . eyebrowse-switch-to-window-config-3)
+          ("M-4" . eyebrowse-switch-to-window-config-4))
+  )
 
 (use-package zoom
-  :init
-  (zoom-mode t)
-  :custom (zoom-size '(0.618 . 0.618)))
+  :bind*
+  ("C-`" . zoom)
+  :custom
+  (zoom-size '(0.618 . 0.618))
+  )
 #+end_src
 
 ** secrets
@@ -754,7 +756,7 @@ https://orgmode.org/manual/Org-Crypt.html
 
 (use-package consult-notes
   :after denote
-  :bind
+  :bind*
   ("C-<home>" . consult-notes)
   ("C-S-<home>" . (lambda () (interactive) (let ((denote-directory my/denote-directory-wrk)) (consult-notes))))
   ("M-<home>" . consult-notes-search-in-all-notes)
