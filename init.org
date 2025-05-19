@@ -1374,8 +1374,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package java-mode
   :ensure nil
-  ;; :hook (java-mode . eglot-ensure)
   :mode ("\\.java\\'" . java-ts-mode)
+  :hook (java-ts-mode . eglot-ensure)
   )
 #+end_src
 
