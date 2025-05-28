@@ -531,7 +531,7 @@
 (use-package mosey)
 
 (use-package edit-indirect
-  :ensure (:type git :host github :repo "Fanael/edit-indirect")
+  :ensure (:host github :repo "Fanael/edit-indirect")
   :commands edit-indirect-region)
 
 
@@ -1058,7 +1058,7 @@ https://github.com/bbatsov/crux
 *** rainbow-mode
 #+begin_src elisp
 (use-package colorful-mode
-    :ensure (:type git :host github :repo "DevelopmentCool2449/colorful-mode")
+    :ensure (:host github :repo "DevelopmentCool2449/colorful-mode")
     :hook (css-ts-mode org-mode help-mode)
     :blackout)
 #+end_src
@@ -1450,7 +1450,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** php
 #+begin_src elisp
 (use-package php-ts-mode
-    :ensure (:type git :host github :repo "emacs-php/php-ts-mode")
+    :ensure (:host github :repo "emacs-php/php-ts-mode")
     :mode "\\.php\\'")
 #+end_src
 
