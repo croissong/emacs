@@ -92,7 +92,7 @@
  [["edit"
    ("e" "eldoc-info" eldoc-print-current-symbol-info)
    ("r" "search-replace" isearch-forward-regexp)
-   ("i" "string-inflection-all-cycle" string-inflection-all-cycle)]
+   ("i" "string-inflection-all-cycle" string-inflection-all-cycle :transient t)]
 
   ["file"
 
