@@ -1305,8 +1305,11 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** dart
 #+begin_src elisp
-(use-package dart-mode
-    :mode ("\\.dart\\'"))
+(use-package dart-ts-mode
+    :ensure (:host github :repo "50ways2sayhard/dart-ts-mode")
+    :mode ("\\.dart\\'")
+    :hook (dart-ts-mode . eglot-ensure)
+    )
 #+end_src
 
 ** docs
