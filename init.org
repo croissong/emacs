@@ -342,12 +342,6 @@
   "C-r" 'isearch-query-replace)
 
 (general-def
-  :keymaps 'dired-mode-map :package 'dirvish
-  "M-<return>" 'dirvish-dispatch
-  "M-#" 'dired-find-file
-  )
-
-(general-def
   :keymaps 'override
 
   "C-l" 'goto-line
@@ -1244,24 +1238,32 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   (dired-clean-confirm-killing-deleted-buffers nil)
   ;; todo: not respected?
   (dired-kill-when-opening-new-dired-buffer t)
-  (dired-listing-switches "-aDGhvl --group-directories-first --time-style=long-iso"))
+  (dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group"))
 
 (use-package dirvish
   :demand t
   :custom
   (dirvish-mode-line-height 15)
+  (dirvish-attributes '(file-time file-size collapse))
   :init
-  (dirvish-override-dired-mode))
-
-(use-package dired-x
-  :ensure nil
-  ;; Enable dired-omit-mode by default
-  ;; :hook
-  ;; (dired-mode . dired-omit-mode)
-  :config
-  ;; Make dired-omit-mode hide all "dotfiles"
-  ;; (setq dired-omit-files
-  ;;       (concat dired-omit-files "\\|^\\..*$"))
+  (dirvish-override-dired-mode)
+  :bind
+  (:map dirvish-mode-map
+   (";"   . dired-up-directory)
+   ("?"   . dirvish-dispatch)
+   ("f"   . dirvish-file-info-menu)
+   ("o"   . dirvish-quick-access)
+   ("s"   . dirvish-quicksort)
+   ("r"   . dirvish-history-jump)
+   ("l"   . dirvish-ls-switches-menu)
+   ("*"   . dirvish-mark-menu)
+   ("y"   . dirvish-yank-menu)
+   ("N"   . dirvish-narrow)
+   ("^"   . dirvish-history-last)
+   ("TAB" . dirvish-subtree-toggle)
+   ("M-f" . dirvish-history-go-forward)
+   ("M-b" . dirvish-history-go-backward)
+   ("M-e" . dirvish-emerge-menu))
   )
 
 (use-package diredfl
