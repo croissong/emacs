@@ -1011,6 +1011,9 @@ https://orgmode.org/manual/Org-Crypt.html
                             consult--source-file-register
                             consult--source-bookmark))
 
+
+  (xref-show-xrefs-function #'consult-xref)
+  (xref-show-definitions-function #'consult-xref)
   :config
   (consult-customize
    consult--source-bookmark
