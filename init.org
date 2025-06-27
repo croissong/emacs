@@ -678,7 +678,7 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
   :after (org cape))
 
 (use-package my-org
-  :after org
+  :after (org org-capture)
   :load-path "my/org"
   :ensure nil
   )

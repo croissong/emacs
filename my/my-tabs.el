@@ -89,8 +89,7 @@
     (kill-new active-tab-url)
     (message "Capturing url %s" active-tab-url)
     (org-capture nil "i")
-    (my-tabs--close-tab active-tab)
-    (magit-status my-tabs-notes-dir)))
+    (my-tabs--close-tab active-tab)))
 
 
 (defun my-tabs-inbox-selected-tab ()
@@ -107,6 +106,7 @@
   (let* ((tab (my-tabs--get-selected-tab))
          (id (plist-get tab :id)))
     (my-tabs--brotab-command (format "activate %s" id))))
+
 
 (defun my-tabs-delete-matching (start end)
   (interactive "r")
