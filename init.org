@@ -741,11 +741,10 @@ https://orgmode.org/manual/Org-Crypt.html
   (denote-directory my/denote-directory-moi)
   )
 
-(use-package denote-silo-extras
+(use-package denote-silo
   :after denote
-  :ensure nil
   :custom
-  (denote-silo-extras-directories `(,my/denote-directory-wrk))
+  (denote-silo-directories `(,my/denote-directory-wrk))
   )
 
 (use-package consult-notes
