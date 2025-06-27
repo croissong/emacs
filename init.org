@@ -228,7 +228,7 @@
 
 (use-package my-priv
   :after (org-capture)
-  :load-path "/home/moi/dot/priv/emacs/"
+  :load-path "~/dot/priv/emacs/"
   :ensure nil
   :demand t)
 
