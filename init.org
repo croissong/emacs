@@ -1020,6 +1020,9 @@ https://orgmode.org/manual/Org-Crypt.html
   (consult-customize
    consult--source-bookmark
    :hidden t)
+
+  :bind (:map flymake-mode-map
+              (("C-/" . consult-flymake)))
   )
 
 (use-package consult-project-extra)
