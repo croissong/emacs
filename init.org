@@ -1709,33 +1709,16 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 
 * ai
-
 #+begin_src elisp :lexical no
-(use-package aidermacs
-  :ensure (:host github :repo "MatthewZMD/aidermacs" :files ("*.el"))
-  :config
-  (setq aidermacs-default-model "anthropic/claude-3-5-sonnet-20241022"
-        aidermacs-architect-model aidermacs-default-model)
-  (setenv "ANTHROPIC_API_KEY" (my/get-password "tech.claude_console.anthropic.com" "apikey"))
-  :bind*
-  ("C-<prior>" . aidermacs-transient-menu)
-  ; See the Configuration section below
-  (setq aidermacs-use-architect-mode t)
-
-
-(use-package org-ai
-  :after org)
-
 (use-package gptel
-  ;; :bind* (("C-<prior>" . gptel))
+  :bind* (("C-<prior>" . gptel))
   :commands gptel
   :custom
-  (gptel-model 'claude-3-sonnet-20240229)
+  (gptel-model 'claude-sonnet-4-20250514)
   :config
   (setq gptel-backend (gptel-make-anthropic "Claude"
                    :stream t :key (my/get-password "tech.claude_console.anthropic.com" "apikey")))
   )
-
 #+end_src
 
 * ui
