@@ -274,8 +274,6 @@
   ;; not global because conflict with org-mode new heading
   "C-<return>" 'crux-smart-open-line
   "M-<return>" 'crux-smart-open-line-above
-
-  "C-/" 'flymake-goto-next-error
   )
 
 (general-def
