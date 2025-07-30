@@ -1613,6 +1613,17 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   )
 #+end_src
 
+
+** toml
+#+begin_src elisp
+;; also open toml.tmpl files in toml mode 
+(use-package toml-ts-mode
+  :ensure nil
+  :mode "\\.toml"
+  )
+#+end_src
+
+
 ** hurl
 #+begin_src elisp
 (use-package hurl-mode
