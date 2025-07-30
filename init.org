@@ -1597,6 +1597,12 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :mode ("\\.tsx\\'" . jtsx-tsx-mode)
   :hook (jtsx-tsx-mode  . eglot-ensure)
   )
+
+;; (use-package flymake-jsts 
+;;   :ensure (:host github :repo "orzechowskid/flymake-jsts")
+;;   :hook (jtsx-tsx-mode  . flymake-eslint-enable))
+(use-package flymake-eslint
+  :hook (jtsx-tsx-mode  . flymake-eslint-enable))
 #+end_src
 
 ** yaml
