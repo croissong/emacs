@@ -1635,7 +1635,14 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package hurl-mode
   :ensure (:host github :repo "jaszhe/hurl-mode")
-    :mode "\\.hurl\\'")
+  :mode "\\.hurl\\'")
+#+end_src
+
+
+** jinja
+#+begin_src elisp
+(use-package jinja2-mode
+  :mode "\\.j2\\'")
 #+end_src
 
 * tools
