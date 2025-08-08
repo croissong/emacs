@@ -8,7 +8,7 @@
   "a"
   #'my-tabs-activate-tab
   "d"
-  #'my-tabs-delete-matching
+  #'my-tabs-delete-tab
   "i"
   #'my-tabs-inbox-selected-tab)
 
@@ -30,7 +30,7 @@
 
   ["tab"
    ("a" "activate" my-tabs-activate-tab :transient t)
-   ("d" "delete matching" my-tabs-delete-matching)]
+   ("d" "delete matching" my-tabs-delete-tab)]
 
   ["mv" ("i" "inbox" my-tabs-inbox-selected-tab)]])
 
@@ -108,19 +108,40 @@
     (my-tabs--brotab-command (format "activate %s" id))))
 
 
-(defun my-tabs-delete-matching (start end)
+(defun my-tabs-delete-tab (start end)
   (interactive "r")
   (let ((search-upper-case nil)
         (search-term (current-kill 0 t))
-        deleted-line-count)
-    (when-let* (((use-region-p))
-                (region (buffer-substring start end)))
-      ;; use region as search-term if active
-      (setq search-term region))
-    (save-excursion
-      (beginning-of-buffer)
-      (setq deleted-line-count (delete-matching-lines search-term))
-      (message "Removed %s tabs matching %s" deleted-line-count search-term))))
+        deleted-urls)
+    (if-let ((region (and (use-region-p) (buffer-substring start end))))
+      ;; region is selected - delete matching
+      (save-excursion
+        (beginning-of-buffer)
+        (kill-matching-lines region)
+        ;; Parse URLs from killed lines
+        (let ((killed-lines (split-string (current-kill 0) "\n" t)))
+          (dolist (line killed-lines)
+            (let* ((tab (my-tabs--parse-line line))
+                   (url (plist-get tab :url)))
+              (when url
+                (push url deleted-urls))))))
+
+      ;; no region selected - delete current line
+      (let* ((line
+              (buffer-substring-no-properties
+               (line-beginning-position) (line-end-position)))
+             (tab (my-tabs--parse-line line))
+             (url (plist-get tab :url)))
+        (when url
+          (push url deleted-urls))
+        (kill-whole-line)))
+
+
+    ;; log the deleted URLs
+    (when deleted-urls
+      (message "Closed %s tabs: %s"
+               (length deleted-urls)
+               (mapconcat 'identity (reverse deleted-urls) "\n")))))
 
 (defun my-tabs--insert-dump-line (title url)
   "Insert TITLE and URL into DUMP-FILE if URL does not already exist."
