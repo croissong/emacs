@@ -693,6 +693,11 @@ http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
               (("M-l" . org-web-tools-insert-link-for-url)))
   )
 
+(use-package org-download
+  :custom
+  (org-download-method 'attach)
+  :after org)
+
 (use-package org-menu
   :ensure (:host github :repo "sheijk/org-menu")
   :after org
@@ -1696,11 +1701,6 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   :commands insert-shebang
   :custom
   (insert-shebang-track-ignored-filename nil))
-
-(use-package org-download
-  :custom
-  (org-download-method 'attach)
-  :after org)
 
 (use-package string-inflection
   :commands (string-inflection-all-cycle))
