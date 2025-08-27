@@ -280,7 +280,6 @@
   "C-z" 'yank
   "M-;" 'comment-line
 
-  "C-M-`" 'quoted-insert
 
   "M-y" 'consult-yank-pop
   "C-M-s" 'consult-ripgrep
@@ -305,6 +304,10 @@
   "a" 'org-agenda
   "b" 'org-iswitchb
   "c" 'org-capture)
+
+(general-def
+  :keymaps 'minibuffer-mode-map
+  "M-RET" 'quoted-insert)
 
 (general-def
   :keymaps 'org-mode-map :package 'org
