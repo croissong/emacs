@@ -1607,7 +1607,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
   )
 
 (use-package flymake-jsts
-  :ensure (:host github :repo "orzechowskid/flymake-jsts"))
+  :ensure (:host github :repo "orzechowskid/flymake-jsts")
+  :custom (flymake-jsts-executable-name-alist '((eslint . "eslint_d") (oxlint . "oxlint") (biome . "biome"))))
 ;; (use-package flymake-eslint)
 #+end_src
 
