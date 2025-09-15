@@ -802,17 +802,15 @@ https://orgmode.org/manual/Org-Crypt.html
 ;; but keep an eye on future features
 ;; (use-package async)
 
-(use-package midnight
-  :ensure nil
-  :config
-  (setq midnight-period (* 60 60 3)) ;; 3h
-  (advice-add 'clean-buffer-list :around 'suppress-message-advice-around)
-  (midnight-delay-set 'midnight-delay (ts-format "%I:%M%p" (ts-adjust 'minute 5 (ts-now))))
-  (midnight-mode)
+(use-package buffer-terminator
   :custom
-  ;; https://www.emacswiki.org/emacs/CleanBufferList
-  (clean-buffer-list-delay-special (* 60 60 2)) ;; 2h
-  (clean-buffer-list-kill-regexps '(".*")))
+  (buffer-terminator-verbose nil)
+  (buffer-terminator-inactivity-timeout (* 60 60 2)) ;; 2h
+  (buffer-terminator-interval (* 60 60 3)) ; 3h
+
+  :config
+  (buffer-terminator-mode 1)
+  :blackout)
 #+end_src
 
 ** editing
