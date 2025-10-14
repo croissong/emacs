@@ -47,6 +47,11 @@ If not within a project, or with prefix argument ABSOLUTE-P, copy the absolute p
           (message "Copied absolute directory path: %s" dir-path))))
     (message "Unable to determine buffer path")))
 
+(defun my-snippets-copy-buffer-file-name ()
+  "Copy the file name of the current buffer."
+  (interactive "")
+  (kill-new (file-name-nondirectory (my-snippets--get-buffer-path))))
+
 (defun my-snippets--get-buffer-path ()
   (let ((buffer (current-buffer)))
     (cond

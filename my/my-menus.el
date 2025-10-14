@@ -101,8 +101,10 @@
    ("2" "delete" my-snippets-delete-file-and-buffer)
 
    ("3" "copy" write-file)]
-  ["" ("f" "file" my-snippets-copy-buffer-path)
-   ("C-f" "file abs"
+  [""
+   ("f" "file" my-snippets-copy-buffer-path)
+   ("C-f" "file name" my-snippets-copy-buffer-file-name)
+   ("M-f" "file abs"
     (lambda ()
       (interactive)
       (my-snippets-copy-buffer-path t)))
