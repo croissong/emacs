@@ -100,28 +100,21 @@
 
    ("2" "delete" my-snippets-delete-file-and-buffer)
 
-   ("3" "copy" write-file)
-
-   ("p" "path" my-menus--code-path)]
+   ("3" "copy" write-file)]
+  ["" ("f" "file" my-snippets-copy-buffer-path)
+   ("C-f" "file abs"
+    (lambda ()
+      (interactive)
+      (my-snippets-copy-buffer-path t)))
+   ("d" "dir" my-snippets-copy-buffer-dir)
+   ("C-d" "dir abs"
+    (lambda ()
+      (interactive)
+      (my-snippets-copy-buffer-dir t)))]
 
   ["misc"
 
    ("+" "zoom" text-scale-adjust)]])
-
-(transient-define-prefix
- my-menus--code-path ()
- ["path"
-  ("f" "file" my-menus--copy-file-path)
-  ("d" "dir" my-menus--copy-file-dir)]
- ["args" ("a" "absolute" "abs")])
-
-
-(defun my-menus--copy-file-path ()
-  (interactive)
-  (let ((absolute
-         (transient-arg-value
-          "abs" (transient-args transient-current-command))))
-    (my-snippets-copy-buffer-path absolute)))
 
 (defun my-menus--copy-file-dir ()
   (interactive)
