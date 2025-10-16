@@ -101,6 +101,7 @@
    ("2" "delete" my-snippets-delete-file-and-buffer)
 
    ("3" "copy" write-file)]
+
   [""
    ("f" "file" my-snippets-copy-buffer-path)
    ("C-f" "file name" my-snippets-copy-buffer-file-name)
