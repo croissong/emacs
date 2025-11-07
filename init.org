@@ -1746,7 +1746,10 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 * ai
 #+begin_src elisp :lexical no
 (use-package gptel
-  :bind* (("C-<prior>" . gptel))
+  :bind* (
+          ("C-<prior>" . gptel)
+          ("M-<prior>" . gptel-menu)
+          )
   :commands gptel
   :custom
   (gptel-model 'claude-sonnet-4-20250514)
