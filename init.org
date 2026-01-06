@@ -1329,9 +1329,11 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** docs
 #+begin_src elisp
-(use-package pdf-tools
-  :ensure nil ;; built by nix
-  :mode "\\.pdf\\'")
+
+(use-package reader
+  :ensure '(:type git :host codeberg :repo "divyaranjan/emacs-reader"
+  	           :files ("*.el" "render-core.so")
+  	           :pre-build ("make" "all")))
 
 
 (use-package csv-mode)
