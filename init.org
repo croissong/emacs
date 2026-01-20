@@ -1010,19 +1010,19 @@ https://orgmode.org/manual/Org-Crypt.html
   (consult-preview-key nil)
   (consult-narrow-key "^")
 
-  (consult-buffer-sources '(consult--source-hidden-buffer
-                            consult--source-modified-buffer
-                            consult--source-buffer
-                            consult--source-recent-file
-                            consult--source-file-register
-                            consult--source-bookmark))
+  (consult-buffer-sources '(consult-source-hidden-buffer
+                            consult-source-modified-buffer
+                            consult-source-buffer
+                            consult-source-recent-file
+                            consult-source-file-register
+                            consult-source-bookmark))
 
 
   (xref-show-xrefs-function #'consult-xref)
   (xref-show-definitions-function #'consult-xref)
   :config
   (consult-customize
-   consult--source-bookmark
+   consult-source-bookmark
    :hidden t)
 
   :bind (:map flymake-mode-map
