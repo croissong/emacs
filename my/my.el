@@ -43,15 +43,14 @@
     (while (search-forward "\n" nil t)
       (replace-match "" nil t))))
 
-(defun my-indent-rigidly (start _end _arg &optional _interactive)
-  "Move pointer to start ofIndent rigidily do not skip first line when indenting"
+(defun my-indent-rigidly (start end arg &optional interactive)
+  "Indent rigidly without skipping first line when indenting."
   (interactive "r\nP\np")
-  (save-excursion
-    (when (use-region-p)
-      (goto-char start))
-    (beginning-of-line)
-    (set-mark (point))
-    (call-interactively 'indent-rigidly)))
+  (let ((new-start (save-excursion
+                     (goto-char start)
+                     (beginning-of-line)
+                     (point))))
+    (indent-rigidly new-start end arg interactive)))
 
 
 (defun my-discard-buffer-action (buf)
