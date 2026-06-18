@@ -164,10 +164,7 @@
 (use-package emacs
   :ensure nil
   :custom
-
-  (major-mode-remap-alist
-   '((sh-mode . bash-ts-mode)
-     (yaml-mode . yaml-ts-mode)))
+  (treesit-enabled-modes t)
 
   (browse-url-browser-function 'browse-url-generic)
   (browse-url-generic-program (executable-find "handlr"))
@@ -1066,7 +1063,6 @@ https://github.com/bbatsov/crux
 *** rainbow-mode
 #+begin_src elisp
 (use-package colorful-mode
-    :ensure (:host github :repo "DevelopmentCool2449/colorful-mode")
     :hook (css-ts-mode org-mode help-mode)
     :blackout)
 #+end_src
@@ -1325,7 +1321,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package dart-ts-mode
     :ensure (:host github :repo "50ways2sayhard/dart-ts-mode")
-    :mode ("\\.dart\\'")
+    :mode "\\.dart\\'"
     :hook (dart-ts-mode . eglot-ensure)
     )
 #+end_src
@@ -1338,7 +1334,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** docker
 #+begin_src elisp
 (use-package dockerfile-mode
-    :mode ("\\Dockerfile\\'" . dockerfile-ts-mode))
+    :mode "\\Dockerfile\\'")
 #+end_src
 
 ** elisp
@@ -1361,7 +1357,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package elixir-mode
     :hook (elixir-mode . flycheck-mode)
-    :mode ("\\.ex\\'" . elixir-ts-mode))
+    :mode "\\.ex\\'")
 
 (use-package flycheck-credo
     :after elixir-mode
@@ -1374,7 +1370,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** golang
 #+begin_src elisp
 (use-package go-mode
-    :mode ("\\.go\\'" . go-ts-mode)
+    :mode "\\.go\\'"
     ;; :config
     ;; (require 'dap-dlv-go)
     :hook (go-ts-mode . eglot-ensure))
@@ -1390,7 +1386,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package java-mode
   :ensure nil
-  :mode ("\\.java\\'" . java-ts-mode)
+  :mode "\\.java\\'"
   :hook (java-ts-mode . eglot-ensure)
   )
 #+end_src
@@ -1398,7 +1394,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 ** json
 #+begin_src elisp
 (use-package json-mode
-    :mode ("\\.json\\'" . json-ts-mode)
+    :mode "\\.json\\'"
     :custom
     (json-reformat:indent-width 2)
     (js-indent-level 2))
@@ -1487,7 +1483,7 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 #+begin_src elisp
 (use-package python
   :ensure nil
-  :mode ("\\.py\\'" . python-ts-mode)
+  :mode "\\.py\\'"
   :hook (python-ts-mode . (lambda ()
                             (eglot-ensure)
                             (combobulate-mode)
@@ -1613,9 +1609,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** yaml
 #+begin_src elisp
-
 (use-package yaml-ts-mode
   :ensure nil
+  ;; also open yaml.tmpl files in toml mode
   :mode "\\.ya?ml"
   )
 
@@ -1628,9 +1624,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** toml
 #+begin_src elisp
-;; also open toml.tmpl files in toml mode 
 (use-package toml-ts-mode
   :ensure nil
+  ;; also open toml.tmpl files in toml mode
   :mode "\\.toml"
   )
 #+end_src
@@ -1653,8 +1649,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** cook-lang
 #+begin_src elisp
-(use-package cook-ts-mode
-  :ensure (cook-mode :host github :repo "cooklang/cook-mode")
+(use-package cook-mode
+  :ensure (:host github :repo "cooklang/cook-mode")
   :mode "\\.cook\\'")
 #+end_src
 
