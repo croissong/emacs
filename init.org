@@ -278,8 +278,7 @@
 
 (general-def
   "C-z" 'yank
-  "M-;" 'comment-line
-
+  "M-;" 'comment-dwim
 
   "M-y" 'consult-yank-pop
   "C-M-s" 'consult-ripgrep
