@@ -1036,10 +1036,9 @@ https://orgmode.org/manual/Org-Crypt.html
   (marginalia-mode)
   :config
   ;; disable all annotations
-  (mapc
-   (lambda (x)
-     (setcdr x (cons 'none (remq 'none (cdr x)))))
-   marginalia-annotator-registry)
+  (mapc (lambda (x)
+        (setcdr x (cons 'builtin (remq 'builtin (cdr x)))))
+      marginalia-annotators)
   )
 
 (use-package embark-consult
