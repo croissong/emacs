@@ -912,6 +912,8 @@ https://orgmode.org/manual/Org-Crypt.html
   :custom
   (eglot-autoshutdown t)
   (eglot-confirm-server-initiated-edits nil)
+  (eglot-documentation-renderer 'markdown-ts-view-mode)
+  (eglot-code-action-indications nil)
   )
 
 (use-package eglot-booster
