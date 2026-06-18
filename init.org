@@ -1653,8 +1653,8 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** cook-lang
 #+begin_src elisp
-(use-package cook-mode
-  :ensure (:host github :repo "cooklang/cook-mode")
+(use-package cook-ts-mode
+  :ensure (cook-mode :host github :repo "cooklang/cook-mode")
   :mode "\\.cook\\'")
 #+end_src
 
