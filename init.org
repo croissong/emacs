@@ -1433,8 +1433,9 @@ TODO more at [[http://oremacs.com/2015/01/17/setting-up-ediff/][oremacs.com]]
 
 ** markdown
 #+begin_src elisp
-(use-package markdown-mode
-    :mode "\\.md\\'")
+(use-package markdown-ts-mode
+  :ensure nil
+  :mode "\\.md\\'") 
 
 (use-package grip-mode
   :custom
