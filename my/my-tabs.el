@@ -113,18 +113,18 @@
   (let ((search-upper-case nil)
         (search-term (current-kill 0 t))
         deleted-urls)
-    (if-let ((region (and (use-region-p) (buffer-substring start end))))
-      ;; region is selected - delete matching
-      (save-excursion
-        (beginning-of-buffer)
-        (kill-matching-lines region)
-        ;; Parse URLs from killed lines
-        (let ((killed-lines (split-string (current-kill 0) "\n" t)))
-          (dolist (line killed-lines)
-            (let* ((tab (my-tabs--parse-line line))
-                   (url (plist-get tab :url)))
-              (when url
-                (push url deleted-urls))))))
+    (if-let* ((region (and (use-region-p) (buffer-substring start end))))
+        ;; region is selected - delete matching
+        (save-excursion
+          (beginning-of-buffer)
+          (kill-matching-lines region)
+          ;; Parse URLs from killed lines
+          (let ((killed-lines (split-string (current-kill 0) "\n" t)))
+            (dolist (line killed-lines)
+              (let* ((tab (my-tabs--parse-line line))
+                     (url (plist-get tab :url)))
+                (when url
+                  (push url deleted-urls))))))
 
       ;; no region selected - delete current line
       (let* ((line

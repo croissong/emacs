@@ -20,31 +20,31 @@
   "Copy the current buffer's project-root-relative.
 If not within a project, or with prefix argument, copy the absolute path instead."
   (interactive "P")
-  (if-let ((buffer-path (my-snippets--get-buffer-path)))
-    (if (not absolute-p)
-        (if-let ((project (project-current))
-                 (root (project-root project)))
-          (kill-new (file-relative-name buffer-path root))
-          (message "Not in project"))
-      (kill-new buffer-path))))
+  (if-let* ((buffer-path (my-snippets--get-buffer-path)))
+      (if (not absolute-p)
+          (if-let* ((project (project-current))
+                    (root (project-root project)))
+              (kill-new (file-relative-name buffer-path root))
+            (message "Not in project"))
+        (kill-new buffer-path))))
 
 (defun my-snippets-copy-buffer-dir (absolute-p)
   "Copy the directory path of the current buffer.
 If not within a project, or with prefix argument ABSOLUTE-P, copy the absolute path instead."
   (interactive "P")
-  (if-let ((buffer-path (my-snippets--get-buffer-path)))
-    (let ((dir-path (file-name-directory buffer-path)))
-      (if (and (not absolute-p) (project-current))
-          (if-let ((project (project-current))
-                   (root (project-root project)))
-            (progn
-              (kill-new (file-relative-name dir-path root))
-              (message "Copied relative directory path: %s"
-                       (file-relative-name dir-path root)))
-            (message "Not in project"))
-        (progn
-          (kill-new dir-path)
-          (message "Copied absolute directory path: %s" dir-path))))
+  (if-let* ((buffer-path (my-snippets--get-buffer-path)))
+      (let ((dir-path (file-name-directory buffer-path)))
+        (if (and (not absolute-p) (project-current))
+            (if-let* ((project (project-current))
+                      (root (project-root project)))
+                (progn
+                  (kill-new (file-relative-name dir-path root))
+                  (message "Copied relative directory path: %s"
+                           (file-relative-name dir-path root)))
+              (message "Not in project"))
+          (progn
+            (kill-new dir-path)
+            (message "Copied absolute directory path: %s" dir-path))))
     (message "Unable to determine buffer path")))
 
 (defun my-snippets-copy-buffer-file-name ()
